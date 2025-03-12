@@ -534,82 +534,82 @@
     "image": "../images/mlb-stadiums/oracle-park.jpg",
     "location": "San Francisco, CA",
     "name": "Oracle Park",
-    "capacity": "e",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "42,300",
+    "teams": "San Francisco Giants",
+    "opened_date": "April 11, 2000",
+    "construction_cost": "$357 Million"
   },
   "Oriole Park at Camden Yards": {
     "image": "../images/mlb-stadiums/oriole-park-at-camden-yards.jpg",
     "location": "Baltimore, MD",
     "name": "Oriole Park at Camden Yards",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "45,971",
+    "teams": "Baltimore Orioles",
+    "opened_date": "April 6, 1992",
+    "construction_cost": "$110 Million"
   },
   "PNC Park": {
     "image": "../images/mlb-stadiums/pnc-park.jpg",
     "location": "Pittsburgh, PA",
     "name": "PNC Park",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "38,747",
+    "teams": "Pittsburgh Pirates",
+    "opened_date": "March 31, 2001",
+    "construction_cost": "$216 Million"
   },
   "Paycom Center": {
     "image": "../images/nba-stadiums/paycom-center.jpg",
     "location": "Oklahoma City, OK",
     "name": "Paycom Center",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "18,203",
+    "teams": "Oklahoma City Thunder",
+    "opened_date": "June 8, 2002",
+    "construction_cost": "$89.2 Million"
   },
   "Paycor Stadium": {
     "image": "../images/nfl-stadiums/paycor-stadium.jpg",
     "location": "Cincinnati, OH",
     "name": "Paycor Stadium",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "65,515",
+    "teams": "Cincinnati Bengals",
+    "opened_date": "August 19, 2000",
+    "construction_cost": "$455 Million"
   },
   "Petco Park": {
     "image": "../images/mlb-stadiums/petco-park.jpg",
     "location": "San Diego, CA",
     "name": "Petco Park",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "39,860",
+    "teams": "San Diego Padres",
+    "opened_date": "April 8, 2004",
+    "construction_cost": "$450 Million"
   },
   "Progressive Field": {
     "image": "../images/mlb-stadiums/progressive-field.jpg",
     "location": "Cleveland, OH",
     "name": "Progressive Field",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "34,830",
+    "teams": "Cleveland Guardians",
+    "opened_date": "April 4, 1994",
+    "construction_cost": "$175 Million"
   },
   "Rate Field": {
     "image": "../images/mlb-stadiums/rate-field.jpg",
     "location": "Chicago, IL",
     "name": "Rate Field",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "40,615",
+    "teams": "Chicago White Sox",
+    "opened_date": "April 18, 1991",
+    "construction_cost": "$167 Million"
   },
   "Raymond James Stadium": {
     "image": "../images/nfl-stadiums/raymond-james-stadium.jpg",
     "location": "Tampa, FL",
     "name": "Raymond James Stadium",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "75,000",
+    "teams": "Tampa Bay Buccaneers",
+    "opened_date": "September 20, 1998",
+    "construction_cost": "$168.5 Million"
   },
   "Rocket Mortgage Fieldhouse": {
     "image": "../images/nba-stadiums/rocket-mortgage-fieldhouse.jpg",
