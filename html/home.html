@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>StadiumTrackr</title>
+        <link rel="stylesheet" href="../css/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div id="overlay"></div>
+        
+        <!-- Login Menu -->
+        <div id="log-in-menu">
+            <h2>Log In</h2>
+            <h3 id="close-log-in-menu">x</h3>
+            <form id="log-in-form">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="input-field"><br>
+                <label for="password">Password</label>
+                <input type="password" id="password" class="input-field"><br>
+                <input type="submit" id="log-in-button" value="Log In">
+            </form>
+        </div>
+
+        <!-- Create Account Menu -->
+        <div id="create-account-menu">
+            <h2>Create Account</h2>
+            <h3 id="close-create-account-menu">x</h3>
+            <form id="create-account-form">
+                <label for="new-email">Email address</label>
+                <input type="text" id="new-email" class="input-field"><br>
+                <label for="new-username">Username</label>
+                <input type="text" id="new-username" class="input-field"><br>
+                <label for="new-password">Password</label>
+                <input type="text" id="new-password" class="input-field"><br>
+                <input type="submit" id="sign-up-button" value="Sign Up">
+            </form>
+        </div>
+
+        <!-- Main Content -->
+        <div id="content-wrapper">
+
+            <!-- Header -->
+            <header>
+                <h1>StadiumTrackr</h1>
+                <ul id="nav-items">
+                    <li class="nav-item"><a href="./home.html">Home</a></li>
+                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
+                    <li class="nav-item"><a href="">Events</a></li>
+                    <li class="nav-item"><a href="">About</a></li>
+                    <li class="nav-item button" id="log-in">Log In</li>
+                    <li class="nav-item button" id="create-account">Sign Up</li>
+                </ul>
+            </header>
+
+            <!-- Welcome Text -->
+            <div id="welcome-text">
+                <h2>Track Your Stadium Visits</h2>
+                <h4>Discover and share your experiences at sports venues worldwide</h4>
+                <div id="button-container">
+                    <h4 id="get-started-button">Get Started</h4>
+                    <h4>Learn More</h4>
+                </div>
+                <div id="stadium-search-container">
+                    <form id="search-stadiums">
+                        <input type="text" placeholder="Search stadiums..." id="search-field">
+                        <input type="submit" value="Search" id="submit-button">
+                    </form>
+                </div>
+            </div>
+
+            <!-- Home Content -->
+            <div id="home-content">
+
+                <!-- Popular Stadiums -->
+                <div id="popular-stadiums-container">
+                    <h2>Popular Stadiums</h2>
+                    <ul id="popular-stadiums">
+                        <li class="popular-stadium">
+                            <img src="../images/nfl-stadiums/lambeau-field.jpg" alt="">
+                            <h3>Lambeau Field</h3>
+                            <h4>Green Bay, WI</h4>
+                        </li>
+                        <li class="popular-stadium">
+                            <img src="../images/nba-stadiums/madison-square-garden.jpg" alt="">
+                            <h3>Madison Square Garden</h3>
+                            <h4>New York, NY</h4>
+                        </li>
+                        <li class="popular-stadium">
+                            <img src="../images/mlb-stadiums/dodger-stadium.jpg" alt="">
+                            <h3>Dodger Stadium</h3>
+                            <h4>Los Angeles, CA</h4>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- StadiumTrackr Info -->
+                <div id="stadium-tracker-container">
+                    <h2>Why Use StadiumTrackr?</h2>
+                    <ul id="stadium-tracker-infos">
+                        <li class="stadium-tracker-info">
+                            <div>
+                                <img src="../images/icons/pin.png" alt="">
+                            </div>
+                            <h3>Track Visits</h3>
+                            <h4>Keep a record of all the stadiums you've visited</h4>
+                        </li>
+                        <li class="stadium-tracker-info">
+                            <div>
+                                <img src="../images/icons/phone.png" alt="">
+                            </div>
+                            <h3>Stay Updated</h3>
+                            <h4>Get notifications about events at your favorite venues</h4>
+                        </li>
+                        <li class="stadium-tracker-info">
+                            <div>
+                                <img src="../images/icons/trophy.png" alt="">
+                            </div>
+                            <h3>Earn Badges</h3>
+                            <h4>Collect achievements for visting different stadiums</h4>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer>
+                <ul id="footer-items">
+                    <li class="footer-item">
+                        <h4>StadiumTrackr</h4>
+                        <h5>Track your stadium visits and discover new venues worldwide</h5>
+                    </li>
+                    <li class="footer-item">
+                        <h4>Quick Links</h4>
+                        <h5>About Us</h5>
+                        <h5>Contact</h5>
+                        <h5>Privacy Policy</h5>
+                        <h5>Terms of Service</h5>
+                    </li>
+                    <li class="footer-item">
+                        <h4>Features</h4>
+                        <h5>Stadium Database</h5>
+                        <h5>Event Calendar</h5>
+                        <h5>Achievement System</h5>
+                        <h5>Mobile App</h5>
+                    </li>
+                    <li class="footer-item">
+                        <h4>Newsletter</h4>
+                        <h5>Subscribe for updates and news</h5>
+                        <form id="newsletter-email">
+                            <input type="text" placeholder="Enter your email" id="email-field">
+                            <input type="submit" value="Subscribe" id="subscribe-button">
+                        </form>
+                    </li>
+                </ul>
+                <h5 id="copyright">&copy;2025 StadiumTrackr. All rights reserved.</h5>
+            </footer>
+
+        </div>
+
+        <!-- Scripts -->
+        <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-database-compat.js"></script>
+        <script src="../scripts/firebase.js"></script>
+        <script type="module" src="../scripts/home-script.js"></script>
+        <script type="module" src="../scripts/createaccount.js"></script>
+        <script type="module" src="../scripts/signin.js"></script>
+        
+    </body>
+</html>

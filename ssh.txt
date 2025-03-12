@@ -1,0 +1,9 @@
+copy files to the server 
+scp -i stadiumtrackr_sshkey.pem [filename] admin@ec2-54-166-102-246.compute-1.amazonaws.com:/tmp/
+
+ssh to move files within the server
+ssh -i stadiumtrackr_sshkey.pem admin@ec2-54-166-102-246.compute-1.amazonaws.com
+
+sudo mv /tmp/[filename] /var/www/stadiumtrackr/
+
+https://us-east-1.console.aws.amazon.com/ec2/home?region=us-east-1#InstanceDetails:instanceId=i-072cb2eea80bea879

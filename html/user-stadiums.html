@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>StadiumTrackr</title>
+        <link rel="stylesheet" href="../css/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <!-- Loading Screen -->
+        <div id="loading-screen">
+            <p>Loading...</p>
+        </div>
+
+        <div id="overlay"></div>
+
+        <!-- Add Stadium Menu -->
+        <div class="add-stadium-menu">
+            <h2>Add a Stadium</h2>
+            <h3 id="close-add-stadium-menu">x</h3>
+            <div class="dropdown" style="display: block;">
+                <button class="dropdown-btn" id="league-dropdown-btn">Select League</button>
+                <ul class="dropdown-list" id="league-dropdown-list">
+                    <li data-value="nfl">NFL</li>
+                    <li data-value="nba">NBA</li>
+                    <li data-value="mlb">MLB</li>
+                </ul>
+            </div>
+            <div class="dropdown" id="nfl-dropdown">
+                <button class="dropdown-btn stadiums-dropdown">Select Stadium</button>
+                <ul class="dropdown-list stadiums-dropdown-list">
+                    <li data-value="acrisure-stadium">Acrisure Stadium</li>
+                    <li data-value="allegiant-stadium">Allegiant Stadium</li>
+                    <li data-value="arrowhead-stadium">Arrowhead Stadium</li>
+                    <li data-value="att-stadium">AT&T Stadium</li>
+                    <li data-value="bank-of-america-stadium">Bank Of America Stadium</li>
+                    <li data-value="caesars-superdome">Caesars Superdome</li>
+                    <li data-value="empower-field-at-mile-high">Empower Field at Mile High</li>
+                    <li data-value="everbank-stadium">Everbank Stadium</li>
+                    <li data-value="ford-field">Ford Field</li>
+                    <li data-value="gillette-stadium">Gillette Stadium</li>
+                    <li data-value="hard-rock-stadium">Hard Rock Stadium</li>
+                    <li data-value="highmark-stadium">Highmark Stadium</li>
+                    <li data-value="huntington-bank-field">Huntington Bank Field</li>
+                    <li data-value="lambeau-field">Lambeau Field</li>
+                    <li data-value="levis-stadium">Levi's Stadium</li>
+                    <li data-value="lincoln-financial-field">Lincoln Financial Field</li>
+                    <li data-value="luca-oil-stadium">Lucas Oil Stadium</li>
+                    <li data-value="lumen-field">Lumen Field</li>
+                    <li data-value="metlife-stadium-giants">MetLife Stadium (Giants)</li>
+                    <li data-value="metlife-stadium-jets">MetLife Stadium (Jets)</li>
+                    <li data-value="mercedes-benz-stadium">Mercedes-Benz Stadium</li>
+                    <li data-value="mt-bank-stadium">M&T Bank Stadium</li>
+                    <li data-value="nissan-stadium">Nissan Stadium</li>
+                    <li data-value="northwest-stadium">Northwest Stadium</li>
+                    <li data-value="nrg-stadium">NRG Stadium</li>
+                    <li data-value="paycor-stadium">Paycor Stadium</li>
+                    <li data-value="raymond-james-stadium">Raymond James Stadium</li>
+                    <li data-value="sofi-stadium-chargers">Sofi Stadium (Chargers)</li>
+                    <li data-value="sofi-stadium-rams">Sofi Stadium (Rams)</li>
+                    <li data-value="soldier-field">Soldier Field</li>
+                    <li data-value="state-farm-stadium">State Farm Stadium</li>
+                    <li data-value="us-bank-stadium">US Bank Stadium</li>
+                </ul>
+            </div>
+            <div class="dropdown" id="nba-dropdown">
+                <button class="dropdown-btn stadiums-dropdown">Select Stadium</button>
+                <ul class="dropdown-list stadiums-dropdown-list">
+                    <li data-value="american-airlines-center">American Airlines Center</li>
+                    <li data-value="ball-arena">Ball Arena</li>
+                    <li data-value="barclays-center">Barclays Center</li>
+                    <li data-value="capital-one-arena">Capitol One Arena</li>
+                    <li data-value="chase-center">Chase Center</li>
+                    <li data-value="cryptocom-arena">Crypto.com Arena</li>
+                    <li data-value="delta-center">Delta Center</li>
+                    <li data-value="fedex-forum">FedExForum</li>
+                    <li data-value="fiserv-forum">Fiserv Forum</li>
+                    <li data-value="footprint-center">Footprint Center</li>
+                    <li data-value="gainbridge-fieldhouse">Gainbridge Fieldhouse</li>
+                    <li data-value="golden-1-center">Golden 1 Center</li>
+                    <li data-value="intuit-dome">Intuit Dome</li>
+                    <li data-value="kaseya-center">Kaseya Center</li>
+                    <li data-value="kia-center">Kia Center</li>
+                    <li data-value="little-caesars-arena">Little Caesars Arena</li>
+                    <li data-value="madison-square-garden">Madison Square Garden</li>
+                    <li data-value="moda-center">Moda Center</li>
+                    <li data-value="paycom-center">Paycom Center</li>
+                    <li data-value="rocket-mortgage-fieldhouse">Rocket Mortgage Fieldhouse</li>
+                    <li data-value="scotiabank-arena">Scotiabank Arena</li>
+                    <li data-value="smoothie-king-center">Smoothie King Center</li>
+                    <li data-value="spectrum-center">Spectrum Center</li>
+                    <li data-value="state-farm-arena">State Farm Arena</li>
+                    <li data-value="target-center">Target Center</li>
+                    <li data-value="td-garden">TD Garden</li>
+                    <li data-value="toyota-center">Toyota Center</li>
+                    <li data-value="united-center">United Center</li>
+                    <li data-value="wells-fargo-center">Wells Fargo Center</li>
+                </ul>                
+            </div>
+            <div class="dropdown" id="mlb-dropdown">
+                <button class="dropdown-btn stadiums-dropdown">Select Stadium</button>
+                <ul class="dropdown-list stadiums-dropdown-list">
+                    <li data-value="american-family-field">American Family Field</li>
+                    <li data-value="angel-stadium">Angel Stadium</li>
+                    <li data-value="busch-stadium">Busch Stadium</li>
+                    <li data-value="chase-field">Chase Field</li>
+                    <li data-value="citizens-bank-park">Citizens Bank Park</li>
+                    <li data-value="citi-field">Citi Field</li>
+                    <li data-value="coors-field">Coors Field</li>
+                    <li data-value="comerica-park">Comerica Park</li>
+                    <li data-value="daikin-park">Daikin Park</li>
+                    <li data-value="dodger-stadium">Dodger Stadium</li>
+                    <li data-value="fenway-park">Fenway Park</li>
+                    <li data-value="globe-life-field">Globe Life Field</li>
+                    <li data-value="great-american-ballpark">Great American Ballpark</li>
+                    <li data-value="kauffman-stadium">Kauffman Stadium</li>
+                    <li data-value="loandepot-park">loanDepot Park</li>
+                    <li data-value="nationals-park">Nationals Park</li>
+                    <li data-value="oracle-park">Oracle Park</li>
+                    <li data-value="oriole-park-at-camden-yards">Oriole Park at Camden Yards</li>
+                    <li data-value="petco-park">Petco Park</li>
+                    <li data-value="pnc-park">PNC Park</li>
+                    <li data-value="progressive-field">Progressive Field</li>
+                    <li data-value="rate-field">Rate Field</li>
+                    <li data-value="rogers-centre">Rogers Centre</li>
+                    <li data-value="sutter-health-park">Sutter Health Park</li>
+                    <li data-value="target-field">Target Field</li>
+                    <li data-value="tmobile-park">T-Mobile Park</li>
+                    <li data-value="tropicana-field">Tropicana Field</li>
+                    <li data-value="truist-park">Truist Park</li>
+                    <li data-value="wrigley-field">Wrigley Field</li>
+                    <li data-value="yankee-stadium">Yankee Stadium</li>
+                </ul>
+            </div>
+            <ul id="popular-stadiums" style="display: none;">
+                <li class="popular-stadium">
+                    <img src="" alt="" id="stadium-image">
+                    <h3 id="stadium-name"></h3>
+                    <h4 id="stadium-location"></h4>
+                </li>
+            </ul>
+            <div id="date-visited-container" style="display: none;">
+                <label for="date-visited" id="date-visited-label">Date Visited:</label>
+                <input type="date" id="date-visited" min="1900-01-01"><br>
+            </div>
+            <input type="submit" id="add-stadium-button" value="Add Stadium" style="display: none;">
+        </div>
+
+        <!-- Main Content -->
+        <div id="content-wrapper">
+            
+            <!-- Header -->
+            <header>
+                <h1>StadiumTrackr</h1>
+                <ul id="nav-items">
+                    <li class="nav-item"><a href="./user-home.html">Home</a></li>
+                    <li class="nav-item"><a href="./user-stadiums.html">My Stadiums</a></li>
+                    <li class="nav-item"><a href="">Statistics</a></li>
+                    <li class="nav-item" id="user-info">
+                        <div id="user-icon-container">
+                            <img src="../images/icons/person.png" alt="">
+                            <p id="username"></p>
+                        </div>
+                    </li>
+                    <li class="nav-item button" id="add-stadium">Add Stadium</li>
+                    <li class="nav-item button" id="log-out">Log Out</li>
+                </ul>
+            </header>
+
+            <!-- League Selector -->
+            <h2 id="league-text">Choose a league to see your stadiums...</h2>
+            <div id="league-selector">
+                <ul id="leagues">
+                    <li class="league" id="nfl">
+                        <h3>NFL</h3>
+                        <img src="../images/logos/nfl-logo.png" alt="">
+                    </li>
+                    <li class="league" id="nba">
+                        <h3>NBA</h3>
+                        <img src="../images/logos/nba-logo.png" alt="">
+                    </li>
+                    <li class="league" id="mlb">
+                        <h3>MLB</h3>
+                        <img src="../images/logos/mlb-logo.png" alt="">
+                    </li>
+                </ul>
+            </div>
+
+            <!-- NFL Stadiums -->
+            <div class="stadiums-list-container" id="nfl-stadiums-list">
+                <h2>NFL Stadiums</h2>
+                <ul class="stadiums-list-user" id="nfl-stadiums-list-gzero"></ul>
+                <div class="stadiums-list-zero" id="nfl-stadiums-list-zero">
+                    <h3>You haven't been to any NFL stadiums yet...</h3>
+                    <h3 class="stadiums-add-stadiums-button">Add Stadiums</h3>
+                </div>
+            </div>
+
+            <!-- NBA Stadiums -->
+            <div class="stadiums-list-container" id="nba-stadiums-list">
+                <h2>NBA Stadiums</h2>
+                <ul class="stadiums-list-user" id="nba-stadiums-list-gzero"></ul>
+                <div class="stadiums-list-zero" id="nba-stadiums-list-zero">
+                    <h3>You haven't been to any NBA stadiums yet...</h3>
+                    <h3 class="stadiums-add-stadiums-button">Add Stadiums</h3>
+                </div>
+            </div>
+
+            <!-- MLB Stadiums -->
+            <div class="stadiums-list-container" id="mlb-stadiums-list">
+                <h2>MLB Stadiums</h2>
+                <ul class="stadiums-list-user" id="mlb-stadiums-list-gzero"></ul>
+                <div class="stadiums-list-zero" id="mlb-stadiums-list-zero">
+                    <h3>You haven't been to any MLB stadiums yet...</h3>
+                    <h3 class="stadiums-add-stadiums-button">Add Stadiums</h3>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer>
+                <ul id="footer-items">
+                    <li class="footer-item">
+                        <h4>StadiumTrackr</h4>
+                        <h5>Track your stadium visits and discover new venues worldwide</h5>
+                    </li>
+                    <li class="footer-item">
+                        <h4>Quick Links</h4>
+                        <h5>About Us</h5>
+                        <h5>Contact</h5>
+                        <h5>Privacy Policy</h5>
+                        <h5>Terms of Service</h5>
+                    </li>
+                    <li class="footer-item">
+                        <h4>Features</h4>
+                        <h5>Stadium Database</h5>
+                        <h5>Event Calendar</h5>
+                        <h5>Achievement System</h5>
+                        <h5>Mobile App</h5>
+                    </li>
+                    <li class="footer-item">
+                        <h4>Newsletter</h4>
+                        <h5>Subscribe for updates and news</h5>
+                        <form id="newsletter-email">
+                            <input type="text" placeholder="Enter your email" id="email-field">
+                            <input type="submit" value="Subscribe" id="subscribe-button">
+                        </form>
+                    </li>
+                </ul>
+                <h5 id="copyright">&copy;2025 StadiumTrackr. All rights reserved.</h5>
+            </footer>
+
+        </div>
+
+        <!-- Scripts -->
+        <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-database-compat.js"></script>
+        <script src="../scripts/firebase.js"></script>
+        <script type="module" src="../scripts/loadUserStadiumsInfo.js"></script>
+        <script type="module" src="../scripts/user-stadiums-script.js"></script>
+        <script type="module" src="../scripts/logout.js"></script>        
+        <script type="module" src="../scripts/addStadium.js"></script>
+    </body>
+
+</html>

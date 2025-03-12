@@ -1,0 +1,1024 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Rubik", sans-serif;
+    color: white;
+    margin: 0;
+    width: auto;
+    background-color: lightgrey;
+}
+
+#loading-screen {
+    font-size: 30px;
+    color: black;
+    text-align: center;
+}
+
+#content-wrapper {
+    display: none;
+    height: auto;
+    background-color: ghostwhite;
+    text-align: center;
+}
+
+header {
+    display: flex;
+    width: 100%;
+    height: 90px;
+    justify-content: space-between;
+    background-color: rgb(29, 64, 175);
+    align-items: center;
+}
+
+header h1 {
+    margin-left: 50px;
+}
+
+#nav-items {
+    list-style-type: none;
+    display: flex;
+    padding: 0;
+    align-items: center;
+    margin-right: 50px;
+}
+
+.nav-item {
+    margin: 0 20px;
+}
+
+.nav-item a {
+    color: white;
+    text-decoration: none;
+}
+
+.nav-item a:hover {
+    color: lightgray;
+}
+
+.nav-item:hover {
+    cursor: pointer;
+}
+
+.nav-item.button {
+    background-color: rgb(36,99,235);
+    padding: 10px 15px;
+    border-radius: 10px;
+    margin: 0 10px;
+}
+
+.nav-item.nav-item.button:hover {
+    background-color: dodgerblue;
+}
+
+#user-icon-container {
+    display: flex;
+    align-items: center;
+    width: auto;
+    margin-right: 10px;
+}
+
+#user-icon-container img {
+    height: 35px;
+    width: 35px;
+    border: 1px solid black;
+    border-radius: 50%;
+    background-color: white;
+}
+
+#user-icon-container p {
+    margin-left: 10px;
+}
+
+#welcome-text {
+    position: relative;
+    margin: 0 auto;
+    text-align: center;
+    width: 800px;
+    font-size: 25px;
+    color: black;
+    top: 15px;
+    margin-bottom: 35px;
+}
+
+#welcome-text h2 {
+    font-size: 30px;
+}
+ 
+#welcome-text h4 {
+    font-size: 22px;
+    font-weight: normal;
+}
+
+#button-container {
+    margin: 0 auto;
+    display: flex;
+    width: 300px;
+    height: 80px;
+    align-items: center;
+    justify-content: space-around;
+}
+
+#button-container h4 {
+    color: white;
+    background-color: rgb(36,99,235);
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-size: 15px;
+}
+
+#button-container h4:hover {
+    background-color: dodgerblue;
+    cursor: pointer;
+}
+
+#stadium-search-container {
+    margin: 20px auto;
+    width: auto;
+    height: auto;
+}
+
+#search-field {
+    border: 1px solid lightgrey;
+    width: 500px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+input {
+    padding-left: 5px;
+    color: black;
+}
+
+input:focus {
+    outline: none;
+}
+
+input::placeholder {
+    color: black;
+}
+
+#submit-button {
+    width: 100px;
+    height: 40px;
+    background-color: rgb(36,99,235);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 15px;
+}
+
+#submit-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+#home-content {
+    width: 98%;
+    margin: 60px auto;
+    padding: 0;
+}
+
+#home-content div {
+    padding: 5px 25px;
+    color: black;
+}
+
+#popular-stadiums-container {
+    background-color: white;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+}
+
+#popular-stadiums, .stadiums-list, .stadiums-list-user {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+}
+
+<<<<<<< HEAD
+.popular-stadium, .stadiums-list-stadium, .recent-stadium {
+    background-color: ghostwhite;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.popular-stadium:hover, .stadiums-list-stadium:hover, .recent-stadium:hover {
+    cursor: pointer;
+    border-color: black;
+    border-radius: 8px;
+    transform: scale(0.97);
+    box-sizing: border-box;
+    overflow: hidden;
+=======
+.popular-stadium, .stadiums-list-stadium {
+    background-color: ghostwhite;
+    border-radius: 8px;
+>>>>>>> 72ced5a82d69c346eef5c2fec5c4ac98d69857ac
+}
+
+.popular-stadium img, .stadiums-list-stadium img {
+    height: 250px;
+    width: 440px;
+    object-fit: cover;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+}
+
+.popular-stadium h3, .popular-stadium h4, .stadiums-list-stadium h3, .stadiums-list-stadium h4 {
+    margin: 10px;
+    font-weight: normal;
+}
+
+#stadium-tracker-container {
+    text-align: center;
+    margin: 20px 0;
+}
+
+#stadium-tracker-infos {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.stadium-tracker-info {
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+    background-color: white;
+    width: 440px;
+    text-align: center;
+    border-radius: 8px;
+}
+
+.stadium-tracker-info div {
+    margin: 0 auto;
+    height: 60px;
+    width: 60px;
+    border-radius: 30px;
+    margin-top: 20px;
+    background-color: rgb(219, 234, 254);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stadium-tracker-info img {
+    height: 30px;
+    width: 30px;
+    object-fit: cover;
+}
+
+.stadium-tracker-info h3, .stadium-tracker-info h4 {
+    margin: 10px;
+    font-weight: normal;
+}
+
+.stadium-tracker-info h4 {
+    margin-bottom: 20px;
+}
+
+footer {
+    background-color: rgb(31, 41, 55);
+    height: 320px;
+    text-align: left;
+}
+
+#footer-items {
+    width: 90%;
+    margin: 0 auto;
+    list-style-type: none;
+    padding: 0;
+    border-bottom: 1px solid rgb(55, 65, 81);
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+}
+
+.footer-item {
+    width: 300px;
+    margin-top: 40px;
+}
+
+.footer-item h4 {
+    font-weight: bold;
+    margin: 0;
+}
+
+footer h5 {
+    font-weight: normal;
+    color: rgb(115, 124, 137);
+}
+
+#newsletter-email {
+    display: flex;
+}
+
+#email-field {
+    height: 35px;
+    width: 200px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border: none;
+    margin: 0;
+}
+
+#subscribe-button {
+    height: 35px;
+    background-color: rgb(36,99,235);
+    border: none;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    margin: 0;
+    padding: 0 10px;
+    color: white;
+}
+
+#subscribe-button:hover {
+    cursor: pointer;
+}
+
+#copyright {
+    text-align: center;
+    margin-top: 30px;
+}
+
+#overlay {
+    position: fixed;
+    background-color: rgba(0,0,0,0.9);
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+    z-index: 999;
+    display: none;
+}
+
+#create-account-menu, #log-in-menu {
+    position: fixed;
+    display: none;
+    width: 428px;
+    height: 500px;
+    background-color: ghostwhite;
+    z-index: 1000;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    color: black;
+}
+
+#log-in-menu {
+    height: 400px;
+}
+
+#create-account-menu h2, #log-in-menu h2 {
+    text-align: center;
+    font-size: 30px;
+}
+
+#close-create-account-menu, #close-log-in-menu {
+    font-size: 25px;
+    position: absolute;
+    left: 380px;
+    top: 1px;
+}
+
+#close-create-account-menu:hover, #close-log-in-menu:hover {
+    cursor: pointer;
+}
+
+#create-account-form, #log-in-form{
+    margin-top: 40px;
+    text-align: center;
+    width: auto;
+    height: auto;
+}
+
+#create-account-form label, #log-in-form label {
+    display: block;
+    margin-top: 25px;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
+.input-field {
+    height: 40px;
+    width: 325px;
+    border-radius: 8px;
+    border: 0.5px solid lightgray;
+    font-size: 16px;
+}
+
+#sign-up-button, #log-in-button {
+    background-color: rgb(36,99,235);
+    color: white;
+    font-size: 20px;
+    width: 150px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    margin-top: 45px;
+}
+
+#log-in-button:hover, #sign-up-button:hover {
+    background-color: dodgerblue;
+    cursor: pointer;
+}
+
+#welcome-header {
+    display: inline-block;
+    color: black;
+    margin: 30px 0 0;
+    width: auto;
+    font-size: 22px;
+    border-bottom: 1px solid lightgray;
+}
+
+#user-items {
+    margin: 20px auto;
+    width: 1150px;
+    display: flex;
+    flex-wrap: wrap;
+    color: black;
+    list-style-type: none;
+    padding: 0;
+    justify-content: space-between;
+}
+
+.user-item {
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+    background-color: white;
+}
+
+.user-item h3 {
+    text-align: left;
+    margin: 25px 0px 20px 20px;
+}
+
+#favorite-stadiums {
+    width: 750px;
+    height: 385px;
+}
+
+#recently-visited-stadiums {
+    width: 750px;
+    height: 355px;
+}
+
+#recent-stadiums-gone, #favorite-stadiums-gone {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 auto;
+    width: 730px;
+    display: none;
+}
+
+#recent-stadiums-zero, #favorite-stadiums-zero {
+    margin: 0 auto;
+    flex-wrap: wrap;
+    padding: 0;
+    width: 400px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 85px;
+    display: none;
+}
+
+#recent-stadiums-one, #favorite-stadiums-one {
+    list-style-type: none;
+    padding: 0;
+}
+
+#recent-stadiums-zero h4, #favorite-stadiums-zero h4 {
+    width: auto;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+#add-favorite-stadiums-button, #add-stadiums-button {
+    width: auto;
+    background-color: rgb(36,99,235);
+    padding: 10px 15px;
+    border-radius: 8px;
+    color: white;
+    margin: 0;
+}
+
+#add-favorite-stadiums-button:hover, #add-stadiums-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+.recent-stadium, .favorite-stadium {
+    border-radius: 8px;
+    height: 300px;
+    margin: 0 auto 15px;
+    width: 350px;
+    background-color: ghostwhite;
+}
+
+.recent-stadium {
+    height: auto;
+}
+
+.recent-stadium img, .favorite-stadium img {
+    height: 200px;
+    width: 348px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.recent-stadium h4, .recent-stadium h5, .recent-stadium h6, .favorite-stadium h4, .favorite-stadium h5, .favorite-stadium h6 {
+    padding-left: 10px;
+    margin: 0;
+    font-weight: normal;
+}
+
+.recent-stadium h4, .recent-stadium h5, .favorite-stadium h4, .favorite-stadium h5 {
+    margin: 10px 0;
+}
+
+.recent-stadium h4, .favorite-stadium h4 {
+    font-weight: bold;
+}
+
+#user-stats {
+    width: 350px;
+    height: auto;
+}
+
+#user-stats-container {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+.user-stat h3 {
+    text-align: center;
+}
+
+.user-stat {
+    border-radius: 8px;
+    width: 320px;
+    height: 90px;
+    margin: 0 auto;
+    margin-bottom: 15px;
+    padding: 18px;
+}
+
+.user-stat h3, .user-stat h4 {
+    margin: 0;
+}
+
+.user-stat h4 {
+    margin-top: 8px;
+    font-weight: normal;
+}
+
+#stadiums-visited {
+    background-color: rgb(238, 246, 255);
+    text-align: center;
+}
+
+#countries {
+    background-color: rgb(239, 253, 244);
+}
+
+#events-attended {
+    background-color: rgb(254, 252, 232);
+}
+
+#wishlist {
+    width: 350px;
+    height: 255px;
+}
+
+#wishlist-text-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#wishlist-text-container h3 {
+    margin: 25px 20px 0;
+}
+
+#wishlist-text-container h4 {
+    font-weight: normal;
+    margin: 28px 28px 0 0;
+}
+
+#wishlist-items-gzero {
+    position: relative;
+    display: none;
+}
+
+#wishlist-items-zero {
+    text-align: center;
+    display: none;
+}
+
+#wishlist-items-zero h4 {
+    font-weight: normal;
+}
+
+#wishlist-items-zero-header {
+    margin-top: 50px;
+}
+
+#add-stadiums-wishlist-button {
+    background-color: rgb(36,99,235);
+    color: white;
+    padding: 10px 15px;
+    width: 220px;
+    margin: 0 auto;
+    border-radius: 8px;
+}
+
+#add-stadiums-wishlist-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+.wishlist-item {
+    display: flex;
+    justify-content: space-between;
+    width: 85%;
+    margin: 25px auto;
+    align-items: center;
+}
+
+.wishlist-item h4, .wishlist-item h5 {
+    margin: 0;
+    font-weight: normal;
+}
+
+#league-selector {
+    color: black;
+    width: 320px;
+    height: 58px;
+    margin: 0 auto;
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+
+#leagues {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.league {
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+    height: 45px;
+}
+
+.league:hover {
+    cursor: pointer;
+}
+
+.league img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    padding: 0;
+    margin-left: 8px;
+}
+
+.league h3 {
+    font-weight: normal;
+}
+
+#league-text {
+    color: black;
+    margin-top: 30px;
+}
+
+.stadiums-list-container {
+    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+    width: 95%;
+    height: auto;
+    margin: 30px auto;
+    color: black;
+    padding: 5px;
+    border-radius: 8px;
+    background-color: white;
+}
+
+.stadiums-list {
+    flex-wrap: wrap;
+}
+
+.stadiums-list-stadium {
+    margin-bottom: 20px;
+}
+
+#stadiums-list-nfl {
+    display: none;
+}
+
+.stadiums-list-zero {
+    margin: 0 auto;
+    display: none;
+    flex-wrap: wrap;
+    padding: 0;
+    width: 400px;
+    justify-content: center;
+    align-items: center;
+}
+
+.stadiums-list-zero h3 {
+    font-weight: normal;
+}
+
+.stadiums-add-stadiums-button {
+    background-color: rgb(36,99,235);
+    border-radius: 8px;
+    width: 150px;
+    color: white;
+    padding: 10px 10px;
+    margin-top: 0px;
+}
+
+.stadiums-add-stadiums-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+.stadiums-list-user {
+    display: none;
+    flex-wrap: wrap;
+}
+
+.add-stadium-menu {
+    position: fixed;
+    width: 50%;
+    min-width: 500px;
+    min-height: 650px;
+    height: auto;
+    background-color: ghostwhite;
+    z-index: 1000;
+    top: 75px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 10px;
+    color: black;
+    text-align: center;
+    display: none;
+}
+
+#add-stadium-button {
+    text-align: center;
+    background-color: rgb(36,99,235);
+    border-radius: 8px;
+    color: white;
+    width: 150px;
+    margin: 20px auto;
+    padding: 10px 10px;
+    border: none;
+    font-size: 15px;
+}
+
+#add-stadium-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+.dropdown {
+    width: 200px;
+    margin: 0 auto 20px;
+    border: 0.5px solid lightgray;
+    border-radius: 8px;
+    display: none;
+}
+
+.dropdown-btn {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+}
+
+.dropdown-btn::after {
+    content: "▼";
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.dropdown-list {
+    display: none;
+    position: absolute;
+    width: 200px;
+    background: white;
+    border: none;
+    border-radius: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 2px 0;
+    z-index: 10;
+    text-align: left;
+    border: 0.5px solid lightgray;
+    height: auto;
+}
+
+.dropdown-list li {
+    padding: 10px;
+    cursor: pointer;
+    color: black;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.dropdown-list li:hover {
+    background: #0073e6;
+    color: white;
+}
+
+#date-visited {
+    border: 0.5px solid lightgray;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 15px;
+}
+
+.stadiums-dropdown-list {
+    max-height: 175px;
+    overflow-y: auto;
+}
+
+.stadiums-dropdown-list::-webkit-scrollbar {
+    display: none;
+}
+
+.stadiums-dropdown-list {
+    scrollbar-width: none;
+}
+
+#date-visited-container {
+    margin-top: 10px;
+}
+
+#close-add-stadium-menu {
+    font-size: 25px;
+    position: absolute;
+    left: 94%;
+    top: 0px;
+    margin: 15px 0 0;
+}
+
+#close-add-stadium-menu:hover {
+    cursor: pointer;
+}
+
+<<<<<<< HEAD
+.stadium-information-container {
+    background-color: ghostwhite;
+    position: fixed;
+    width: 580px;
+    height: 620px;
+    z-index: 1000;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 10px;
+    color: black;
+    text-align: center;
+    display: none;
+}
+
+.stadium-information-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid lightgray;
+}
+
+.stadium-information-header h2 {
+    margin: 20px 28px;
+}
+
+#close-stadium-information:hover {
+    cursor: pointer;
+}
+
+.stadium-information-container img {
+    height: 270px;
+    width: 525px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin: 25px 0 20px;
+}
+
+.stadium-facts {
+    width: 525px;
+    margin: 0 auto;
+}
+
+.stadium-fact h3, .stadium-fact h4 {
+    margin: 0;
+    font-weight: normal;
+    text-align: left;
+}
+
+.stadium-facts h4 {
+    color: #4B5563;
+}
+
+.stadium-facts-first {
+    display: flex;
+    justify-content: space-between;
+    width: 525px;
+    margin-top: 5px;
+}
+
+.stadium-facts-second {
+    display: flex;
+    width: 525px;
+    justify-content: space-between;
+    margin-top: 25px;
+}
+
+.stadium-facts-first div:nth-child(1) {
+    width: 165px;
+}
+
+.stadium-facts-first div:nth-child(2) {
+    width: 80px;
+}
+
+.stadium-facts-first div:nth-child(3) {
+    width: 190px;
+}
+
+.stadium-facts-second div:nth-child(1) {
+    width: 320px;
+}
+
+.stadium-facts-second div:nth-child(2) {
+    width: 190px;
+}
+
+#signed-out-button {
+    width: 250px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 10px 10px;
+    background-color: rgb(36, 99, 235);
+    color: white;
+    border-radius: 8px;
+    font-weight: normal;
+    margin-top: 35px;
+}
+
+#signed-out-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+=======
+>>>>>>> 72ced5a82d69c346eef5c2fec5c4ac98d69857ac
+@media screen and (max-width: 1050px) {
+    #user-items {
+        width: 850px;
+        justify-content: center;
+    }
+
+    .user-item {
+        margin: 15px 25px;
+    }
+    #favorite-stadiums {
+        order: 1;
+    }
+
+    #user-stats {
+        order: 3;
+    }
+    #recently-visited-stadiums {
+        order: 2;
+    }
+    #wishlist {
+        order: 4;
+    }
+    .nav-item {
+        margin: 0 10px;
+    }
+}
