@@ -422,6 +422,15 @@
     "opened_date": "September 5, 2017",
     "construction_cost": "$862.9 Million"
   },
+  "loanDepot Park": {
+    "image": "../images/mlb-stadiums/loan-depot-park.jpg",
+    "location": "Miami, FL",
+    "name": "loanDepot Park",
+    "capacity": "37,000",
+    "teams": "Miami Marlins",
+    "opened_date": "March 5, 2012",
+    "construction_cost": "$634 Million"
+  },
   "Lucas Oil Stadium": {
     "image": "../images/nfl-stadiums/lucas-oil-stadium.jpg",
     "location": "Indianapolis, IN",
@@ -615,158 +624,158 @@
     "image": "../images/nba-stadiums/rocket-mortgage-fieldhouse.jpg",
     "location": "Cleveland, OH",
     "name": "Rocket Mortgage Fieldhouse",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "19,432",
+    "teams": "Cleveland Cavaliers",
+    "opened_date": "October 17, 1994",
+    "construction_cost": "$100 Million"
   },
   "Rogers Centre": {
     "image": "../images/mlb-stadiums/rogers-centre.jpg",
     "location": "Toronto, ON",
     "name": "Rogers Centre",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "49,286",
+    "teams": "Toronto Blue Jays",
+    "opened_date": "June 3, 1989",
+    "construction_cost": "$570 Million"
   },
   "Scotiabank Arena": {
     "image": "../images/nba-stadiums/scotiabank-arena.jpg",
     "location": "Toronto, ON",
     "name": "Scotiabank Arena",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "19,800",
+    "teams": "Toronto Maple Leafs, Toronto Raptors",
+    "opened_date": "February 19, 1999",
+    "construction_cost": "$177.6 Million"
   },
   "Smoothie King Center": {
     "image": "../images/nba-stadiums/smoothie-king-center.jpg",
     "location": "New Orleans, LA",
     "name": "Smoothie King Center",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "17,791",
+    "teams": "New Orleans Pelicans",
+    "opened_date": "October 29, 1999",
+    "construction_cost": "$114 Million"
   },
   "Sofi Stadium (Chargers)": {
     "image": "../images/nfl-stadiums/sofi-stadium-chargers.jpg",
     "location": "Inglewood, CA",
     "name": "Sofi Stadium (Chargers)",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "70,000",
+    "teams": "Los Angeles Chargers, Los Angeles Rams",
+    "opened_date": "September 8, 2020",
+    "construction_cost": "$5.5 Billion"
   },
   "Sofi Stadium (Rams)": {
     "image": "../images/nfl-stadiums/sofi-stadium-rams.jpg",
     "location": "Inglewood, CA",
     "name": "Sofi Stadium (Rams)",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "70,000",
+    "teams": "Los Angeles Chargers, Los Angeles Rams",
+    "opened_date": "September 8, 2020",
+    "construction_cost": "$5.5 Billion"
   },
   "Soldier Field": {
     "image": "../images/nfl-stadiums/soldier-field.jpg",
     "location": "Chicago, IL",
     "name": "Soldier Field",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "61,500",
+    "teams": "Chicago Bears, Chicago Fire FC",
+    "opened_date": "October 9, 1924",
+    "construction_cost": "$13 Million"
   },
   "Spectrum Center": {
     "image": "../images/nba-stadiums/spectrum-center.jpg",
     "location": "Charlotte, NC",
     "name": "Spectrum Center",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "19,077",
+    "teams": "Charlotte Hornets",
+    "opened_date": "October 21, 2005",
+    "construction_cost": "$260 Million"
   },
   "State Farm Arena": {
     "image": "../images/nba-stadiums/state-farm-arena.jpg",
     "location": "Atlanta, GA",
     "name": "State Farm Arena",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "16,888",
+    "teams": "Atlanta Hawks",
+    "opened_date": "September 18, 1999",
+    "construction_cost": "$213.5 Million"
   },
   "State Farm Stadium": {
     "image": "../images/nfl-stadiums/state-farm-stadium.jpg",
     "location": "Glendale, AZ",
     "name": "State Farm Stadium",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "63,400",
+    "teams": "Arizona Cardinals",
+    "opened_date": "August 1, 2006",
+    "construction_cost": "$455 Million"
   },
   "Sutter Health Park": {
     "image": "../images/mlb-stadiums/sutter-health-park.jpg",
     "location": "West Sacramento, CA",
     "name": "Sutter Health Park",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "14,014",
+    "teams": "Athletics",
+    "opened_date": "May 15, 2000",
+    "construction_cost": "$46.5 Million"
   },
   "T-Mobile Park": {
     "image": "../images/mlb-stadiums/tmobile-park.jpg",
     "location": "Seattle, WA",
     "name": "T-Mobile Park",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "47,943",
+    "teams": "Seattle Mariners",
+    "opened_date": "July 15, 1999",
+    "construction_cost": "$517 Million"
   },
   "TD Garden": {
     "image": "../images/nba-stadiums/td-garden.jpg",
     "location": "Boston, MA",
     "name": "TD Garden",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "19,580",
+    "teams": "Boston Bruins, Boston Celtics",
+    "opened_date": "September 30, 1995",
+    "construction_cost": "$160 Million"
   },
   "Target Center": {
     "image": "../images/nba-stadiums/target-center.jpg",
     "location": "Minneapolis, MN",
     "name": "Target Center",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "20,000",
+    "teams": "Minnesota Timberwolves",
+    "opened_date": "October 13, 1990",
+    "construction_cost": "$104 Million"
   },
   "Target Field": {
     "image": "../images/mlb-stadiums/target-field.jpg",
     "location": "Minneapolis, MN",
     "name": "Target Field",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "39,504",
+    "teams": "Minnesota Twins",
+    "opened_date": "April 12, 2010",
+    "construction_cost": "$555 Million"
   },
   "Toyota Center": {
     "image": "../images/nba-stadiums/toyota-center.jpg",
     "location": "Houston, TX",
     "name": "Toyota Center",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "19,000",
+    "teams": "Houston Rockets",
+    "opened_date": "October 6, 2003",
+    "construction_cost": "$235 Million"
   },
   "Tropicana Field": {
     "image": "../images/mlb-stadiums/tropicana-field.jpg",
     "location": "St. Petersburg, FL",
     "name": "Tropicana Field",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "25,025",
+    "teams": "Tampa Bay Rays",
+    "opened_date": "March 3, 1990",
+    "construction_cost": "$138 Million"
   },
   "Truist Park": {
     "capacity": "41,084",
-    "construction_cost": "$672 Million",
+    "construction_cost": "$622 Million",
     "image": "../images/mlb-stadiums/truist-park.jpg",
     "location": "Atlanta, GA",
     "name": "Truist Park",
@@ -777,54 +786,45 @@
     "image": "../images/nfl-stadiums/us-bank-stadium.jpg",
     "location": "Minneapolis, MN",
     "name": "US Bank Stadium",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "66,860",
+    "teams": "Minnesota Vikings",
+    "opened_date": "July 22, 2016",
+    "construction_cost": "$1.061 Billion"
   },
   "United Center": {
     "image": "../images/nba-stadiums/united-center.jpg",
     "location": "Chicago, IL",
     "name": "United Center",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "23,500",
+    "teams": "Chicago Blackhawks, Chicago Bulls",
+    "opened_date": "August 18, 1994",
+    "construction_cost": "$175 Million"
   },
   "Wells Fargo Center": {
     "image": "../images/nba-stadiums/wells-fargo-center.jpg",
     "location": "Philadelphia, PA",
     "name": "Wells Fargo Center",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "21,000",
+    "teams": "Philadelphia 76ers, Philadelphia Flyers",
+    "opened_date": "August 12, 1996",
+    "construction_cost": "$210 Million"
   },
   "Wrigley Field": {
     "image": "../images/mlb-stadiums/wrigley-field.jpg",
     "location": "Chicago, IL",
     "name": "Wrigley Field",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "41,649",
+    "teams": "Chicago Cubs",
+    "opened_date": "April 23, 1914",
+    "construction_cost": "$250,000"
   },
   "Yankee Stadium": {
     "image": "../images/mlb-stadiums/yankee-stadium.jpg",
     "location": "Bronx, NY",
     "name": "Yankee Stadium",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
-  },
-  "loanDepot Park": {
-    "image": "../images/mlb-stadiums/loan-depot-park.jpg",
-    "location": "Miami, FL",
-    "name": "loanDepot Park",
-    "capacity": "",
-    "teams": "",
-    "opened_date": "",
-    "construction_cost": ""
+    "capacity": "46,537",
+    "teams": "New York City FC, New York Yankees",
+    "opened_date": "April 2, 2009",
+    "construction_cost": "$2.3 Billion"
   }
 }
