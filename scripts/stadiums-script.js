@@ -1,9 +1,6 @@
 import { createAccount } from "./createaccount.js";
 import { signIn } from "./signin.js";
-<<<<<<< HEAD
 import { loadStadiumInfo } from "./loadStadiumInfo.js";
-=======
->>>>>>> 72ced5a82d69c346eef5c2fec5c4ac98d69857ac
 
 const overlay = document.getElementById('overlay');
 
@@ -110,7 +107,6 @@ window.onload = () => setView('nfl');
 Object.keys(selectors).forEach(key => {
     selectors[key].addEventListener('click', () => setView(key));
 });
-<<<<<<< HEAD
 
 const stadiums = document.getElementsByClassName('stadiums-list-stadium');
 
@@ -129,5 +125,3 @@ closeStadiumInformation.addEventListener('click', () => {
     stadiumInformationContainer.style.display = 'none';
     overlay.style.display = 'none';
 })
-=======
->>>>>>> 72ced5a82d69c346eef5c2fec5c4ac98d69857ac

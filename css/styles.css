@@ -198,7 +198,6 @@ input::placeholder {
     justify-content: space-around;
 }
 
-<<<<<<< HEAD
 .popular-stadium, .stadiums-list-stadium, .recent-stadium {
     background-color: ghostwhite;
     border-radius: 8px;
@@ -213,11 +212,6 @@ input::placeholder {
     transform: scale(0.97);
     box-sizing: border-box;
     overflow: hidden;
-=======
-.popular-stadium, .stadiums-list-stadium {
-    background-color: ghostwhite;
-    border-radius: 8px;
->>>>>>> 72ced5a82d69c346eef5c2fec5c4ac98d69857ac
 }
 
 .popular-stadium img, .stadiums-list-stadium img {
@@ -889,7 +883,6 @@ footer h5 {
     cursor: pointer;
 }
 
-<<<<<<< HEAD
 .stadium-information-container {
     background-color: ghostwhite;
     position: fixed;
@@ -994,8 +987,6 @@ footer h5 {
     background-color: dodgerblue;
 }
 
-=======
->>>>>>> 72ced5a82d69c346eef5c2fec5c4ac98d69857ac
 @media screen and (max-width: 1050px) {
     #user-items {
         width: 850px;
