@@ -852,6 +852,7 @@ footer h5 {
     border-radius: 8px;
     padding: 10px;
     font-size: 15px;
+    margin-right: 20px;
 }
 
 .stadiums-dropdown-list {
@@ -867,8 +868,17 @@ footer h5 {
     scrollbar-width: none;
 }
 
-#date-visited-container {
+#date-rating-container {
     margin-top: 10px;
+    margin: 0 auto;
+}
+
+#rating {
+    padding: 10px;
+    border: 0.5px solid lightgray;
+    border-radius: 8px;
+    width: 65px;
+    font-size: 15px;
 }
 
 #close-add-stadium-menu {

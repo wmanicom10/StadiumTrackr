@@ -45,7 +45,6 @@ export async function loadUserInfo() {
                 wishlistItemsGzero.style.display = 'block';
             }
 
-
             const favoriteStadiumsZero = document.getElementById('favorite-stadiums-zero');
             const favoriteStadiumsOne = document.getElementById('favorite-stadiums-one');
             const favoriteStadiumsGone = document.getElementById('favorite-stadiums-gone');

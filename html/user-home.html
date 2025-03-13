@@ -144,10 +144,13 @@
                     <h4 id="stadium-location"></h4>
                 </li>
             </ul>
-            <div id="date-visited-container" style="display: none;">
+            <div id="date-rating-container" style="display: none;">
                 <label for="date-visited" id="date-visited-label">Date Visited:</label>
-                <input type="date" id="date-visited" min="1900-01-01"><br>
+                <input type="date" id="date-visited" min="1900-01-01">
+                <label for="rating">Rating:</label>
+                <input type="number" id="rating" min="0.5" max="5" step="0.5">
             </div>
+            
             <input type="submit" id="add-stadium-button" value="Add Stadium" style="display: none;">
         </div>
 
@@ -461,6 +464,5 @@
         <script src="../scripts/firebase.js"></script>
         <script type="module" src="../scripts/user-home-script.js"></script>
         <script type="module" src="../scripts/logout.js"></script>
-        <script type="module" src="../scripts/addStadium.js"></script>
     </body>
 </html>

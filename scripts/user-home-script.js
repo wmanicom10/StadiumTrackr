@@ -1,6 +1,5 @@
 import { loadUserInfo } from "./loadUserInfo.js";
 import { stadiums } from "./stadiums.js";
-import { addStadium } from "./addStadium.js";
 
 const addStadiumsButton = document.getElementById('add-stadiums-button');
 const addStadiumMenu = document.getElementsByClassName('add-stadium-menu')[0];
@@ -19,7 +18,7 @@ const stadiumElement = document.getElementById('popular-stadiums')
 const stadiumImage = document.getElementById('stadium-image');
 const stadiumName = document.getElementById('stadium-name');
 const stadiumLocation = document.getElementById('stadium-location');
-const dateVisited = document.getElementById('date-visited-container');
+const dateVisited = document.getElementById('date-rating-container');
 const addStadiumButton = document.getElementById('add-stadium-button');
 const closeAddStadiumMenu = document.getElementById('close-add-stadium-menu');
 const leagueDropdownBtn = document.getElementById('league-dropdown-btn');
@@ -123,9 +122,41 @@ closeAddStadiumMenu.addEventListener('click', () => {
     addStadiumButton.style.display = 'none';
 });
 
-addStadiumButton.addEventListener('click', () => {
-    const date = document.getElementById('date-visited').value;
-    addStadium(leagueDropdownBtn.textContent, stadiumName.innerHTML, stadiumLocation.innerHTML, date);
+addStadiumButton.addEventListener('click', async () => {
+    const name = stadiumName.textContent.trim();
+    let date = document.getElementById('date-visited').value.trim();
+    const username = localStorage.getItem('username');
+
+    date = date === "" ? null : date;
+
+    let rating = document.getElementById('rating').value.trim();
+
+    rating = rating === "" ? null : rating;
+
+    if (!(rating === null || (rating >= 0.5 && rating <= 5 && rating % 0.5 === 0))) {
+        alert("Please enter a valid rating");
+        return;
+    }
+
+    try {
+        const response = await fetch('http://localhost:3000/stadium/addStadium', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, name, date, rating })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Failed to add stadium');
+        }
+
+        alert("Stadium added successfully");
+        window.location.reload();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error adding your stadium. Please try again later.');
+    }
 });
 
 function showAddStadiumMenu() {
