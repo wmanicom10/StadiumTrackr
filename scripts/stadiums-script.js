@@ -57,7 +57,6 @@ signUp.addEventListener('click', async () => {
     }
 
     try {
-        // Send the data to the backend (POST request)
         const response = await fetch('http://localhost:3000/auth/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -119,13 +118,17 @@ document.getElementById("log-in-form").addEventListener("submit", function(event
 const stadiumLists = {
     nfl: document.getElementById('nfl-stadiums-list'),
     nba: document.getElementById('nba-stadiums-list'),
-    mlb: document.getElementById('mlb-stadiums-list')
+    mlb: document.getElementById('mlb-stadiums-list'),
+    nhl: document.getElementById('nhl-stadiums-list'),
+    mls: document.getElementById('mls-stadiums-list')
 };
 
 const selectors = {
     nfl: document.getElementById('nfl'),
     nba: document.getElementById('nba'),
-    mlb: document.getElementById('mlb')
+    mlb: document.getElementById('mlb'),
+    nhl: document.getElementById('nhl'),
+    mls: document.getElementById('mls')
 };
 
 function setView(active) {

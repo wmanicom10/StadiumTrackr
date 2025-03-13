@@ -42,6 +42,42 @@
             </form>
         </div>
 
+        <!-- Stadium Info Menu -->
+        <div class="stadium-information-container">
+            <div class="stadium-information-header">
+                <h2 id="stadium-name"></h2>
+                <h2 id="close-stadium-information">x</h2>
+            </div>
+            <img src="" alt="" id="stadium-image">
+            <div class="stadium-facts">
+                <div class="stadium-facts-first">
+                    <div class="stadium-fact">
+                        <h4>Location</h4>
+                        <h3 id="stadium-location"></h3>
+                    </div>
+                    <div class="stadium-fact">
+                        <h4>Opened</h4>
+                        <h3 id="stadium-opened-date"></h3>
+                    </div>
+                    <div class="stadium-fact">
+                        <h4>Capacity</h4>
+                        <h3 id="stadium-capacity"></h3>
+                    </div>
+                </div>
+                <div class="stadium-facts-second">
+                    <div class="stadium-fact">
+                        <h4>Teams</h4>
+                        <h3 id="stadium-teams"></h3>
+                    </div>
+                    <div class="stadium-fact">
+                        <h4>Construction Cost</h4>
+                        <h3 id="stadium-construction-cost"></h3>
+                    </div>
+                </div>
+            </div>
+            <h3 id="signed-out-button">Sign Up to Add Stadium</h3>
+        </div>
+
         <!-- Main Content -->
         <div id="content-wrapper">
 
@@ -164,9 +200,6 @@
         </div>
 
         <!-- Scripts -->
-        <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/9.16.0/firebase-database-compat.js"></script>
-        <script src="../scripts/firebase.js"></script>
         <script type="module" src="../scripts/home-script.js"></script>
         
     </body>
