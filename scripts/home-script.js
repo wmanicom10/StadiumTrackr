@@ -1,6 +1,3 @@
-import { createAccount } from "./createaccount.js";
-import { signIn } from "./signin.js";
-
 const overlay = document.getElementById('overlay');
 
 const logInMenu = document.getElementById('log-in-menu');
@@ -35,7 +32,7 @@ function validateEmail(email) {
     return emailRegex.test(email);
 }
 
-signUp.addEventListener('click', () => {
+signUp.addEventListener('click', async () => {
     const newEmailInput = document.getElementById('new-email');
     const newUsernameInput = document.getElementById('new-username');
     const newPasswordInput = document.getElementById('new-password');
@@ -59,7 +56,26 @@ signUp.addEventListener('click', () => {
         return;
     }
 
-    createAccount(email, username, password);
+    try {
+        // Send the data to the backend (POST request)
+        const response = await fetch('http://localhost:3000/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, username, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Failed to create account');
+        }
+
+        localStorage.setItem('username', username);
+        window.location.replace('user-home.html');
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error creating your account. Please try again later.');
+    }
 });
 
 document.getElementById('create-account-form').addEventListener('submit', function(event) {
@@ -68,14 +84,32 @@ document.getElementById('create-account-form').addEventListener('submit', functi
 
 const logIn = document.getElementById('log-in-button');
 
-logIn.addEventListener('click', () => {
+logIn.addEventListener('click', async () => {
     const usernameInput = document.getElementById('username');
     const passwordInput = document.getElementById('password');
 
     const username = usernameInput.value.trim();
     const password = passwordInput.value.trim();
 
-    signIn(username, password)
+    try {
+        const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Unknown error');
+        }
+        
+        const result = await response.json();
+
+        localStorage.setItem('username', result.username);
+        window.location.replace('user-home.html');
+    } catch (error) {
+        alert(error.message);
+    }
 });
 
 document.getElementById("log-in-form").addEventListener("submit", function(event) {
