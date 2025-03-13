@@ -162,23 +162,24 @@ Array.from(stadiums).forEach(stadium => {
             
             const result = await response.json();
     
-            const location = result.stadiumInfo.location;
-            const image = result.stadiumInfo.image;
-            const capacity = result.stadiumInfo.capacity;
-            const openedDateSQL = result.stadiumInfo.opened_date;
+            const location = result.stadiumInfo.stadium.location;
+            const image = result.stadiumInfo.stadium.image;
+            const capacity = result.stadiumInfo.stadium.capacity;
+            const openedDateSQL = result.stadiumInfo.stadium.openedDate;
             const date = new Date(openedDateSQL);
             const openedDate = date.toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
-            const constructionCost = result.stadiumInfo.construction_cost;
-
+            const constructionCost = result.stadiumInfo.stadium.constructionCost;
+            const teamsSQL = result.stadiumInfo.teams;
+            const teams = teamsSQL.map(team => team.team_name).join(', ');
             const stadiumName = document.getElementById('stadium-name');
             const stadiumImage = document.getElementById('stadium-image');
             const stadiumLocation = document.getElementById('stadium-location');
             const stadiumCapacity = document.getElementById('stadium-capacity');
-            //const stadiumTeams = document.getElementById('stadium-teams');
+            const stadiumTeams = document.getElementById('stadium-teams');
             const stadiumOpenedDate = document.getElementById('stadium-opened-date');
             const stadiumConstructionCost = document.getElementById('stadium-construction-cost');
 
@@ -186,7 +187,7 @@ Array.from(stadiums).forEach(stadium => {
             stadiumImage.src = image;
             stadiumLocation.innerHTML = location;
             stadiumCapacity.innerHTML = capacity;
-            //stadiumTeams.innerHTML = teams;
+            stadiumTeams.innerHTML = teams;
             stadiumOpenedDate.innerHTML = openedDate;
             stadiumConstructionCost.innerHTML = constructionCost;
 

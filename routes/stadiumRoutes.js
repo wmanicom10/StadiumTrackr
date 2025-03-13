@@ -18,14 +18,30 @@ router.post('/loadStadiumInfo', async (req, res) => {
     }
 
     try {
-        const [rows] = await db.execute('SELECT * FROM stadiums WHERE name = ?', [name]);
-
+        const [rows] = await db.execute('SELECT * FROM stadiums JOIN teams ON stadiums.stadium_id = teams.stadium_id WHERE stadiums.stadium_name = ?', [name]);
+          
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Could not find stadium' });
         }
-
-        const stadium = rows[0];
-        res.json({ stadiumInfo: stadium });
+          
+        const stadiumInfo = {
+            stadium: {
+                id: rows[0].stadium_id,
+                name: rows[0].stadium_name,
+                location: rows[0].location,
+                capacity: rows[0].capacity,
+                image: rows[0].image,
+                openedDate: rows[0].opened_date,
+                constructionCost: rows[0].construction_cost
+            },
+            teams: rows.map(row => ({
+                team_id: row.team_id,
+                team_name: row.team_name,
+                league: row.league
+            }))
+        };
+          
+        res.json({ stadiumInfo });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
