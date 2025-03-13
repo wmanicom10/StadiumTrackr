@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="images/static/stadiumtrackr-logo.jpg">
+  <img src="images/static/stadiumtrackr.png">
 
   <h4>The Stadium Tracker that logs your stadium visits</h4>
 
