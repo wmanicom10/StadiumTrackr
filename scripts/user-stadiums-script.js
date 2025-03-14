@@ -72,7 +72,7 @@ function toggleDropdown(dropdown) {
 }
 
 function showStadiums(league) {
-    const leagues = ["nfl", "nba", "mlb"];
+    const leagues = ["nfl", "nba", "mlb", "nhl", "mls"];
 
     leagues.forEach(l => {
         const dropdown = document.getElementById(`${l}-dropdown`);
@@ -171,13 +171,17 @@ function showAddStadiumMenu() {
 const stadiumLists = {
     nfl: document.getElementById('nfl-stadiums-list'),
     nba: document.getElementById('nba-stadiums-list'),
-    mlb: document.getElementById('mlb-stadiums-list')
+    mlb: document.getElementById('mlb-stadiums-list'),
+    nhl: document.getElementById('nhl-stadiums-list'),
+    mls: document.getElementById('mls-stadiums-list')
 };
 
 const selectors = {
     nfl: document.getElementById('nfl'),
     nba: document.getElementById('nba'),
-    mlb: document.getElementById('mlb')
+    mlb: document.getElementById('mlb'),
+    nhl: document.getElementById('nhl'),
+    mls: document.getElementById('mls')
 };
 
 let activeLeague = 'nfl';

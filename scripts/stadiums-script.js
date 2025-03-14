@@ -11,9 +11,6 @@ const closeButtons = {
     'log-in-menu': document.getElementById('close-log-in-menu')
 };
 
-const contentWrapper = document.getElementById('content-wrapper');
-contentWrapper.style.display = 'block';
-
 function toggleMenu(menu, show) {
     overlay.style.display = show ? 'block' : 'none';
     menu.style.display = show ? 'block' : 'none';
@@ -116,92 +113,150 @@ document.getElementById("log-in-form").addEventListener("submit", function(event
 });
 
 const stadiumLists = {
-    nfl: document.getElementById('nfl-stadiums-list'),
-    nba: document.getElementById('nba-stadiums-list'),
-    mlb: document.getElementById('mlb-stadiums-list'),
-    nhl: document.getElementById('nhl-stadiums-list'),
-    mls: document.getElementById('mls-stadiums-list')
+    NFL: document.getElementById('nfl-stadiums-list'),
+    NBA: document.getElementById('nba-stadiums-list'),
+    MLB: document.getElementById('mlb-stadiums-list'),
+    NHL: document.getElementById('nhl-stadiums-list'),
+    MLS: document.getElementById('mls-stadiums-list')
 };
 
 const selectors = {
-    nfl: document.getElementById('nfl'),
-    nba: document.getElementById('nba'),
-    mlb: document.getElementById('mlb'),
-    nhl: document.getElementById('nhl'),
-    mls: document.getElementById('mls')
+    NFL: document.getElementById('nfl'),
+    NBA: document.getElementById('nba'),
+    MLB: document.getElementById('mlb'),
+    NHL: document.getElementById('nhl'),
+    MLS: document.getElementById('mls')
 };
 
-function setView(active) {
-    Object.keys(stadiumLists).forEach(key => {
-        stadiumLists[key].style.display = key === active ? 'block' : 'none';
+async function setView(active) {
+    Object.keys(selectors).forEach(key => {
         selectors[key].style.borderBottom = key === active ? '1px solid black' : 'none';
+        stadiumLists[key].style.display = key === active ? 'block' : 'none';
     });
+
+    document.getElementById('loading-screen').style.display = 'block';
+    document.getElementById('content-wrapper').style.display = 'none';
+
+    const league = active;
+
+    try {
+        const response = await fetch('http://localhost:3000/stadium/loadStadiums', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ league })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Unknown error');
+        }
+        
+        const result = await response.json();
+
+        console.log(result);
+
+        result.rows.forEach(stadium => {
+            const listItem = document.createElement('li');
+            listItem.classList.add('stadiums-list-stadium');
+            const img = document.createElement('img');
+            img.src = stadium.image;
+            const h3 = document.createElement('h3');
+            h3.innerHTML = stadium.stadium_name;
+            const h4 = document.createElement('h4');
+            h4.textContent = stadium.location;
+            listItem.appendChild(img);
+            listItem.appendChild(h3);
+            listItem.appendChild(h4);
+
+            listItem.addEventListener('click', async () => {
+                const name = stadium.stadium_name;
+                overlay.style.display = 'block';
+                
+                try {
+                    const response = await fetch('http://localhost:3000/stadium/loadStadiumInfo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: name })
+                    });
+            
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Unknown error');
+                    }
+                    
+                    const result = await response.json();
+
+                    console.log(result);
+            
+                    const location = result.stadiumInfo.stadium.location;
+                    const image = result.stadiumInfo.stadium.image;
+                    const capacity = result.stadiumInfo.stadium.capacity;
+                    const openedDateSQL = result.stadiumInfo.stadium.openedDate;
+                    const date = new Date(openedDateSQL);
+                    const openedDate = date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    const constructionCost = result.stadiumInfo.stadium.constructionCost;
+                    const teamsSQL = result.stadiumInfo.teams;
+                    const teams = teamsSQL.map(team => team.team_name).join(', ');
+                    const stadiumName = document.getElementById('stadium-name');
+                    const stadiumImage = document.getElementById('stadium-image');
+                    const stadiumLocation = document.getElementById('stadium-location');
+                    const stadiumCapacity = document.getElementById('stadium-capacity');
+                    const stadiumTeams = document.getElementById('stadium-teams');
+                    const stadiumOpenedDate = document.getElementById('stadium-opened-date');
+                    const stadiumConstructionCost = document.getElementById('stadium-construction-cost');
+        
+                    stadiumName.innerHTML = name;
+                    stadiumImage.src = image;
+                    stadiumLocation.innerHTML = location;
+                    stadiumCapacity.innerHTML = capacity;
+                    stadiumTeams.innerHTML = teams;
+                    stadiumOpenedDate.innerHTML = openedDate;
+                    stadiumConstructionCost.innerHTML = constructionCost;
+        
+                    const stadiumInformationContainer = document.querySelector('.stadium-information-container');
+                    stadiumInformationContainer.style.display = 'block';
+        
+                } catch (error) {
+                    alert(error.message);
+                }
+        
+            });
+
+            const stadiumLists = document.getElementsByClassName('stadiums-list');
+            let position = 0;
+            if (active === "NBA") {
+                position = 1;
+            }
+            else if (active === "MLB") {
+                position = 2;
+            }
+            else if (active === "NHL") {
+                position = 3;
+            }
+            else if (active === "MLS") {
+                position = 4;
+            }
+            stadiumLists[position].appendChild(listItem);
+        })
+
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('content-wrapper').style.display = 'block';
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
-window.onload = () => setView('nfl');
+window.onload = async () => {
+    setView('NFL');
+};
 
 Object.keys(selectors).forEach(key => {
-    selectors[key].addEventListener('click', () => setView(key));
-});
-
-const stadiums = document.getElementsByClassName('stadiums-list-stadium');
-
-Array.from(stadiums).forEach(stadium => {
-    stadium.addEventListener('click', async () => {
-        const name = stadium.querySelector('h3').textContent;
-        overlay.style.display = 'block';
-        
-        try {
-            const response = await fetch('http://localhost:3000/stadium/loadStadiumInfo', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: name })
-            });
-    
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Unknown error');
-            }
-            
-            const result = await response.json();
-    
-            const location = result.stadiumInfo.stadium.location;
-            const image = result.stadiumInfo.stadium.image;
-            const capacity = result.stadiumInfo.stadium.capacity;
-            const openedDateSQL = result.stadiumInfo.stadium.openedDate;
-            const date = new Date(openedDateSQL);
-            const openedDate = date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            const constructionCost = result.stadiumInfo.stadium.constructionCost;
-            const teamsSQL = result.stadiumInfo.teams;
-            const teams = teamsSQL.map(team => team.team_name).join(', ');
-            const stadiumName = document.getElementById('stadium-name');
-            const stadiumImage = document.getElementById('stadium-image');
-            const stadiumLocation = document.getElementById('stadium-location');
-            const stadiumCapacity = document.getElementById('stadium-capacity');
-            const stadiumTeams = document.getElementById('stadium-teams');
-            const stadiumOpenedDate = document.getElementById('stadium-opened-date');
-            const stadiumConstructionCost = document.getElementById('stadium-construction-cost');
-
-            stadiumName.innerHTML = name;
-            stadiumImage.src = image;
-            stadiumLocation.innerHTML = location;
-            stadiumCapacity.innerHTML = capacity;
-            stadiumTeams.innerHTML = teams;
-            stadiumOpenedDate.innerHTML = openedDate;
-            stadiumConstructionCost.innerHTML = constructionCost;
-
-            const stadiumInformationContainer = document.querySelector('.stadium-information-container');
-            stadiumInformationContainer.style.display = 'block';
-
-        } catch (error) {
-            alert(error.message);
-        }
-
-    });
+    selectors[key].addEventListener('click', async () => setView(key));
 });
 
 const closeStadiumInformation = document.getElementById('close-stadium-information');
