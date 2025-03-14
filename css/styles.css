@@ -896,8 +896,8 @@ footer h5 {
 .stadium-information-container {
     background-color: ghostwhite;
     position: fixed;
-    width: 580px;
-    height: 620px;
+    width: 610px;
+    height: 630px;
     z-index: 1000;
     top: 50%;
     left: 50%;
@@ -924,16 +924,36 @@ footer h5 {
 }
 
 .stadium-information-container img {
-    height: 270px;
-    width: 525px;
+    height: 280px;
+    width: 555px;
     object-fit: cover;
     border-radius: 8px;
     margin: 25px 0 20px;
 }
 
 .stadium-facts {
-    width: 525px;
+    width: 555px;
     margin: 0 auto;
+}
+
+.stadium-fact div {
+    margin-bottom: 5px;
+}
+
+.stadium-fact img {
+    height: 25px;
+    width: auto;
+    object-fit: cover;
+    margin: 0;
+}
+
+.stadium-fact div {
+    display: flex;
+    align-items: flex-end;
+}
+
+.stadium-fact div h4 {
+    margin-right: 7px;
 }
 
 .stadium-fact h3, .stadium-fact h4 {
@@ -955,7 +975,7 @@ footer h5 {
 
 .stadium-facts-second {
     display: flex;
-    width: 525px;
+    width: 555px;
     justify-content: space-between;
     margin-top: 25px;
 }
@@ -965,7 +985,7 @@ footer h5 {
 }
 
 .stadium-facts-first div:nth-child(3) {
-    width: 136px;
+    width: 138px;
 }
 
 .stadium-facts-second div:nth-child(1) {
@@ -974,7 +994,7 @@ footer h5 {
 
 #signed-out-button {
     width: 250px;
-    margin: 35px auto;
+    margin: 25px auto;
     text-align: center;
     padding: 10px 10px;
     background-color: rgb(36, 99, 235);

@@ -56,6 +56,11 @@ signUp.addEventListener('click', async () => {
         return;
     }
 
+    if (password.length < 8) {
+        alert('Password must be at least 8 characters long');
+        return;
+    }
+
     try {
         // Send the data to the backend (POST request)
         const response = await fetch('http://localhost:3000/auth/signup', {
@@ -168,6 +173,7 @@ Array.from(stadiums).forEach(stadium => {
 
             const stadiumInformationContainer = document.querySelector('.stadium-information-container');
             stadiumInformationContainer.style.display = 'block';
+            document.body.style.overflow = 'hidden';
 
         } catch (error) {
             alert(error.message);
@@ -181,4 +187,5 @@ const stadiumInformationContainer = document.querySelector('.stadium-information
 closeStadiumInformation.addEventListener('click', () => {
     stadiumInformationContainer.style.display = 'none';
     overlay.style.display = 'none';
+    document.body.style.overflow = 'auto';
 })

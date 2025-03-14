@@ -11,7 +11,6 @@ export async function loadUserInfo() {
         const userHeader = document.getElementById('welcome-header');
 
         usernameElement.innerHTML = username;
-        userHeader.innerHTML += username + "!";
 
         const stadiumsVisited = document.getElementById('stadiums-visited-number');
         const countries = document.getElementById('countries-number');
@@ -30,7 +29,6 @@ export async function loadUserInfo() {
 
             let stadiumsVisitedNumber = new Set(stadiumsVisitedArray.map(stadium => stadium.name)).size
             
-
             stadiumsVisited.innerHTML = stadiumsVisitedNumber;
             countries.innerHTML = data.countries;
             eventsAttended.innerHTML = data.events_attended;

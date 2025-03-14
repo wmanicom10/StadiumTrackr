@@ -10,6 +10,64 @@ const addFavoriteStadiumMenu = document.getElementsByClassName('add-stadium-menu
 
 window.onload = async function () {
     await loadUserInfo();
+
+    const username = localStorage.getItem('username');
+    if (!username) return;
+
+    const usernameElement = document.getElementById('username');
+    const userHeader = document.getElementById('welcome-header');
+
+    usernameElement.innerHTML = username;
+    userHeader.innerHTML += username + "!";
+
+    const stadiumsVisited = document.getElementById('stadiums-visited-number');
+    const countries = document.getElementById('countries-number');
+    const eventsAttended = document.getElementById('events-attended-number');
+    const wishlist = document.getElementById('wishlist-number');
+    const wishlistItemsZero = document.getElementById('wishlist-items-zero');
+    const wishlistItemsGzero = document.getElementById('wishlist-items-gzero');
+
+    try {
+        const response = await fetch('http://localhost:3000/user/loadUserInfo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Failed to load user info');
+        }
+
+        const numStadiumsVisited = result.numStadiumsVisited;
+        stadiumsVisited.innerHTML = numStadiumsVisited;
+
+        const numCountriesVisited = result.numCountriesVisited;
+        countries.innerHTML = numCountriesVisited;
+
+        const numEventsAttended = result.numEventsAttended;
+        eventsAttended.innerHTML = numEventsAttended;
+
+        // array of wishlist items
+        const wishlistItems = result.wishlistItems;
+        const wishlistNumber = wishlistItems.length;
+
+        wishlist.innerHTML = wishlistNumber;
+
+        if (wishlistNumber === 0) {
+            wishlistItemsZero.style.display = 'block';
+            wishlistItemsGzero.style.display = 'none';
+        }
+        else {
+            wishlistItemsGzero.style.display = 'block';
+            wishlistItemsZero.style.display = 'none';
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error accessing user data. Please try again later.');
+    }
 };
 
 document.getElementById("date-visited").setAttribute("max", new Date().toISOString().split("T")[0]);

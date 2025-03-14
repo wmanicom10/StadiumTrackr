@@ -18,7 +18,7 @@ const handleSignup = async (req, res) => {
     try {
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const [result] = await db.execute('INSERT INTO users (email, username, password, created_at) VALUES (?, ?, ?, now())', [email, username, hashedPassword]);
+        const [result] = await db.execute('INSERT INTO users (email, username, password, created_on) VALUES (?, ?, ?, now())', [email, username, hashedPassword]);
 
         res.json({ message: 'Account created successfully' });
     } catch (err) {

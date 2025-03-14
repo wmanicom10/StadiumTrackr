@@ -14,6 +14,7 @@ const closeButtons = {
 function toggleMenu(menu, show) {
     overlay.style.display = show ? 'block' : 'none';
     menu.style.display = show ? 'block' : 'none';
+    document.body.style.overflow = show ? 'hidden' : 'auto';
 }
 
 createAccountButton.addEventListener('click', () => toggleMenu(createAccountMenu, true));
@@ -50,6 +51,11 @@ signUp.addEventListener('click', async () => {
 
     if (username.length > 30 || username.length < 6) {
         alert('Username must be between 6 and 30 characters.');
+        return;
+    }
+
+    if (password.length < 8) {
+        alert('Password must be at least 8 characters long');
         return;
     }
 
@@ -153,8 +159,6 @@ async function setView(active) {
         
         const result = await response.json();
 
-        console.log(result);
-
         result.rows.forEach(stadium => {
             const listItem = document.createElement('li');
             listItem.classList.add('stadiums-list-stadium');
@@ -185,8 +189,6 @@ async function setView(active) {
                     }
                     
                     const result = await response.json();
-
-                    console.log(result);
             
                     const location = result.stadiumInfo.stadium.location;
                     const image = result.stadiumInfo.stadium.image;
@@ -219,6 +221,7 @@ async function setView(active) {
         
                     const stadiumInformationContainer = document.querySelector('.stadium-information-container');
                     stadiumInformationContainer.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
         
                 } catch (error) {
                     alert(error.message);
@@ -265,4 +268,12 @@ const stadiumInformationContainer = document.querySelector('.stadium-information
 closeStadiumInformation.addEventListener('click', () => {
     stadiumInformationContainer.style.display = 'none';
     overlay.style.display = 'none';
+    document.body.style.overflow = 'auto';
+})
+
+const signedOutButton = document.getElementById('signed-out-button');
+
+signedOutButton.addEventListener('click', () => {
+    stadiumInformationContainer.style.display = 'none';
+    toggleMenu(createAccountMenu, true);
 })
