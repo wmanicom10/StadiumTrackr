@@ -10,7 +10,7 @@ const db = mysql.createPool({
 const handleLoadStadiumInfo = async (req, res) => {
     const { name } = req.body;
 
-    if (!name || name.trim() === '') {
+    if (!name) {
         return res.status(400).json({ error: 'Stadium name is required' });
     }
 
