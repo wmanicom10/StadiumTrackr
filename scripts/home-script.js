@@ -62,7 +62,6 @@ signUp.addEventListener('click', async () => {
     }
 
     try {
-        // Send the data to the backend (POST request)
         const response = await fetch('http://localhost:3000/auth/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

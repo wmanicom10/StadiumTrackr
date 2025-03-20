@@ -353,7 +353,6 @@ footer h5 {
     position: fixed;
     display: none;
     width: 428px;
-    height: 500px;
     background-color: ghostwhite;
     z-index: 1000;
     top: 48%;
@@ -365,6 +364,10 @@ footer h5 {
 
 #log-in-menu {
     height: 400px;
+}
+
+#create-account-menu {
+    height: 500px;
 }
 
 #create-account-menu h2, #log-in-menu h2 {
