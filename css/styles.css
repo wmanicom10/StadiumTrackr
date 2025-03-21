@@ -191,21 +191,29 @@ input::placeholder {
     border-radius: 8px;
 }
 
-#popular-stadiums, .stadiums-list, .stadiums-list-user {
+#popular-stadiums, .stadiums-list, .stadiums-list-user, #add-stadium-stadiums {
     list-style-type: none;
     padding: 0;
     display: flex;
     justify-content: space-around;
 }
 
-.popular-stadium, .stadiums-list-stadium, .recent-stadium {
+#add-stadium-stadiums {
+    display: none;
+}
+
+.popular-stadium, .stadiums-list-stadium, .recent-stadium, #add-stadium-stadium {
     background-color: ghostwhite;
     border-radius: 8px;
     border: 1px solid transparent;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
-.popular-stadium:hover, .stadiums-list-stadium:hover, .recent-stadium:hover {
+#add-stadium-stadium {
+    background-color: white;
+}
+
+.popular-stadium:hover, .stadiums-list-stadium:hover, .recent-stadium:hover, #add-stadium-stadium:hover {
     cursor: pointer;
     border-color: black;
     border-radius: 8px;
@@ -214,7 +222,7 @@ input::placeholder {
     overflow: hidden;
 }
 
-.popular-stadium img, .stadiums-list-stadium img {
+.popular-stadium img, .stadiums-list-stadium img, #add-stadium-stadium img {
     height: 250px;
     width: 440px;
     object-fit: cover;
@@ -222,7 +230,7 @@ input::placeholder {
     border-top-left-radius: 8px;
 }
 
-.popular-stadium h3, .popular-stadium h4, .stadiums-list-stadium h3, .stadiums-list-stadium h4 {
+.popular-stadium h3, .popular-stadium h4, .stadiums-list-stadium h3, .stadiums-list-stadium h4, #add-stadium-stadium h3, #add-stadium-stadium h4 {
     margin: 10px;
     font-weight: normal;
 }
@@ -801,6 +809,10 @@ footer h5 {
     display: none;
 }
 
+.dropdown:first-of-type {
+    display: block;
+}
+
 .dropdown-btn {
     width: 100%;
     padding: 10px;
@@ -874,6 +886,7 @@ footer h5 {
 #date-rating-container {
     margin-top: 10px;
     margin: 0 auto;
+    display: none;
 }
 
 #rating {
@@ -1033,6 +1046,10 @@ footer h5 {
 .wishlist-item:hover {
     transform: scale(0.96);
     cursor: pointer;
+}
+
+.add-stadium-menu #add-stadium-button {
+    display: none;
 }
 
 @media screen and (max-width: 1050px) {
