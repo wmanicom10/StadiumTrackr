@@ -15,7 +15,7 @@ const handleLoadStadiumInfo = async (req, res) => {
     }
 
     try {
-        const [rows] = await db.execute('SELECT * FROM stadiums JOIN teams ON stadiums.stadium_id = teams.stadium_id WHERE stadiums.stadium_name = ?', [name]);
+        const [rows] = await db.execute('SELECT * FROM stadiums JOIN teams ON stadiums.stadium_id = teams.stadium_id JOIN leagues on teams.league_id = leagues.league_id WHERE stadiums.stadium_name = ?', [name]);
           
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Could not find stadium' });
@@ -34,7 +34,7 @@ const handleLoadStadiumInfo = async (req, res) => {
             teams: rows.map(row => ({
                 team_id: row.team_id,
                 team_name: row.team_name,
-                league: row.league
+                league: row.league_name
             }))
         };
           

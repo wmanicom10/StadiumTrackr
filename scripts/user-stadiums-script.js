@@ -1,24 +1,84 @@
-import { loadUserStadiumsInfo } from "./loadUserStadiumsInfo.js";
-import { stadiums } from "./stadiums.js";
-
-const addStadiumMenu = document.getElementsByClassName('add-stadium-menu')[0];
 const overlay = document.getElementById('overlay');
 const addStadiumsButtons = document.querySelectorAll('.stadiums-add-stadiums-button');
 const addStadiumButtonNav = document.getElementById('add-stadium');
-addStadiumsButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        addStadiumMenu.style.display = 'block';
-        overlay.style.display = 'block';
-    })
-})
-addStadiumButtonNav.addEventListener('click', () => {
-    addStadiumMenu.style.display = 'block';
-    overlay.style.display = 'block';
-});
+
+const username = localStorage.getItem('username');
+
+window.onload = async function () {
+    setView('nfl');
+
+    if (!username) return;
+
+    const usernameElement = document.getElementById('username');
+    usernameElement.innerHTML = username;
+
+    try {
+        const response = await fetch('http://localhost:3000/user/loadUserStadiumInfo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+        });
+
+        if (!response.ok) {
+            throw new Error(result.error);
+        }
+
+        const result = await response.json();
+
+        const userStadiums = result.userStadiums;
+
+        for (const league in userStadiums) {
+            const stadiums = userStadiums[league];
+            const numStadiumsPerLeague = stadiums.length;
+
+            const stadiumsListZero = document.getElementById(`${league.toLowerCase()}-stadiums-list-zero`);
+            const stadiumsListGZero = document.getElementById(`${league.toLowerCase()}-stadiums-list-gzero`);
+
+            if (numStadiumsPerLeague === 0) {
+                stadiumsListZero.style.display = 'flex';
+                stadiumsListGZero.style.display = 'none';
+            }
+            else {
+                stadiumsListZero.style.display = 'none';
+                stadiumsListGZero.style.display = 'flex';
+
+                stadiums.forEach(stadium => {
+                    const listItem = document.createElement('li');
+                    listItem.classList.add('stadiums-list-stadium');
+    
+                    const image = document.createElement('img');
+                    image.src = stadium.image;
+
+                    const name = document.createElement('h3');
+                    name.innerHTML = stadium.stadium_name;
+
+                    const location = document.createElement('h4');
+                    location.innerHTML = stadium.location;
+
+                    listItem.appendChild(image);
+                    listItem.appendChild(name);
+                    listItem.appendChild(location);
+
+                    stadiumsListGZero.appendChild(listItem);
+                })
+
+            }
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error loading user info. Please try again later.');
+    }
+
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('content-wrapper').style.display = 'block';
+};
 
 document.getElementById("date-visited").setAttribute("max", new Date().toISOString().split("T")[0]);
 
-const stadiumElement = document.getElementById('popular-stadiums')
+
+const addStadiumMenu = document.getElementsByClassName('add-stadium-menu')[0];
+const stadiumElement = document.getElementById('add-stadium-stadiums')
 const stadiumImage = document.getElementById('stadium-image');
 const stadiumName = document.getElementById('stadium-name');
 const stadiumLocation = document.getElementById('stadium-location');
@@ -28,75 +88,153 @@ const closeAddStadiumMenu = document.getElementById('close-add-stadium-menu');
 const leagueDropdownBtn = document.getElementById('league-dropdown-btn');
 const leagueDropdownList = document.getElementById('league-dropdown-list');
 
-function searchStadiums(stadium) {
-    const stadiumImagePath = stadiums[stadium].image;
-    const stadiumName = stadiums[stadium].name;
-    const stadiumLocation = stadiums[stadium].location
+async function searchStadiums(stadium) {
+    try {
+        const response = await fetch('http://localhost:3000/stadium/loadStadiumInfo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: stadium })
+        });
 
-    return {
-        stadiumImagePath,
-        stadiumName,
-        stadiumLocation
-    };
-}
-
-leagueDropdownBtn.addEventListener('click', () => {
-    toggleDropdown(leagueDropdownList);
-});
-
-leagueDropdownList.addEventListener('click', (e) => {
-    if (e.target.tagName === 'LI') {
-        leagueDropdownBtn.textContent = e.target.textContent;
-        leagueDropdownBtn.dataset.value = e.target.dataset.value;
-        leagueDropdownList.style.display = 'none';
-        showStadiums(e.target.dataset.value);
-    }
-});
-
-document.addEventListener('click', (e) => {
-    if (!leagueDropdownBtn.contains(e.target) && !leagueDropdownList.contains(e.target)) {
-        leagueDropdownList.style.display = 'none';
-    }
-
-    const stadiumDropdownBtns = document.querySelectorAll('.stadiums-dropdown');
-    stadiumDropdownBtns.forEach(button => {
-        const dropdownList = button.nextElementSibling;
-        if (!button.contains(e.target) && !dropdownList.contains(e.target)) {
-            dropdownList.style.display = 'none';
+        if (!response.ok) {
+            throw new Error(result.error || 'Error loading stadiums');
         }
-    });
-});
+
+        const result = await response.json();
+
+        const name = result.stadiumInfo.stadium.name;
+        const image = result.stadiumInfo.stadium.image;
+        const location = result.stadiumInfo.stadium.location;
+
+        return { name, image, location };
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error loading stadiums. Please try again later.');
+    }
+}
 
 function toggleDropdown(dropdown) {
     dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
 }
 
 function showStadiums(league) {
-    const leagues = ["nfl", "nba", "mlb", "nhl", "mls"];
+    const leagues = ["nfl", "nba", "mlb"];
 
-    leagues.forEach(l => {
-        const dropdown = document.getElementById(`${l}-dropdown`);
+    leagues.forEach(league => {
+        const dropdown = document.getElementById(`${league}-dropdown`);
         if (dropdown) dropdown.style.display = 'none';
     });
 
-    const selectedDropdown = document.getElementById(`${league}-dropdown`);
+    const selectedDropdown = document.getElementById(`${league.toLowerCase()}-dropdown`);
     if (!selectedDropdown) return;
     
     selectedDropdown.style.display = 'block';
 }
 
+leagueDropdownBtn.addEventListener('click', async () => {
+    if (leagueDropdownList.children.length > 0) {
+        toggleDropdown(leagueDropdownList);
+        return;
+    }
+    try {
+        const response = await fetch('http://localhost:3000/league/loadLeagues', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+
+        const result = await response.json();
+        const leagues = result.leagues;
+
+        leagues.forEach(league => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = league.league_name;
+            leagueDropdownList.appendChild(listItem);
+        })
+
+        if (!response.ok) {
+            throw new Error(result.error || 'Error loading stadiums');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error loading stadiums. Please try again later.');
+    }
+
+    toggleDropdown(leagueDropdownList);
+});
+
+let league;
+
+leagueDropdownList.addEventListener('click', (e) => {
+    if (e.target.tagName === 'LI') {
+        league = e.target.textContent;
+        leagueDropdownBtn.textContent = league;
+        leagueDropdownList.style.display = 'none';
+        showStadiums(league);
+    }
+});
+
+const stadiumDropdownBtns = document.querySelectorAll('.stadiums-dropdown');
+
 document.addEventListener('click', (e) => {
+    if (!leagueDropdownBtn.contains(e.target) && !leagueDropdownList.contains(e.target)) {
+        leagueDropdownList.style.display = 'none';
+        leagueDropdownList.innerHTML = '';
+    }
+
+    Array.from(stadiumDropdownBtns).forEach(button => {
+        const dropdownList = button.nextElementSibling;
+
+        if (!button.contains(e.target) && !dropdownList.contains(e.target)) {
+            dropdownList.style.display = 'none';
+            dropdownList.innerHTML = '';
+        }
+    });
+});
+
+document.addEventListener('click', async (e) => {
     if (e.target.classList.contains('stadiums-dropdown')) {
         const dropdownList = e.target.nextElementSibling;
+
+        if (dropdownList.children.length > 0) {
+            toggleDropdown(dropdownList);
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:3000/stadium/loadStadiums', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ league })
+            });
+    
+            const result = await response.json();
+            const stadiums = result.rows;
+
+            stadiums.forEach(stadium => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = stadium.stadium_name;
+                dropdownList.appendChild(listItem);
+            })
+    
+            if (!response.ok) {
+                throw new Error(result.error || 'Error loading stadiums');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('There was an error loading stadiums. Please try again later.');
+        }
+
         toggleDropdown(dropdownList);
-    } else if (e.target.tagName === 'LI' && e.target.closest('.stadiums-dropdown-list')) {
+    } 
+    else if (e.target.tagName === 'LI' && e.target.closest('.stadiums-dropdown-list')) {
         const dropdownBtn = e.target.closest('.dropdown').querySelector('.stadiums-dropdown');
         const stadium = e.target.textContent;
-        const result = searchStadiums(stadium);
+        const result = await searchStadiums(stadium);
 
-        stadiumImage.src = result.stadiumImagePath;
-        stadiumName.innerHTML = result.stadiumName;
-        stadiumLocation.innerHTML = result.stadiumLocation;
+        stadiumImage.src = result.image;
+        stadiumName.innerHTML = result.name;
+        stadiumLocation.innerHTML = result.location;
 
         dropdownBtn.textContent = e.target.textContent;
         dropdownBtn.dataset.value = e.target.dataset.value;
@@ -124,6 +262,7 @@ closeAddStadiumMenu.addEventListener('click', () => {
     stadiumElement.style.display = 'none';
     dateVisited.style.display = 'none';
     addStadiumButton.style.display = 'none';
+    document.body.style.overflow = 'auto';
 });
 
 addStadiumButton.addEventListener('click', async () => {
@@ -166,7 +305,32 @@ addStadiumButton.addEventListener('click', async () => {
 function showAddStadiumMenu() {
     addStadiumMenu.style.display = 'block';
     overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
 };
+
+Array.from(addStadiumsButtons).forEach(button => {
+    button.addEventListener('click', showAddStadiumMenu);
+})
+addStadiumButtonNav.addEventListener('click', showAddStadiumMenu);
+
+const closeStadiumInformation = document.getElementById('close-stadium-information');
+const stadiumInformationContainer = document.querySelector('.stadium-information-container');
+
+closeStadiumInformation.addEventListener('click', () => {
+    stadiumInformationContainer.style.display = 'none';
+    overlay.style.display = 'none';
+    document.body.style.overflow = 'auto';
+})
+
+const logOutButton = document.getElementById('log-out');
+
+logOutButton.addEventListener("click", () => {
+    localStorage.setItem('username', '');
+    window.location.replace('home.html');
+    setTimeout(() => {
+        history.pushState(null, null, 'home.html');
+    }, 0);
+})
 
 const stadiumLists = {
     nfl: document.getElementById('nfl-stadiums-list'),
@@ -184,22 +348,13 @@ const selectors = {
     mls: document.getElementById('mls')
 };
 
-let activeLeague = 'nfl';
-
-function setView(active) {
-    activeLeague = active;
-
+async function setView(league) {
     Object.keys(stadiumLists).forEach(key => {
-        stadiumLists[key].style.display = key === active ? 'block' : 'none';
-        selectors[key].style.borderBottom = key === active ? '1px solid black' : 'none';
+        stadiumLists[key].style.display = key === league ? 'block' : 'none';
+        selectors[key].style.borderBottom = key === league ? '1px solid black' : 'none';
     });
 }
 
 Object.keys(selectors).forEach(key => {
     selectors[key].addEventListener('click', () => setView(key));
 });
-
-window.onload = async function () {
-    await loadUserStadiumsInfo();
-    setView('nfl');
-};

@@ -1,5 +1,3 @@
-import { stadiums } from "./stadiums.js";
-
 const addStadiumsButton = document.getElementById('add-stadiums-button');
 const overlay = document.getElementById('overlay');
 const addStadiumButtonNav = document.getElementById('add-stadium');
@@ -210,7 +208,6 @@ document.getElementById("date-visited").setAttribute("max", new Date().toISOStri
 
 
 const addStadiumMenu = document.getElementsByClassName('add-stadium-menu')[0];
-
 const stadiumElement = document.getElementById('add-stadium-stadiums')
 const stadiumImage = document.getElementById('stadium-image');
 const stadiumName = document.getElementById('stadium-name');
@@ -221,16 +218,30 @@ const closeAddStadiumMenu = document.getElementById('close-add-stadium-menu');
 const leagueDropdownBtn = document.getElementById('league-dropdown-btn');
 const leagueDropdownList = document.getElementById('league-dropdown-list');
 
-function searchStadiums(stadium) {
-    const stadiumImagePath = stadiums[stadium].image;
-    const stadiumName = stadiums[stadium].name;
-    const stadiumLocation = stadiums[stadium].location
+async function searchStadiums(stadium) {
+    try {
+        const response = await fetch('http://localhost:3000/stadium/loadStadiumInfo', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: stadium })
+        });
 
-    return {
-        stadiumImagePath,
-        stadiumName,
-        stadiumLocation
-    };
+        if (!response.ok) {
+            throw new Error(result.error || 'Error loading stadiums');
+        }
+
+        const result = await response.json();
+
+        const name = result.stadiumInfo.stadium.name;
+        const image = result.stadiumInfo.stadium.image;
+        const location = result.stadiumInfo.stadium.location;
+
+        return { name, image, location };
+
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error loading stadiums. Please try again later.');
+    }
 }
 
 function toggleDropdown(dropdown) {
@@ -311,7 +322,6 @@ document.addEventListener('click', (e) => {
     });
 });
 
-
 document.addEventListener('click', async (e) => {
     if (e.target.classList.contains('stadiums-dropdown')) {
         const dropdownList = e.target.nextElementSibling;
@@ -350,11 +360,11 @@ document.addEventListener('click', async (e) => {
     else if (e.target.tagName === 'LI' && e.target.closest('.stadiums-dropdown-list')) {
         const dropdownBtn = e.target.closest('.dropdown').querySelector('.stadiums-dropdown');
         const stadium = e.target.textContent;
-        const result = searchStadiums(stadium);
+        const result = await searchStadiums(stadium);
 
-        stadiumImage.src = result.stadiumImagePath;
-        stadiumName.innerHTML = result.stadiumName;
-        stadiumLocation.innerHTML = result.stadiumLocation;
+        stadiumImage.src = result.image;
+        stadiumName.innerHTML = result.name;
+        stadiumLocation.innerHTML = result.location;
 
         dropdownBtn.textContent = e.target.textContent;
         dropdownBtn.dataset.value = e.target.dataset.value;
@@ -438,4 +448,14 @@ closeStadiumInformation.addEventListener('click', () => {
     stadiumInformationContainer.style.display = 'none';
     overlay.style.display = 'none';
     document.body.style.overflow = 'auto';
+})
+
+const logOutButton = document.getElementById('log-out');
+
+logOutButton.addEventListener("click", () => {
+    localStorage.setItem('username', '');
+    window.location.replace('home.html');
+    setTimeout(() => {
+        history.pushState(null, null, 'home.html');
+    }, 0);
 })
