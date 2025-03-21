@@ -55,6 +55,57 @@
             <input type="submit" id="add-stadium-button" value="Add Stadium">
         </div>
 
+        <!-- Stadium Info Menu -->
+        <div class="stadium-information-container">
+            <div class="stadium-information-header">
+                <h2 id="stadium-name2"></h2>
+                <h2 id="close-stadium-information">x</h2>
+            </div>
+            <img src="" alt="" id="stadium-image2">
+            <div class="stadium-facts">
+                <div class="stadium-facts-first">
+                    <div class="stadium-fact">
+                        <div>
+                            <h4>Location</h4>
+                            <img src="../images/icons/pin-emoji.png" alt="">
+                        </div>
+                        <h3 id="stadium-location2"></h3>
+                    </div>
+                    <div class="stadium-fact">
+                        <div>
+                            <h4>Opened</h4>
+                            <img src="../images/icons/calendar-emoji.png" alt="">
+                        </div>
+                        <h3 id="stadium-opened-date"></h3>
+                    </div>
+                    <div class="stadium-fact">
+                        <div>
+                            <h4>Capacity</h4>
+                            <img src="../images/icons/stadium-emoji.png" alt="">
+                        </div>
+                        <h3 id="stadium-capacity"></h3>
+                    </div>
+                </div>
+                <div class="stadium-facts-second">
+                    <div class="stadium-fact">
+                        <div>
+                            <h4>Teams</h4>
+                            <img src="../images/icons/trophy-emoji.png" alt="">
+                        </div>
+                        <h3 id="stadium-teams"></h3>
+                    </div>
+                    <div class="stadium-fact">
+                        <div>
+                            <h4>Construction Cost</h4>
+                            <img src="../images/icons/money-emoji.png" alt="">
+                        </div>
+                        <h3 id="stadium-construction-cost"></h3>
+                    </div>
+                </div>
+            </div>
+            <h3 id="signed-in-button">Add Stadium</h3>
+        </div>
+
         <!-- Main Content -->
         <div id="content-wrapper">
 
@@ -85,30 +136,9 @@
                 <!-- Favorite Stadiums -->
                 <li class="user-item" id="favorite-stadiums">
                     <h3>Favorite Stadiums</h3>
-                    <ul id="favorite-stadiums-gone">
-                        <li class="favorite-stadium">
-                            <img src="../images/mlb-stadiums/truist-park.jpg" alt="">
-                            <h4>Truist Park</h4>
-                            <h5>Atlanta, GA</h5>
-                            <h6>Visited on May 15, 2024</h6>
-                        </li>
-                        <li class="favorite-stadium">
-                            <img src="../images/nba-stadiums/american-airlines-center.jpg" alt="">
-                            <h4>American Airlines Center</h4>
-                            <h5>Dallas, TX</h5>
-                            <h6>Visited on November 15, 2021</h6>
-                        </li>
-                    </ul>
-                    <ul id="favorite-stadiums-one">
-                        <li class="favorite-stadium">
-                            <img src="../images/mlb-stadiums/truist-park.jpg" alt="">
-                            <h4>Truist Park</h4>
-                            <h5>Atlanta, GA</h5>
-                            <h6>Visited on May 15, 2024</h6>
-                        </li>
-                    </ul>
+                    <ul id="favorite-stadiums-gzero"></ul>
                     <ul id="favorite-stadiums-zero">
-                        <h4>You haven't added favorite stadiums yet...</h4>
+                        <h4>You haven't added any favorite stadiums yet...</h4>
                         <h4 id="add-favorite-stadiums-button">Add Favorite Stadiums</h4>
                     </ul>
                 </li>
@@ -135,25 +165,7 @@
                 <!-- Recently Visited Stadiums -->
                 <li class="user-item" id="recently-visited-stadiums">
                     <h3>Recently Visited Stadiums</h3>
-                    <ul id="recent-stadiums-gone">
-                        <li class="recent-stadium">
-                            <img src="" alt="" id="recent-stadium-gone-image-one">
-                            <h4 id="recent-stadium-gone-name-one"></h4>
-                            <h5 id="recent-stadium-gone-location-one"></h5>
-                        </li>
-                        <li class="recent-stadium">
-                            <img src="" alt="" id="recent-stadium-gone-image-two">
-                            <h4 id="recent-stadium-gone-name-two"></h4>
-                            <h5 id="recent-stadium-gone-location-two"></h5>
-                        </li>
-                    </ul>
-                    <ul id="recent-stadiums-one">
-                        <li class="recent-stadium">
-                            <img src="" alt="" id="recent-stadium-one-image">
-                            <h4 id="recent-stadium-one-name"></h4>
-                            <h5 id="recent-stadium-one-location"></h5>
-                        </li>
-                    </ul>
+                    <ul id="recent-stadiums-gzero"></ul>
                     <ul id="recent-stadiums-zero">
                         <h4>You haven't visited any stadiums yet...</h4>
                         <h4 id="add-stadiums-button">Add Stadiums</h4>
@@ -166,24 +178,7 @@
                         <h3>Wishlist</h3>
                         <h4 id="wishlist-number"></h4>
                     </div>
-                    <div id="wishlist-items-gzero">
-                        <div class="wishlist-item">
-                            <h4>Stadium</h4>
-                            <h5>Place</h5>
-                        </div>
-                        <div class="wishlist-item">
-                            <h4>Stadium</h4>
-                            <h5>Place</h5>
-                        </div>
-                        <div class="wishlist-item">
-                            <h4>Stadium</h4>
-                            <h5>Place</h5>
-                        </div>
-                        <div class="wishlist-item">
-                            <h4>Stadium</h4>
-                            <h5>Place</h5>
-                        </div>
-                    </div>
+                    <div id="wishlist-items-gzero"></div>
                     <div id="wishlist-items-zero">
                         <h4 id="wishlist-items-zero-header">Your wishlist is empty...</h4>
                         <h4 id="add-stadiums-wishlist-button">Add Stadiums To Wishlist</h4>

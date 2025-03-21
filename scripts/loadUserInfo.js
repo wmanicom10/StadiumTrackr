@@ -23,7 +23,6 @@ export async function loadUserInfo() {
         const snapshot = await userRef.once('value');
         if (snapshot.exists()) {
             const data = snapshot.val();
-            const favoriteStadiumsNumber = data.favorite_stadiums ? data.favorite_stadiums.length : 0;
 
             const stadiumsVisitedArray = data.stadiums_visited ? data.stadiums_visited : [];
 
@@ -41,16 +40,6 @@ export async function loadUserInfo() {
             }
             else {
                 wishlistItemsGzero.style.display = 'block';
-            }
-
-            const favoriteStadiumsZero = document.getElementById('favorite-stadiums-zero');
-            const favoriteStadiumsOne = document.getElementById('favorite-stadiums-one');
-            const favoriteStadiumsGone = document.getElementById('favorite-stadiums-gone');
-
-            if (favoriteStadiumsNumber === 0) {
-                favoriteStadiumsZero.style.display = 'flex';
-                favoriteStadiumsOne.style.display = 'none';
-                favoriteStadiumsGone.style.display = 'none';
             }
 
             const recentStadiumsZero = document.getElementById('recent-stadiums-zero');
@@ -99,9 +88,6 @@ export async function loadUserInfo() {
             }
 
         }
-
-        document.getElementById('loading-screen').style.display = 'none';
-        document.getElementById('content-wrapper').style.display = 'block';
 
     } catch (error) {
         console.error('Error loading user information:', error);

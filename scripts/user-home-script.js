@@ -1,4 +1,3 @@
-import { loadUserInfo } from "./loadUserInfo.js";
 import { stadiums } from "./stadiums.js";
 
 const addStadiumsButton = document.getElementById('add-stadiums-button');
@@ -6,7 +5,6 @@ const overlay = document.getElementById('overlay');
 const addStadiumButtonNav = document.getElementById('add-stadium');
 
 window.onload = async function () {
-    await loadUserInfo();
 
     const username = localStorage.getItem('username');
     if (!username) return;
@@ -17,12 +15,17 @@ window.onload = async function () {
     usernameElement.innerHTML = username;
     userHeader.innerHTML += username + "!";
 
+    const favoriteStadiumsGZero = document.getElementById('favorite-stadiums-gzero');
+    const favoriteStadiumsZero = document.getElementById('favorite-stadiums-zero');
+    const recentStadiumsGZero = document.getElementById('recent-stadiums-gzero');
+    const recentStadiumsZero = document.getElementById('recent-stadiums-zero')
     const stadiumsVisited = document.getElementById('stadiums-visited-number');
     const countries = document.getElementById('countries-number');
     const eventsAttended = document.getElementById('events-attended-number');
     const wishlist = document.getElementById('wishlist-number');
     const wishlistItemsZero = document.getElementById('wishlist-items-zero');
     const wishlistItemsGzero = document.getElementById('wishlist-items-gzero');
+    const wishlistContainer = document.getElementById('wishlist');
 
     try {
         const response = await fetch('http://localhost:3000/user/loadUserInfo', {
@@ -40,11 +43,74 @@ window.onload = async function () {
         const numStadiumsVisited = result.numStadiumsVisited;
         stadiumsVisited.innerHTML = numStadiumsVisited;
 
+        const recentStadiumsVisited = result.recentStadiumsVisited;
+
+        if (numStadiumsVisited === 0) {
+            recentStadiumsZero.style.display = 'block';
+            recentStadiumsGZero.style.display = 'none';
+        }
+        else {
+            recentStadiumsGZero.style.display = 'flex';
+            recentStadiumsZero.style.display = 'none';
+
+            recentStadiumsVisited.forEach(stadium => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('recent-stadium');
+
+                const image = document.createElement('img');
+                image.src = stadium.image;
+
+                const name = document.createElement('h4');
+                name.innerHTML = stadium.stadium_name;
+
+                const location = document.createElement('h5');
+                location.innerHTML = stadium.location;
+
+                listItem.appendChild(image);
+                listItem.appendChild(name);
+                listItem.appendChild(location);
+
+                recentStadiumsGZero.appendChild(listItem);
+            })
+        }
+
         const numCountriesVisited = result.numCountriesVisited;
         countries.innerHTML = numCountriesVisited;
 
         const numEventsAttended = result.numEventsAttended;
         eventsAttended.innerHTML = numEventsAttended;
+
+        const favoriteStadiums = result.favoriteStadiums;
+        const favoriteStadiumsNumber = favoriteStadiums.length;
+
+        if (favoriteStadiumsNumber === 0) {
+            favoriteStadiumsZero.style.display = 'block';
+            favoriteStadiumsGZero.style.display = 'none';
+        }
+        else {
+            favoriteStadiumsGZero.style.display = 'flex';
+            favoriteStadiumsZero.style.display = 'none';
+
+            favoriteStadiums.forEach(stadium => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('favorite-stadium');
+
+                const image = document.createElement('img');
+                image.src = stadium.image;
+
+                const name = document.createElement('h4');
+                name.innerHTML = stadium.stadium_name;
+
+                const location = document.createElement('h5');
+                location.innerHTML = stadium.location;
+
+                listItem.appendChild(image);
+                listItem.appendChild(name);
+                listItem.appendChild(location);
+
+                favoriteStadiumsGZero.appendChild(listItem);
+            })
+        }
 
         const wishlistItems = result.wishlistItems;
         const wishlistNumber = wishlistItems.length;
@@ -54,16 +120,90 @@ window.onload = async function () {
         if (wishlistNumber === 0) {
             wishlistItemsZero.style.display = 'block';
             wishlistItemsGzero.style.display = 'none';
+            wishlistContainer.style.height = '250px'
         }
         else {
             wishlistItemsGzero.style.display = 'block';
             wishlistItemsZero.style.display = 'none';
+            wishlistContainer.style.height = '385px';
+
+            wishlistItems.slice(0, 5).forEach(wishlistItem => {
+                const div = document.createElement('div');
+                div.classList.add('wishlist-item');
+                let name = document.createElement('h4');
+                name.innerHTML = wishlistItem.stadium_name;
+                const location = document.createElement('h5');
+                location.innerHTML = wishlistItem.location;
+
+                div.appendChild(name);
+                div.appendChild(location);
+                wishlistItemsGzero.appendChild(div);
+
+                div.addEventListener('click', async () => {
+                    overlay.style.display = 'block';
+
+                    name = name.innerHTML;
+                    
+                    try {
+                        const response = await fetch('http://localhost:3000/stadium/loadStadiumInfo', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name })
+                        });
+                
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Unknown error');
+                        }
+                        
+                        const result = await response.json();
+                
+                        const image = result.stadiumInfo.stadium.image;
+                        const capacity = result.stadiumInfo.stadium.capacity;
+                        const openedDateSQL = result.stadiumInfo.stadium.openedDate;
+                        const date = new Date(openedDateSQL);
+                        const openedDate = date.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        const constructionCost = result.stadiumInfo.stadium.constructionCost;
+                        const teamsSQL = result.stadiumInfo.teams;
+                        const teams = teamsSQL.map(team => team.team_name).join(', ');
+                        const stadiumName = document.getElementById('stadium-name2');
+                        const stadiumImage = document.getElementById('stadium-image2');
+                        const stadiumLocation = document.getElementById('stadium-location2');
+                        const stadiumCapacity = document.getElementById('stadium-capacity');
+                        const stadiumTeams = document.getElementById('stadium-teams');
+                        const stadiumOpenedDate = document.getElementById('stadium-opened-date');
+                        const stadiumConstructionCost = document.getElementById('stadium-construction-cost');
+            
+                        stadiumName.innerHTML = name;
+                        stadiumImage.src = image;
+                        stadiumLocation.innerHTML = location.innerHTML;
+                        stadiumCapacity.innerHTML = capacity;
+                        stadiumTeams.innerHTML = teams;
+                        stadiumOpenedDate.innerHTML = openedDate;
+                        stadiumConstructionCost.innerHTML = constructionCost;
+            
+                        const stadiumInformationContainer = document.querySelector('.stadium-information-container');
+                        stadiumInformationContainer.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+            
+                    } catch (error) {
+                        alert(error.message);
+                    }
+                })
+            })
         }
 
     } catch (error) {
         console.error('Error:', error);
         alert('There was an error accessing user data. Please try again later.');
     }
+
+    document.getElementById('loading-screen').style.display = 'none';
+    document.getElementById('content-wrapper').style.display = 'block';
 };
 
 document.getElementById("date-visited").setAttribute("max", new Date().toISOString().split("T")[0]);
@@ -242,6 +382,7 @@ closeAddStadiumMenu.addEventListener('click', () => {
     stadiumElement.style.display = 'none';
     dateVisited.style.display = 'none';
     addStadiumButton.style.display = 'none';
+    document.body.style.overflow = 'auto';
 });
 
 addStadiumButton.addEventListener('click', async () => {
@@ -284,7 +425,17 @@ addStadiumButton.addEventListener('click', async () => {
 function showAddStadiumMenu() {
     addStadiumMenu.style.display = 'block';
     overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
 };
 
 addStadiumsButton.addEventListener('click', showAddStadiumMenu);
 addStadiumButtonNav.addEventListener('click', showAddStadiumMenu);
+
+const closeStadiumInformation = document.getElementById('close-stadium-information');
+const stadiumInformationContainer = document.querySelector('.stadium-information-container');
+
+closeStadiumInformation.addEventListener('click', () => {
+    stadiumInformationContainer.style.display = 'none';
+    overlay.style.display = 'none';
+    document.body.style.overflow = 'auto';
+})
