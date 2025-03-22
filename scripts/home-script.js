@@ -56,8 +56,8 @@ signUp.addEventListener('click', async () => {
         return;
     }
 
-    if (password.length < 8) {
-        alert('Password must be at least 8 characters long');
+    if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[!@#$%^&*]/.test(password)) {
+        alert('Password must be at least 8 characters long and include an uppercase letter, a number, and a special character.');
         return;
     }
 
@@ -71,7 +71,8 @@ signUp.addEventListener('click', async () => {
         const result = await response.json();
 
         if (!response.ok) {
-            throw new Error(result.error || 'Failed to create account');
+            alert(result.error)
+            return;
         }
 
         localStorage.setItem('username', username);

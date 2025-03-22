@@ -16,22 +16,24 @@ const handleLogin = async (req, res) => {
     }
 
     try {
-        const [rows] = await db.execute('SELECT * FROM users WHERE username = ?', [username]);
+        const [[user]] = await db.execute(
+            'SELECT username, password FROM users WHERE username = ?',
+            [username]
+        );
 
-        if (rows.length === 0) {
+        if (!user) {
             return res.status(401).json({ error: 'Incorrect username or password' });
         }
 
-        const user = rows[0];
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Incorrect username or password' });
         }
 
-        res.json({ username: user.username });
+        res.json({ message: 'Login successful', username: user.username });
     } catch (err) {
-        console.error(err);
+        console.error('Login error:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 };

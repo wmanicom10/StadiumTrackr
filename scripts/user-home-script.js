@@ -418,8 +418,6 @@ addStadiumButton.addEventListener('click', async () => {
             body: JSON.stringify({ username, name, date, rating })
         });
 
-        const result = await response.json();
-
         if (!response.ok) {
             throw new Error(result.error || 'Failed to add stadium');
         }

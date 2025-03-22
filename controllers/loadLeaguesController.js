@@ -11,10 +11,6 @@ const handleLoadLeagues = async (req, res) => {
     try {
         const [leagues] = await db.execute('select league_name from leagues');
 
-        if (leagues.length === 0) {
-            return res.status(404).json({ error: 'Could not load stadiums' });
-        }
-
         res.json({ leagues });
     } catch (err) {
         console.error(err);
