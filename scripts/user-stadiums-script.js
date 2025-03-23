@@ -119,7 +119,7 @@ function toggleDropdown(dropdown) {
 }
 
 function showStadiums(league) {
-    const leagues = ["nfl", "nba", "mlb"];
+    const leagues = ["nfl", "nba", "mlb", "nhl", "mls"];
 
     leagues.forEach(league => {
         const dropdown = document.getElementById(`${league}-dropdown`);
@@ -253,9 +253,13 @@ closeAddStadiumMenu.addEventListener('click', () => {
     const nflDropdown = document.getElementById('nfl-dropdown');
     const nbaDropdown = document.getElementById('nba-dropdown');
     const mlbDropdown = document.getElementById('mlb-dropdown');
+    const nhlDropdown = document.getElementById('nhl-dropdown');
+    const mlsDropdown = document.getElementById('mls-dropdown');
     nflDropdown.style.display = 'none';
     nbaDropdown.style.display = 'none';
     mlbDropdown.style.display = 'none';
+    nhlDropdown.style.display = 'none';
+    mlsDropdown.style.display = 'none';
     stadiumImage.src = '';
     stadiumName.innerHTML = '';
     stadiumLocation.innerHTML = '';
