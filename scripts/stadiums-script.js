@@ -216,6 +216,11 @@ async function setView(active) {
                     stadiumLocation.innerHTML = location;
                     stadiumCapacity.innerHTML = capacity;
                     stadiumTeams.innerHTML = teams;
+
+                    if (name === "Gillette Stadium") {
+                        stadiumTeams.style.fontSize = '17px'
+                    }
+
                     stadiumOpenedDate.innerHTML = openedDate;
                     stadiumConstructionCost.innerHTML = constructionCost;
         
