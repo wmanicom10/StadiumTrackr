@@ -3,7 +3,6 @@ const overlay = document.getElementById('overlay');
 const addStadiumButtonNav = document.getElementById('add-stadium');
 
 window.onload = async function () {
-
     const username = localStorage.getItem('username');
     if (!username) return;
 
@@ -273,6 +272,7 @@ const addStadiumButton = document.getElementById('add-stadium-button');
 const closeAddStadiumMenu = document.getElementById('close-add-stadium-menu');
 const leagueDropdownBtn = document.getElementById('league-dropdown-btn');
 const leagueDropdownList = document.getElementById('league-dropdown-list');
+const removeStadiumButton = document.getElementById('remove-stadium-button');
 
 async function searchStadiums(stadium) {
     try {
@@ -478,6 +478,8 @@ addStadiumButton.addEventListener('click', async () => {
             body: JSON.stringify({ username, name, date, rating })
         });
 
+        const result = await response.json();
+
         if (!response.ok) {
             throw new Error(result.error || 'Failed to add stadium');
         }
@@ -516,4 +518,27 @@ logOutButton.addEventListener("click", () => {
     setTimeout(() => {
         history.pushState(null, null, 'home.html');
     }, 0);
+})
+
+removeStadiumButton.addEventListener('click', async () => {
+    const stadiumName = document.getElementById('stadium-name2').innerHTML;
+    const username = localStorage.getItem('username');
+
+    try {
+        const response = await fetch('http://localhost:3000/stadium/removeStadium', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stadiumName, username })
+        });
+
+        if (!response.ok) {
+            throw new Error('Failed to remove stadium');
+        }
+
+        alert("Stadium removed successfully")
+        window.location.reload();
+    } catch (error) {
+        console.error('Error:', error);
+        alert('There was an error removing your stadium. Please try again later.');
+    }
 })

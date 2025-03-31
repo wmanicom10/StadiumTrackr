@@ -143,6 +143,12 @@ async function setView(active) {
     document.getElementById('loading-screen').style.display = 'block';
     document.getElementById('content-wrapper').style.display = 'none';
 
+    if (stadiumLists[active].children[1].children.length > 1) {
+        document.getElementById('loading-screen').style.display = 'none';
+        document.getElementById('content-wrapper').style.display = 'block';
+        return;
+    }
+
     const league = active;
 
     try {

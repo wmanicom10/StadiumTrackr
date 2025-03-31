@@ -1054,6 +1054,22 @@ footer h5 {
     display: none;
 }
 
+#remove-stadium-button {
+    width: 200px;
+    margin: 25px auto;
+    text-align: center;
+    padding: 10px 10px;
+    background-color: rgb(36, 99, 235);
+    color: white;
+    border-radius: 8px;
+    font-weight: normal;
+}
+
+#remove-stadium-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
 @media screen and (max-width: 1050px) {
     #user-items {
         width: 850px;

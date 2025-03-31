@@ -17,6 +17,7 @@ contentWrapper.style.display = 'block';
 function toggleMenu(menu, show) {
     overlay.style.display = show ? 'block' : 'none';
     menu.style.display = show ? 'block' : 'none';
+    document.body.style.overflow = show ? 'hidden' : 'auto';
 }
 
 createAccountButtons.forEach(button => button.addEventListener('click', () => toggleMenu(createAccountMenu, true)));
@@ -188,4 +189,11 @@ closeStadiumInformation.addEventListener('click', () => {
     stadiumInformationContainer.style.display = 'none';
     overlay.style.display = 'none';
     document.body.style.overflow = 'auto';
+})
+
+const signedOutButton = document.getElementById('signed-out-button');
+
+signedOutButton.addEventListener('click', () => {
+    stadiumInformationContainer.style.display = 'none';
+    toggleMenu(createAccountMenu, true);
 })
