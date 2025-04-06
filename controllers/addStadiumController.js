@@ -8,7 +8,7 @@ const db = mysql.createPool({
 });
 
 const handleAddStadium = async (req, res) => {
-    const { username, name, date, rating } = req.body;
+    const { username, name, date, rating, review } = req.body;
 
     const connection = await db.getConnection();
     await connection.beginTransaction();
@@ -29,9 +29,9 @@ const handleAddStadium = async (req, res) => {
         }
 
         const [insertResult] = await connection.execute(
-            `INSERT INTO user_stadiums (stadium_id, user_id, visited_on, rating, rated_on) 
-             VALUES (?, ?, ?, ?, NOW())`,
-            [stadium.stadium_id, user.user_id, date, rating]
+            `INSERT INTO user_stadiums (stadium_id, user_id, visited_on, rating, rated_on, review) 
+             VALUES (?, ?, ?, ?, NOW(), ?)`,
+            [stadium.stadium_id, user.user_id, date, rating, review]
         );
 
         const [updateResult] = await connection.execute(

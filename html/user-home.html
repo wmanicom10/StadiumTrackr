@@ -23,95 +23,33 @@
         <div class="add-stadium-menu">
             <h2>Add a Stadium</h2>
             <h3 id="close-add-stadium-menu">x</h3>
-            <div class="dropdown">
-                <button class="dropdown-btn" id="league-dropdown-btn">Select League</button>
-                <ul class="dropdown-list" id="league-dropdown-list"></ul>
+            <div id="stadium-search-container">
+                <form id="search-stadiums">
+                    <input type="text" placeholder="Search stadiums..." id="search-field">
+                </form>
+                <div id="search-stadiums-results-container"></div>
             </div>
-            <div class="dropdown" id="nfl-dropdown">
-                <button class="dropdown-btn stadiums-dropdown">Select Stadium</button>
-                <ul class="dropdown-list stadiums-dropdown-list"></ul>
-            </div>
-            <div class="dropdown" id="nba-dropdown">
-                <button class="dropdown-btn stadiums-dropdown">Select Stadium</button>
-                <ul class="dropdown-list stadiums-dropdown-list"></ul>                
-            </div>
-            <div class="dropdown" id="mlb-dropdown">
-                <button class="dropdown-btn stadiums-dropdown">Select Stadium</button>
-                <ul class="dropdown-list stadiums-dropdown-list"></ul>
-            </div>
-            <div class="dropdown" id="nhl-dropdown">
-                <button class="dropdown-btn stadiums-dropdown">Select Stadium</button>
-                <ul class="dropdown-list stadiums-dropdown-list"></ul>
-            </div>
-            <div class="dropdown" id="mls-dropdown">
-                <button class="dropdown-btn stadiums-dropdown">Select Stadium</button>
-                <ul class="dropdown-list stadiums-dropdown-list"></ul>
-            </div>
-            <ul id="add-stadium-stadiums">
-                <li id="add-stadium-stadium">
-                    <img src="" alt="" id="stadium-image">
-                    <h3 id="stadium-name"></h3>
-                    <h4 id="stadium-location"></h4>
-                </li>
-            </ul>
-            <div id="date-rating-container">
-                <label for="date-visited" id="date-visited-label">Date Visited:</label>
-                <input type="date" id="date-visited" min="1900-01-01">
-                <label for="rating">Rating:</label>
-                <input type="number" id="rating" min="0.5" max="5" step="0.5">
-            </div>
-            <input type="submit" id="add-stadium-button" value="Add Stadium">
-        </div>
-
-        <!-- Stadium Info Menu -->
-        <div class="stadium-information-container">
-            <div class="stadium-information-header">
-                <h2 id="stadium-name2"></h2>
-                <h2 id="close-stadium-information">x</h2>
-            </div>
-            <img src="" alt="" id="stadium-image2">
-            <div class="stadium-facts">
-                <div class="stadium-facts-first">
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Location</h4>
-                            <img src="../images/icons/pin-emoji.png" alt="">
+            <div id="stadium-container">
+                <h2 id="stadium-container-name"></h2>
+                <div id="stadium-container-stadium">
+                    <img src="../images/stadiums/truist-park.jpg" alt="" id="stadium-container-image">
+                    <form id="add-stadium-form">
+                        <div id="date-rating-container">
+                            <div class="date-rating-input-container">
+                                <label for="date-visited">Date Visited</label>
+                                <input type="date" id="date-visited">
+                            </div>
+                            <div class="date-rating-input-container">
+                                <label for="rating">Rating</label><br>
+                                <input type="number" id="rating" step="0.5" min="0.5" max="5.0">
+                            </div>
                         </div>
-                        <h3 id="stadium-location2"></h3>
-                    </div>
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Opened</h4>
-                            <img src="../images/icons/calendar-emoji.png" alt="">
-                        </div>
-                        <h3 id="stadium-opened-date"></h3>
-                    </div>
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Capacity</h4>
-                            <img src="../images/icons/stadium-emoji.png" alt="">
-                        </div>
-                        <h3 id="stadium-capacity"></h3>
-                    </div>
+                        <label for="review">Review</label><br>
+                        <textarea id="review" placeholder="Add a review..."></textarea>
+                    </form>
                 </div>
-                <div class="stadium-facts-second">
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Teams</h4>
-                            <img src="../images/icons/trophy-emoji.png" alt="">
-                        </div>
-                        <h3 id="stadium-teams"></h3>
-                    </div>
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Construction Cost</h4>
-                            <img src="../images/icons/money-emoji.png" alt="">
-                        </div>
-                        <h3 id="stadium-construction-cost"></h3>
-                    </div>
-                </div>
+                <h3 id="add-stadium-submit-button">Add Stadium</h3>
             </div>
-            <h3 id="remove-stadium-button">Remove Stadium</h3>
         </div>
 
         <!-- Main Content -->
@@ -182,14 +120,69 @@
 
                 <!-- Wishlist -->
                 <li class="user-item" id="wishlist">
-                    <div id="wishlist-text-container">
-                        <h3>Wishlist</h3>
-                        <h4 id="wishlist-number"></h4>
-                    </div>
+                    <h3>Wishlist</h3>
                     <div id="wishlist-items-gzero"></div>
                     <div id="wishlist-items-zero">
                         <h4 id="wishlist-items-zero-header">Your wishlist is empty...</h4>
                         <h4 id="add-stadiums-wishlist-button">Add Stadiums To Wishlist</h4>
+                    </div>
+                </li>
+
+                <!-- Recent Reviews -->
+                <li class="user-item" id="user-recent-reviews">
+                    <h3>Recent Reviews</h3>
+                    <div id="user-recent-reviews-list">
+
+                        <div class="user-recent-review-item">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+
+                        <div class="user-recent-review-item">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+
+                        <div class="user-recent-review-item">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+
+                <!-- Popular Reviews -->
+                <li class="user-item" id="user-popular-reviews">
+                    <h3>Popular Reviews</h3>
+                    <div id="user-popular-reviews-list">
+
+                        <div class="user-popular-review-item">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+
+                        <div class="user-popular-review-item">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+
+                        <div class="user-popular-review-item">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+
                     </div>
                 </li>
 

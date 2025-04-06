@@ -15,21 +15,27 @@ const handleLoadStadiumInfo = async (req, res) => {
     }
 
     try {
-        const [rows] = await db.execute('SELECT * FROM stadiums JOIN teams ON stadiums.stadium_id = teams.stadium_id JOIN leagues on teams.league_id = leagues.league_id WHERE stadiums.stadium_name = ?', [name]);
+        const [rows] = await db.execute('SELECT stadiums.*, ROUND(AVG(user_stadiums.rating), 2) AS average_rating, teams.team_id, teams.team_name, leagues.league_name FROM stadiums JOIN teams ON stadiums.stadium_id = teams.stadium_id JOIN leagues ON teams.league_id = leagues.league_id LEFT JOIN user_stadiums ON stadiums.stadium_id = user_stadiums.stadium_id WHERE stadiums.stadium_name = ? GROUP BY stadiums.stadium_id, teams.team_id, leagues.league_id', [name]);
           
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Could not find stadium' });
         }
           
+        const {
+            stadium_name, location, capacity, image, opened_date, 
+            construction_cost, visits, average_rating
+        } = rows[0];
+
         const stadiumInfo = {
             stadium: {
-                id: rows[0].stadium_id,
-                name: rows[0].stadium_name,
-                location: rows[0].location,
-                capacity: rows[0].capacity,
-                image: rows[0].image,
-                openedDate: rows[0].opened_date,
-                constructionCost: rows[0].construction_cost
+                name: stadium_name,
+                location,
+                capacity,
+                image,
+                openedDate: opened_date,
+                constructionCost: construction_cost,
+                visits,
+                averageRating: average_rating || 0.0
             },
             teams: rows.map(row => ({
                 team_id: row.team_id,

@@ -6,6 +6,11 @@ const createAccountMenu = document.getElementById('create-account-menu');
 const createAccountButtons = [document.getElementById('create-account'), document.getElementById('get-started-button')];
 const logInButton = document.getElementById('log-in');
 
+window.onload = () => {
+    searchResultsContainer.innerHTML = '';
+    searchValue.value = '';
+}
+
 const closeButtons = {
     'create-account-menu': document.getElementById('close-create-account-menu'),
     'log-in-menu': document.getElementById('close-log-in-menu')
@@ -98,21 +103,21 @@ logIn.addEventListener('click', async () => {
     const password = passwordInput.value.trim();
 
     try {
-            const response = await fetch('http://localhost:3000/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-        });
+        const response = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Unknown error');
-        }
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Unknown error');
+    }
         
-        const result = await response.json();
+    const result = await response.json();
 
-        localStorage.setItem('username', result.username);
-        window.location.replace('user-home.html');
+    localStorage.setItem('username', result.username);
+    window.location.replace('user-home.html');
     } catch (error) {
         alert(error.message);
     }
@@ -125,75 +130,72 @@ document.getElementById("log-in-form").addEventListener("submit", function(event
 const stadiums = document.getElementsByClassName('popular-stadium');
 
 Array.from(stadiums).forEach(stadium => {
-    stadium.addEventListener('click', async() => {
-        const name = stadium.querySelector('h3').textContent;
-        overlay.style.display = 'block';
-
-        try {
-            const response = await fetch('http://localhost:3000/stadium/loadStadiumInfo', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: name })
-            });
-    
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Unknown error');
-            }
-            
-            const result = await response.json();
-    
-            const location = result.stadiumInfo.stadium.location;
-            const image = result.stadiumInfo.stadium.image;
-            const capacity = result.stadiumInfo.stadium.capacity;
-            const openedDateSQL = result.stadiumInfo.stadium.openedDate;
-            const date = new Date(openedDateSQL);
-            const openedDate = date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            const constructionCost = result.stadiumInfo.stadium.constructionCost;
-            const teamsSQL = result.stadiumInfo.teams;
-            const teams = teamsSQL.map(team => team.team_name).join(', ');
-            const stadiumName = document.getElementById('stadium-name');
-            const stadiumImage = document.getElementById('stadium-image');
-            const stadiumLocation = document.getElementById('stadium-location');
-            const stadiumCapacity = document.getElementById('stadium-capacity');
-            const stadiumTeams = document.getElementById('stadium-teams');
-            const stadiumOpenedDate = document.getElementById('stadium-opened-date');
-            const stadiumConstructionCost = document.getElementById('stadium-construction-cost');
-
-            stadiumName.innerHTML = name;
-            stadiumImage.src = image;
-            stadiumLocation.innerHTML = location;
-            stadiumCapacity.innerHTML = capacity;
-            stadiumTeams.innerHTML = teams;
-            stadiumOpenedDate.innerHTML = openedDate;
-            stadiumConstructionCost.innerHTML = constructionCost;
-
-            const stadiumInformationContainer = document.querySelector('.stadium-information-container');
-            stadiumInformationContainer.style.display = 'block';
-            document.body.style.overflow = 'hidden';
-
-        } catch (error) {
-            alert(error.message);
-        }
-    });
+    const stadiumName = stadium.querySelector('h3').textContent;
+    const link = stadium.querySelector('a');
+    link.href = `stadium.html?stadium=${encodeURIComponent(stadiumName)}`;
 });
 
-const closeStadiumInformation = document.getElementById('close-stadium-information');
-const stadiumInformationContainer = document.querySelector('.stadium-information-container');
+const searchValue = document.getElementById('search-field');
+let typingTimer;
+const debounceTime = 1000;
+const searchResultsContainer = document.getElementById("search-results-container");
 
-closeStadiumInformation.addEventListener('click', () => {
-    stadiumInformationContainer.style.display = 'none';
-    overlay.style.display = 'none';
-    document.body.style.overflow = 'auto';
-})
+searchValue.addEventListener('input', (event) => {
+    clearTimeout(typingTimer);
+    typingTimer = setTimeout(() => {
+        searchResultsContainer.innerHTML = '';
+        const name = event.target.value;
+        if (!(name === '')) {
+            searchStadiums(name);
+        }
+    }, debounceTime);
+});
 
-const signedOutButton = document.getElementById('signed-out-button');
+async function searchStadiums(name) {
+    try {
+        const response = await fetch('http://localhost:3000/stadium/searchStadiums', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+    });
 
-signedOutButton.addEventListener('click', () => {
-    stadiumInformationContainer.style.display = 'none';
-    toggleMenu(createAccountMenu, true);
-})
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Unknown error');
+    }
+        
+    const result = await response.json();
+
+    const stadiums = result.stadiums;
+
+    if (stadiums.length === 0) {
+        const searchResult = document.createElement('div');
+        searchResult.classList.add('search-result');
+        const stadiumName = document.createElement('h4');
+        stadiumName.innerHTML = 'No stadiums found';
+        searchResult.appendChild(stadiumName);
+        searchResultsContainer.appendChild(searchResult);
+    }
+
+    stadiums.forEach(stadium => {
+        const stadiumLink = document.createElement('a');
+        stadiumLink.href = `stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}`;
+        const searchResult = document.createElement('div');
+        searchResult.classList.add('search-result');
+        const stadiumName = document.createElement('h4');
+        stadiumName.innerHTML = stadium.stadium_name;
+        searchResult.appendChild(stadiumName);
+        stadiumLink.appendChild(searchResult);
+        searchResultsContainer.appendChild(stadiumLink);
+
+        stadiumLink.addEventListener('click', () => {
+            searchResultsContainer.innerHTML = '';
+            searchValue.value = '';
+        })
+
+    });
+
+    } catch (error) {
+        alert(error.message);
+    }
+}

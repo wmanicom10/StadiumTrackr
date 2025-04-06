@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>StadiumTrackr</title>
+        <link rel="stylesheet" href="../css/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    </head>
+
+    <body>
+
+        <div id="overlay"></div>
+
+        <div id="loading-screen">
+            <p>Loading...</p>
+        </div>
+
+        <!-- Login Menu -->
+        <div id="log-in-menu">
+            <h2>Log In</h2>
+            <h3 id="close-log-in-menu">x</h3>
+            <form id="log-in-form">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="input-field"><br>
+                <label for="password">Password</label>
+                <input type="password" id="password" class="input-field"><br>
+                <input type="submit" id="log-in-button" value="Log In">
+            </form>
+        </div>
+
+        <!-- Create Account Menu -->
+        <div id="create-account-menu">
+            <h2>Create Account</h2>
+            <h3 id="close-create-account-menu">x</h3>
+            <form id="create-account-form">
+                <label for="new-email">Email address</label>
+                <input type="text" id="new-email" class="input-field"><br>
+                <label for="new-username">Username</label>
+                <input type="text" id="new-username" class="input-field"><br>
+                <label for="new-password">Password</label>
+                <input type="text" id="new-password" class="input-field"><br>
+                <input type="submit" id="sign-up-button" value="Sign Up">
+            </form>
+        </div>
+
+        <!-- Main Content -->
+        <div id="content-wrapper">
+
+            <!-- Header -->
+            <header>
+                <h1>StadiumTrackr</h1>
+                <ul id="nav-items">
+                    <li class="nav-item"><a href="./home.html">Home</a></li>
+                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
+                    <li class="nav-item"><a href="">Events</a></li>
+                    <li class="nav-item"><a href="">About</a></li>
+                    <li class="nav-item button" id="log-in">Log In</li>
+                    <li class="nav-item button" id="create-account">Sign Up</li>
+                </ul>
+            </header>
+
+            <div id="stadium-page-container">
+                <h2 id="stadium-name"></h2>
+                <img id="stadium-image">
+                <div id="stadium-info">
+                    <div id="stadium-info1">
+                        <div class="stadium-fact">
+                            <div>
+                                <h4>Location</h4>
+                                <img src="../images/icons/pin-emoji.png" alt="Pin">
+                            </div>
+                            <h3 id="stadium-location"></h3>
+                        </div>
+                        <div class="stadium-fact">
+                            <div>
+                                <h4>Opened</h4>
+                                <img src="../images/icons/calendar-emoji.png" alt="Calendar">
+                            </div>
+                            <h3 id="stadium-opened-date"></h3>
+                        </div>
+                        <div class="stadium-fact">
+                            <div id="stadium-teams-info">
+                                <h4>Teams</h4>
+                            </div>
+                            <h3 id="stadium-teams"></h3>
+                        </div>
+                        <div class="stadium-fact">
+                            <div>
+                                <h4>Capacity</h4>
+                                <img src="../images/icons/stadium-emoji.png" alt="Stadium">
+                            </div>
+                            <h3 id="stadium-capacity"></h3>
+                        </div>
+                        <div class="stadium-fact">
+                            <div>
+                                <h4>Construction Cost</h4>
+                                <img src="../images/icons/money-emoji.png" alt="Money">
+                            </div>
+                            <h3 id="stadium-construction-cost"></h3>
+                        </div>
+                    </div>
+                    <div id="stadium-info2">
+                        <h4 class="log-stadium-button stadium-info-button">Log Stadium</h4>
+                        <h4 class="add-wishlist-button stadium-info-button">Add to Wishlist</h4>
+                        <h4 class="share-button stadium-info-button">Share</h4>
+                        <div class="stadium-fact">
+                            <div>
+                                <h4>Visits</h4>
+                                <img src="../images/icons/person-emoji.png" alt="Person">
+                            </div>
+                            <h3 id="stadium-visits"></h3>
+                        </div>
+                        <div class="stadium-fact">
+                            <div>
+                                <h4>Average Rating</h4>
+                                <img src="../images/icons/star-emoji.png" alt="Star">
+                            </div>
+                            <h3 id="stadium-average-rating"></h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="friend-activity">
+                    <h3>Friend's Activity</h3>
+                    <div id="friend-activity-list">
+                        <div class="friend-activity-item">
+                            <img src="../images/icons/person-gray.png" alt="">
+                            <p>4.5/5</p>
+                        </div>
+                        <div class="friend-activity-item">
+                            <img src="../images/icons/person-gray.png" alt="">
+                            <p>4.5/5</p>
+                        </div>
+                        <div class="friend-activity-item">
+                            <img src="../images/icons/person-gray.png" alt="">
+                            <p>4.5/5</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="friend-reviews">
+                    <h3>Friend's Reviews</h3>
+                    <div id="friend-reviews-list">
+                        <div class="friend-review-item">
+                            <img src="../images/icons/person-gray.png" alt="">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+                        <div class="friend-review-item">
+                            <img src="../images/icons/person-gray.png" alt="">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+                        <div class="friend-review-item">
+                            <img src="../images/icons/person-gray.png" alt="">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="popular-reviews">
+                    <h3>Popular Reviews</h3>
+                    <div id="popular-reviews-list">
+                        <div class="popular-review-item">
+                            <img src="../images/icons/person-gray.png" alt="">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+                        <div class="popular-review-item">
+                            <img src="../images/icons/person-gray.png" alt="">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+                        <div class="popular-review-item">
+                            <img src="../images/icons/person-gray.png" alt="">
+                            <div>
+                                <h4>Name</h4>
+                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus, nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem felis nec erat</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="upcoming-events">
+                    <h3>Upcoming Events</h3>
+                    <div id="upcoming-events-list">
+                        <div class="upcoming-event-item">
+                            <img src="../images/icons/football-emoji.png" alt="">
+                            <div>
+                                <h4>Stadium Name</h4>
+                                <h4>Location</h4>
+                                <h4>Event</h4>
+                                <h4>Date</h4>
+                            </div>
+                        </div>
+                        <div class="upcoming-event-item">
+                            <img src="../images/icons/basketball-emoji.png" alt="">
+                            <div>
+                                <h4>Stadium Name</h4>
+                                <h4>Location</h4>
+                                <h4>Event</h4>
+                                <h4>Date</h4>
+                            </div>
+                        </div>
+                        <div class="upcoming-event-item">
+                            <img src="../images/icons/baseball-emoji.png" alt="">
+                            <div>
+                                <h4>Stadium Name</h4>
+                                <h4>Location</h4>
+                                <h4>Event</h4>
+                                <h4>Date</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer>
+                <ul id="footer-items">
+                    <li class="footer-item">
+                        <h4>StadiumTrackr</h4>
+                        <h5>Track your stadium visits and discover new venues worldwide</h5>
+                    </li>
+                    <li class="footer-item">
+                        <h4>Quick Links</h4>
+                        <h5>About Us</h5>
+                        <h5>Contact</h5>
+                        <h5>Privacy Policy</h5>
+                        <h5>Terms of Service</h5>
+                    </li>
+                    <li class="footer-item">
+                        <h4>Features</h4>
+                        <h5>Stadium Database</h5>
+                        <h5>Event Calendar</h5>
+                        <h5>Achievement System</h5>
+                        <h5>Mobile App</h5>
+                    </li>
+                    <li class="footer-item">
+                        <h4>Newsletter</h4>
+                        <h5>Subscribe for updates and news</h5>
+                        <form id="newsletter-email">
+                            <input type="text" placeholder="Enter your email" id="email-field">
+                            <input type="submit" value="Subscribe" id="subscribe-button">
+                        </form>
+                    </li>
+                </ul>
+                <h5 id="copyright">&copy;2025 StadiumTrackr. All rights reserved.</h5>
+            </footer>
+
+        </div>
+        
+        <!-- Scripts -->
+        <script type="module" src="../scripts/stadium-script.js"></script>
+
+    </body>
+
+</html>

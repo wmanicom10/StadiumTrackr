@@ -4,7 +4,7 @@
 
 body {
     font-family: "Rubik", sans-serif;
-    color: white;
+    color: #f0f0f0;
     margin: 0;
     width: auto;
     background-color: lightgrey;
@@ -19,7 +19,7 @@ body {
 #content-wrapper {
     display: none;
     height: auto;
-    background-color: ghostwhite;
+    background-color: rgb(28, 28, 28);
     text-align: center;
 }
 
@@ -36,6 +36,10 @@ header h1 {
     margin-left: 50px;
 }
 
+header h1:hover {
+    cursor: default;
+}
+
 #nav-items {
     list-style-type: none;
     display: flex;
@@ -49,7 +53,7 @@ header h1 {
 }
 
 .nav-item a {
-    color: white;
+    color: #f0f0f0;
     text-decoration: none;
 }
 
@@ -64,7 +68,7 @@ header h1 {
 .nav-item.button {
     background-color: rgb(36,99,235);
     padding: 10px 15px;
-    border-radius: 10px;
+    border-radius: 20px;
     margin: 0 10px;
 }
 
@@ -97,7 +101,7 @@ header h1 {
     text-align: center;
     width: 800px;
     font-size: 25px;
-    color: black;
+    color: #f0f0f0;
     top: 15px;
     margin-bottom: 35px;
 }
@@ -109,6 +113,7 @@ header h1 {
 #welcome-text h4 {
     font-size: 22px;
     font-weight: normal;
+    margin-bottom: 10px;
 }
 
 #button-container {
@@ -121,29 +126,16 @@ header h1 {
 }
 
 #button-container h4 {
-    color: white;
+    color: #f0f0f0;
     background-color: rgb(36,99,235);
     padding: 15px 20px;
-    border-radius: 12px;
+    border-radius: 25px;
     font-size: 15px;
 }
 
 #button-container h4:hover {
     background-color: dodgerblue;
     cursor: pointer;
-}
-
-#stadium-search-container {
-    margin: 20px auto;
-    width: auto;
-    height: auto;
-}
-
-#search-field {
-    border: 1px solid lightgrey;
-    width: 500px;
-    height: 40px;
-    border-radius: 8px;
 }
 
 input {
@@ -164,8 +156,8 @@ input::placeholder {
     height: 40px;
     background-color: rgb(36,99,235);
     border: none;
-    border-radius: 8px;
-    color: white;
+    border-radius: 20px;
+    color: #f0f0f0;
     font-size: 15px;
 }
 
@@ -181,63 +173,90 @@ input::placeholder {
 }
 
 #home-content div {
-    padding: 5px 25px;
     color: black;
 }
 
 #popular-stadiums-container {
-    background-color: white;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
-    border-radius: 8px;
+    border-top: 0.5px solid #f0f0f0;
+    padding: 0;
+    width: 97%;
+    margin: 0 auto;
 }
 
-#popular-stadiums, .stadiums-list, .stadiums-list-user, #add-stadium-stadiums {
+#popular-stadiums-container h2 {
+    color: #f0f0f0;
+    margin-top: 40px;
+}
+
+#popular-stadiums, .stadiums-list {
     list-style-type: none;
     padding: 0;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
-#add-stadium-stadiums {
-    display: none;
+.stadiums-list-user {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
 }
 
-.popular-stadium, .stadiums-list-stadium, .recent-stadium, #add-stadium-stadium {
-    background-color: ghostwhite;
+.stadiums-list-user a {
+    color: #f0f0f0;
+    text-decoration: none;
+}
+
+.popular-stadium, .stadiums-list-stadium, .recent-stadium {
     border-radius: 8px;
-    border: 1px solid transparent;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    padding: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
-#add-stadium-stadium {
-    background-color: white;
+.popular-stadium a {
+    color: black;
+    text-decoration: none;
+}
+
+.popular-stadium-text {
+    padding: 5px 0;
+    background-color: rgb(45, 45, 45);
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .popular-stadium:hover, .stadiums-list-stadium:hover, .recent-stadium:hover, #add-stadium-stadium:hover {
     cursor: pointer;
-    border-color: black;
-    border-radius: 8px;
     transform: scale(0.97);
-    box-sizing: border-box;
-    overflow: hidden;
 }
 
-.popular-stadium img, .stadiums-list-stadium img, #add-stadium-stadium img {
-    height: 250px;
-    width: 440px;
+.popular-stadium img, .stadiums-list-stadium img {
+    height: 220px;
+    width: 450px;
     object-fit: cover;
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
+    display: block;
 }
 
-.popular-stadium h3, .popular-stadium h4, .stadiums-list-stadium h3, .stadiums-list-stadium h4, #add-stadium-stadium h3, #add-stadium-stadium h4 {
+.popular-stadium h3, .popular-stadium h4, .stadiums-list-stadium h3, .stadiums-list-stadium h4 {
     margin: 10px;
     font-weight: normal;
+    border: 0px solid white;
+    color: #f0f0f0;
 }
 
 #stadium-tracker-container {
     text-align: center;
-    margin: 20px 0;
+    margin: 50px auto;
+    border-top: 0.5px solid #f0f0f0;
+    width: 97%;
+}
+
+#stadium-tracker-container h2 {
+    color: #f0f0f0;
+    margin-top: 40px;
 }
 
 #stadium-tracker-infos {
@@ -245,14 +264,17 @@ input::placeholder {
     padding: 0;
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 }
 
 .stadium-tracker-info {
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
-    background-color: white;
-    width: 440px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    background-color: rgb(45, 45, 45);
+    width: 450px;
     text-align: center;
     border-radius: 8px;
+    margin-bottom: 25px;
+    color: #f0f0f0;
 }
 
 .stadium-tracker-info div {
@@ -261,7 +283,7 @@ input::placeholder {
     width: 60px;
     border-radius: 30px;
     margin-top: 20px;
-    background-color: rgb(219, 234, 254);
+    background-color: #f0f0f0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -283,7 +305,7 @@ input::placeholder {
 }
 
 footer {
-    background-color: rgb(31, 41, 55);
+    background-color: rgb(20, 20, 20);
     height: 320px;
     text-align: left;
 }
@@ -352,7 +374,7 @@ footer h5 {
     background-color: rgba(0,0,0,0.9);
     width: 100%;
     height: 100%;
-    opacity: 0.8;
+    opacity: 0.7;
     z-index: 999;
     display: none;
 }
@@ -361,13 +383,13 @@ footer h5 {
     position: fixed;
     display: none;
     width: 428px;
-    background-color: ghostwhite;
+    background-color: rgb(45, 45, 45);
     z-index: 1000;
     top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 10px;
-    color: black;
+    color: #f0f0f0;
 }
 
 #log-in-menu {
@@ -381,6 +403,9 @@ footer h5 {
 #create-account-menu h2, #log-in-menu h2 {
     text-align: center;
     font-size: 30px;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 25px;
+    margin-bottom: 0;
 }
 
 #close-create-account-menu, #close-log-in-menu {
@@ -395,7 +420,6 @@ footer h5 {
 }
 
 #create-account-form, #log-in-form{
-    margin-top: 40px;
     text-align: center;
     width: auto;
     height: auto;
@@ -411,9 +435,10 @@ footer h5 {
 .input-field {
     height: 40px;
     width: 325px;
-    border-radius: 8px;
+    border-radius: 20px;
     border: 0.5px solid lightgray;
     font-size: 16px;
+    padding-left: 10px;
 }
 
 #sign-up-button, #log-in-button {
@@ -423,7 +448,7 @@ footer h5 {
     width: 150px;
     height: 40px;
     border: none;
-    border-radius: 8px;
+    border-radius: 20px;
     margin-top: 45px;
 }
 
@@ -434,7 +459,7 @@ footer h5 {
 
 #welcome-header {
     display: inline-block;
-    color: black;
+    color: #f0f0f0;
     margin: 30px 0 0;
     width: auto;
     font-size: 22px;
@@ -442,7 +467,7 @@ footer h5 {
 }
 
 #user-items {
-    margin: 20px auto;
+    margin: 25px auto 0;
     width: 1150px;
     display: flex;
     flex-wrap: wrap;
@@ -452,34 +477,24 @@ footer h5 {
     justify-content: space-between;
 }
 
-.user-item {
-    margin: 15px 0;
-    border-radius: 8px;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
-    background-color: white;
-}
-
 .user-item h3 {
     text-align: left;
-    margin: 25px 0px 20px 20px;
+    color: #f0f0f0;
+    padding-bottom: 10px;
+    border-bottom: 0.5px solid #f0f0f0;
 }
 
-#favorite-stadiums {
-    width: 750px;
-    height: 385px;
-}
-
-#recently-visited-stadiums {
-    width: 750px;
+#favorite-stadiums, #recently-visited-stadiums {
+    width: 740px;
     height: 385px;
 }
 
 #recent-stadiums-gzero, #favorite-stadiums-gzero {
     list-style-type: none;
     padding: 0;
-    margin: 0 auto;
-    width: 730px;
+    width: 100%;
     display: none;
+    justify-content: space-between;
 }
 
 #recent-stadiums-zero, #favorite-stadiums-zero {
@@ -487,7 +502,7 @@ footer h5 {
     flex-wrap: wrap;
     padding: 0;
     width: 400px;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     margin-top: 100px;
     display: none;
@@ -496,14 +511,15 @@ footer h5 {
 #recent-stadiums-zero h4, #favorite-stadiums-zero h4 {
     font-size: 18px;
     font-weight: normal;
+    color: #f0f0f0;
 }
 
 #add-favorite-stadiums-button, #add-stadiums-button {
     width: 220px;
     background-color: rgb(36,99,235);
-    border-radius: 8px;
+    border-radius: 20px;
     padding: 10px 15px;
-    color: white;
+    color: #f0f0f0;
     margin: 0 auto;
 }
 
@@ -519,18 +535,15 @@ footer h5 {
 .recent-stadium, .favorite-stadium {
     border-radius: 8px;
     height: 295px;
-    margin: 0 auto 15px;
     width: 350px;
-    background-color: ghostwhite;
-}
-
-.recent-stadium {
-    height: auto;
+    background-color: rgb(45, 45, 45);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    color: #f0f0f0;
 }
 
 .recent-stadium img, .favorite-stadium img {
     height: 220px;
-    width: 348px;
+    width: 100%;
     object-fit: cover;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -552,7 +565,7 @@ footer h5 {
 
 #user-stats {
     width: 350px;
-    height: auto;
+    height: 385px;
 }
 
 #user-stats-container {
@@ -560,7 +573,8 @@ footer h5 {
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-
+    height: 295px;
+    align-content: space-between;
 }
 
 .user-stat h3 {
@@ -569,58 +583,31 @@ footer h5 {
 
 .user-stat {
     border-radius: 8px;
-    width: 320px;
+    width: 100%;
     height: 90px;
-    margin: 0 auto;
-    margin-bottom: 15px;
     padding: 18px;
+    background-color: rgb(45, 45, 45);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
 .user-stat h3, .user-stat h4 {
     margin: 0;
+    border: none;
+    color: #f0f0f0;
 }
 
 .user-stat h4 {
-    margin-top: 8px;
     font-weight: normal;
-}
-
-#stadiums-visited {
-    background-color: rgb(238, 246, 255);
-    text-align: center;
-}
-
-#countries {
-    background-color: rgb(239, 253, 244);
-}
-
-#events-attended {
-    background-color: rgb(254, 252, 232);
 }
 
 #wishlist {
     width: 350px;
-    height: 255px;
 }
 
 #wishlist-text-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
-}
-
-#wishlist-text-container h3 {
-    margin: 25px 20px 0;
-}
-
-#wishlist-text-container h4 {
-    font-weight: normal;
-    margin: 28px 28px 0 0;
-}
-
-#wishlist-items-gzero {
-    position: relative;
-    display: none;
 }
 
 #wishlist-items-zero {
@@ -633,16 +620,17 @@ footer h5 {
 }
 
 #wishlist-items-zero-header {
-    margin-top: 50px;
+    color: #f0f0f0;
+    margin-top: 60px;
 }
 
 #add-stadiums-wishlist-button {
     background-color: rgb(36,99,235);
-    color: white;
+    color: #f0f0f0;
     padding: 10px 15px;
     width: 220px;
     margin: 0 auto;
-    border-radius: 8px;
+    border-radius: 20px;
 }
 
 #add-stadiums-wishlist-button:hover {
@@ -663,12 +651,23 @@ footer h5 {
     font-weight: normal;
 }
 
+#user-recent-reviews, #user-popular-reviews {
+    width: 740px;
+    color: #f0f0f0;
+    text-align: left;
+}
+
+#user-popular-reviews {
+    margin-bottom: 40px;
+}
+
 #league-selector {
-    color: black;
+    color: #f0f0f0;
+    background-color: rgb(45, 45, 45);
     width: 530px;
     height: 58px;
     margin: 0 auto;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     padding: 5px 10px;
     border-radius: 8px;
 }
@@ -705,27 +704,40 @@ footer h5 {
 }
 
 #league-text {
-    color: black;
+    color: #f0f0f0;
     margin-top: 30px;
 }
 
 .stadiums-list-container {
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
     width: 95%;
     height: auto;
     margin: 30px auto;
     color: black;
-    padding: 5px;
-    border-radius: 8px;
-    background-color: white;
+    border-top: 0.5px solid #f0f0f0;
+}
+
+.stadiums-list-container h2 {
+    color: #f0f0f0;
+    margin-top: 20px;
 }
 
 .stadiums-list {
     flex-wrap: wrap;
 }
 
+.stadiums-list a {
+    color: #f0f0f0;
+    text-decoration: none;
+}
+
 .stadiums-list-stadium {
     margin-bottom: 20px;
+    background-color: rgb(45, 45, 45);
+    height: 300px;
+}
+
+.stadiums-list-stadium h3 {
+    margin-top: 15px;
 }
 
 #stadiums-list-nfl {
@@ -744,15 +756,16 @@ footer h5 {
 
 .stadiums-list-zero h3 {
     font-weight: normal;
+    color: #f0f0f0;
 }
 
 .stadiums-add-stadiums-button {
     background-color: rgb(36,99,235);
-    border-radius: 8px;
+    border-radius: 20px;
     width: 150px;
-    color: white;
+    color: #f0f0f0;
     padding: 10px 10px;
-    margin-top: 0px;
+    margin-top: 10px;
 }
 
 .stadiums-add-stadiums-button:hover {
@@ -767,132 +780,189 @@ footer h5 {
 
 .add-stadium-menu {
     position: fixed;
-    width: 50%;
-    min-width: 500px;
-    min-height: 650px;
-    height: auto;
-    background-color: ghostwhite;
+    width: 80%;
+    height: 85%;
+    background-color: rgb(28, 28, 28);
     z-index: 1000;
-    top: 75px;
     left: 50%;
-    transform: translateX(-50%);
-    border-radius: 10px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 20px;
+    color: #f0f0f0;
+    text-align: center;
+    display: none;
+}
+
+.add-stadium-menu h2 {
+    margin-top: 30px;
+}
+
+#stadium-search-container {
+    width: 500px;
+    margin: 0 auto;
+}
+
+#search-field {
+    border: none;
+    background-color: #f0f0f0;
+    width: 400px;
+    height: 40px;
+    border-radius: 20px;
+    padding-left: 21px;
+    z-index: 1;
+}
+
+#home-search-field {
+    border: none;
+    background-color: #f0f0f0;
+    width: 500px;
+    height: 40px;
+    border-radius: 20px;
+    padding-left: 21px;
+    z-index: 1;
+    margin-top: 20px;
+}
+
+#search-stadiums-results-container {
+    margin: 0 auto;
+    width: 400px;
+    max-height: 200px;
+    overflow: scroll;
+}
+
+#search-stadiums-results-container a {
     color: black;
-    text-align: center;
-    display: none;
+    text-decoration: none;
 }
 
-#add-stadium-button {
-    text-align: center;
-    background-color: rgb(36,99,235);
-    border-radius: 8px;
-    color: white;
-    width: 150px;
-    margin: 20px auto;
-    padding: 10px 10px;
-    border: none;
-    font-size: 15px;
-}
-
-#add-stadium-button:hover {
-    cursor: pointer;
-    background-color: dodgerblue;
-}
-
-.dropdown {
-    width: 200px;
-    margin: 0 auto 20px;
+.search-result {
+    width: 399px;
+    margin: 0 auto;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    padding: 10px 0;
     border: 0.5px solid lightgray;
-    border-radius: 8px;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.search-result:hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.search-result h4 {
+    color: black;
+    font-weight: normal;
+    margin: 0;
+}
+
+#stadium-container {
+    width: 80%;
+    margin: 0 auto;
+    text-align: center;
     display: none;
 }
 
-.dropdown:first-of-type {
-    display: block;
+#stadium-container-name {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
 }
 
-.dropdown-btn {
-    width: 100%;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    background: white;
-    cursor: pointer;
-    text-align: left;
+#stadium-container-stadium {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    font-size: 15px;
 }
 
-.dropdown-btn::after {
-    content: "▼";
-    font-size: 12px;
-    margin-left: 10px;
+#stadium-container-image {
+    height: 350px;
+    max-width: 525px;
+    width: auto;
+    object-fit: cover;
+    border-radius: 20px;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
-.dropdown-list {
-    display: none;
-    position: absolute;
-    width: 200px;
-    background: white;
-    border: none;
-    border-radius: 8px;
-    list-style: none;
-    padding: 0;
-    margin: 2px 0;
-    z-index: 10;
-    text-align: left;
-    border: 0.5px solid lightgray;
-    height: auto;
-}
-
-.dropdown-list li {
-    padding: 10px;
+#stadium-container-image:hover {
     cursor: pointer;
-    color: black;
-    border-radius: 8px;
-    font-size: 15px;
+    transform: scale(0.97);
 }
 
-.dropdown-list li:hover {
-    background: #0073e6;
-    color: white;
+#add-stadium-form {
+    margin-left: 50px;
+    width: 500px;
+    text-align: left;
 }
 
-#date-visited {
-    border: 0.5px solid lightgray;
-    border-radius: 8px;
-    padding: 10px;
-    font-size: 15px;
-    margin-right: 20px;
-}
-
-.stadiums-dropdown-list {
-    max-height: 175px;
-    overflow-y: auto;
-}
-
-.stadiums-dropdown-list::-webkit-scrollbar {
-    display: none;
-}
-
-.stadiums-dropdown-list {
-    scrollbar-width: none;
+#add-stadium-form label {
+    font-size: 20px;
+    margin-left: 5px;
 }
 
 #date-rating-container {
+    display: flex;
+    width: 90%;
+    margin-bottom: 10px;
+}
+
+.date-rating-input-container {
+    width: 170px;
+}
+
+.date-rating-input-container input {
+    background-color: rgb(45, 45, 45);
+    border: none;
+    border-radius: 20px;
+    padding: 10px;
     margin-top: 10px;
-    margin: 0 auto;
-    display: none;
+    font-size: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#date-visited {
+    color: #f0f0f0;
+    padding: 10px 20px;
 }
 
 #rating {
-    padding: 10px;
-    border: 0.5px solid lightgray;
-    border-radius: 8px;
-    width: 65px;
+    color: #f0f0f0;
+    padding: 12px 10px 12px 15px;
+    width: 75px;
+}
+
+#review {
+    background-color: rgb(45, 45, 45);
+    border-radius: 20px;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    height: 64%;
+    resize: none;
+    color: #f0f0f0;
     font-size: 15px;
+    margin-top: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#review:focus {
+    outline: none;
+}
+
+#add-stadium-submit-button {
+    background-color: rgb(36, 99, 235);
+    border-radius: 20px;
+    font-weight: normal;
+    text-align: center;
+    padding: 10px 30px;
+    margin: 35px auto;
+    font-size: 20px;
+    display: inline-block;
+}
+
+#add-stadium-submit-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
 }
 
 #close-add-stadium-menu {
@@ -900,7 +970,7 @@ footer h5 {
     position: absolute;
     left: 94%;
     top: 0px;
-    margin: 15px 0 0;
+    margin: 30px 0 0;
 }
 
 #close-add-stadium-menu:hover {
@@ -950,7 +1020,7 @@ footer h5 {
     margin: 0 auto;
 }
 
-.stadium-fact div {
+/*.stadium-fact div {
     margin-bottom: 5px;
 }
 
@@ -974,7 +1044,7 @@ footer h5 {
     margin: 0;
     font-weight: normal;
     text-align: left;
-}
+}*/
 
 .stadium-facts h4 {
     color: #4B5563;
@@ -1028,20 +1098,28 @@ footer h5 {
 
 #wishlist {
     width: 350px;
-    height: 355px;
+    height: 385px;
 }
 
 #wishlist-items-gzero {
+    position: relative;
     display: none;
-    margin-top: 28px;
+    height: 295px;
+}
+
+#wishlist-items-gzero a {
+    color: #f0f0f0;
+    text-decoration: none;
 }
 
 .wishlist-item {
-    background-color: ghostwhite;
-    padding: 10px;
-    margin: 21px auto;
-    border-radius: 8px;
-    box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.3);
+    background-color: rgb(45, 45, 45);
+    width: 100%;
+    color: #f0f0f0;
+    padding: 10px 20px;
+    margin: 0 0 25px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
@@ -1070,6 +1148,173 @@ footer h5 {
     background-color: dodgerblue;
 }
 
+#stadium-page-container {
+    width: 700px;
+    margin: 0 auto 50px;
+    text-align: left;
+    color: white;
+    border-radius: 8px;
+}
+
+#stadium-name {
+    padding: 10px 0;
+    border-bottom: 1px solid white;
+    font-size: 28px;
+}
+
+#stadium-image {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+#stadium-info {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px auto;
+    width: 100%;
+    padding: 0 20px;
+    flex-wrap: wrap;
+    border-top: 1px solid white;
+}
+
+#stadium-info img {
+    height: 25px;
+    width: auto;
+    object-fit: cover;
+    margin: 0;
+}
+
+#stadium-info h3, #stadium-info h4 {
+    font-weight: normal;
+    margin: 0;
+}
+
+#stadium-info h3 {
+    font-size: 25px;
+}
+
+#stadium-info h4 {
+    font-size: 20px;
+}
+
+#stadium-info1, #stadium-info2 {
+}
+
+.stadium-fact {
+    margin: 20px 0;
+}
+
+.stadium-fact div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.stadium-fact div h4, .stadium-fact div img {
+    margin-right: 5px !important;
+}
+
+.stadium-fact div h4 {
+
+}
+
+.stadium-info-button {
+    background-color: rgb(36, 99, 235);
+    color: white;
+    padding: 15px 10px;
+    text-align: center;
+    border-radius: 8px;
+    margin-top: 25px !important;
+}
+
+.stadium-info-button:hover {
+    background-color: dodgerblue;
+    cursor: pointer;
+}
+
+#friend-activity {
+    margin: 20px auto;
+    width: 100%;
+    padding: 0 20px;
+    border-top: 1px solid white;
+}
+
+#friend-activity h3 {
+    font-weight: normal;
+    font-size: 20px;
+}
+
+#friend-activity-list {
+    display: flex;
+}
+
+.friend-activity-item {
+    display: flex;
+    width: 50px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-right: 20px;
+}
+
+.friend-activity-item img {
+    height: 50px;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.friend-activity-item p {
+    margin: 10px;
+}
+
+#friend-reviews, #popular-reviews, #upcoming-events {
+    margin: 20px auto;
+    width: 100%;
+    padding: 0 20px;
+    border-top: 1px solid white;
+}
+
+#friend-reviews h3, #popular-reviews h3, #upcoming-events h3 {
+    font-weight: normal;
+    font-size: 20px;
+}
+
+.friend-review-item, .popular-review-item, .upcoming-event-item {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.friend-review-item img, .popular-review-item img {
+    height: 50px;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.friend-review-item div h4, .popular-review-item div h4, .upcoming-event-item div h4 {
+    margin: 5px 20px;
+}
+
+.friend-review-item div p, .popular-review-item div p {
+    margin: 10px 20px;
+}
+
+.upcoming-event-item img {
+    height: 50px;
+    object-fit: cover;
+}
+
+.upcoming-event-item div h4 {
+    font-weight: normal;
+    font-size: 18px;
+}
+
+#user-recent-reviews h3, #user-popular-reviews h3 {
+    border-bottom: 0.5px solid #f0f0f0;
+    text-align: left;
+    padding-bottom: 10px;
+}
+
 @media screen and (max-width: 1050px) {
     #user-items {
         width: 850px;
@@ -1081,8 +1326,8 @@ footer h5 {
     }
     #favorite-stadiums {
         order: 1;
+        height: 320px;
     }
-
     #user-stats {
         order: 3;
     }
@@ -1091,6 +1336,12 @@ footer h5 {
     }
     #wishlist {
         order: 4;
+    }
+    #user-recent-reviews {
+        order: 5;
+    }
+    #user-popular-reviews {
+        order: 6;
     }
     .nav-item {
         margin: 0 10px;

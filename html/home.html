@@ -42,57 +42,6 @@
             </form>
         </div>
 
-        <!-- Stadium Info Menu -->
-        <div class="stadium-information-container">
-            <div class="stadium-information-header">
-                <h2 id="stadium-name"></h2>
-                <h2 id="close-stadium-information">x</h2>
-            </div>
-            <img id="stadium-image">
-            <div class="stadium-facts">
-                <div class="stadium-facts-first">
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Location</h4>
-                            <img src="../images/icons/pin-emoji.png" alt="Pin">
-                        </div>
-                        <h3 id="stadium-location"></h3>
-                    </div>
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Opened</h4>
-                            <img src="../images/icons/calendar-emoji.png" alt="Calendar">
-                        </div>
-                        <h3 id="stadium-opened-date"></h3>
-                    </div>
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Capacity</h4>
-                            <img src="../images/icons/stadium-emoji.png" alt="Stadium">
-                        </div>
-                        <h3 id="stadium-capacity"></h3>
-                    </div>
-                </div>
-                <div class="stadium-facts-second">
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Teams</h4>
-                            <img src="../images/icons/trophy-emoji.png" alt="Trophy">
-                        </div>
-                        <h3 id="stadium-teams"></h3>
-                    </div>
-                    <div class="stadium-fact">
-                        <div>
-                            <h4>Construction Cost</h4>
-                            <img src="../images/icons/money-emoji.png" alt="Money">
-                        </div>
-                        <h3 id="stadium-construction-cost"></h3>
-                    </div>
-                </div>
-            </div>
-            <h3 id="signed-out-button">Sign Up to Add Stadium</h3>
-        </div>
-
         <!-- Main Content -->
         <div id="content-wrapper">
 
@@ -119,8 +68,7 @@
                 </div>
                 <div id="stadium-search-container">
                     <form id="search-stadiums">
-                        <input type="text" placeholder="Search stadiums..." id="search-field">
-                        <input type="submit" value="Search" id="submit-button">
+                        <input type="text" placeholder="Search stadiums..." id="home-search-field">
                     </form>
                 </div>
             </div>
@@ -133,19 +81,31 @@
                     <h2>Popular Stadiums</h2>
                     <ul id="popular-stadiums">
                         <li class="popular-stadium">
-                            <img src="../images/stadiums/lambeau-field.jpg" alt="Lambeau Field">
-                            <h3>Lambeau Field</h3>
-                            <h4>Green Bay, WI</h4>
+                            <a>
+                                <img src="../images/stadiums/lambeau-field.jpg" alt="Lambeau Field">
+                                <div class="popular-stadium-text">
+                                    <h3>Lambeau Field</h3>
+                                    <h4>Green Bay, WI</h4>
+                                </div>
+                            </a>
                         </li>
                         <li class="popular-stadium">
-                            <img src="../images/stadiums/madison-square-garden.jpg" alt="Madison Square Garden">
-                            <h3>Madison Square Garden</h3>
-                            <h4>New York, NY</h4>
+                            <a>
+                                <img src="../images/stadiums/madison-square-garden.jpg" alt="Madison Square Garden">
+                                <div class="popular-stadium-text">
+                                    <h3>Madison Square Garden</h3>
+                                    <h4>New York, NY</h4>
+                                </div>
+                            </a>
                         </li>
                         <li class="popular-stadium">
-                            <img src="../images/stadiums/dodger-stadium.jpg" alt="Dodger Stadium">
-                            <h3>Dodger Stadium</h3>
-                            <h4>Los Angeles, CA</h4>
+                            <a>
+                                <img src="../images/stadiums/yankee-stadium.jpg" alt="Yankee Stadium">
+                                <div class="popular-stadium-text">
+                                    <h3>Yankee Stadium</h3>
+                                    <h4>The Bronx, NY</h4>
+                                </div>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -163,10 +123,31 @@
                         </li>
                         <li class="stadium-tracker-info">
                             <div>
-                                <img src="../images/icons/phone.png" alt="Phone">
+                                <img src="../images/icons/wishlist.png" alt="Trophy">
                             </div>
-                            <h3>Stay Updated</h3>
-                            <h4>Get notifications about events at your favorite venues</h4>
+                            <h3>Add to Wishlist</h3>
+                            <h4>Save stadiums you want to visit in the future</h4>
+                        </li>
+                        <li class="stadium-tracker-info">
+                            <div>
+                                <img src="../images/icons/calendar.png" alt="Trophy">
+                            </div>
+                            <h3>Upcoming Events</h3>
+                            <h4>Stay updated on events at your favorite stadiums</h4>
+                        </li>
+                        <li class="stadium-tracker-info">
+                            <div>
+                                <img src="../images/icons/person.png" alt="Phone">
+                            </div>
+                            <h3>Follow Friends</h3>
+                            <h4>Connect with others and see their stadium visits</h4>
+                        </li>
+                        <li class="stadium-tracker-info">
+                            <div>
+                                <img src="../images/icons/notepad.png" alt="Trophy" style="margin-left: 5px;">
+                            </div>
+                            <h3>Rate & Review</h3>
+                            <h4>Share and view others' stadium experiences</h4>
                         </li>
                         <li class="stadium-tracker-info">
                             <div>

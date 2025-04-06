@@ -136,7 +136,7 @@ const selectors = {
 
 async function setView(active) {
     Object.keys(selectors).forEach(key => {
-        selectors[key].style.borderBottom = key === active ? '1px solid black' : 'none';
+        selectors[key].style.borderBottom = key === active ? '1px solid #f0f0f0' : 'none';
         stadiumLists[key].style.display = key === active ? 'block' : 'none';
     });
 
@@ -166,6 +166,8 @@ async function setView(active) {
         const result = await response.json();
 
         result.rows.forEach(stadium => {
+            const stadiumLink = document.createElement('a');
+            stadiumLink.href = `stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}`;
             const listItem = document.createElement('li');
             listItem.classList.add('stadiums-list-stadium');
             const img = document.createElement('img');
@@ -177,68 +179,7 @@ async function setView(active) {
             listItem.appendChild(img);
             listItem.appendChild(h3);
             listItem.appendChild(h4);
-
-            listItem.addEventListener('click', async () => {
-                const name = stadium.stadium_name;
-                overlay.style.display = 'block';
-                
-                try {
-                    const response = await fetch('http://localhost:3000/stadium/loadStadiumInfo', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: name })
-                    });
-            
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || 'Unknown error');
-                    }
-                    
-                    const result = await response.json();
-            
-                    const location = result.stadiumInfo.stadium.location;
-                    const image = result.stadiumInfo.stadium.image;
-                    const capacity = result.stadiumInfo.stadium.capacity;
-                    const openedDateSQL = result.stadiumInfo.stadium.openedDate;
-                    const date = new Date(openedDateSQL);
-                    const openedDate = date.toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                    const constructionCost = result.stadiumInfo.stadium.constructionCost;
-                    const teamsSQL = result.stadiumInfo.teams;
-                    const teams = teamsSQL.map(team => team.team_name).join(', ');
-                    const stadiumName = document.getElementById('stadium-name');
-                    const stadiumImage = document.getElementById('stadium-image');
-                    const stadiumLocation = document.getElementById('stadium-location');
-                    const stadiumCapacity = document.getElementById('stadium-capacity');
-                    const stadiumTeams = document.getElementById('stadium-teams');
-                    const stadiumOpenedDate = document.getElementById('stadium-opened-date');
-                    const stadiumConstructionCost = document.getElementById('stadium-construction-cost');
-        
-                    stadiumName.innerHTML = name;
-                    stadiumImage.src = image;
-                    stadiumLocation.innerHTML = location;
-                    stadiumCapacity.innerHTML = capacity;
-                    stadiumTeams.innerHTML = teams;
-
-                    if (name === "Gillette Stadium") {
-                        stadiumTeams.style.fontSize = '17px'
-                    }
-
-                    stadiumOpenedDate.innerHTML = openedDate;
-                    stadiumConstructionCost.innerHTML = constructionCost;
-        
-                    const stadiumInformationContainer = document.querySelector('.stadium-information-container');
-                    stadiumInformationContainer.style.display = 'block';
-                    document.body.style.overflow = 'hidden';
-        
-                } catch (error) {
-                    alert(error.message);
-                }
-        
-            });
+            stadiumLink.appendChild(listItem);
 
             const stadiumLists = document.getElementsByClassName('stadiums-list');
             let position = 0;
@@ -254,7 +195,7 @@ async function setView(active) {
             else if (active === "MLS") {
                 position = 4;
             }
-            stadiumLists[position].appendChild(listItem);
+            stadiumLists[position].appendChild(stadiumLink);
         })
 
         document.getElementById('loading-screen').style.display = 'none';
@@ -272,19 +213,3 @@ window.onload = async () => {
 Object.keys(selectors).forEach(key => {
     selectors[key].addEventListener('click', async () => setView(key));
 });
-
-const closeStadiumInformation = document.getElementById('close-stadium-information');
-const stadiumInformationContainer = document.querySelector('.stadium-information-container');
-
-closeStadiumInformation.addEventListener('click', () => {
-    stadiumInformationContainer.style.display = 'none';
-    overlay.style.display = 'none';
-    document.body.style.overflow = 'auto';
-})
-
-const signedOutButton = document.getElementById('signed-out-button');
-
-signedOutButton.addEventListener('click', () => {
-    stadiumInformationContainer.style.display = 'none';
-    toggleMenu(createAccountMenu, true);
-})
