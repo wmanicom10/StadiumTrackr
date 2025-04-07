@@ -7,7 +7,6 @@ const createAccountButtons = [document.getElementById('create-account'), documen
 const logInButton = document.getElementById('log-in');
 
 window.onload = () => {
-    searchResultsContainer.innerHTML = '';
     searchValue.value = '';
 }
 
@@ -135,15 +134,13 @@ Array.from(stadiums).forEach(stadium => {
     link.href = `stadium.html?stadium=${encodeURIComponent(stadiumName)}`;
 });
 
-const searchValue = document.getElementById('search-field');
+const searchValue = document.getElementById('home-search-field');
 let typingTimer;
 const debounceTime = 1000;
-const searchResultsContainer = document.getElementById("search-results-container");
 
 searchValue.addEventListener('input', (event) => {
     clearTimeout(typingTimer);
     typingTimer = setTimeout(() => {
-        searchResultsContainer.innerHTML = '';
         const name = event.target.value;
         if (!(name === '')) {
             searchStadiums(name);
@@ -189,7 +186,6 @@ async function searchStadiums(name) {
         searchResultsContainer.appendChild(stadiumLink);
 
         stadiumLink.addEventListener('click', () => {
-            searchResultsContainer.innerHTML = '';
             searchValue.value = '';
         })
 
