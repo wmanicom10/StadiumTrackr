@@ -261,7 +261,7 @@ logOutButton.addEventListener("click", () => {
     localStorage.setItem('username', '');
     window.location.replace('home.html');
     setTimeout(() => {
-        history.pushState(null, null, 'home.html');
+        history.pushState(null, null, 'index.html');
     }, 0);
 });
 

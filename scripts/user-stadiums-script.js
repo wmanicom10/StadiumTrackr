@@ -221,9 +221,9 @@ const logOutButton = document.getElementById('log-out');
 
 logOutButton.addEventListener("click", () => {
     localStorage.setItem('username', '');
-    window.location.replace('home.html');
+    window.location.replace('index.html');
     setTimeout(() => {
-        history.pushState(null, null, 'home.html');
+        history.pushState(null, null, 'index.html');
     }, 0);
 })
 
