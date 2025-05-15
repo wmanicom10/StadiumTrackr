@@ -1198,9 +1198,6 @@ footer h5 {
     font-size: 20px;
 }
 
-#stadium-info1, #stadium-info2 {
-}
-
 .stadium-fact {
     margin: 20px 0;
 }
@@ -1213,10 +1210,6 @@ footer h5 {
 
 .stadium-fact div h4, .stadium-fact div img {
     margin-right: 5px !important;
-}
-
-.stadium-fact div h4 {
-
 }
 
 .stadium-info-button {
