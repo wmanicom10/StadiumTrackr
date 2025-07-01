@@ -5,3 +5,4 @@ script.sh
 github-token.txt
 node_modules/
 test.html
+.env
