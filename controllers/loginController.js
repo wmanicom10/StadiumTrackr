@@ -1,5 +1,6 @@
 const mysql = require('mysql2/promise');
 const bcrypt = require('bcrypt');
+require('dotenv').config();
 
 const db = mysql.createPool({
     host: process.env.DB_HOST,
@@ -17,7 +18,7 @@ const handleLogin = async (req, res) => {
 
     try {
         const [[user]] = await db.execute(
-            'SELECT username, password FROM users WHERE username = ?',
+            'SELECT user_id, username, password FROM users WHERE username = ?',
             [username]
         );
 

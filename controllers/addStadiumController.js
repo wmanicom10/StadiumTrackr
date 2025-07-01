@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+require('dotenv').config();
 
 const db = mysql.createPool({
     host: process.env.DB_HOST,
@@ -8,50 +9,23 @@ const db = mysql.createPool({
 });
 
 const handleAddStadium = async (req, res) => {
-    const { username, name, date, rating, review } = req.body;
+    const { username, stadiumName, visitedOn, userReview, userRating, userLiked } = req.body;
 
-    const connection = await db.getConnection();
-    await connection.beginTransaction();
+    if (userLiked) {
+        await db.execute('INSERT INTO stadium_likes (stadium_id, user_id, liked_on) VALUES ((SELECT stadium_id FROM stadiums WHERE stadium_name = ?), (SELECT user_id FROM users WHERE username = ?), now())', [stadiumName, username])
+    }
 
-    try {
-        const [[stadium]] = await connection.execute(
-            'SELECT stadium_id FROM stadiums WHERE stadium_name = ?',
-            [name]
-        );
-        const [[user]] = await connection.execute(
-            'SELECT user_id FROM users WHERE username = ?',
-            [username]
-        );
+    if (userReview !== null) {
+        const [addReview] = await db.execute('INSERT INTO stadium_reviews (user_id, stadium_id, review, rating, reviewed_on, like_count) VALUES ((SELECT user_id FROM users WHERE username = ?), (SELECT stadium_id FROM stadiums WHERE stadium_name = ?), ?, ?, NOW(), 0)', [username, stadiumName, userReview, userRating]);
 
-        if (!stadium || !user) {
-            await connection.rollback();
-            return res.status(400).json({ error: 'Invalid stadium or user' });
-        }
+        const [addStadium] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, visited_on, rating, rated_on, review_id) VALUES ((SELECT stadium_id FROM stadiums WHERE stadium_name = ?), (SELECT user_id FROM users WHERE username = ?), ?, ?, now(), (SELECT review_id FROM stadium_reviews WHERE user_id = (SELECT user_id FROM users WHERE username = ?) AND stadium_id = (SELECT stadium_id FROM stadiums WHERE stadium_name = ?) ORDER BY reviewed_on DESC LIMIT 1))', [stadiumName, username, visitedOn, userRating, username, stadiumName]);
 
-        const [insertResult] = await connection.execute(
-            `INSERT INTO user_stadiums (stadium_id, user_id, visited_on, rating, rated_on, review) 
-             VALUES (?, ?, ?, ?, NOW(), ?)`,
-            [stadium.stadium_id, user.user_id, date, rating, review]
-        );
+        res.json({ addReview, addStadium });
+    }
+    else {
+        const [addStadium] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, visited_on, rating, rated_on, review_id) VALUES ((SELECT stadium_id FROM stadiums WHERE stadium_name = ?), (SELECT user_id FROM users WHERE username = ?), now(), ?, now(), null)', [stadiumName, username, userRating]);
 
-        const [updateResult] = await connection.execute(
-            'UPDATE stadiums SET visits = visits + 1 WHERE stadium_id = ?',
-            [stadium.stadium_id]
-        );
-
-        if (insertResult.affectedRows > 0 && updateResult.affectedRows > 0) {
-            await connection.commit();
-            return res.json({ message: 'Stadium added successfully' });
-        } else {
-            await connection.rollback();
-            return res.status(500).json({ error: 'Failed to add stadium' });
-        }
-    } catch (err) {
-        await connection.rollback();
-        console.error(err);
-        res.status(500).json({ error: 'Internal server error' });
-    } finally {
-        connection.release();
+        res.json({ addStadium });
     }
 };
 

@@ -3,32 +3,30 @@
 
     <head>
         <meta charset="utf-8">
-        <title>StadiumTrackr - Stadiums</title>
-        <link rel="stylesheet" href="../css/styles.css">
+        <title>StadiumTrackr</title>
+        <link rel="stylesheet" href="css/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
     </head>
 
     <body>
-
-        <!-- Loading Screen -->
-        <div id="loading-screen">
-            <p>Loading...</p>
-        </div>
 
         <div id="overlay"></div>
 
         <!-- Login Menu -->
         <div id="log-in-menu">
-            <h2>Log In</h2>
+            <h2>Sign In</h2>
             <h3 id="close-log-in-menu">x</h3>
             <form id="log-in-form">
-                <label for="username">Username</label>
-                <input type="text" id="username" class="input-field"><br>
-                <label for="password">Password</label>
-                <input type="password" id="password" class="input-field"><br>
-                <input type="submit" id="log-in-button" value="Log In">
+                <input type="text" id="username" class="input-field" placeholder="Username"><br>
+                <input type="password" id="password" class="input-field" placeholder="Password"><br>
+                <span class="forgot-password">Forgot Password?</span>
+                <input type="submit" id="log-in-button" value="Login">
+                <span class="sign-up-link">Don't have an account? <span>Sign up here</span></span>
             </form>
         </div>
 
@@ -37,21 +35,23 @@
             <h2>Create Account</h2>
             <h3 id="close-create-account-menu">x</h3>
             <form id="create-account-form">
-                <label for="new-email">Email address</label>
-                <input type="text" id="new-email" class="input-field"><br>
-                <label for="new-username">Username</label>
-                <input type="text" id="new-username" class="input-field"><br>
-                <label for="new-password">Password</label>
-                <input type="text" id="new-password" class="input-field"><br>
-                <input type="submit" id="sign-up-button" value="Sign Up">
+                <input type="text" id="new-username" class="input-field" placeholder="Username"><br>
+                <input type="text" id="new-email" class="input-field" placeholder="Email address"><br>
+                <input type="text" id="new-password" class="input-field" placeholder="Password"><br>
+                <div id="terms-and-conditions-container">
+                    <input type="checkbox" id="terms-and-conditions">
+                    <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html">Terms and Conditions</a></label>
+                </div>
+                <input type="submit" id="sign-up-button" value="Sign Up"><br>
+                <span class="sign-in-link">Already have an account? <span>Sign in here</span></span>
             </form>
         </div>
 
         <!-- Main Content -->
         <div id="content-wrapper">
 
-            <!-- Header -->
-            <header>
+            <!-- Logged Out Header -->
+            <header id="logged-out-header">
                 <h1>StadiumTrackr</h1>
                 <ul id="nav-items">
                     <li class="nav-item"><a href="./index.html">Home</a></li>
@@ -60,96 +60,190 @@
                     <li class="nav-item"><a href="">About</a></li>
                     <li class="nav-item button" id="log-in">Log In</li>
                     <li class="nav-item button" id="create-account">Sign Up</li>
+                    <li class="nav-item toggle">
+                        <input type="checkbox" id="sidebar-active">
+                        <label for="sidebar-active" class="open-sidebar-button">
+                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
+                        </label>
+                        <label id="sidebar-overlay" for="sidebar-active"></label>
+                        <div class="links-container">
+                            <label for="sidebar-active" class="close-sidebar-button">
+                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
+                            </label>
+                            <div class="sidebar-links">
+                                <a class="home-link" href="./index.html">Home</a>
+                                <a href="./stadiums.html">Stadiums</a>
+                                <a href="">Events</a>
+                                <a href="">About</a>
+                            </div>
+                            <div class="account-buttons">
+                                <span id="sidebar-log-in">Log In</span>
+                                <span id="sidebar-sign-up">Sign Up</span>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </header>
 
-            <!-- League Selector -->
-            <h2 id="league-text">Choose a league to explore its stadiums...</h2>
-            <div id="league-selector">
-                <ul id="leagues">
-                    <li class="league" id="nfl">
-                        <h3>NFL</h3>
-                        <img src="../images/logos/nfl-logo.png" alt="">
+            <!-- Logged In Header -->
+            <header id="logged-in-header">
+                <h1>StadiumTrackr</h1>
+                <ul id="nav-items">
+                    <li class="nav-item">
+                        <div id="user-dropdown-wrapper">
+                            <div id="logged-in-header-user-container">
+                                <img src="images/icons/person-gray.png" alt="" id="logged-in-header-user-profile-pic">
+                                <span id="logged-in-header-username"></span>
+                                <img src="images/icons/arrow-down.svg" alt="Arrow Down" height="25" width="25">
+                            </div>
+                            <div id="logged-in-header-user-container-hidden">
+                                <a href="user-home.html">Home</a>
+                                <a href="user-stadiums.html">My Stadiums</a>
+                                <a href="">Wishlist</a>
+                                <a href="">Reviews</a>
+                                <a href="">Settings</a>
+                            </div>
+                        </div>
                     </li>
-                    <li class="league" id="nba">
-                        <h3>NBA</h3>
-                        <img src="../images/logos/nba-logo.png" alt="">
-                    </li>
-                    <li class="league" id="mlb">
-                        <h3>MLB</h3>
-                        <img src="../images/logos/mlb-logo.png" alt="">
-                    </li>
-                    <li class="league" id="nhl">
-                        <h3>NHL</h3>
-                        <img src="../images/logos/nhl-logo.png" alt="">
-                    </li>
-                    <li class="league" id="mls">
-                        <h3>MLS</h3>
-                        <img src="../images/logos/mls-logo.png" alt="">
+                    <li class="nav-item"><a href="./index.html">Stadiums</a></li>
+                    <li class="nav-item"><a href="./index.html">Users</a></li>
+                    <li class="nav-item"><a href="./index.html">Events</a></li>
+                    <li class="nav-item button" id="log-out">Log Out</li>
+                    <li class="nav-item toggle">
+                        <input type="checkbox" id="sidebar-active-logged-in">
+                        <label for="sidebar-active-logged-in" class="open-sidebar-button">
+                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
+                        </label>
+                        <label id="sidebar-overlay-logged-in" for="sidebar-active-logged-in"></label>
+                        <div class="links-container">
+                            <label for="sidebar-active-logged-in" class="close-sidebar-button">
+                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
+                            </label>
+                            <div id="sidebar-user-info">
+                                <img src="images/icons/person-gray.png" alt="" id="sidebar-user-profile-pic">
+                                <span id="sidebar-username">Username</span>
+                            </div>
+                            <div id="sidebar-user-links">
+                                <a href="user-home.html">Home</a>
+                                <a href="user-stadiums.html">My Stadiums</a>
+                                <a href="">Wishlist</a>
+                                <a href="">Reviews</a>
+                                <a href="">Settings</a>
+                            </div>
+                            <div class="sidebar-links">
+                                <a href="./stadiums.html">Stadiums</a>
+                                <a href="">Users</a>
+                                <a href="">Events</a>
+                            </div>
+                            <div class="account-buttons">
+                                <span id="sidebar-log-out">Log Out</span>
+                            </div>
+                        </div>
                     </li>
                 </ul>
-            </div>
+            </header>
 
-            <!-- NFL Stadiums -->
-            <div class="stadiums-list-container" id="nfl-stadiums-list">
-                <h2>NFL Stadiums</h2>
-                <ul class="stadiums-list"></ul>
-            </div>
+            <main>
+                
+                <!-- League Selector -->
+                <div id="league-selector-container">
+                    <h2 id="league-text">Choose a league to explore its stadiums...</h2>
+                    <div id="league-selector">
+                        <div class="league" id="nfl">
+                            <h3>NFL</h3>
+                            <img src="../images/logos/nfl-logo.png" alt="">
+                        </div>
+                        <div class="league" id="nba">
+                            <h3>NBA</h3>
+                            <img src="../images/logos/nba-logo.png" alt="">
+                        </div>
+                        <div class="league" id="mlb">
+                            <h3>MLB</h3>
+                            <img src="../images/logos/mlb-logo.png" alt="">
+                        </div>
+                        <div class="league" id="nhl">
+                            <h3>NHL</h3>
+                            <img src="../images/logos/nhl-logo.png" alt="">
+                        </div>
+                        <div class="league" id="mls">
+                            <h3>MLS</h3>
+                            <img src="../images/logos/mls-logo.png" alt="">
+                        </div>
+                    </div>
+                </div>
 
-            <!-- NBA Stadiums -->
-            <div class="stadiums-list-container" id="nba-stadiums-list">
-                <h2>NBA Stadiums</h2>
-                <ul class="stadiums-list"></ul>
-            </div>
+                <!-- NFL Stadiums -->
+                <div class="stadiums-list-container" id="nfl-stadiums-list">
+                    <h2>NFL Stadiums</h2>
+                    <div class="stadiums-list"></div>
+                </div>
 
-            <!-- MLB Stadiums -->
-            <div class="stadiums-list-container" id="mlb-stadiums-list">
-                <h2>MLB Stadiums</h2>
-                <ul class="stadiums-list"></ul>
-            </div>
+                <!-- NBA Stadiums -->
+                <div class="stadiums-list-container" id="nba-stadiums-list">
+                    <h2>NBA Stadiums</h2>
+                    <div class="stadiums-list"></div>
+                </div>
 
-            <!-- NHL Stadiums -->
-            <div class="stadiums-list-container" id="nhl-stadiums-list">
-                <h2>NHL Stadiums</h2>
-                <ul class="stadiums-list"></ul>
-            </div>
+                <!-- MLB Stadiums -->
+                <div class="stadiums-list-container" id="mlb-stadiums-list">
+                    <h2>MLB Stadiums</h2>
+                    <div class="stadiums-list"></div>
+                </div>
 
-            <!-- MLS Stadiums -->
-            <div class="stadiums-list-container" id="mls-stadiums-list">
-                <h2>MLS Stadiums</h2>
-                <ul class="stadiums-list"></ul>
-            </div>
+                <!-- NHL Stadiums -->
+                <div class="stadiums-list-container" id="nhl-stadiums-list">
+                    <h2>NHL Stadiums</h2>
+                    <div class="stadiums-list"></div>
+                </div>
+
+                <!-- MLS Stadiums -->
+                <div class="stadiums-list-container" id="mls-stadiums-list">
+                    <h2>MLS Stadiums</h2>
+                    <div class="stadiums-list"></div>
+                </div>
+
+                <!-- Stadium Search -->
+                <div id="stadiums-search-container">
+                    <h3>Can't find what you're looking for? Search for a stadium</h3>
+                    <form id="search-stadiums" autocomplete="off">
+                        <div id="search-wrapper">
+                            <input type="text" placeholder="Search stadiums..." id="home-search-field">
+                            <div id="autocomplete-list"></div>
+                        </div>
+                    </form>
+                </div>
+            </main>
                 
             <!-- Footer -->
             <footer>
-                <ul id="footer-items">
-                    <li class="footer-item">
+                <div id="footer-items">
+                    <div class="footer-item">
                         <h4>StadiumTrackr</h4>
                         <h5>Track your stadium visits and discover new venues worldwide</h5>
-                    </li>
-                    <li class="footer-item">
+                    </div>
+                    <div class="footer-item footer-links">
                         <h4>Quick Links</h4>
-                        <h5>About Us</h5>
-                        <h5>Contact</h5>
-                        <h5>Privacy Policy</h5>
+                        <h5>About Us</h5><br>
+                        <h5>Contact</h5><br>
+                        <h5>Privacy Policy</h5><br>
                         <h5>Terms of Service</h5>
-                    </li>
-                    <li class="footer-item">
+                    </div>
+                    <div class="footer-item footer-links">
                         <h4>Features</h4>
-                        <h5>Stadium Database</h5>
-                        <h5>Event Calendar</h5>
-                        <h5>Achievement System</h5>
+                        <h5>Stadium Database</h5><br>
+                        <h5>Event Calendar</h5><br>
+                        <h5>Achievement System</h5><br>
                         <h5>Mobile App</h5>
-                    </li>
-                    <li class="footer-item">
+                    </div>
+                    <div class="footer-item">
                         <h4>Newsletter</h4>
                         <h5>Subscribe for updates and news</h5>
                         <form id="newsletter-email">
                             <input type="text" placeholder="Enter your email" id="email-field">
                             <input type="submit" value="Subscribe" id="subscribe-button">
                         </form>
-                    </li>
-                </ul>
+                    </div>
+                </div>
                 <h5 id="copyright">&copy;2025 StadiumTrackr. All rights reserved.</h5>
             </footer>
 

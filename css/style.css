@@ -1,0 +1,2329 @@
+/*  General  */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Rubik", sans-serif;
+    color: #f0f0f0;
+    margin: 0;
+    overflow-x: hidden;
+    background-color: #1c1c1c;
+}
+
+#overlay {
+    position: fixed;
+    background-color: rgba(0,0,0,0.9);
+    width: 100%;
+    height: 100%;
+    opacity: 0.7;
+    z-index: 1000;
+    display: none;
+}
+
+/*  Log In Menu, Create Account Menu  */
+#create-account-menu, #log-in-menu {
+    position: fixed;
+    width: 428px;
+    background: linear-gradient(145deg, #3a3939, #181818);
+    z-index: 1001;
+    display: none;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 25px;
+    color: #f0f0f0;
+}
+
+#log-in-menu {
+    height: 375px;
+}
+
+#create-account-menu {
+    height: 450px;
+}
+
+#create-account-menu h2, #log-in-menu h2 {
+    text-align: center;
+    font-size: 30px;
+    font-weight: normal;
+    margin-bottom: 0;
+}
+
+#close-create-account-menu, #close-log-in-menu {
+    font-size: 25px;
+    position: absolute;
+    left: 380px;
+    top: 1px;
+    font-weight: normal;
+}
+
+#close-create-account-menu:hover, #close-log-in-menu:hover {
+    cursor: pointer;
+}
+
+#create-account-form, #log-in-form{
+    text-align: center;
+    width: auto;
+    height: auto;
+    margin-top: 15px;
+}
+
+.input-field {
+    height: 40px;
+    width: 325px;
+    border-radius: 20px;
+    border: none;
+    background-color: #1c1c1c;
+    font-size: 16px;
+    padding: 0 10px 0 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    color: #f0f0f0;
+}
+
+.input-field::placeholder {
+    color: #f0f0f0;
+}
+
+.input-field:focus {
+    outline: none;
+    caret-color: #f0f0f0;
+}
+
+#log-in-form span, #create-account-menu span {
+    display: block;
+}
+
+.forgot-password {
+    text-align: right;
+    margin-right: 60px;
+    margin-top: 15px;
+    text-decoration: underline;
+}
+
+.forgot-password:hover {
+    cursor: pointer;
+    color: rgb(199, 199, 199);
+}
+
+#sign-up-button, #log-in-button {
+    background-color: rgb(36,99,235);
+    color: white;
+    font-size: 20px;
+    width: 325px;
+    height: 40px;
+    border: none;
+    border-radius: 20px;
+    margin-top: 15px;
+    transition: background-color 0.1s ease-in-out;
+}
+
+#log-in-menu span span, #create-account-menu span span {
+    display: inline;
+    color: #2463eb;
+}
+
+#create-account-menu label a {
+    color: #f0f0f0;
+    display: inline;
+    text-decoration: underline;
+}
+
+#log-in-menu span span:hover, #create-account-menu span span:hover, #create-account-menu label span:hover {
+    cursor: pointer;
+}
+
+.sign-up-link, .sign-in-link {
+    margin-top: 15px;
+}
+
+.sign-up-link span:hover, .sign-in-link span:hover {
+    text-decoration: underline;
+}
+
+#terms-and-conditions {
+    width: 25px;
+    height: 25px;
+}
+
+#terms-and-conditions-container {
+    display: flex;
+    margin-top: 15px;
+    text-align: left;
+    margin-left: 60px;
+    align-items: center;
+}
+
+#terms-and-conditions-container label {
+    margin-left: 5px;
+}
+
+#terms-and-conditions-container label a:hover {
+    color: rgb(199, 199, 199);
+}
+
+#log-in-button:hover, #sign-up-button:hover {
+    background-color: dodgerblue;
+    cursor: pointer;
+}
+
+.menu-fade-in {
+    animation: fadeInSlide 0.3s ease-out forwards;
+}
+
+.menu-fade-out {
+    animation: fadeOutSlide 0.2s ease-in forwards;
+}
+
+.overlay-fade-in {
+    animation: overlayFadeIn 0.3s ease-out forwards;
+}
+
+.overlay-fade-out {
+    animation: overlayFadeOut 0.2s ease-in forwards;
+}
+
+/*  Add Stadium Menu  */
+#add-stadium-menu {
+    position: fixed;
+    display: none;
+    width: 1020px;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1c1c1c;
+    z-index: 1001;
+    border-radius: 30px;
+}
+
+#add-stadium-menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+#add-stadium-name, #close-add-stadium-menu {
+    font-weight: normal;
+    font-size: 25px;
+    margin-top: 25px;
+}
+
+#add-stadium-name {
+    margin-left: 45px;
+}
+
+#close-add-stadium-menu {
+    margin-top: 20px;
+    margin-right: 45px;
+    cursor: pointer;
+}
+
+#add-stadium-container {
+    width: 92%;
+    margin: 15px auto 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+#add-stadium-container1 {
+    width: 460px;
+}
+
+#add-stadium-image {
+    width: 100%;
+    height: 290px;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+#add-stadium-user-controls {
+    display: flex;
+    width: 460px;
+    margin-top: 20px;
+    margin-left: 5px;
+}
+
+#add-stadium-rating-container {
+    margin-right: 25px;
+}
+
+#add-stadium-rating-text-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 212px;
+}
+
+#add-stadium-rating-text-container h3 {
+    font-weight: normal;
+    margin: 0 70px 0 0;
+}
+
+#rating-text {
+    font-weight: normal;
+    margin: 0;
+    width: auto;
+}
+
+#add-stadium-stars {
+    display: flex;
+    margin-top: 10px;
+    cursor: pointer;
+    align-items: center;
+}
+
+#add-stadium-rating-clear-button {
+    font-size: 18px;
+    opacity: 0;
+    margin-left: 15px;
+    transition: opacity 0.1s ease-in;
+}
+
+.add-stadium-star {
+    width: 40px;
+    height: 40px;
+    margin-right: 2px;
+}
+
+#add-stadium-like-container {
+    cursor: pointer;
+}
+
+#add-stadium-like-container:hover h3 {
+    color: rgb(199, 199, 199);
+}
+
+#add-stadium-like-container h3 {
+    font-weight: normal;
+    margin: 0;
+}
+
+#add-stadium-heart {
+    width: 44px;
+    height: 40px;
+    margin-top: 12px;
+}
+
+#add-stadium-form {
+    width: 425px;
+}
+
+#add-stadium-visited-container {
+    display: flex;
+}
+
+#add-stadium-date-visited-container {
+    display: flex;
+    flex-direction: column;
+    margin-right: 40px;
+}
+
+#add-stadium-date-visited-text {
+    font-size: 20px;
+    margin: 0;
+    margin-left: 5px;
+    font-weight: normal;
+}
+
+#add-stadium-visited-before-text {
+    font-size: 20px;
+    margin: 0;
+    font-weight: normal;
+}
+
+#add-stadium-date-visited {
+    border: none;
+    border-radius: 25px;
+    background-color: #2d2d2d;
+    color: #f0f0f0;
+    padding: 10px 15px;
+    font-size: 16px;
+    margin-top: 10px;
+    font-family: "Rubik", sans-serif;
+    text-align: center;
+}
+
+#add-stadium-date-visited::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+#add-stadium-visited-before-container {
+    display: flex;
+    flex-direction: column;
+}
+
+#add-stadium-visited-before {
+    background-color: #2d2d2d;
+    width: 44px;
+    height: 42px;
+    border-radius: 20px;
+    margin-top: 10px;
+    cursor: pointer ;
+}
+
+#visited-before-checkmark {
+    display: none;
+    width: 18px;
+    height: 18px;
+    margin-top: 12px;
+    margin-left: 13px;
+}
+
+#add-stadium-review-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+#add-stadium-review-text {
+    margin: 0;
+    font-size: 20px;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+#add-stadium-review {
+    background-color: #2d2d2d;
+    border-radius: 25px;
+    border: none;
+    width: 100%;
+    height: 260px;
+    margin-top: 10px;
+    padding: 20px;
+    resize: none;
+    color: #f0f0f0;
+    font-size: 18px;
+    font-family: "Rubik", sans-serif;
+}
+
+#add-stadium-review:focus {
+    outline: none;
+}
+
+#add-stadium-review::placeholder {
+    color: #f0f0f0;
+    font-size: 18px;
+    font-family: "Rubik", sans-serif;
+}
+
+#add-stadium-submit-button {
+    width: 180px;
+    padding: 10px 0;
+    font-size: 22px;
+    font-weight: normal;
+    margin: 40px auto 30px;
+    background-color: #2463eb;
+    text-align: center;
+    border-radius: 25px;
+    transition: background-color 0.1s ease-in-out;
+}
+
+#add-stadium-submit-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+/*  Header  */
+header {
+    display: flex;
+    height: 90px;
+    justify-content: space-between;
+    background-color: rgb(29, 64, 175);
+    align-items: center;
+    margin: 0;
+}
+
+header h1 {
+    margin-left: 50px;
+}
+
+header h1:hover {
+    cursor: default;
+}
+
+#nav-items {
+    list-style-type: none;
+    display: flex;
+    padding: 0;
+    align-items: center;
+    margin-right: 50px;
+}
+
+.nav-item {
+    margin: 0 20px;
+}
+
+.nav-item a {
+    color: #f0f0f0;
+    text-decoration: none;
+}
+
+.nav-item a:hover {
+    color: rgb(199, 198, 198);
+}
+
+.nav-item:hover {
+    cursor: pointer;
+}
+
+.nav-item.button {
+    background-color: rgb(36,99,235);
+    padding: 10px 15px;
+    border-radius: 20px;
+    margin: 0 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: background-color 0.1s ease-in-out;
+}
+
+.nav-item.nav-item.button:hover {
+    background-color: dodgerblue;
+}
+
+.toggle {
+    font-size: 40px;
+    display: none;
+}
+
+.toggle:hover {
+    cursor: pointer;
+}
+
+#sidebar-active, #sidebar-active-logged-in {
+    display: none;
+}
+
+label img:hover {
+    cursor: pointer;
+}
+
+.open-sidebar-button img {
+    margin-top: 10px;
+}
+
+.open-sidebar-button, .close-sidebar-button {
+    display: block;
+}
+
+.close-sidebar-button {
+    padding: 10px 15px 0;
+}
+
+.links-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    width: 100%;
+    align-items: flex-start;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    z-index: 999;
+    width: 220px;
+    background-color: #141414;
+    transition: 0.6s ease-out;
+}
+
+.links-container:hover {
+    cursor: default;
+}
+
+.links-container a {
+    font-size: 20px;
+    padding: 10px 15px;
+    width: 100%;
+    border-radius: 25px;
+    transition: background-color 0.1s ease-in;
+    margin: 5px 0;
+}
+
+.links-container a:hover {
+    background-color: #2463eb;
+    color: #f0f0f0;
+}
+
+#sidebar-active:checked ~ .links-container, #sidebar-active-logged-in:checked ~ .links-container {
+    right: 0;
+}
+
+#sidebar-active:checked ~ #sidebar-overlay, #sidebar-active-logged-in:checked ~ #sidebar-overlay-logged-in {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9;
+}
+
+.account-buttons {
+    width: 82%;
+    margin: 12px auto;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.account-buttons span {
+    justify-content: left;
+    display: inline-block;
+    font-size: 17px;
+    width: 130px;
+    background-color: #2463eb;
+    border-radius: 25px;
+    padding: 10px 15px;
+    margin-top: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.1s ease-in;
+}
+
+.account-buttons span:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+#logged-in-header #nav-items .nav-item:first-of-type {
+    margin: 0 10px;
+    height: 35px;
+}
+
+#logged-in-header-user-profile-pic {
+    height: 35px;
+    width: 35px;
+    margin-right: 10px;
+}
+
+#logged-in-header-user-container {
+    display: flex;
+    align-items: center;
+    z-index: 999;
+    position: relative;
+}
+
+#logged-in-header-user-container-hidden {
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    min-width: calc(100% + 20px);
+    width: max(100%, 140px);
+    background-color: #2d2d2d;
+    padding: 40px 0 5px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.2s ease-in;
+    pointer-events: none;
+}
+
+#user-dropdown-wrapper:hover #logged-in-header-user-container-hidden {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#logged-in-header-user-container-hidden a {
+    display: block;
+    margin: 5px 10px;
+    padding: 10px 12px;
+    color: #f0f0f0;
+    border-radius: 25px;
+    text-decoration: none;
+}
+
+#logged-in-header-user-container-hidden a:first-of-type {
+    margin: 15px 10px 5px;
+}
+
+#logged-in-header-user-container-hidden a:hover {
+    background-color: #2463eb;
+    color: white;
+}
+
+#user-dropdown-wrapper {
+    position: relative;
+}
+
+#sidebar-user-info {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+#sidebar-user-profile-pic {
+    height: 35px;
+    width: 35px;
+    margin-right: 10px;
+}
+
+#sidebar-username {
+    font-size: 20px;
+}
+
+#sidebar-user-links, .sidebar-links {
+    width: 85%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    border-bottom: 0.5px solid #f0f0f0;
+}
+
+#sidebar-user-links a:last-of-type, .sidebar-links a:last-of-type {
+    margin: 5px 0 15px;
+}
+
+.sidebar-links a:first-of-type {
+    margin: 15px 0 5px;
+}
+
+#logged-out-header .sidebar-links a:first-of-type {
+    margin: 5px 0;
+}
+
+/*  Welcome Text  */
+#welcome-text {
+    width: 80%;
+    margin: 40px auto 0;
+    text-align: center;
+}
+
+#welcome-text h2 {
+    font-size: 30px;
+    font-weight: normal;
+}
+
+#welcome-text h4 {
+    font-size: 22px;
+    font-weight: normal;
+    margin-bottom: 30px;
+}
+
+#button-container {
+    display: flex;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+#button-container h4 {
+    font-size: 15px;
+    background-color: #2463eb;
+    border-radius: 25px;
+    padding: 14px 20px;
+    margin: 0 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: background-color 0.1s ease-in-out;
+}
+
+#button-container h4:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+/*  Stadium Search  */
+#stadium-search-container {
+    width: 95%;
+    margin: 30px auto;
+}
+
+#home-search-field {
+    border: none;
+    background-color: #2d2d2d;
+    height: 40px;
+    border-radius: 20px;
+    padding-left: 21px;
+    z-index: 10;
+    width: 450px;
+    color: #f0f0f0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#search-wrapper {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+#home-search-field {
+    font-size: 15px;
+}
+
+#home-search-field:focus {
+    outline: none;
+    font-size: 15px;
+}
+
+#home-search-field::placeholder {
+    font-size: 15px;
+    color: #f0f0f0;
+}
+
+#autocomplete-list {
+    background-color: #2d2d2d;
+    width: 450px;
+    margin: 0 auto;
+    border-bottom-left-radius: 25px;
+    border-bottom-right-radius: 20px;
+    z-index: 999;
+    text-align: left;
+    padding: 0;
+    position: absolute;
+    top: 100%;
+    max-height: 285px;
+    overflow-y: auto;
+}
+
+#autocomplete-list a {
+    color: black;
+    text-decoration: none;
+}
+
+#autocomplete-list a .search-result h4 {
+    margin: 0;
+    font-size: 15px;
+    width: 97%;
+    padding: 8px 10px;
+    border-radius: 20px;
+    color: #f0f0f0;
+    font-weight: normal;
+}
+
+.search-result {
+    margin-bottom: 10px;
+}
+
+#autocomplete-list .search-result h4 {
+    margin: 0;
+    font-size: 15px;
+    color: #f0f0f0;
+    padding: 8px 10px;
+}
+
+#autocomplete-list a .search-result h4:hover {
+    background-color: #2463eb;
+    color: #f0f0f0;
+}
+
+/*  Popular Stadiums  */
+#popular-stadiums-container {
+    border-top: 0.5px solid #f0f0f0;
+    width: 95%;
+    margin: 45px auto;
+}
+
+#popular-stadiums-container h2 {
+    margin: 30px auto 20px;
+    text-align: center;
+    font-weight: normal;
+}
+
+#popular-stadiums {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.popular-stadium {
+    border-radius: 15px;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    padding: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    margin: 10px 20px;
+    will-change: transform;
+}
+
+.popular-stadium img {
+    width: 410px;
+    height: 220px;
+    object-fit: cover;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    display: block;
+}
+
+.popular-stadium-text {
+    background-color: #2d2d2d;
+    padding: 5px 0;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.popular-stadium-text h3, .popular-stadium-text h4 {
+    font-weight: normal;
+    text-align: center;
+    margin: 10px;
+    border: 0px solid white;
+    color: #f0f0f0;
+}
+
+.popular-stadium a {
+    text-decoration: none;
+    color: #f0f0f0;
+}
+
+.popular-stadium:hover {
+    cursor: pointer;
+    transform: scale(0.97);
+}
+
+/*  StadiumTrackr Info  */
+#stadium-trackr-container {
+    border-top: 0.5px solid #f0f0f0;
+    width: 95%;
+    margin: 0 auto;
+}
+
+#stadium-trackr-container h2 {
+    margin: 30px auto 20px;
+    text-align: center;
+    font-weight: normal;
+}
+
+#stadium-trackr-infos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.stadium-trackr-info {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    background-color: #2d2d2d;
+    width: 410px;
+    text-align: center;
+    border-radius: 15px;
+    margin: 10px 20px 25px;
+}
+
+.stadium-trackr-info div {
+    margin: 0 auto;
+    height: 60px;
+    width: 60px;
+    border-radius: 30px;
+    margin-top: 20px;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stadium-trackr-info img {
+    height: 30px;
+    width: 30px;
+    object-fit: cover;
+}
+
+.stadium-trackr-info h3, .stadium-trackr-info h4 {
+    margin: 10px;
+    font-weight: normal;
+}
+
+.stadium-trackr-info h4 {
+    margin-bottom: 20px;
+}
+
+/*  Home Stadium Map  */
+#home-stadium-map-container {
+    width: 95%;
+    border-top: 0.5px solid #f0f0f0;
+    margin: 20px auto;
+}
+
+#home-stadium-map-container h2 {
+    text-align: center;
+    margin: 30px auto 30px;
+    font-weight: normal;
+}
+
+#home-stadium-map {
+    width: 91%;
+    margin: 0 auto;
+    height: 500px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    background-color: #2d2d2d;
+}
+
+.leaflet-popup-content-wrapper {
+    background-color: #2d2d2d !important;
+    width: 350px;
+    border-radius: 10px;
+    padding: 10px;
+    font-family: 'Rubik', sans-serif;
+}
+
+.leaflet-popup-close-button {
+    margin: 10px 10px 0 0;
+}
+
+.leaflet-popup-tip {
+    background-color: #2d2d2d !important;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+    color: #f0f0f0 !important;
+}
+
+.leaflet-bottom {
+    display: none;
+}
+
+.leaflet-touch .leaflet-bar a:first-child {
+    border-top-left-radius: 15px !important;
+    border-top-right-radius: 15px !important;
+}
+
+.leaflet-touch .leaflet-bar a:last-child {
+    border-bottom-left-radius: 15px !important;
+    border-bottom-right-radius: 15px !important;
+}
+
+.leaflet-control-zoom, .leaflet-bar, .leaflet-control {
+    border: 0px !important;
+}
+
+.leaflet-control-zoom-in, .leaflet-control-zoom-out {
+    height: 40px !important;
+    width: 35px !important;
+    background-color: #1c1c1c !important;
+}
+
+.leaflet-control-zoom-in span, .leaflet-control-zoom-out span {
+    font-family: "Rubik", sans-serif;
+    font-weight: normal;
+    color: #f0f0f0;
+    position: relative;
+    display: block;
+    padding-top: 5px !important;
+}
+
+.popup-card h4 {
+    color: #f0f0f0;
+    margin: 0;
+    font-size: 16px;
+}
+
+.popup-card p {
+    margin: 10px 0 !important;
+    color: #f0f0f0;
+}
+
+.popup-card img {
+    height: 175px;
+    width: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.popup-card img:hover {
+    transform: scale(0.97);
+    cursor: pointer;
+}
+
+/*  Footer  */
+footer {
+    background-color: rgb(20, 20, 20);
+    height: 330px;
+    text-align: left;
+    margin-top: 50px;
+}
+
+#footer-items {
+    margin: 0 auto;
+    width: 90%;
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid #f0f0f0;
+}
+
+.footer-links h4 {
+    margin-bottom: 10px !important;
+}
+
+.footer-links h5 {
+    display: inline-block;
+    margin: 13px 0;
+}
+
+.footer-links h5:hover {
+    cursor: pointer;
+    color: #f0f0f0;
+}
+
+.footer-item {
+    width: 300px;
+    margin-top: 40px;
+    margin: 40px 10px 0;
+}
+
+.footer-item h4 {
+    font-weight: bold;
+    margin: 0;
+}
+
+footer h5 {
+    font-weight: normal;
+    color: rgb(115, 124, 137);
+}
+
+#newsletter-email {
+    display: flex;
+}
+
+#email-field {
+    height: 35px;
+    width: 195px;
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border: none;
+    margin: 0;
+    padding-left: 15px;
+    background-color: #2d2d2d;
+    color: #f0f0f0;
+}
+
+#email-field::placeholder {
+    color: #f0f0f0;
+}
+
+#email-field:focus {
+    outline: none;
+    caret-color: #f0f0f0;
+}
+
+#subscribe-button {
+    height: 35px;
+    background-color: rgb(36,99,235);
+    border: none;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    margin: 0;
+    padding: 0 15px 0 12px;
+    color: white;
+    transition: background-color 0.1s ease-in-out;
+}
+
+#subscribe-button:hover {
+    cursor: pointer;
+    background-color: dodgerblue;
+}
+
+#copyright {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/*  League Selector  */
+#league-selector-container {
+    width: 530px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+#league-text {
+    font-weight: normal;
+    margin: 0;
+}
+
+#league-selector {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: #2d2d2d;
+    border-radius: 35px;
+    padding: 10px;
+    margin-top: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.league {
+    display: flex;
+    align-items: center;
+    border-radius: 25px;
+    padding: 8px 12px;
+}
+
+.league:hover {
+    cursor: pointer;
+}
+
+.league h3 {
+    font-weight: normal;
+    margin: 0 5px 0 5px;
+}
+
+.league img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+}
+
+/*  Stadiums List  */
+.stadiums-list-container {
+    border-top: 0.5px solid #f0f0f0;
+    width: 95%;
+    margin: 45px auto;
+}
+
+.stadiums-list-container h2 {
+    margin: 30px auto 20px;
+    text-align: center;
+    font-weight: normal;
+}
+
+.stadiums-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.stadiums-list-stadium {
+    border-radius: 15px;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    padding: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    margin: 10px 20px;
+    will-change: transform;
+}
+
+.stadiums-list-stadium img {
+    width: 410px;
+    height: 220px;
+    object-fit: cover;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    display: block;
+}
+
+.stadiums-list-stadium-text {
+    background-color: #2d2d2d;
+    padding: 5px 0;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.stadiums-list-stadium-text h3, .stadiums-list-stadium-text h4 {
+    font-weight: normal;
+    text-align: center;
+    margin: 10px;
+    border: 0px solid white;
+    color: #f0f0f0;
+}
+
+.stadiums-list-stadium a {
+    text-decoration: none;
+    color: #f0f0f0;
+}
+
+.stadiums-list-stadium:hover {
+    cursor: pointer;
+    transform: scale(0.97);
+}
+
+/*  Stadiums Search  */
+#stadiums-search-container {
+    width: 95%;
+    margin: 0 auto;
+    text-align: center;
+    border-top: 0.5px solid #f0f0f0;
+}
+
+#stadiums-search-container h3 {
+    font-weight: normal;
+    margin: 40px 0 20px;
+}
+
+/*  Stadium Info  */
+#stadium-content {
+    display: none;
+}
+
+#stadium-container {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+#stadium-name {
+    font-weight: normal;
+    font-size: 28px;
+    margin-top: 35px;
+    margin-bottom: 10px;
+}
+
+#stadium-info-container {
+    border-top: 0.5px solid #f0f0f0;
+    display: flex;
+}
+
+#stadium-image {
+    display: none;
+    width: 640px;
+    height: 360px;
+    object-fit: cover;
+    border-radius: 25px;
+    margin-top: 20px;
+}
+
+#stadium-info1-container {
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+}
+
+.user-button {
+    text-align: center;
+    font-weight: normal;
+    background-color: #2463eb;
+    border-radius: 25px;
+    margin: 0;
+    padding: 8px 18px;
+    margin-bottom: 15px;
+    transition: background-color 0.1s ease-in-out;
+    width: 282px;
+}
+
+#user-buttons-container h3:last-of-type {
+    margin-bottom: 0;
+}
+
+#user-buttons-container h3:hover {
+    background-color: dodgerblue;
+    cursor: pointer;
+}
+
+#stadium-user-controls {
+    display: none;
+    justify-content: space-between;
+}
+
+#stadium-visited {
+    margin-right: 25px;
+}
+
+#stadium-visited-text {
+    width: 65px;
+}
+
+#stadium-like {
+    cursor: pointer;
+}
+
+#stadium-like:hover h4 {
+    cursor: pointer;
+    color: rgb(199, 199, 199);
+}
+
+#stadium-like-text {
+    width: 50px;
+}
+
+#stadium-like-heart {
+    cursor: pointer;
+}
+
+#stadium-rating div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#stadium-rating-clear-button {
+    margin-right: 4px;
+    margin-bottom: 9px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.1s ease-in;
+}
+
+.stadium-user-control {
+    margin: 0 40px 0 0;
+}
+
+.stadium-user-control h4 {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+#stadium-visited:hover {
+    cursor: pointer;
+}
+
+#stadium-visited:hover h4 {
+    color: rgb(199, 199, 199);
+}
+
+#stadium-visited-checkmark {
+    width: 45px;
+    height: 45px;
+}
+
+#stadium-like-heart {
+    width: 48px;
+    height: 42px;
+    margin-top: 3px;
+}
+
+#stadium-rating-stars {
+    margin-top: 5px;
+    display: flex;
+    cursor: pointer;
+}
+
+#stadium-rating-stars img {
+    width: 36px;
+    height: 36px;
+    cursor: pointer;
+    margin-right: 2px;
+}
+
+.stadium-rating-star-half {
+    width: 18px;
+    height: 36px;
+    cursor: pointer;
+    margin-right: 2px;
+}
+
+#stadium-stats {
+    display: flex;
+}
+
+.stadium-stat {
+    margin-right: 50px;
+}
+
+.stadium-stat div {
+    display: flex;
+    align-items: center;
+}
+
+.stadium-stat h4, .stadium-stat h3 {
+    font-weight: normal;
+    margin: 0;
+}
+
+.stadium-stat h4 {
+    font-size: 20px;
+    margin-right: 7px;
+}
+
+.stadium-stat h3 {
+    font-size: 25px;
+    margin-top: 10px;
+}
+
+.stadium-stat img {
+    width: 25px;
+    height: 25px;
+    object-fit: cover;
+}
+
+#stadium-info2 {
+    margin-top: 10px;
+    margin-left: 30px;
+}
+
+.stadium-info {
+    margin: 26px 30px;
+}
+
+.stadium-info:last-of-type {
+    margin-bottom: 0;
+}
+
+.stadium-info h4, .stadium-info h3 {
+    font-weight: normal;
+    margin: 0;
+}
+
+.stadium-info img {
+    height: 25px;
+    width: 25px;
+    object-fit: contain;
+}
+
+.stadium-info div {
+    display: flex;
+    align-items: center;
+}
+
+.stadium-info div img {
+    margin-right: 7px;
+}
+
+.stadium-info h4 {
+    font-size: 20px;
+    margin-right: 7px;
+}
+
+.stadium-info h3 {
+    font-size: 25px;
+    margin-top: 12px;
+}
+
+#location-header {
+    margin-right: 3px;
+}
+
+/*  Friend's Activity  */
+#friend-activity-container {
+    width: 1000px;
+    margin: 50px auto 0;
+}
+
+#friend-activity-content {
+    display: none;
+}
+
+#friend-activity-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid #f0f0f0;
+}
+
+#friend-activity-header h4, #friend-activity-header h5 {
+    font-weight: normal;
+    margin: 0;
+    margin-bottom: 7px;
+}
+
+#friend-activity-header h4 {
+    font-size: 20px;
+}
+
+#friend-activity-header h5:hover {
+    color: rgb(199, 198, 198);
+    cursor: pointer;
+}
+
+#friend-activity {
+    display: flex;
+    padding: 20px 0 5px;
+    flex-wrap: wrap;
+}
+
+.friend-activity-item {
+    text-align: center;
+    margin: 0 9px 15px;
+    width: 65px;
+}
+
+.friend-activity-item:first-of-type {
+    margin: 0 9px 15px 0;
+}
+
+.friend-activity-profile-pic {
+    height: 50px;
+    width: 50px;
+}
+
+.friend-activity-item div {
+    display: flex;
+    margin-top: 3px;
+    justify-content: center;
+}
+
+.friend-activity-star {
+    height: 12px;
+    width: 12px;
+    margin: 0 1px 2px 0;
+}
+
+.friend-activity-half-star {
+    height: 12px;
+    width: 12px;
+    object-fit: contain;
+    object-position: left;
+    margin: 0 1px 2px 0;
+}
+
+/*  Friend's Reviews / Popular Reviews / Recent Reviews / Upcoming Events  */
+#friend-reviews-container, #popular-reviews-container, #recent-reviews-container, #upcoming-events-container {
+    width: 1000px;
+    margin: 30px auto 0;
+}
+
+#friend-reviews-content, #popular-reviews-content, #recent-reviews-content, #upcoming-events-content {
+    display: none;
+}
+
+#friend-reviews-header, #popular-reviews-header, #recent-reviews-header, #upcoming-events-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 0.5px solid #f0f0f0;
+}
+
+#friend-reviews-header h4, #friend-reviews-header h5, #popular-reviews-header h4, #popular-reviews-header h5, #recent-reviews-header h4, #recent-reviews-header h5, #upcoming-events-header h4, #upcoming-events-header h5 {
+    font-weight: normal;
+    margin: 0;
+    margin-bottom: 7px;
+}
+
+#friend-reviews-header h4, #popular-reviews-header h4, #recent-reviews-header h4, #upcoming-events-header h4 {
+    font-size: 20px;
+}
+
+#friend-reviews-header h5:hover, #popular-reviews-header h5:hover, #recent-reviews-header h5:hover, #upcoming-events-header h5:hover {
+    color: rgb(199, 198, 198);
+    cursor: pointer;
+}
+
+#no-popular-reviews-container, #no-recent-reviews-container, #no-upcoming-events-container {
+    display: none;
+    width: 50%;
+    margin: 40px auto;
+    text-align: center;
+}
+
+#no-popular-reviews-message, #no-recent-reviews-message, #no-upcoming-events-message {
+    margin: 0;
+    font-weight: normal;
+}
+
+.friend-review, .popular-review, .recent-review, .upcoming-event {
+    display: flex;
+    padding: 20px 0;
+}
+
+#friend-reviews > *:not(:last-child), #popular-reviews > *:not(:last-child), #recent-reviews > *:not(:last-child), #upcoming-events > *:not(:last-child) {
+    border-bottom: 0.5px solid #f0f0f03a;
+}
+
+.upcoming-event:first-of-type {
+    padding: 25px 0 20px;
+}
+
+.friend-review img, .popular-review img, .recent-review img, .upcoming-event img {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+}
+
+.user-review {
+    width: 85%;
+    max-width: 85%;
+}
+
+.event-info {
+    width: 75%;
+    max-width: 75%;
+}
+
+.event-info h4 {
+    overflow-wrap: break-word;
+}
+
+.user-review div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.user-review h4, .user-review h5 {
+    margin: 0;
+    font-weight: normal;
+}
+
+.user-review div h4 {
+    margin-top: 0px;
+    margin-right: 10px;
+    font-size: 18px;
+    max-width: 90%;
+    overflow-wrap: break-word;
+}
+
+.user-review h4 {
+    margin-top: 15px;
+    font-size: 16px;
+}
+
+.user-review h5 {
+    margin-top: 15px;
+    max-width: 90%;
+    font-size: 15px;
+    overflow-wrap: break-word;
+}
+
+.user-review-stars {
+    display: flex;
+}
+
+.user-review-star {
+    height: 14px !important;
+    width: 14px !important;
+    object-fit: contain;
+    margin: 0 1px 2px 0 !important;
+}
+
+.user-review-half-star {
+    height: 14px !important;
+    width: 7px !important;
+    object-fit: contain;
+    margin: 0 1px 2px 0 !important;
+}
+
+.event-info h4 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 18px;
+}
+
+.event-info h4:not(:first-of-type) {
+    margin-top: 15px;
+}
+
+#stadium-map-container {
+    width: 1000px;
+    border-top: 0.5px solid #f0f0f0;
+    margin: 20px auto;
+}
+
+#stadium-map-container h2 {
+    text-align: center;
+    margin: 30px auto 30px;
+    font-weight: normal;
+}
+
+#stadium-map {
+    width: 100%;
+    margin: 0 auto;
+    height: 500px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    background-color: #2d2d2d;
+}
+
+/*  Skeleton Loading  */
+.skeleton-card {
+    width: 410px;
+    height: 302px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    border-radius: 15px;
+    margin: 10px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#popular-stadiums-skeleton {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#stadium-name-skeleton {
+    width: 40%;
+    height: 33px;
+    margin: 35px 0 10px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+#stadium-info-container-skeleton {
+    display: flex;
+}
+
+#stadium-image-skeleton {
+    width: 640px;
+    height: 360px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    margin-top: 20px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+#stadium-info1-container-skeleton {
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+    width: 640px;
+}
+
+#user-buttons-container-skeleton {
+    width: 230px;
+    border-radius: 25px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#user-buttons-container-skeleton h3 {
+    text-align: center;
+    font-weight: normal;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    width: 230px;
+    height: 38px;
+    margin: 0 0 15px;
+    padding: 10px 0;
+}
+
+.user-button-skeleton:last-of-type {
+    margin-bottom: 0 !important;
+}
+
+#stadium-stats-skeleton {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#stadium-stats-skeleton div {
+    display: flex;
+}
+
+#stadium-stats-skeleton > div:first-of-type {
+    margin-bottom: 15px;
+}
+
+.stadium-stat-skeleton {
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    height: 65px;
+}
+
+.stadium-stat-skeleton:first-of-type, .stadium-stat-skeleton:nth-of-type(3) {
+    width: 110px;
+}
+
+.stadium-stat-skeleton:nth-of-type(2), .stadium-stat-skeleton:last-of-type {
+    width: 180px;
+}
+
+.stadium-stat-skeleton:first-of-type, .stadium-stat-skeleton:nth-of-type(3) {
+    margin-right: 30px;
+}
+
+#stadium-info2-skeleton {
+    margin-top: 10px;
+    margin-left: 30px;
+}
+
+.stadium-info-skeleton {
+    margin: 26px 30px;
+}
+
+.stadium-info-skeleton:last-of-type {
+    margin-bottom: 0;
+}
+
+.stadium-info-skeleton div:first-of-type {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    height: 25px;
+    width: 150px;
+    margin: 0;
+}
+
+.stadium-info-skeleton > div:nth-child(2) {
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    height: 29px;
+    width: 250px;
+    margin-top: 13px;
+}
+
+#friend-reviews-header-skeleton, #popular-reviews-header-skeleton, #recent-reviews-header-skeleton, #upcoming-events-header-skeleton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    height: 32px;
+    width: 100%;
+}
+
+#friend-reviews-skeleton, #popular-reviews-skeleton, #recent-reviews-skeleton, #upcoming-events-skeleton {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.friend-review-skeleton, .popular-review-skeleton, .recent-review-skeleton {
+    display: flex;
+    padding: 15px 0;
+}
+
+.upcoming-event-skeleton {
+    display: flex;
+    padding: 13px 0;
+}
+
+.friend-review-profile-pic-skeleton, .popular-review-profile-pic-skeleton, .recent-review-profile-pic-skeleton, .upcoming-event-image-skeleton {
+    min-width: 50px;
+    height: 50px;
+    margin-right: 20px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+.user-review-skeleton {
+    width: 85%;
+    max-width: 85%;
+}
+
+.event-info-skeleton {
+    width: 75%;
+    max-width: 75%;
+}
+
+.event-info-skeleton:last-of-type div:last-of-type {
+    margin-bottom: 12px;
+}
+
+.event-info-skeleton div {
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    width: 200px;
+    height: 22px;
+    margin-bottom: 15px;
+}
+
+.user-review-skeleton div:first-of-type {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.user-review-name-skeleton {
+    margin-top: 0px;
+    margin-right: 10px;
+    max-width: 90%;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    height: 22px;
+    width: 250px;
+}
+
+.user-review-review-skeleton {
+    margin-top: 15px;
+    max-width: 90%;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    height: 22px;
+    width: 400px;
+}
+
+.user-review-likes-skeleton {
+    margin-top: 15px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    height: 22px;
+    width: 100px;
+}
+
+#friend-activity-header-skeleton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    height: 32px;
+    width: 100%;
+}
+
+#friend-activity-skeleton {
+    display: flex;
+    padding: 20px 0 5px;
+    flex-wrap: wrap;
+}
+
+.friend-activity-item-skeleton {
+    margin: 0 9px 15px;
+    width: 65px;
+}
+
+.friend-activity-profile-pic-skeleton {
+    height: 50px;
+    width: 50px;
+    margin: 0 auto;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+.friend-activity-stars-skeleton {
+    margin-top: 6px;
+    width: 100%;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    height: 20px;
+}
+
+/*  Media Queries  */ 
+@media screen and (max-width: 365px) {
+    #stadium-stats {
+        flex-direction: column;
+    }
+    .stadium-stat:nth-of-type(2) {
+        margin-top: 15px;
+    }
+}
+
+@media screen and (max-width: 415px) {
+    #stadium-user-controls {
+        flex-wrap: wrap;
+    }
+    #stadium-rating {
+        margin-top: 10px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .leaflet-popup-content-wrapper {
+        width: 300px;
+    }
+    .popup-card img {
+        width: 250px;
+        height: 150px;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #create-account-menu, #log-in-menu {
+        width: 300px;
+    }
+    #close-create-account-menu, #close-log-in-menu {
+        left: 260px;
+        top: -6px;
+    }
+    #create-account-menu h2, #log-in-menu h2 {
+        font-size: 25px;
+    }
+    .input-field, #sign-up-button, #log-in-button {
+        width: 250px;
+    }
+    .forgot-password {
+        margin-right: 35px;
+    }
+    #log-in-form span, #create-account-form span, #create-account-form a, #create-account-form label {
+        font-size: 14px;
+    }
+    #log-in-menu {
+        height: 350px;
+    }
+    #terms-and-conditions-container {
+        margin-left: 15px;
+    }
+    #terms-and-conditions-container label {
+        margin-left: 5px;
+    }
+    #create-account-menu {
+        height: 425px;
+    }
+    #sign-up-button, #log-in-button {
+        font-size: 18px;
+    }
+    .popular-stadium img {
+        max-width: 100%;
+    }
+    .stadiums-list-stadium img {
+        max-width: 100%;
+    }
+}
+
+@media screen and (max-width: 520px) {
+    .user-review-name-skeleton {
+        width: 63%;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    #nav-items .button {
+        display: none;
+    }
+    #search-wrapper {
+        width: 100%;
+    }
+    #home-search-field {
+        width: 100%;
+        max-width: 450px;
+    }
+    #autocomplete-list {
+        width: 100%;
+        max-width: 450px;
+    }
+    #league-selector-container {
+        width: 90%;
+        margin: 30px auto;
+        text-align: center;
+    }
+    #league-selector {
+        width: 300px;
+        margin: 15px auto 0;
+    }
+    .league h3 {
+        display: none;
+    }
+    #stadium-info1-container, #stadium-info1-container-skeleton {
+        flex-direction: column !important;
+    }
+    #add-stadium-container {
+        flex-direction: column;
+    }
+    #add-stadium-container1 {
+        width: 90%;
+    }
+    #add-stadium-image {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    #add-stadium-user-controls {
+        flex-direction: column;
+    }
+    #add-stadium-like-container {
+        margin-top: 20px;
+    }
+}
+
+@media screen and (max-width: 715px) {
+    #stadium-image, #stadium-image-skeleton {
+        max-width: 640px;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        height: auto;
+    }
+    #stadium-info1-container, #stadium-info1-container-skeleton {
+        display: flex;
+        flex-direction: column;
+        max-width: 640px !important;
+        width: 100% !important;
+    }
+    #stadium-info2, #stadium-info2-skeleton {
+        margin: 0 !important;
+    }
+    .stadium-stat:nth-child(2), .stadium-stat-skeleton:nth-child(2) {
+        margin-right: 0;
+    }
+    #user-buttons-container, #user-buttons-container-skeleton {
+        margin: 30px 0;
+    }
+    #stadium-stats-skeleton {
+        width: 100%;
+        justify-content: start;
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 830px) {
+    footer {
+        height: 760px;
+    }
+    #footer-items {
+        width: 95%;
+        margin: 0 auto;
+        padding: 20px 10px 30px 10px;
+        flex-direction: column;
+        flex-wrap: wrap;
+    }
+    .footer-item {
+        margin: 0;
+    }
+    #copyright {
+        margin-bottom: 30px;
+    }
+    .footer-item {
+        margin-top: 10px;
+    }
+}
+
+@media screen and (max-width: 947px) {
+    #nav-items {
+        margin-right: 10px;
+    }
+    #nav-items li {
+        display: none;
+    }
+
+    #nav-items .toggle {
+        display: list-item;
+    }
+}
+
+@media screen and (max-width: 970px) {
+    #add-stadium-visited-container {
+        flex-direction: column;
+    }
+    #add-stadium-visited-before-container {
+        margin-top: 20px;
+    }
+    #add-stadium-visited-before-text {
+        margin-left: 5px;
+    }
+    #add-stadium-date-visited {
+        width: 139px;
+        padding: 10px 15px;
+    }
+    #add-stadium-container1 {
+        width: 56%;
+    }
+    #add-stadium-image {
+        width: 100%;
+        height: auto;
+    }
+    #add-stadium-review {
+    }
+}
+
+@media screen and (max-width: 1100px) {
+    #stadium-container {
+        width: 90%;
+    }
+    #stadium-info-container, #stadium-info-container-skeleton {
+        flex-direction: column;
+    }
+    #stadium-info2 {
+        margin: 0;
+        margin-top: 20px;
+    }
+    #stadium-info2-skeleton {
+        margin: 30px 0 0;
+    }
+    .stadium-info, .stadium-info-skeleton {
+        margin: 26px 0;
+    }
+    .stadium-info:first-of-type, .stadium-info-skeleton:first-of-type {
+        margin-top: 0;
+    }
+    #stadium-info1-container, #stadium-info1-container-skeleton {
+        justify-content: space-between;
+        width: 640px;
+    }
+    .user-button:last-of-type {
+        margin-bottom: 0 !important;
+    }
+    #popular-reviews-container, #recent-reviews-container, #upcoming-events-container {
+        width: 90%;
+    }
+    #popular-reviews-container {
+        margin-top: 40px;
+    }
+    #stadium-map-container {
+        width: 90%;
+    }
+    #friend-activity-container {
+        width: 90%;
+    }
+    #add-stadium-menu {
+        width: 93%;
+    }
+    #add-stadium-form {
+        margin-left: 40px;
+    }
+}
+
+/*  Keyframes  */
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+@keyframes fadeOutSlide {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    to {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+}
+
+@keyframes overlayFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.7;
+    }
+}
+
+@keyframes overlayFadeOut {
+    from {
+        opacity: 0.7;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes loading {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}

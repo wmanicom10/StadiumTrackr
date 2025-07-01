@@ -4,10 +4,15 @@
     <head>
         <meta charset="utf-8">
         <title>StadiumTrackr</title>
-        <link rel="stylesheet" href="../css/styles.css">
+        <link rel="stylesheet" href="css/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     </head>
 
     <body>
@@ -16,14 +21,14 @@
         
         <!-- Login Menu -->
         <div id="log-in-menu">
-            <h2>Log In</h2>
+            <h2>Sign In</h2>
             <h3 id="close-log-in-menu">x</h3>
             <form id="log-in-form">
-                <label for="username">Username</label>
-                <input type="text" id="username" class="input-field"><br>
-                <label for="password">Password</label>
-                <input type="password" id="password" class="input-field"><br>
-                <input type="submit" id="log-in-button" value="Log In">
+                <input type="text" id="username" class="input-field" placeholder="Username"><br>
+                <input type="password" id="password" class="input-field" placeholder="Password"><br>
+                <span class="forgot-password">Forgot Password?</span>
+                <input type="submit" id="log-in-button" value="Login">
+                <span class="sign-up-link">Don't have an account? <span>Sign up here</span></span>
             </form>
         </div>
 
@@ -32,13 +37,15 @@
             <h2>Create Account</h2>
             <h3 id="close-create-account-menu">x</h3>
             <form id="create-account-form">
-                <label for="new-email">Email address</label>
-                <input type="text" id="new-email" class="input-field"><br>
-                <label for="new-username">Username</label>
-                <input type="text" id="new-username" class="input-field"><br>
-                <label for="new-password">Password</label>
-                <input type="text" id="new-password" class="input-field"><br>
-                <input type="submit" id="sign-up-button" value="Sign Up">
+                <input type="text" id="new-username" class="input-field" placeholder="Username"><br>
+                <input type="text" id="new-email" class="input-field" placeholder="Email address"><br>
+                <input type="text" id="new-password" class="input-field" placeholder="Password"><br>
+                <div id="terms-and-conditions-container">
+                    <input type="checkbox" id="terms-and-conditions">
+                    <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html">Terms and Conditions</a></label>
+                </div>
+                <input type="submit" id="sign-up-button" value="Sign Up"><br>
+                <span class="sign-in-link">Already have an account? <span>Sign in here</span></span>
             </form>
         </div>
 
@@ -55,148 +62,186 @@
                     <li class="nav-item"><a href="">About</a></li>
                     <li class="nav-item button" id="log-in">Log In</li>
                     <li class="nav-item button" id="create-account">Sign Up</li>
+                    <li class="nav-item toggle">
+                        <input type="checkbox" id="sidebar-active">
+                        <label for="sidebar-active" class="open-sidebar-button">
+                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
+                        </label>
+                        <label id="sidebar-overlay" for="sidebar-active"></label>
+                        <div class="links-container">
+                            <label for="sidebar-active" class="close-sidebar-button">
+                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
+                            </label>
+                            <a class="home-link" href="./index.html">Home</a>
+                            <a href="./stadiums.html">Stadiums</a>
+                            <a href="">Events</a>
+                            <a href="">About</a>
+                            <div class="account-buttons">
+                                <span id="sidebar-log-in">Log In</span>
+                                <span id="sidebar-sign-up">Sign Up</span>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </header>
 
-            <!-- Welcome Text -->
-            <div id="welcome-text">
-                <h2>Track Your Stadium Visits</h2>
-                <h4>Discover and share your experiences at sports venues worldwide</h4>
-                <div id="button-container">
-                    <h4 id="get-started-button">Get Started</h4>
-                    <h4>Learn More</h4>
-                </div>
-                <div id="stadium-search-container">
-                    <form id="search-stadiums">
-                        <input type="text" placeholder="Search stadiums..." id="home-search-field">
-                    </form>
-                </div>
-            </div>
+            <main>
 
-            <!-- Home Content -->
-            <div id="home-content">
-
-                <!-- Popular Stadiums -->
-                <div id="popular-stadiums-container">
-                    <h2>Popular Stadiums</h2>
-                    <ul id="popular-stadiums">
-                        <li class="popular-stadium">
-                            <a>
-                                <img src="../images/stadiums/lambeau-field.jpg" alt="Lambeau Field">
-                                <div class="popular-stadium-text">
-                                    <h3>Lambeau Field</h3>
-                                    <h4>Green Bay, WI</h4>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="popular-stadium">
-                            <a>
-                                <img src="../images/stadiums/madison-square-garden.jpg" alt="Madison Square Garden">
-                                <div class="popular-stadium-text">
-                                    <h3>Madison Square Garden</h3>
-                                    <h4>New York, NY</h4>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="popular-stadium">
-                            <a>
-                                <img src="../images/stadiums/yankee-stadium.jpg" alt="Yankee Stadium">
-                                <div class="popular-stadium-text">
-                                    <h3>Yankee Stadium</h3>
-                                    <h4>The Bronx, NY</h4>
-                                </div>
-                            </a>
-                        </li>
-                    </ul>
+                <!-- Welcome Text -->
+                <div id="welcome-text">
+                    <h2>Track Your Stadium Visits</h2>
+                    <h4>Discover and share your experiences at sports venues worldwide</h4>
+                    <div id="button-container">
+                        <h4 id="get-started-button">Get Started</h4>
+                        <h4>Learn More</h4>
+                    </div>
+                    <div id="stadium-search-container">
+                        <form id="search-stadiums" autocomplete="off">
+                            <div id="search-wrapper">
+                                <input type="text" placeholder="Search stadiums..." id="home-search-field">
+                                <div id="autocomplete-list"></div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
 
-                <!-- StadiumTrackr Info -->
-                <div id="stadium-tracker-container">
-                    <h2>Why Use StadiumTrackr?</h2>
-                    <ul id="stadium-tracker-infos">
-                        <li class="stadium-tracker-info">
-                            <div>
-                                <img src="../images/icons/pin.png" alt="Pin">
+                <!-- Home Content -->
+                <div id="home-content">
+
+                    <!-- Popular Stadiums -->
+                    <div id="popular-stadiums-container">
+                        <h2>Popular Stadiums</h2>
+                        <div id="popular-stadiums-skeleton">
+                            <div class="skeleton-card"></div>
+                            <div class="skeleton-card"></div>
+                            <div class="skeleton-card"></div>
+                        </div>
+                        <div id="popular-stadiums">
+                            <div class="popular-stadium">
+                                <a>
+                                    <img src="../images/stadiums/lambeau-field.jpg" alt="Lambeau Field">
+                                    <div class="popular-stadium-text">
+                                        <h3>Lambeau Field</h3>
+                                        <h4>Green Bay, WI</h4>
+                                    </div>
+                                </a>
                             </div>
-                            <h3>Track Visits</h3>
-                            <h4>Keep a record of all the stadiums you've visited</h4>
-                        </li>
-                        <li class="stadium-tracker-info">
-                            <div>
-                                <img src="../images/icons/wishlist.png" alt="Trophy">
+                            <div class="popular-stadium">
+                                <a>
+                                    <img src="../images/stadiums/madison-square-garden.jpg" alt="Madison Square Garden">
+                                    <div class="popular-stadium-text">
+                                        <h3>Madison Square Garden</h3>
+                                        <h4>New York, NY</h4>
+                                    </div>
+                                </a>
                             </div>
-                            <h3>Add to Wishlist</h3>
-                            <h4>Save stadiums you want to visit in the future</h4>
-                        </li>
-                        <li class="stadium-tracker-info">
-                            <div>
-                                <img src="../images/icons/calendar.png" alt="Trophy">
+                            <div class="popular-stadium">
+                                <a>
+                                    <img src="../images/stadiums/yankee-stadium.jpg" alt="Yankee Stadium">
+                                    <div class="popular-stadium-text">
+                                        <h3>Yankee Stadium</h3>
+                                        <h4>The Bronx, NY</h4>
+                                    </div>
+                                </a>
                             </div>
-                            <h3>Upcoming Events</h3>
-                            <h4>Stay updated on events at your favorite stadiums</h4>
-                        </li>
-                        <li class="stadium-tracker-info">
-                            <div>
-                                <img src="../images/icons/person.png" alt="Phone">
+                        </div>
+                    </div>
+
+                    <!-- StadiumTrackr Info -->
+                    <div id="stadium-trackr-container">
+                        <h2>Why Use StadiumTrackr?</h2>
+                        <div id="stadium-trackr-infos">
+                            <div class="stadium-trackr-info">
+                                <div>
+                                    <img src="../images/icons/pin.png" alt="Pin">
+                                </div>
+                                <h3>Track Visits</h3>
+                                <h4>Keep a record of all the stadiums you've visited</h4>
                             </div>
-                            <h3>Follow Friends</h3>
-                            <h4>Connect with others and see their stadium visits</h4>
-                        </li>
-                        <li class="stadium-tracker-info">
-                            <div>
-                                <img src="../images/icons/notepad.png" alt="Trophy" style="margin-left: 5px;">
+                            <div class="stadium-trackr-info">
+                                <div>
+                                    <img src="../images/icons/wishlist.png" alt="Trophy">
+                                </div>
+                                <h3>Add to Wishlist</h3>
+                                <h4>Save stadiums you want to visit in the future</h4>
                             </div>
-                            <h3>Rate & Review</h3>
-                            <h4>Share and view others' stadium experiences</h4>
-                        </li>
-                        <li class="stadium-tracker-info">
-                            <div>
-                                <img src="../images/icons/trophy.png" alt="Trophy">
+                            <div class="stadium-trackr-info">
+                                <div>
+                                    <img src="../images/icons/calendar.png" alt="Trophy">
+                                </div>
+                                <h3>Upcoming Events</h3>
+                                <h4>Stay updated on events at your favorite stadiums</h4>
                             </div>
-                            <h3>Earn Badges</h3>
-                            <h4>Collect achievements for visting different stadiums</h4>
-                        </li>
-                    </ul>
+                            <div class="stadium-trackr-info">
+                                <div>
+                                    <img src="../images/icons/person.png" alt="Phone">
+                                </div>
+                                <h3>Follow Friends</h3>
+                                <h4>Connect with others and see their stadium visits</h4>
+                            </div>
+                            <div class="stadium-trackr-info">
+                                <div>
+                                    <img src="../images/icons/notepad.png" alt="Trophy" style="margin-left: 5px;">
+                                </div>
+                                <h3>Rate & Review</h3>
+                                <h4>Share and view others' stadium experiences</h4>
+                            </div>
+                            <div class="stadium-trackr-info">
+                                <div>
+                                    <img src="../images/icons/trophy.png" alt="Trophy">
+                                </div>
+                                <h3>Earn Badges</h3>
+                                <h4>Collect achievements for visting different stadiums</h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                <!-- Interactive Stadium Map -->
+                <div id="home-stadium-map-container">
+                    <h2>Interactive Stadium Map</h2>
+                    <div id="home-stadium-map"></div>
+                </div>
+
+            </main>
 
             <!-- Footer -->
             <footer>
-                <ul id="footer-items">
-                    <li class="footer-item">
+                <div id="footer-items">
+                    <div class="footer-item">
                         <h4>StadiumTrackr</h4>
                         <h5>Track your stadium visits and discover new venues worldwide</h5>
-                    </li>
-                    <li class="footer-item">
+                    </div>
+                    <div class="footer-item footer-links">
                         <h4>Quick Links</h4>
-                        <h5>About Us</h5>
-                        <h5>Contact</h5>
-                        <h5>Privacy Policy</h5>
+                        <h5>About Us</h5><br>
+                        <h5>Contact</h5><br>
+                        <h5>Privacy Policy</h5><br>
                         <h5>Terms of Service</h5>
-                    </li>
-                    <li class="footer-item">
+                    </div>
+                    <div class="footer-item footer-links">
                         <h4>Features</h4>
-                        <h5>Stadium Database</h5>
-                        <h5>Event Calendar</h5>
-                        <h5>Achievement System</h5>
+                        <h5>Stadium Database</h5><br>
+                        <h5>Event Calendar</h5><br>
+                        <h5>Achievement System</h5><br>
                         <h5>Mobile App</h5>
-                    </li>
-                    <li class="footer-item">
+                    </div>
+                    <div class="footer-item">
                         <h4>Newsletter</h4>
                         <h5>Subscribe for updates and news</h5>
                         <form id="newsletter-email">
                             <input type="text" placeholder="Enter your email" id="email-field">
                             <input type="submit" value="Subscribe" id="subscribe-button">
                         </form>
-                    </li>
-                </ul>
+                    </div>
+                </div>
                 <h5 id="copyright">&copy;2025 StadiumTrackr. All rights reserved.</h5>
             </footer>
-
+            
         </div>
 
         <!-- Scripts -->
-        <script type="module" src="../scripts/home-script.js"></script>
+        <script type="module" src="../scripts/index-script.js"></script>
         
     </body>
 </html>

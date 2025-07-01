@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>StadiumTrackr</title>
+        <!--<link rel="stylesheet" href="../css/styles.css">-->
+        <link rel="stylesheet" href="../css/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
+    </head>
+
+    <body>
+
+        <div id="overlay"></div>
+        
+        <!-- Login Menu -->
+        <div id="log-in-menu">
+            <h2>Sign In</h2>
+            <h3 id="close-log-in-menu">x</h3>
+            <form id="log-in-form">
+                <input type="text" id="username" class="input-field" placeholder="Username"><br>
+                <input type="password" id="password" class="input-field" placeholder="Password"><br>
+                <span class="forgot-password">Forgot Password?</span>
+                <input type="submit" id="log-in-button" value="Login">
+                <span class="sign-up-link">Don't have an account? <span>Sign up here</span></span>
+            </form>
+        </div>
+
+        <!-- Create Account Menu -->
+        <div id="create-account-menu">
+            <h2>Create Account</h2>
+            <h3 id="close-create-account-menu">x</h3>
+            <form id="create-account-form">
+                <input type="text" id="new-email" class="input-field" placeholder="Username"><br>
+                <input type="text" id="new-username" class="input-field" placeholder="Email address"><br>
+                <input type="text" id="new-password" class="input-field" placeholder="Password"><br>
+                <div id="terms-and-conditions-container">
+                    <input type="checkbox" id="terms-and-conditions">
+                    <label for="terms-and-conditions">I agree to the <span>Terms and Conditions</span></label>
+                </div>
+                <input type="submit" id="sign-up-button" value="Sign Up"><br>
+                <span class="sign-in-link">Already have an account? <span>Sign in here</span></span>
+            </form>
+        </div>
+
+        <!-- Main Content -->
+        <div id="content-wrapper">
+
+            <!-- Header -->
+            <header>
+                <h1>StadiumTrackr</h1>
+                <ul id="nav-items">
+                    <li class="nav-item"><a href="./index.html">Home</a></li>
+                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
+                    <li class="nav-item"><a href="">Events</a></li>
+                    <li class="nav-item"><a href="">About</a></li>
+                    <li class="nav-item button" id="log-in">Log In</li>
+                    <li class="nav-item button" id="create-account">Sign Up</li>
+                    <li class="nav-item toggle">
+                        <input type="checkbox" id="sidebar-active">
+                        <label for="sidebar-active" class="open-sidebar-button">
+                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
+                        </label>
+                        <label id="sidebar-overlay" for="sidebar-active"></label>
+                        <div class="links-container">
+                            <label for="sidebar-active" class="close-sidebar-button">
+                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
+                            </label>
+                            <a class="home-link" href="./index.html">Home</a>
+                            <a href="./stadiums.html">Stadiums</a>
+                            <a href="">Events</a>
+                            <a href="">About</a>
+                            <div class="account-buttons">
+                                <span id="sidebar-log-in">Log In</span>
+                                <span id="sidebar-create-account">Sign Up</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </header>
+
+            <main>
+
+                <div style="width: 400px; margin: 0 auto; text-align: center;">
+                    <h2>Terms and Conditions</h2>
+                    <h3 style="font-weight: normal;">Don't do bad stuff</h3>
+                </div>
+                
+            </main>
+            
+        </div>
+        
+    </body>
+</html>
