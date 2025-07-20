@@ -56,45 +56,15 @@
                 <h2 id="close-add-stadium-menu">x</h2>
             </div>
             <div id="add-stadium-container">
-                <div id="add-stadium-container1">
-                    <img src="" id="add-stadium-image">
-                    <div id="add-stadium-user-controls">
-                        <div id="add-stadium-rating-container">
-                            <div id="add-stadium-rating-text-container">
-                                <h3 id="add-stadium-rating-text">Rating</h3>
-                                <h4 id="rating-text"></h4>
-                            </div>
-                            <div id="add-stadium-stars">
-                                <img src="images/icons/gray-star.png" alt="" class="add-stadium-star">
-                                <img src="images/icons/gray-star.png" alt="" class="add-stadium-star">
-                                <img src="images/icons/gray-star.png" alt="" class="add-stadium-star">
-                                <img src="images/icons/gray-star.png" alt="" class="add-stadium-star">
-                                <img src="images/icons/gray-star.png" alt="" class="add-stadium-star">
-                                <span id="add-stadium-rating-clear-button">X</span>
-                            </div>
-                        </div>
-                        <div id="add-stadium-like-container">
-                            <h3>Like</h3>
-                            <img src="images/icons/gray-heart.png" alt="" id="add-stadium-heart">
-                        </div>
-                    </div>
-                </div>
+                <img src="" id="add-stadium-image">
                 <form id="add-stadium-form">
-                    <div id="add-stadium-visited-container">
-                        <div id="add-stadium-date-visited-container">
-                            <h3 id="add-stadium-date-visited-text">Visited On</h3>
-                            <input type="date" id="add-stadium-date-visited">
-                        </div>
-                        <div id="add-stadium-visited-before-container">
-                            <h3 id="add-stadium-visited-before-text">Visited Before?</h3>
-                            <div id="add-stadium-visited-before">
-                                <img src="images/icons/checkmark.png" id="visited-before-checkmark">
-                            </div>
-                        </div>
+                    <div id="add-stadium-date-visited-container">
+                        <h3 id="add-stadium-date-visited-text">Visited On</h3>
+                        <input type="date" id="add-stadium-date-visited">
                     </div>
-                    <div id="add-stadium-review-container">
-                        <h3 id="add-stadium-review-text">Review</h3>
-                        <textarea id="add-stadium-review" placeholder="Add a review..."></textarea>
+                    <div id="add-stadium-note-container">
+                        <h3 id="add-stadium-note-text">Note</h3>
+                        <textarea id="add-stadium-note" placeholder="Add a note..."></textarea>
                     </div>
                 </form>
             </div>
@@ -154,14 +124,14 @@
                                 <a href="user-home.html">Home</a>
                                 <a href="user-stadiums.html">My Stadiums</a>
                                 <a href="">Wishlist</a>
-                                <a href="">Reviews</a>
+                                <a href="">Achievements</a>
                                 <a href="">Settings</a>
                             </div>
                         </div>
                     </li>
                     <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="">Users</a></li>
                     <li class="nav-item"><a href="">Events</a></li>
+                    <li class="nav-item"><a href="">About</a></li>
                     <li class="nav-item button" id="log-out">Log Out</li>
                     <li class="nav-item toggle">
                         <input type="checkbox" id="sidebar-active-logged-in">
@@ -175,19 +145,19 @@
                             </label>
                             <div id="sidebar-user-info">
                                 <img src="images/icons/person-gray.png" alt="" id="sidebar-user-profile-pic">
-                                <span id="sidebar-username">Username</span>
+                                <span id="sidebar-username"></span>
                             </div>
                             <div id="sidebar-user-links">
                                 <a href="user-home.html">Home</a>
                                 <a href="user-stadiums.html">My Stadiums</a>
                                 <a href="">Wishlist</a>
-                                <a href="">Reviews</a>
+                                <a href="">Achievements</a>
                                 <a href="">Settings</a>
                             </div>
                             <div class="sidebar-links">
                                 <a href="./stadiums.html">Stadiums</a>
-                                <a href="">Users</a>
                                 <a href="">Events</a>
+                                <a href="">About</a>
                             </div>
                             <div class="account-buttons">
                                 <span id="sidebar-log-out">Log Out</span>
@@ -206,46 +176,49 @@
                         <div id="stadium-info-container-skeleton">
                             <div id="stadium-info1-skeleton">
                                 <div id="stadium-image-skeleton"></div>
-                                <div id="stadium-info1-container-skeleton">
-                                    <div id="stadium-stats-skeleton">
-                                        <div>
-                                            <div class="stadium-stat-skeleton"></div>
-                                            <div class="stadium-stat-skeleton"></div>
+                                <div id="stadium-info2-skeleton">
+                                    <div id="stadium-user-controls-skeleton">
+                                        <div class="stadium-user-control-skeleton">
+                                            <div></div>
+                                            <div></div>
                                         </div>
-                                        <div>
-                                            <div class="stadium-stat-skeleton"></div>
-                                            <div class="stadium-stat-skeleton"></div>
+                                        <div class="stadium-user-control-skeleton">
+                                            <div></div>
+                                            <div></div>
                                         </div>
                                     </div>
-                                    <div id="user-buttons-container-skeleton">
-                                        <h3 class="user-button-skeleton"></h3>
-                                        <h3 class="user-button-skeleton"></h3>
-                                        <h3 class="user-button-skeleton"></h3>
+                                    <div id="stadium-user-buttons-skeleton">
+                                        <div></div>
+                                        <div></div>
                                     </div>
                                 </div>
                             </div>
-                            <div id="stadium-info2-skeleton">
-                                <div class="stadium-info-skeleton">
-                                    <div></div>
-                                    <div></div>
+                            <div id="stadium-info1-container-skeleton">
+                                    <div class="stadium-info-skeleton">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div class="stadium-info-skeleton">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div class="stadium-info-skeleton">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div class="stadium-info-skeleton">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div class="stadium-info-skeleton">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                    <div class="stadium-info-skeleton">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
                                 </div>
-                                <div class="stadium-info-skeleton">
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                                <div class="stadium-info-skeleton">
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                                <div class="stadium-info-skeleton">
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                                <div class="stadium-info-skeleton">
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div id="stadium-content">
@@ -254,51 +227,30 @@
                             <div id="stadium-info1">
                                 <img id="stadium-image">
                                 <div id="stadium-info1-container">
-                                    <div>
-                                        <div id="stadium-user-controls">
-                                            <div class="stadium-user-control" id="stadium-visited">
-                                                <h4 id="stadium-visited-text">Rate</h4>
-                                                <img src="images/icons/checkmark-white.png" id="stadium-visited-checkmark">
-                                            </div>
-                                            <div class="stadium-user-control" id="stadium-like">
-                                                <h4 id="stadium-like-text">Like</h4>
-                                                <img src="images/icons/gray-heart.png" id="stadium-like-heart">
-                                            </div>
-                                            <div class="stadium-user-control" id="stadium-rating">
-                                                <div>
-                                                    <h4 id="stadium-rating-text"></h4>
-                                                    <span id="stadium-rating-clear-button">X</span>
-                                                </div>
-                                                <div id="stadium-rating-stars">
-                                                    <img src="images/icons/gray-star.png" alt="" class="stadium-rating-star">
-                                                    <img src="images/icons/gray-star.png" alt="" class="stadium-rating-star">
-                                                    <img src="images/icons/gray-star.png" alt="" class="stadium-rating-star">
-                                                    <img src="images/icons/gray-star.png" alt="" class="stadium-rating-star">
-                                                    <img src="images/icons/gray-star.png" alt="" class="stadium-rating-star">
-                                                </div>
-                                            </div>
+                                    <div id="stadium-user-controls">
+                                        <div class="stadium-user-control" id="stadium-user-control-visited">
+                                            <h3 id="stadium-user-control-visited-text">Visited</h3>
+                                            <img src="images/icons/checkmark-white.png" alt="" id="user-visited-checkmark">
                                         </div>
-                                        <div id="stadium-stats">
-                                            <div class="stadium-stat">
-                                                <div>
-                                                    <h4>Visits</h4>
-                                                    <img src="images/icons/person-emoji.png" alt="">
-                                                </div>
-                                                <h3 id="stadium-visits"></h3>
-                                            </div>
-                                            <div class="stadium-stat">
-                                                <div>
-                                                    <h4>Average Rating</h4>
-                                                    <img src="images/icons/star-emoji.png" alt="">
-                                                </div>
-                                                <h3 id="stadium-average-rating"></h3>
-                                            </div>
+                                        <div class="stadium-user-control" id="stadium-user-control-wishlist">
+                                            <h3 id="stadium-user-control-wishlist-text">Add to Wishlist</h3>
+                                            <img src="images/icons/gray-heart.png" alt="" id="user-wishlist-heart">
                                         </div>
                                     </div>
-                                    <div id="user-buttons-container"></div>
+                                    <div id="stadium-user-buttons">
+                                        <h3 id="stadium-log-button">Log Your Visit</h3>
+                                        <h3 id="stadium-activity-button">Show Your Activity</h3>
+                                    </div>
                                 </div>
                             </div>
                             <div id="stadium-info2">
+                                <div class="stadium-info">
+                                    <div>
+                                        <h4>Visits</h4>
+                                        <img src="images/icons/person-emoji.png" alt="">
+                                    </div>
+                                    <h3 id="stadium-visits"></h3>
+                                </div>
                                 <div class="stadium-info">
                                     <div>
                                         <h4 id="location-header">Location</h4>
@@ -315,12 +267,6 @@
                                 </div>
                                 <div class="stadium-info">
                                     <div>
-                                        <h4>Teams</h4>
-                                    </div>
-                                    <h3 id="stadium-teams"></h3>
-                                </div>
-                                <div class="stadium-info">
-                                    <div>
                                         <h4>Capacity</h4>
                                         <img src="images/icons/stadium-emoji.png" alt="">
                                     </div>
@@ -333,180 +279,14 @@
                                     </div>
                                     <h3 id="stadium-construction-cost"></h3>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Friend's Activity -->
-                <div id="friend-activity-container">
-                    <div id="friend-activity-skeleton-container">
-                        <div id="friend-activity-header-skeleton"></div>
-                        <div id="friend-activity-skeleton">
-                            <div class="friend-activity-item-skeleton">
-                                <div class="friend-activity-profile-pic-skeleton"></div>
-                                <div class="friend-activity-stars-skeleton"></div>
-                            </div>
-                            <div class="friend-activity-item-skeleton">
-                                <div class="friend-activity-profile-pic-skeleton"></div>
-                                <div class="friend-activity-stars-skeleton"></div>
-                            </div>
-                            <div class="friend-activity-item-skeleton">
-                                <div class="friend-activity-profile-pic-skeleton"></div>
-                                <div class="friend-activity-stars-skeleton"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="friend-activity-content">
-                        <div id="friend-activity-header">
-                            <h4>Friend's Activity</h4>
-                            <h5>MORE</h5>
-                        </div>
-                        <div id="friend-activity"></div>
-                    </div>
-                </div>
-
-                <!-- Friend's Reviews -->
-                <div id="friend-reviews-container">
-                    <div id="friend-reviews-skeleton-container">
-                        <div id="friend-reviews-header-skeleton"></div>
-                        <div id="friend-reviews-skeleton">
-                            <div class="friend-review-skeleton">
-                                <div class="friend-review-profile-pic-skeleton"></div>
-                                <div class="user-review-skeleton">
+                                <div class="stadium-info">
                                     <div>
-                                        <div class="user-review-name-skeleton"></div>
+                                        <h4>Teams</h4>
                                     </div>
-                                    <div class="user-review-review-skeleton"></div>
-                                    <div class="user-review-likes-skeleton"></div>
-                                </div>
-                            </div>
-                            <div class="friend-review-skeleton">
-                                <div class="friend-review-profile-pic-skeleton"></div>
-                                <div class="user-review-skeleton">
-                                    <div>
-                                        <div class="user-review-name-skeleton"></div>
-                                    </div>
-                                    <div class="user-review-review-skeleton"></div>
-                                    <div class="user-review-likes-skeleton"></div>
-                                </div>
-                            </div>
-                            <div class="friend-review-skeleton">
-                                <div class="friend-review-profile-pic-skeleton"></div>
-                                <div class="user-review-skeleton">
-                                    <div>
-                                        <div class="user-review-name-skeleton"></div>
-                                    </div>
-                                    <div class="user-review-review-skeleton"></div>
-                                    <div class="user-review-likes-skeleton"></div>
+                                    <h3 id="stadium-teams"></h3>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="friend-reviews-content">
-                        <div id="friend-reviews-header">
-                            <h4>Friend's Reviews</h4>
-                            <h5>MORE</h5>
-                        </div>
-                        <div id="friend-reviews"></div>
-                    </div>
-                </div>
-
-                <!-- Popular Reviews -->
-                <div id="popular-reviews-container">
-                    <div id="popular-reviews-skeleton-container">
-                        <div id="popular-reviews-header-skeleton"></div>
-                        <div id="popular-reviews-skeleton">
-                            <div class="popular-review-skeleton">
-                                <div class="popular-review-profile-pic-skeleton"></div>
-                                <div class="user-review-skeleton">
-                                    <div>
-                                        <div class="user-review-name-skeleton"></div>
-                                    </div>
-                                    <div class="user-review-review-skeleton"></div>
-                                    <div class="user-review-likes-skeleton"></div>
-                                </div>
-                            </div>
-                            <div class="popular-review-skeleton">
-                                <div class="popular-review-profile-pic-skeleton"></div>
-                                <div class="user-review-skeleton">
-                                    <div>
-                                        <div class="user-review-name-skeleton"></div>
-                                    </div>
-                                    <div class="user-review-review-skeleton"></div>
-                                    <div class="user-review-likes-skeleton"></div>
-                                </div>
-                            </div>
-                            <div class="popular-review-skeleton">
-                                <div class="popular-review-profile-pic-skeleton"></div>
-                                <div class="user-review-skeleton">
-                                    <div>
-                                        <div class="user-review-name-skeleton"></div>
-                                    </div>
-                                    <div class="user-review-review-skeleton"></div>
-                                    <div class="user-review-likes-skeleton"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="popular-reviews-content">
-                        <div id="popular-reviews-header">
-                            <h4>Popular Reviews</h4>
-                            <h5>MORE</h5>
-                        </div>
-                        <div id="no-popular-reviews-container">
-                            <h4 id="no-popular-reviews-message">No reviews yet. Be the first to leave one!</h4>
-                        </div>
-                        <div id="popular-reviews"></div>
-                    </div>
-                </div>
-
-                <!-- Recent Reviews -->
-                <div id="recent-reviews-container">
-                    <div id="recent-reviews-skeleton-container">
-                        <div id="recent-reviews-header-skeleton"></div>
-                        <div id="recent-reviews-skeleton">
-                            <div class="recent-review-skeleton">
-                                <div class="recent-review-profile-pic-skeleton"></div>
-                                <div class="user-review-skeleton">
-                                    <div>
-                                        <div class="user-review-name-skeleton"></div>
-                                    </div>
-                                    <div class="user-review-review-skeleton"></div>
-                                    <div class="user-review-likes-skeleton"></div>
-                                </div>
-                            </div>
-                            <div class="recent-review-skeleton">
-                                <div class="recent-review-profile-pic-skeleton"></div>
-                                <div class="user-review-skeleton">
-                                    <div>
-                                        <div class="user-review-name-skeleton"></div>
-                                    </div>
-                                    <div class="user-review-review-skeleton"></div>
-                                    <div class="user-review-likes-skeleton"></div>
-                                </div>
-                            </div>
-                            <div class="recent-review-skeleton">
-                                <div class="recent-review-profile-pic-skeleton"></div>
-                                <div class="user-review-skeleton">
-                                    <div>
-                                        <div class="user-review-name-skeleton"></div>
-                                    </div>
-                                    <div class="user-review-review-skeleton"></div>
-                                    <div class="user-review-likes-skeleton"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="recent-reviews-content">
-                        <div id="recent-reviews-header">
-                            <h4>Recent Reviews</h4>
-                            <h5>MORE</h5>
-                        </div>
-                        <div id="no-recent-reviews-container">
-                            <h4 id="no-recent-reviews-message">No reviews yet. Be the first to leave one!</h4>
-                        </div>
-                        <div id="recent-reviews"></div>
                     </div>
                 </div>
 
@@ -555,8 +335,14 @@
 
                 <!-- Stadium Map -->
                 <div id="stadium-map-container">
-                    <h2>Stadium Map</h2>
-                    <div id="stadium-map"></div>
+                    <!--<div id="stadium-map-skeleton-container">
+                        <div id="stadium-map-skeleton-header"></div>
+                        <div id="stadium-map-skeleton"></div>
+                    </div>-->
+                    <div id="stadium-map-content">
+                        <h2>Stadium Map</h2>
+                        <div id="stadium-map"></div>
+                    </div>
                 </div>
                 
             </main>

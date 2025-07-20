@@ -25,6 +25,7 @@ const sidebarToggleLoggedIn = document.getElementById('sidebar-active-logged-in'
 const sidebarLogInButton = document.getElementById('sidebar-log-in');
 const sidebarSignUpButton = document.getElementById('sidebar-sign-up');
 const sidebarLogOutButton = document.getElementById('sidebar-log-out');
+const sidebarUsername = document.getElementById('sidebar-username');
 const selectors = {
     NFL: document.getElementById('nfl'),
     NBA: document.getElementById('nba'),
@@ -213,6 +214,7 @@ function showLoggedInUI() {
     }
     document.getElementById('logged-in-header-username').textContent = username;
     loggedOutHeader.style.display = 'none';
+    sidebarUsername.textContent = username;
     loggedInHeader.style.display = 'flex';
 }
 

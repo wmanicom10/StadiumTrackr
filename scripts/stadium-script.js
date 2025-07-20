@@ -20,20 +20,10 @@ const closeButtons = {
 };
 const addStadiumMenu = document.getElementById('add-stadium-menu');
 const addStadiumDateVisited = document.getElementById('add-stadium-date-visited');
+const addStadiumNote = document.getElementById('add-stadium-note')
+const closeAddStadiumMenu = document.getElementById('close-add-stadium-menu');
 const addStadiumName = document.getElementById('add-stadium-name');
 const addStadiumImage = document.getElementById('add-stadium-image');
-const closeAddStadiumMenu = document.getElementById('close-add-stadium-menu');
-const addStadiumVisitedBefore = document.getElementById('add-stadium-visited-before');
-const visitedBeforeCheckmark = document.getElementById('visited-before-checkmark');
-const addStadiumReview = document.getElementById('add-stadium-review');
-const addStadiumRating = document.getElementById('add-stadium-rating-container');
-const addStadiumRatingText = document.getElementById('add-stadium-rating-text');
-const addStadiumRatingStars = document.getElementById('add-stadium-stars');
-const addStadiumStars = document.querySelectorAll('.add-stadium-star');
-const addStadiumRatingClearButton = document.getElementById('add-stadium-rating-clear-button');
-const ratingText = document.getElementById('rating-text');
-const addStadiumLikeContainer = document.getElementById('add-stadium-like-container');
-const addStadiumHeart = document.getElementById('add-stadium-heart');
 const addStadiumSubmitButton = document.getElementById('add-stadium-submit-button');
 const contentWrapper = document.getElementById('content-wrapper');
 const logInButton = document.getElementById('log-in');
@@ -43,202 +33,28 @@ const sidebarToggleLoggedIn = document.getElementById('sidebar-active-logged-in'
 const sidebarLogInButton = document.getElementById('sidebar-log-in');
 const sidebarSignUpButton = document.getElementById('sidebar-sign-up');
 const sidebarLogOutButton = document.getElementById('sidebar-log-out');
+const sidebarUsername = document.getElementById('sidebar-username');
 const stadiumName = document.getElementById('stadium-name');
 const stadiumImage = document.getElementById('stadium-image');
 const stadiumUserControls = document.getElementById('stadium-user-controls')
 const stadiumVisited = document.getElementById('stadium-visited');
-const stadiumVisitedText = document.getElementById('stadium-visited-text');
-const checkmark = document.getElementById('stadium-visited-checkmark');
-const stadiumLike = document.getElementById('stadium-like');
-const stadiumLikeText = document.getElementById('stadium-like-text');
-const heart = document.getElementById('stadium-like-heart');
-const stadiumRating = document.getElementById('stadium-rating');
-const stadiumRatingText = document.getElementById('stadium-rating-text');
-const stadiumRatingClearButton = document.getElementById('stadium-rating-clear-button');
-const stadiumRatingStars = document.getElementById('stadium-rating-stars');
-const stars = document.querySelectorAll('.stadium-rating-star');
-const stadiumStats = document.getElementById('stadium-stats');
 const stadiumVisits = document.getElementById('stadium-visits');
-const stadiumAverageRating = document.getElementById('stadium-average-rating');
-const userButtonsContainer = document.getElementById('user-buttons-container');
 const stadiumLocation = document.getElementById('stadium-location');
 const stadiumOpenedDate = document.getElementById('stadium-opened-date');
 const stadiumTeams = document.getElementById('stadium-teams');
 const stadiumCapacity = document.getElementById('stadium-capacity');
 const stadiumConstructionCost = document.getElementById('stadium-construction-cost');
-const friendActivityContainer = document.getElementById('friend-activity-container');
-const friendActivity = document.getElementById('friend-activity');
-const friendReviewsContainer = document.getElementById('friend-reviews-container');
-const noPopularReviewsContainer = document.getElementById('no-popular-reviews-container');
-const noRecentReviewsContainer = document.getElementById('no-recent-reviews-container');
+const stadiumUserControlVisited = document.getElementById('stadium-user-control-visited');
+const stadiumUserControlWishlist = document.getElementById('stadium-user-control-wishlist');
+const stadiumUserControlVisitedText = document.getElementById('stadium-user-control-visited-text');
+const userVisitedCheckmark = document.getElementById('user-visited-checkmark');
+const stadiumUserControlWishlistText = document.getElementById('stadium-user-control-wishlist-text');
+const userWishlistHeart = document.getElementById('user-wishlist-heart');
+const stadiumLogButton = document.getElementById('stadium-log-button');
 const noUpcomingEventsContainer = document.getElementById('no-upcoming-events-container');
-const popularReviewsContainer = document.getElementById('popular-reviews');
-const recentReviewsContainer = document.getElementById('recent-reviews');
 const upcomingEventsContainer = document.getElementById('upcoming-events');
 
 /*  Functions  */
-function appendButtons(buttons) {
-    buttons.forEach(btn => userButtonsContainer.appendChild(btn));
-}
-
-function applySelectedRating(stars, rating) {
-    stars.forEach((star, i) => {
-        const starNumber = i + 1;
-        if (rating >= starNumber) {
-            star.src = 'images/icons/blue-star.png';
-        } else if (rating >= starNumber - 0.5) {
-            star.src = 'images/icons/blue-gray-star.png';
-        } else {
-            star.src = 'images/icons/gray-star.png';
-        }
-    });
-}
-
-function createUserButton(id, text, clickHandler = null) {
-    const button = document.createElement('h3');
-    button.classList.add('user-button');
-    button.id = id;
-    button.textContent = text;
-    if (clickHandler) button.addEventListener('click', clickHandler);
-    return button;
-}
-
-function hideClearButton() {
-    stadiumRatingClearButton.style.opacity = '0';
-}
-
-function hideAddStadiumClearButton() {
-    addStadiumRatingClearButton.style.opacity = '0';
-} 
-
-function makeButton(className, text) {
-    const btn = createUserButton(className, text);
-    btn.style.width = '230px';
-    return btn;
-}
-
-function setRatingEvents(name, username, currentRating) {
-    let selectedRating = currentRating;
-
-    stars.forEach((star, i) => {
-        star.addEventListener('mousemove', (e) => {
-            const rect = star.getBoundingClientRect();
-            const isLeft = (e.clientX - rect.left) < rect.width / 2;
-            updateStars(i, isLeft, stars);
-        });
-
-        star.addEventListener('click', async (e) => {
-            const rect = star.getBoundingClientRect();
-            const isLeft = (e.clientX - rect.left) < rect.width / 2;
-            selectedRating = i + (isLeft ? 0.5 : 1);
-            applySelectedRating(stars, selectedRating);
-            stadiumRatingText.textContent = 'Rated';
-            stadiumRatingStars.addEventListener('mouseleave', () => applySelectedRating(stars, selectedRating));
-
-            try {
-                const response = await fetch('http://localhost:3000/stadium/updateUserRating', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, username, selectedRating })
-                });
-
-                const result = await response.json();
-                if (!response.ok || result.rows.affectedRows < 1) {
-                    throw new Error('Failed to update rating');
-                }
-
-                checkmark.src = 'images/icons/checkmark-blue.png';
-                stadiumVisitedText.textContent = 'Visited';
-            } catch (error) {
-                console.error('Error updating like status:', error);
-            }
-
-            stadiumRating.addEventListener('mouseover', showClearButton);
-            stadiumRating.addEventListener('mouseleave', hideClearButton);
-        });
-    });
-
-    stadiumRatingStars.addEventListener('mouseleave', () => applySelectedRating(stars, selectedRating));
-
-    stadiumRatingClearButton.addEventListener('click', async () => {
-        selectedRating = 0;
-        applySelectedRating(stars, 0);
-        stadiumRatingText.textContent = 'Rate';
-
-        try {
-            const response = await fetch('http://localhost:3000/stadium/updateUserRating', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, username, selectedRating: null })
-            });
-
-            const result = await response.json();
-            if (!response.ok || result.rows.affectedRows < 1) {
-                throw new Error('Failed to update rating');
-            }
-        } catch (error) {
-            console.error('Error updating like status:', error);
-        }
-
-        stadiumRatingClearButton.style.opacity = '0';
-
-        stadiumRating.removeEventListener('mouseover', showClearButton);
-        stadiumRating.removeEventListener('mouseleave', hideClearButton);
-
-        stadiumRatingStars.addEventListener('mouseleave', () => applySelectedRating(stars, 0));
-    });
-}
-
-function setRatingEventsAddStadium(name, username, currentRating) {
-    let selectedRating = currentRating;
-
-    addStadiumStars.forEach((star, i) => {
-        star.addEventListener('mousemove', (e) => {
-            const rect = star.getBoundingClientRect();
-            const isLeft = (e.clientX - rect.left) < rect.width / 2;
-            updateStars(i, isLeft, addStadiumStars);
-        });
-
-        star.addEventListener('click', (e) => {
-            const rect = star.getBoundingClientRect();
-            const isLeft = (e.clientX - rect.left) < rect.width / 2;
-            selectedRating = i + (isLeft ? 0.5 : 1);
-            applySelectedRating(addStadiumStars, selectedRating);
-            ratingText.textContent = selectedRating + ' out of 5'
-            ratingText.style.display = 'inline'
-            addStadiumRatingStars.addEventListener('mouseleave', () => applySelectedRating(addStadiumStars, selectedRating));
-
-            addStadiumRating.addEventListener('mouseover', showAddStadiumClearButton);
-            addStadiumRating.addEventListener('mouseleave', hideAddStadiumClearButton);
-        });
-    });
-
-    addStadiumRatingStars.addEventListener('mouseleave', () => applySelectedRating(addStadiumStars, selectedRating));
-
-    addStadiumRatingClearButton.addEventListener('click', async () => {
-        selectedRating = 0;
-        applySelectedRating(addStadiumStars, 0);
-
-        ratingText.style.display = 'none';
-        ratingText.textContent = '';
-
-        addStadiumRatingClearButton.style.opacity = '0';
-
-        addStadiumRating.removeEventListener('mouseover', showAddStadiumClearButton);
-        addStadiumRating.removeEventListener('mouseleave', hideAddStadiumClearButton);
-
-        addStadiumRatingStars.addEventListener('mouseleave', () => applySelectedRating(addStadiumStars, 0));
-    });
-}
-
-function showClearButton() {
-    stadiumRatingClearButton.style.opacity = '1';
-}
-
-function showAddStadiumClearButton() {
-    addStadiumRatingClearButton.style.opacity = '1';
-}
-
 function showLoggedInUI() {
     let username = localStorage.getItem('username');
     if (username.length > 9) {
@@ -247,33 +63,13 @@ function showLoggedInUI() {
     loggedInHeaderUsername.textContent = username;
     loggedOutHeader.style.display = 'none';
     loggedInHeader.style.display = 'flex';
+    sidebarUsername.textContent = username;
     stadiumUserControls.style.display = 'flex';
-    stadiumStats.style.marginTop = '20px';
 }
 
 function showLoggedOutUI() {
     loggedInHeader.style.display = 'none';
     loggedOutHeader.style.display = 'flex';
-    stadiumUserControls.style.display = 'none';
-    stadiumStats.style.marginTop = '0';
-}
-
-function toggleCheckmark(show) {
-    if (show) {
-        visitedBeforeCheckmark.style.display = 'block';
-    }
-    else {
-        visitedBeforeCheckmark.style.display = 'none';
-    }
-}
-
-function toggleHeart(show) {
-    if (show) {
-        addStadiumHeart.src = 'images/icons/blue-heart.png'
-    }
-    else {
-        addStadiumHeart.src = 'images/icons/gray-heart.png'
-    }
 }
 
 function toggleMenu(menu, show, keepOverlay = false) {
@@ -304,18 +100,6 @@ function toggleMenu(menu, show, keepOverlay = false) {
             }
         }, 200);
     }
-}
-
-function updateStars(index, isLeft, stars) {
-    stars.forEach((star, i) => {
-        if (i < index) {
-            star.src = 'images/icons/blue-star.png';
-        } else if (i === index) {
-            star.src = isLeft ? 'images/icons/blue-gray-star.png' : 'images/icons/blue-star.png';
-        } else {
-            star.src = 'images/icons/gray-star.png';
-        }
-    });
 }
 
 function validateEmail(email) {
@@ -350,9 +134,6 @@ async function loadStadiumInfo(name, username) {
             }
         });
         await imagePromise;
-        await new Promise(resolve => setTimeout(resolve, 750));
-        document.getElementById('stadium-image-skeleton').style.display = 'none';
-        document.getElementById('stadium-image').style.display = 'flex';
 
         const location = result.stadiumInfo.stadium.city + ', ' + result.stadiumInfo.stadium.state;
         stadiumLocation.innerHTML = location;
@@ -386,7 +167,7 @@ async function loadStadiumInfo(name, username) {
             NHL: '../images/icons/hockey-emoji.png',
             MLS: '../images/icons/soccer-emoji.png'
         };
-        const innerDiv = document.getElementsByClassName('stadium-info')[2].querySelector('div');
+        const innerDiv = document.getElementsByClassName('stadium-info')[5].querySelector('div');
         Object.keys(leagueCounts).forEach(league => {
             if (leagueCounts[league] > 0) {
                 const img = document.createElement('img');
@@ -404,376 +185,133 @@ async function loadStadiumInfo(name, username) {
         const visits = result.stadiumInfo.stadium.visits;
         stadiumVisits.innerHTML = visits;
 
-        const averageRating = result.stadiumInfo.stadium.averageRating;
-        stadiumAverageRating.innerHTML = averageRating === 0 ? "-" : averageRating;
+        let isVisited = result.stadiumInfo.userVisited.length > 0;
+        stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
+        userVisitedCheckmark.src = isVisited ? 'images/icons/checkmark-blue.png' : 'images/icons/checkmark-white.png';
 
-        const userActivity = result.stadiumInfo.userActivity;
-        const userVisited = userActivity.length;
+        let isWishlist = result.stadiumInfo.userWishlist.length > 0;
+        stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
+        userWishlistHeart.src = isWishlist ? 'images/icons/blue-heart.png' : 'images/icons/gray-heart.png';
 
-        let allowChangeVisited = true;
-
-        const hasActivity = userActivity.some(activity =>
-            activity.visited_on !== null || activity.review_id !== null
-        );
-
-        const hasLogged = userActivity.some(activity => 
-            activity.visited_on !== null
-        );
-
-        const handleCheckmarkClick = () => {
-            if (!allowChangeVisited) {
-                alert('There is activity on this stadium, cannot change');
-                return;
-            }
-            const isCurrentlyVisited = checkmark.src.includes('checkmark-blue.png');
-            const newVisitedState = !isCurrentlyVisited;
-            updateVisitStatus(name, username, newVisitedState);
-        };
-
-        const handleHeartClick = () => {
-            const isCurrentlyLiked = heart.src.includes('blue-heart.png');
-            const newLikeState = !isCurrentlyLiked;
-
-            updateLikeStatus(name, username, newLikeState);
-        };
-
-        if (username === '') {
-            const logInBtn = createUserButton('user-button-log-in', 'Sign in to log or review', () => toggleMenu(logInMenu, true));
-            const shareBtn = createUserButton('user-button-share', 'Share');
-            appendButtons([logInBtn, shareBtn]);
-        } else {
-            checkmark.src = userVisited === 0 ? 'images/icons/checkmark-white.png' : 'images/icons/checkmark-blue.png';
-
-            allowChangeVisited = !hasActivity;
-
-            stadiumVisited.addEventListener('click', handleCheckmarkClick);
-
-            if (userVisited === 0) {
-                appendButtons([
-                    makeButton('user-button-log', 'Log or review stadium'),
-                    makeButton('user-button-activity', 'Show your activity'),
-                    makeButton('user-button-wishlist', 'Add to wishlist'),
-                    makeButton('user-button-share', 'Share')
-                ]);
-                stadiumVisitedText.textContent = 'Visit';
+        stadiumUserControlVisited.addEventListener('click', async () => {
+            if (username == '') {
+                toggleMenu(createAccountMenu, true);
             }
             else {
-                if (hasLogged) {
-                    appendButtons([
-                        makeButton('user-button-log', 'Log or review again'),
-                        makeButton('user-button-activity', 'Show your activity'),
-                        makeButton('user-button-wishlist', 'Add to wishlist'),
-                        makeButton('user-button-share', 'Share')
-                    ]);
+                if (isVisited) {
+                    userVisitedCheckmark.src = 'images/icons/checkmark-white.png';
+                    stadiumUserControlVisitedText.textContent = 'Visit';
+                }
+                else if (!isVisited && isWishlist) {
+                    userVisitedCheckmark.src = 'images/icons/checkmark-blue.png';
+                    stadiumUserControlVisitedText.textContent = 'Visited';
+                    userWishlistHeart.src = 'images/icons/gray-heart.png';
+                    stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
+                    try {
+                        const response = await fetch('http://localhost:3000/stadium/updateUserWishlist', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: name, username: username, isWishlist: isWishlist })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Unknown error');
+                        }
+                    }
+                    catch (error) {
+                        alert(error.message);
+                    }
+                    isWishlist = !isWishlist;
                 }
                 else {
-                    appendButtons([
-                        makeButton('user-button-log', 'Log or review stadium'),
-                        makeButton('user-button-activity', 'Show your activity'),
-                        makeButton('user-button-wishlist', 'Add to wishlist'),
-                        makeButton('user-button-share', 'Share')
-                    ]);
+                    userVisitedCheckmark.src = 'images/icons/checkmark-blue.png';
+                    stadiumUserControlVisitedText.textContent = 'Visited';
                 }
-                stadiumVisitedText.textContent = 'Visited';
+                try {
+                    const response = await fetch('http://localhost:3000/stadium/updateUserStadium', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: name, username: username, isVisited: isVisited })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Unknown error');
+                    }
+                }
+                catch (error) {
+                    alert(error.message);
+                }
+                isVisited = !isVisited;
             }
+        });
 
-            const userLogButton = document.getElementById('user-button-log');
-            userLogButton.addEventListener('click', () => toggleMenu(addStadiumMenu, true));
-        }
-
-        if (userActivity.length > 0) {
-            const userLiked = result.stadiumInfo.userActivity[0].liked_count;
-
-            if (userLiked === 0) {
-                stadiumLikeText.textContent = 'Like';
-                heart.src = 'images/icons/gray-heart.png';
+        stadiumUserControlWishlist.addEventListener('click', async() => {
+            if (username == '') {
+                toggleMenu(createAccountMenu, true);
             }
-            else if (userLiked > 0) {
-                stadiumLikeText.textContent = 'Liked';
-                heart.src = 'images/icons/blue-heart.png';
+            else {
+                if (isWishlist) {
+                    userWishlistHeart.src = 'images/icons/gray-heart.png';
+                    stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
+                }
+                else {
+                    userWishlistHeart.src = 'images/icons/blue-heart.png';
+                    stadiumUserControlWishlistText.textContent = 'In Wishlist';
+                }
+                try {
+                    const response = await fetch('http://localhost:3000/stadium/updateUserWishlist', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: name, username: username, isWishlist: isWishlist })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Unknown error');
+                    }
+                }
+                catch (error) {
+                    alert(error.message);
+                }
+                isWishlist = !isWishlist;
             }
-        } 
+        })
 
-        stadiumLike.addEventListener('click', handleHeartClick);
-
-        let userRating = result.stadiumInfo.userActivity.length > 0 ? result.stadiumInfo.userActivity[0].rating : null;
-
-        applySelectedRating(stars, userRating || 0);
-        applySelectedRating(addStadiumStars, userRating || 0);
-        stadiumRatingText.textContent = userRating !== null ? 'Rated' : 'Rate';
-        setRatingEvents(name, username, userRating || '', '', 0);
-        setRatingEventsAddStadium(name, username, userRating || '', '', 0);
-
-        if (userRating !== null) {
-            stadiumRating.addEventListener('mouseover', showClearButton);
-            stadiumRating.addEventListener('mouseleave', hideClearButton);
-        }
-
-        const friendActivityResults = result.stadiumInfo.friendActivity;
-        if (friendActivityResults.length === 0) {
-            friendActivityContainer.style.display = 'none';
-        }
-        else if (friendActivityResults.length > 12) {
-            for (let i = 0; i < 12; i++) {
-
+        stadiumLogButton.addEventListener('click', () => {
+            if (username == '') {
+                toggleMenu(createAccountMenu, true);
             }
-        }
-        else {
-            friendActivityResults.forEach(activity => {
-                const friendActivityItem = document.createElement('div');
-                friendActivityItem.classList.add('friend-activity-item');
-
-                const friendActivityProfilePic = document.createElement('img');
-                friendActivityProfilePic.classList.add('friend-activity-profile-pic');
-                friendActivityProfilePic.src = 'images/icons/person-gray.png';
-
-                const friendActivityStars = document.createElement('div');
-
-                let starCount = 0;
-                if (activity.rating != null) {
-                    starCount = parseInt(activity.rating.trim().slice(0, -2), 10)
-                    for (let i = 0; i < starCount; i++) {
-                        const star = document.createElement('img');
-                        star.classList.add('friend-activity-star');
-                        star.src = 'images/icons/blue-star.png';
-                        friendActivityStars.appendChild(star);
-                    }
-                    if (activity.rating.trim().endsWith('.5')) {
-                        const halfStar = document.createElement('img');
-                        halfStar.classList.add('friend-activity-half-star');
-                        halfStar.src = 'images/icons/blue-star-half.png';
-                        friendActivityStars.appendChild(halfStar);
-                    }
-                }
-
-                friendActivityItem.appendChild(friendActivityProfilePic);
-                friendActivityItem.appendChild(friendActivityStars);
-
-                friendActivity.appendChild(friendActivityItem);
-
-            })
-        }
-
-        const friendReviews = result.stadiumInfo.friend_reviews;
-
-        if (friendReviews.length === 0) {
-            friendReviewsContainer.style.display = 'none';
-        }
-        else {
-            friendReviewsContainer.style.display = 'block';
-
-            friendReviews.forEach(friendReview => {
-                const friendReviewContainer = document.createElement('div');
-                friendReviewContainer.classList.add('popular-review');
-
-                const profilePic = document.createElement('img');
-                profilePic.src = 'images/icons/person-gray.png';
-
-                const userReview = document.createElement('div');
-                userReview.classList.add('user-review');
-
-                const userReviewInfo = document.createElement('div');
-
-                const userReviewName = document.createElement('h4');
-                userReviewName.textContent = friendReview.username;
-
-                const userReviewStars = document.createElement('div');
-                userReviewStars.classList.add('user-review-stars');
-
-                let starCount = 0;
-                if (friendReview.rating != null) {
-                    starCount = parseInt(friendReview.rating.trim().slice(0, -2), 10)
-                    for (let i = 0; i < starCount; i++) {
-                        const star = document.createElement('img');
-                        star.classList.add('user-review-star');
-                        star.src = 'images/icons/blue-star.png';
-                        userReviewStars.appendChild(star);
-                    }
-                    if (friendReview.rating.trim().endsWith('.5')) {
-                        const halfStar = document.createElement('img');
-                        halfStar.classList.add('user-review-half-star');
-                        halfStar.src = 'images/icons/blue-star-half.png';
-                        userReviewStars.appendChild(halfStar);
-                    }
-                }
-
-                const userReviewLikes = document.createElement('h4');
-                const likeText = friendReview.like_count === 1 ? ' Like' : ' Likes';
-                userReviewLikes.textContent = friendReview.like_count.toLocaleString() + likeText;
-
-                const userReviewReview = document.createElement('h5');
-                userReviewReview.textContent = friendReview.review;
-
-                userReviewInfo.appendChild(userReviewName);
-                userReviewInfo.appendChild(userReviewStars);
-
-                userReview.appendChild(userReviewInfo);
-                userReview.appendChild(userReviewReview);
-                userReview.appendChild(userReviewLikes);
-
-                friendReviewContainer.appendChild(profilePic);
-                friendReviewContainer.appendChild(userReview);
-
-                friendReviewsContainer.appendChild(friendReviewContainer);
-            })
-        }
-
-        const popularReviews = result.stadiumInfo.popular_reviews;
-
-        const recentReviews = result.stadiumInfo.recent_reviews;
-
-        if (recentReviews.length === 0) {
-            popularReviewsContainer.style.display = 'none';
-            recentReviewsContainer.style.display = 'none';
-            noPopularReviewsContainer.style.display = 'block';
-            noRecentReviewsContainer.style.display = 'block';
-        }
-        else {
-            noPopularReviewsContainer.style.display = 'none';
-            noRecentReviewsContainer.style.display = 'none';
-            popularReviewsContainer.style.display = 'block';
-            recentReviewsContainer.style.display = 'block';
-
-            popularReviews.forEach(popularReview => {
-                const popularReviewContainer = document.createElement('div');
-                popularReviewContainer.classList.add('popular-review');
-
-                const profilePic = document.createElement('img');
-                profilePic.src = 'images/icons/person-gray.png';
-
-                const userReview = document.createElement('div');
-                userReview.classList.add('user-review');
-
-                const userReviewInfo = document.createElement('div');
-
-                const userReviewName = document.createElement('h4');
-                userReviewName.textContent = popularReview.username;
-
-                const userReviewStars = document.createElement('div');
-                userReviewStars.classList.add('user-review-stars');
-
-                let starCount = 0;
-                if (popularReview.rating != null) {
-                    starCount = parseInt(popularReview.rating.trim().slice(0, -2), 10)
-                    for (let i = 0; i < starCount; i++) {
-                        const star = document.createElement('img');
-                        star.classList.add('user-review-star');
-                        star.src = 'images/icons/blue-star.png';
-                        userReviewStars.appendChild(star);
-                    }
-                    if (popularReview.rating.trim().endsWith('.5')) {
-                        const halfStar = document.createElement('img');
-                        halfStar.classList.add('user-review-half-star');
-                        halfStar.src = 'images/icons/blue-star-half.png';
-                        userReviewStars.appendChild(halfStar);
-                    }
-                }
-
-                const userReviewLikes = document.createElement('h4');
-                const likeText = popularReview.like_count === 1 ? ' Like' : ' Likes';
-                userReviewLikes.textContent = popularReview.like_count.toLocaleString() + likeText;
-
-                const userReviewReview = document.createElement('h5');
-                userReviewReview.textContent = popularReview.review;
-
-                userReviewInfo.appendChild(userReviewName);
-                userReviewInfo.appendChild(userReviewStars);
-
-                userReview.appendChild(userReviewInfo);
-                userReview.appendChild(userReviewReview);
-                userReview.appendChild(userReviewLikes);
-
-                popularReviewContainer.appendChild(profilePic);
-                popularReviewContainer.appendChild(userReview);
-
-                popularReviewsContainer.appendChild(popularReviewContainer);
-            })
-            recentReviews.forEach(recentReview => {
-                const recentReviewContainer = document.createElement('div');
-                recentReviewContainer.classList.add('recent-review');
-
-                const profilePic = document.createElement('img');
-                profilePic.src = 'images/icons/person-gray.png';
-
-                const userReview = document.createElement('div');
-                userReview.classList.add('user-review');
-
-                const userReviewInfo = document.createElement('div');
-
-                const userReviewName = document.createElement('h4');
-                userReviewName.textContent = recentReview.username;
-
-                const userReviewStars = document.createElement('div');
-                userReviewStars.classList.add('user-review-stars');
-
-                let starCount = 0;
-                if (recentReview.rating != null) {
-                    starCount = parseInt(recentReview.rating.trim().slice(0, -2), 10)
-                    for (let i = 0; i < starCount; i++) {
-                        const star = document.createElement('img');
-                        star.classList.add('user-review-star');
-                        star.src = 'images/icons/blue-star.png';
-                        userReviewStars.appendChild(star);
-                    }
-                    if (recentReview.rating.trim().endsWith('.5')) {
-                        const halfStar = document.createElement('img');
-                        halfStar.classList.add('user-review-half-star');
-                        halfStar.src = 'images/icons/blue-star-half.png';
-                        userReviewStars.appendChild(halfStar);
-                    }
-                }
-
-                const userReviewLikes = document.createElement('h4');
-                const likeText = recentReview.like_count === 1 ? ' Like' : ' Likes';
-                userReviewLikes.textContent = recentReview.like_count.toLocaleString() + likeText;
-
-                const userReviewReview = document.createElement('h5');
-                userReviewReview.textContent = recentReview.review;
-
-                userReviewInfo.appendChild(userReviewName);
-                userReviewInfo.appendChild(userReviewStars);
-
-                userReview.appendChild(userReviewInfo);
-                userReview.appendChild(userReviewReview);
-                userReview.appendChild(userReviewLikes);
-
-                recentReviewContainer.appendChild(profilePic);
-                recentReviewContainer.appendChild(userReview);
-
-                recentReviewsContainer.appendChild(recentReviewContainer);
-            })
-        }
-
-        addStadiumDateVisited.setAttribute("max", new Date().toISOString().split("T")[0]);
-        addStadiumDateVisited.value = new Date().toISOString().split('T')[0];
+            else {
+                toggleMenu(addStadiumMenu, true);
+            }
+        })
 
         addStadiumName.textContent = name;
         addStadiumImage.src = result.stadiumInfo.stadium.image;
 
-        if (userVisited > 0) {
-            visitedBeforeCheckmark.style.display = 'block'
-        }
-        else {
-            visitedBeforeCheckmark.style.display = 'none';
-        }
+        addStadiumSubmitButton.addEventListener('click', async () => {
+            const dateVisited = addStadiumDateVisited.value;
+            const note = addStadiumNote.value.trim() === '' ? null : addStadiumNote.value.trim();
 
-        document.getElementById('stadium-skeleton').style.display = 'none';
-        document.getElementById('stadium-content').style.display = 'block';
+            try {
+                const response = await fetch('http://localhost:3000/stadium/addStadium', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: name, username: username, dateVisited: dateVisited, note: note })
+                });
 
-        document.getElementById('friend-activity-skeleton-container').style.display = 'none';
-        document.getElementById('friend-activity-content').style.display = 'block';
-
-        document.getElementById('friend-reviews-skeleton-container').style.display = 'none';
-        document.getElementById('friend-reviews-content').style.display = 'block';
-
-        document.getElementById('popular-reviews-skeleton-container').style.display = 'none';
-        document.getElementById('popular-reviews-content').style.display = 'block';
-
-        document.getElementById('recent-reviews-skeleton-container').style.display = 'none';
-        document.getElementById('recent-reviews-content').style.display = 'block';
-
-        document.getElementById('upcoming-events-skeleton-container').style.display = 'none';
-        document.getElementById('upcoming-events-content').style.display = 'block';
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Unknown error');
+                }
+            }
+            catch (error) {
+                alert(error.message);
+            }
+            window.location.reload();
+        })
 
     } catch (error) {
         alert(error.message);
@@ -872,8 +410,11 @@ async function loadUpcomingEvents(name) {
             eventName.textContent = event.name;
 
             const eventDate = document.createElement('h4');
-            const date = new Date(event.dates.start.localDate);
-            eventDate.textContent = date.toLocaleDateString("en-US");;
+
+            const [year, month, day] = event.dates.start.localDate.split('-');
+            const formattedDate = `${month}/${day}/${year}`;
+            console.log(formattedDate);
+            eventDate.textContent = formattedDate
 
             const eventTime = document.createElement('h4');
             const localTime = event.dates.start.localTime;
@@ -910,57 +451,32 @@ async function loadUpcomingEvents(name) {
     });
 }
 
-async function updateLikeStatus(name, username, isLiked) {
+async function loadFullStadiumPage(name, username) {
     try {
-        const response = await fetch('http://localhost:3000/stadium/updateUserLike', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, username, isLiked })
-        });
+        const stadiumInfoPromise = loadStadiumInfo(name, username);
+        const stadiumMapPromise = loadStadiumMap(name);
+        const upcomingEventsPromise = loadUpcomingEvents(name);
 
-        if (!response.ok) throw new Error('Failed to update like status');
-        const result = await response.json();
+        const minimumLoadingTime = new Promise(resolve => setTimeout(resolve, 750));
 
-        if (result.rows.affectedRows < 1) {
-            alert('Failed to update like status');
-            return;
-        }
+        await Promise.all([
+            stadiumInfoPromise,
+            stadiumMapPromise,
+            upcomingEventsPromise,
+            minimumLoadingTime
+        ]);
 
-        heart.src = isLiked ? 'images/icons/blue-heart.png' : 'images/icons/gray-heart.png';
-        stadiumLikeText.textContent = isLiked ? 'Liked' : 'Like';
+        document.getElementById('stadium-image-skeleton').style.display = 'none';
+        document.getElementById('stadium-image').style.display = 'flex';
 
-    } catch (error) {
-        console.error('Error updating like status:', error);
-        // Optionally revert UI here
+        document.getElementById('stadium-skeleton').style.display = 'none';
+        document.getElementById('stadium-content').style.display = 'block';
+
+        document.getElementById('upcoming-events-skeleton-container').style.display = 'none';
+        document.getElementById('upcoming-events-content').style.display = 'block';
     }
-}
-
-async function updateVisitStatus(name, username, isVisited) {
-    try {
-        const response = await fetch('http://localhost:3000/stadium/updateUserStadium', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, username, isVisited })
-        });
-
-        if (!response.ok) throw new Error('Failed to update visit status');
-        const result = await response.json();
-
-        if (result.rows.affectedRows < 1) {
-            alert('Failed to update visit status');
-            return;
-        }
-
-        checkmark.src = isVisited ? 'images/icons/checkmark-blue.png' : 'images/icons/checkmark-white.png';
-        if (!isVisited) {
-            applySelectedRating(stars, 0);
-            stadiumRatingText.textContent = 'Rate';
-        }
-        stadiumVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
-
-    } catch (error) {
-        console.error('Error updating visit status:', error);
-        // Optionally revert UI here
+    catch (error) {
+        alert('Failed to load stadium content: ' + error.message);
     }
 }
 
@@ -975,14 +491,18 @@ window.onload = async () => {
     }
     const urlParams = new URLSearchParams(window.location.search);
     const name = urlParams.get('stadium');
-    await loadStadiumInfo(name, username);
-    await loadUpcomingEvents(name);
-    await loadStadiumMap(name);
+    document.title = name + " - StadiumTrackr";
+    loadFullStadiumPage(name, username);
+    addStadiumDateVisited.setAttribute("max", new Date().toISOString().split("T")[0]);
+    addStadiumDateVisited.value = new Date().toISOString().split('T')[0];
 }
 
 window.addEventListener("resize", () => {
     if (sidebarToggle.checked) {
         sidebarToggle.checked = false;
+    }
+    if (sidebarToggleLoggedIn.checked) {
+        sidebarToggleLoggedIn.checked = false;
     }
 });
 
@@ -1112,50 +632,6 @@ logOutButton.addEventListener('click', () => {
     window.location.reload();
 });
 
-closeAddStadiumMenu.addEventListener('click', () => toggleMenu(addStadiumMenu, false));
-
-addStadiumVisitedBefore.addEventListener('click', () => {
-    const isVisible = visitedBeforeCheckmark.style.display === 'block';
-    toggleCheckmark(!isVisible);
-});
-
-addStadiumLikeContainer.addEventListener('click', () => {
-    const isLiked = addStadiumHeart.src.includes('images/icons/blue-heart.png');
-    toggleHeart(!isLiked);
-})
-
-addStadiumSubmitButton.addEventListener('click', async () => {
-    const username = localStorage.getItem('username');
-
-    const urlParams = new URLSearchParams(window.location.search);
-    const stadiumName = urlParams.get('stadium');
-
-    const visitedOn = addStadiumDateVisited.value;
-
-    const userReview = addStadiumReview.value || null;
-
-    const match = ratingText.textContent.match(/([\d.]+)\s+out of 5/i);
-    const userRating = match ? parseFloat(match[1]) : null;
-
-    const userLiked = addStadiumHeart.src.includes('images/icons/blue-heart.png');
-
-    try {
-        const response = await fetch('http://localhost:3000/stadium/addStadium', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, stadiumName, visitedOn, userReview, userRating, userLiked })
-        });
-
-        const result = await response.json();
-
-        if (!response.ok) {
-            alert(result.error)
-            return;
-        }
-
-        window.location.reload();
-    } catch (error) {
-        console.error('Error:', error);
-        alert('There was an error adding this stadium. Please try again later.');
-    }
+closeAddStadiumMenu.addEventListener('click', () => {
+    toggleMenu(addStadiumMenu, false);
 })

@@ -9,23 +9,21 @@ const db = mysql.createPool({
 });
 
 const handleAddStadium = async (req, res) => {
-    const { username, stadiumName, visitedOn, userReview, userRating, userLiked } = req.body;
+    const { username, name, dateVisited, note } = req.body;
 
-    if (userLiked) {
-        await db.execute('INSERT INTO stadium_likes (stadium_id, user_id, liked_on) VALUES ((SELECT stadium_id FROM stadiums WHERE stadium_name = ?), (SELECT user_id FROM users WHERE username = ?), now())', [stadiumName, username])
+    if (!username || !name) {
+        return res.status(400).json({ error: 'Stadium name and/or username is required' });
     }
 
-    if (userReview !== null) {
-        const [addReview] = await db.execute('INSERT INTO stadium_reviews (user_id, stadium_id, review, rating, reviewed_on, like_count) VALUES ((SELECT user_id FROM users WHERE username = ?), (SELECT stadium_id FROM stadiums WHERE stadium_name = ?), ?, ?, NOW(), 0)', [username, stadiumName, userReview, userRating]);
+    try {
+        const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on, visited_on, user_note) SELECT s.stadium_id, u.user_id, NOW(), ?, ? FROM stadiums s, users u WHERE s.stadium_name = ? AND u.username = ?', [dateVisited, note, name, username]);
 
-        const [addStadium] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, visited_on, rating, rated_on, review_id) VALUES ((SELECT stadium_id FROM stadiums WHERE stadium_name = ?), (SELECT user_id FROM users WHERE username = ?), ?, ?, now(), (SELECT review_id FROM stadium_reviews WHERE user_id = (SELECT user_id FROM users WHERE username = ?) AND stadium_id = (SELECT stadium_id FROM stadiums WHERE stadium_name = ?) ORDER BY reviewed_on DESC LIMIT 1))', [stadiumName, username, visitedOn, userRating, username, stadiumName]);
+        await db.execute('UPDATE stadiums SET visits = visits + 1 WHERE stadium_name = ?', [name]);
 
-        res.json({ addReview, addStadium });
-    }
-    else {
-        const [addStadium] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, visited_on, rating, rated_on, review_id) VALUES ((SELECT stadium_id FROM stadiums WHERE stadium_name = ?), (SELECT user_id FROM users WHERE username = ?), now(), ?, now(), null)', [stadiumName, username, userRating]);
-
-        res.json({ addStadium });
+        res.json({ rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
     }
 };
 

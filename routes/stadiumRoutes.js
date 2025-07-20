@@ -18,7 +18,6 @@ router.post('/searchStadiums', searchStadiumsController.handleSearchStadiums);
 router.post('/loadMapStadiums', loadMapStadiumsController.handleLoadMapStadiums);
 router.post('/loadStadiumMap', loadStadiumMapController.handleLoadStadiumMap);
 router.post('/updateUserStadium', updateUserActivityController.handleUpdateUserStadium);
-router.post('/updateUserLike', updateUserActivityController.handleUpdateUserLike);
-router.post('/updateUserRating', updateUserActivityController.handleUpdateUserRating);
+router.post('/updateUserWishlist', updateUserActivityController.handleUpdateUserWishlist);
 
 module.exports = router;

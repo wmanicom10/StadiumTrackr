@@ -12,6 +12,7 @@ const closeButtons = {
     'log-in-menu': document.getElementById('close-log-in-menu'),
     'create-account-menu': document.getElementById('close-create-account-menu')
 };
+const header = document.querySelector('header');
 const contentWrapper = document.getElementById('content-wrapper');
 const logInButton = document.getElementById('log-in');
 const createAccountButtons = [document.getElementById('create-account'), document.getElementById('get-started-button')];
@@ -159,6 +160,8 @@ async function loadMapStadiums() {
 
 /*  Events  */
 window.addEventListener('load', async () => {
+    header.style.display = 'flex';
+
     Array.from(stadiums).forEach(stadium => {
         const stadiumName = stadium.querySelector('h3').textContent;
         const link = stadium.querySelector('a');

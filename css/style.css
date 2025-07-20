@@ -200,138 +200,42 @@ body {
 
 #add-stadium-menu-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    margin-top: 15px;
 }
 
-#add-stadium-name, #close-add-stadium-menu {
+#add-stadium-menu-header h2 {
+    font-size: 28px;
     font-weight: normal;
-    font-size: 25px;
-    margin-top: 25px;
 }
 
 #add-stadium-name {
-    margin-left: 45px;
+    margin: 40px 0 0 50px;
 }
 
 #close-add-stadium-menu {
-    margin-top: 20px;
-    margin-right: 45px;
+    margin: 40px 50px 0 0;
     cursor: pointer;
 }
 
 #add-stadium-container {
-    width: 92%;
-    margin: 15px auto 0;
+    width: 91%;
+    margin: 40px auto 0;
     display: flex;
     justify-content: space-between;
-}
-
-#add-stadium-container1 {
-    width: 460px;
 }
 
 #add-stadium-image {
-    width: 100%;
+    width: 460px;
     height: 290px;
     object-fit: cover;
     border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-#add-stadium-user-controls {
-    display: flex;
-    width: 460px;
-    margin-top: 20px;
-    margin-left: 5px;
-}
-
-#add-stadium-rating-container {
-    margin-right: 25px;
-}
-
-#add-stadium-rating-text-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 212px;
-}
-
-#add-stadium-rating-text-container h3 {
+#add-stadium-date-visited-text, #add-stadium-note-text {
     font-weight: normal;
-    margin: 0 70px 0 0;
-}
-
-#rating-text {
-    font-weight: normal;
-    margin: 0;
-    width: auto;
-}
-
-#add-stadium-stars {
-    display: flex;
-    margin-top: 10px;
-    cursor: pointer;
-    align-items: center;
-}
-
-#add-stadium-rating-clear-button {
-    font-size: 18px;
-    opacity: 0;
-    margin-left: 15px;
-    transition: opacity 0.1s ease-in;
-}
-
-.add-stadium-star {
-    width: 40px;
-    height: 40px;
-    margin-right: 2px;
-}
-
-#add-stadium-like-container {
-    cursor: pointer;
-}
-
-#add-stadium-like-container:hover h3 {
-    color: rgb(199, 199, 199);
-}
-
-#add-stadium-like-container h3 {
-    font-weight: normal;
-    margin: 0;
-}
-
-#add-stadium-heart {
-    width: 44px;
-    height: 40px;
-    margin-top: 12px;
-}
-
-#add-stadium-form {
-    width: 425px;
-}
-
-#add-stadium-visited-container {
-    display: flex;
-}
-
-#add-stadium-date-visited-container {
-    display: flex;
-    flex-direction: column;
-    margin-right: 40px;
-}
-
-#add-stadium-date-visited-text {
     font-size: 20px;
-    margin: 0;
-    margin-left: 5px;
-    font-weight: normal;
-}
-
-#add-stadium-visited-before-text {
-    font-size: 20px;
-    margin: 0;
-    font-weight: normal;
+    margin: 0 0 15px 0;
 }
 
 #add-stadium-date-visited {
@@ -341,9 +245,10 @@ body {
     color: #f0f0f0;
     padding: 10px 15px;
     font-size: 16px;
-    margin-top: 10px;
+    margin-bottom: 20px;
     font-family: "Rubik", sans-serif;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 #add-stadium-date-visited::-webkit-calendar-picker-indicator {
@@ -351,85 +256,52 @@ body {
     -webkit-appearance: none;
 }
 
-#add-stadium-visited-before-container {
-    display: flex;
-    flex-direction: column;
-}
-
-#add-stadium-visited-before {
-    background-color: #2d2d2d;
-    width: 44px;
-    height: 42px;
-    border-radius: 20px;
-    margin-top: 10px;
-    cursor: pointer ;
-}
-
-#visited-before-checkmark {
-    display: none;
-    width: 18px;
-    height: 18px;
-    margin-top: 12px;
-    margin-left: 13px;
-}
-
-#add-stadium-review-container {
-    display: flex;
-    flex-direction: column;
-    margin-top: 20px;
-}
-
-#add-stadium-review-text {
-    margin: 0;
-    font-size: 20px;
-    font-weight: normal;
-    margin-left: 5px;
-}
-
-#add-stadium-review {
+#add-stadium-note {
     background-color: #2d2d2d;
     border-radius: 25px;
     border: none;
-    width: 100%;
-    height: 260px;
-    margin-top: 10px;
+    width: 420px;
+    height: 149px !important;
     padding: 20px;
     resize: none;
     color: #f0f0f0;
     font-size: 18px;
     font-family: "Rubik", sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-#add-stadium-review:focus {
+#add-stadium-note:focus {
     outline: none;
 }
 
-#add-stadium-review::placeholder {
+#add-stadium-note::placeholder {
     color: #f0f0f0;
     font-size: 18px;
     font-family: "Rubik", sans-serif;
 }
 
 #add-stadium-submit-button {
+    font-weight: normal;
+    font-size: 22px;
+    background-color: #2463eb;
+    color: #f0f0f0;
+    border-radius: 25px;
+    margin: 40px auto;
     width: 180px;
     padding: 10px 0;
-    font-size: 22px;
-    font-weight: normal;
-    margin: 40px auto 30px;
-    background-color: #2463eb;
     text-align: center;
-    border-radius: 25px;
+    cursor: pointer;
     transition: background-color 0.1s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 #add-stadium-submit-button:hover {
-    cursor: pointer;
     background-color: dodgerblue;
 }
 
 /*  Header  */
 header {
-    display: flex;
+    display: none;
     height: 90px;
     justify-content: space-between;
     background-color: rgb(29, 64, 175);
@@ -608,7 +480,7 @@ label img:hover {
     top: -10px;
     left: -10px;
     min-width: calc(100% + 20px);
-    width: max(100%, 140px);
+    width: max(100%, 150px);
     background-color: #2d2d2d;
     padding: 40px 0 5px;
     border-radius: 20px;
@@ -686,7 +558,7 @@ label img:hover {
 /*  Welcome Text  */
 #welcome-text {
     width: 80%;
-    margin: 40px auto 0;
+    margin: 50px auto 0;
     text-align: center;
 }
 
@@ -696,9 +568,9 @@ label img:hover {
 }
 
 #welcome-text h4 {
-    font-size: 22px;
+    font-size: 25px;
     font-weight: normal;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
 #button-container {
@@ -725,7 +597,7 @@ label img:hover {
 /*  Stadium Search  */
 #stadium-search-container {
     width: 95%;
-    margin: 30px auto;
+    margin: 40px auto;
 }
 
 #home-search-field {
@@ -1258,6 +1130,7 @@ footer h5 {
 #stadium-info-container {
     border-top: 0.5px solid #f0f0f0;
     display: flex;
+    flex-direction: column;
 }
 
 #stadium-image {
@@ -1267,174 +1140,86 @@ footer h5 {
     object-fit: cover;
     border-radius: 25px;
     margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+}
+
+#stadium-info1 {
+    display: flex;
 }
 
 #stadium-info1-container {
     display: flex;
     margin-top: 20px;
-    justify-content: space-between;
+    flex-direction: column;
+    margin-left: 35px;
 }
 
-.user-button {
-    text-align: center;
+#stadium-user-controls {
+    display: flex;
+}
+
+.stadium-user-control:first-of-type {
+    cursor: pointer;
+    width: 70px;
+    margin-right: 50px;
+}
+
+.stadium-user-control:nth-of-type(2) {
+    cursor: pointer;
+    width: 152px;
+}
+
+.stadium-user-control h3 {
+    font-size: 22px;
+    font-weight: normal;
+    margin: 0 0 15px;
+}
+
+.stadium-user-control img {
+    width: 50px;
+    height: 50px;
+}
+
+#stadium-user-buttons {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+}
+
+#stadium-user-buttons h3 {
+    font-size: 20px;
     font-weight: normal;
     background-color: #2463eb;
+    width: 220px;
+    height: 44px;
+    padding: 10px;
     border-radius: 25px;
-    margin: 0;
-    padding: 8px 18px;
-    margin-bottom: 15px;
+    margin: 0 0 15px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     transition: background-color 0.1s ease-in-out;
-    width: 282px;
 }
 
-#user-buttons-container h3:last-of-type {
-    margin-bottom: 0;
-}
-
-#user-buttons-container h3:hover {
+#stadium-user-buttons h3:hover {
     background-color: dodgerblue;
     cursor: pointer;
 }
 
-#stadium-user-controls {
-    display: none;
-    justify-content: space-between;
-}
-
-#stadium-visited {
-    margin-right: 25px;
-}
-
-#stadium-visited-text {
-    width: 65px;
-}
-
-#stadium-like {
-    cursor: pointer;
-}
-
-#stadium-like:hover h4 {
-    cursor: pointer;
-    color: rgb(199, 199, 199);
-}
-
-#stadium-like-text {
-    width: 50px;
-}
-
-#stadium-like-heart {
-    cursor: pointer;
-}
-
-#stadium-rating div {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-#stadium-rating-clear-button {
-    margin-right: 4px;
-    margin-bottom: 9px;
-    cursor: pointer;
-    opacity: 0;
-    transition: opacity 0.1s ease-in;
-}
-
-.stadium-user-control {
-    margin: 0 40px 0 0;
-}
-
-.stadium-user-control h4 {
-    margin: 0;
-    margin-bottom: 10px;
-    font-size: 20px;
-    font-weight: normal;
-}
-
-#stadium-visited:hover {
-    cursor: pointer;
-}
-
-#stadium-visited:hover h4 {
-    color: rgb(199, 199, 199);
-}
-
-#stadium-visited-checkmark {
-    width: 45px;
-    height: 45px;
-}
-
-#stadium-like-heart {
-    width: 48px;
-    height: 42px;
-    margin-top: 3px;
-}
-
-#stadium-rating-stars {
-    margin-top: 5px;
-    display: flex;
-    cursor: pointer;
-}
-
-#stadium-rating-stars img {
-    width: 36px;
-    height: 36px;
-    cursor: pointer;
-    margin-right: 2px;
-}
-
-.stadium-rating-star-half {
-    width: 18px;
-    height: 36px;
-    cursor: pointer;
-    margin-right: 2px;
-}
-
-#stadium-stats {
-    display: flex;
-}
-
-.stadium-stat {
-    margin-right: 50px;
-}
-
-.stadium-stat div {
-    display: flex;
-    align-items: center;
-}
-
-.stadium-stat h4, .stadium-stat h3 {
-    font-weight: normal;
-    margin: 0;
-}
-
-.stadium-stat h4 {
-    font-size: 20px;
-    margin-right: 7px;
-}
-
-.stadium-stat h3 {
-    font-size: 25px;
-    margin-top: 10px;
-}
-
-.stadium-stat img {
-    width: 25px;
-    height: 25px;
-    object-fit: cover;
-}
-
 #stadium-info2 {
-    margin-top: 10px;
-    margin-left: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.stadium-info2-container {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .stadium-info {
-    margin: 26px 30px;
-}
-
-.stadium-info:last-of-type {
-    margin-bottom: 0;
+    margin-top: 30px;
+    margin-right: 50px;
 }
 
 .stadium-info h4, .stadium-info h3 {
@@ -1471,83 +1256,10 @@ footer h5 {
     margin-right: 3px;
 }
 
-/*  Friend's Activity  */
-#friend-activity-container {
-    width: 1000px;
-    margin: 50px auto 0;
-}
-
-#friend-activity-content {
-    display: none;
-}
-
-#friend-activity-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 0.5px solid #f0f0f0;
-}
-
-#friend-activity-header h4, #friend-activity-header h5 {
-    font-weight: normal;
-    margin: 0;
-    margin-bottom: 7px;
-}
-
-#friend-activity-header h4 {
-    font-size: 20px;
-}
-
-#friend-activity-header h5:hover {
-    color: rgb(199, 198, 198);
-    cursor: pointer;
-}
-
-#friend-activity {
-    display: flex;
-    padding: 20px 0 5px;
-    flex-wrap: wrap;
-}
-
-.friend-activity-item {
-    text-align: center;
-    margin: 0 9px 15px;
-    width: 65px;
-}
-
-.friend-activity-item:first-of-type {
-    margin: 0 9px 15px 0;
-}
-
-.friend-activity-profile-pic {
-    height: 50px;
-    width: 50px;
-}
-
-.friend-activity-item div {
-    display: flex;
-    margin-top: 3px;
-    justify-content: center;
-}
-
-.friend-activity-star {
-    height: 12px;
-    width: 12px;
-    margin: 0 1px 2px 0;
-}
-
-.friend-activity-half-star {
-    height: 12px;
-    width: 12px;
-    object-fit: contain;
-    object-position: left;
-    margin: 0 1px 2px 0;
-}
-
 /*  Friend's Reviews / Popular Reviews / Recent Reviews / Upcoming Events  */
 #friend-reviews-container, #popular-reviews-container, #recent-reviews-container, #upcoming-events-container {
     width: 1000px;
-    margin: 30px auto 0;
+    margin: 55px auto 0;
 }
 
 #friend-reviews-content, #popular-reviews-content, #recent-reviews-content, #upcoming-events-content {
@@ -1574,6 +1286,10 @@ footer h5 {
 #friend-reviews-header h5:hover, #popular-reviews-header h5:hover, #recent-reviews-header h5:hover, #upcoming-events-header h5:hover {
     color: rgb(199, 198, 198);
     cursor: pointer;
+}
+
+#upcoming-events {
+    margin: 10px 0;
 }
 
 #no-popular-reviews-container, #no-recent-reviews-container, #no-upcoming-events-container {
@@ -1683,7 +1399,7 @@ footer h5 {
 #stadium-map-container {
     width: 1000px;
     border-top: 0.5px solid #f0f0f0;
-    margin: 20px auto;
+    margin: 0 auto;
 }
 
 #stadium-map-container h2 {
@@ -1732,6 +1448,7 @@ footer h5 {
 
 #stadium-info-container-skeleton {
     display: flex;
+    flex-direction: column;
 }
 
 #stadium-image-skeleton {
@@ -1748,9 +1465,7 @@ footer h5 {
 
 #stadium-info1-container-skeleton {
     display: flex;
-    margin-top: 20px;
-    justify-content: space-between;
-    width: 640px;
+    flex-wrap: wrap;
 }
 
 #user-buttons-container-skeleton {
@@ -1820,7 +1535,43 @@ footer h5 {
 }
 
 .stadium-info-skeleton {
-    margin: 26px 30px;
+    margin: 30px 50px 0 0;
+}
+
+#stadium-info1-skeleton {
+    display: flex;
+}
+
+#stadium-user-controls-skeleton {
+    display: flex;
+    margin-top: 10px;
+}
+
+.stadium-user-control-skeleton {
+    margin-right: 30px;
+}
+
+.stadium-user-control-skeleton div:first-of-type {
+    width: 100px;
+    height: 27px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+.stadium-user-control-skeleton div:last-of-type {
+    width: 55px;
+    height: 50px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    margin-top: 15px;
 }
 
 .stadium-info-skeleton:last-of-type {
@@ -1839,6 +1590,22 @@ footer h5 {
     height: 25px;
     width: 150px;
     margin: 0;
+}
+
+#stadium-user-buttons-skeleton {
+    margin-top: 32px;
+}
+
+#stadium-user-buttons-skeleton div {
+    width: 220px;
+    height: 44px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    margin-bottom: 20px;
 }
 
 .stadium-info-skeleton > div:nth-child(2) {
@@ -2014,6 +1781,18 @@ footer h5 {
     height: 20px;
 }
 
+#stadium-map-skeleton-header {
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+    width: 100px;
+    height: 50px;  
+    margin: 30px auto 30px;
+}
+
 /*  Media Queries  */ 
 @media screen and (max-width: 365px) {
     #stadium-stats {
@@ -2092,6 +1871,19 @@ footer h5 {
     }
 }
 
+@media screen and (max-width: 550px) {
+    #add-stadium-image {
+        max-width: 640px;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        height: auto;
+    }
+    #add-stadium-form {
+        flex-direction: column;
+        margin: 30px 0 0 !important;
+    }
+}
+
 @media screen and (max-width: 600px) {
     #nav-items .button {
         display: none;
@@ -2122,14 +1914,8 @@ footer h5 {
     #stadium-info1-container, #stadium-info1-container-skeleton {
         flex-direction: column !important;
     }
-    #add-stadium-container {
-        flex-direction: column;
-    }
-    #add-stadium-container1 {
-        width: 90%;
-    }
-    #add-stadium-image {
-        width: 100%;
+    #stadium-user-buttons {
+        margin-top: 30px !important;
     }
 }
 
@@ -2206,28 +1992,23 @@ footer h5 {
     }
 }
 
-@media screen and (max-width: 970px) {
-    #add-stadium-visited-container {
+@media screen and (max-width: 1000px) {
+    #stadium-info1, #stadium-info1-skeleton {
         flex-direction: column;
     }
-    #add-stadium-visited-before-container {
-        margin-top: 20px;
+    #stadium-info1-container, #stadium-info2-skeleton {
+        margin: 30px 0 0;
+        flex-direction: row;
+        justify-content: start;
     }
-    #add-stadium-visited-before-text {
-        margin-left: 5px;
+    #stadium-user-controls {
+        flex-direction: row !important;
     }
-    #add-stadium-date-visited {
-        width: 139px;
-        padding: 10px 15px;
+    .stadium-user-control:nth-of-type(2) {
+        margin: 0 !important;
     }
-    #add-stadium-container1 {
-        width: 56%;
-    }
-    #add-stadium-image {
-        width: 100%;
-        height: auto;
-    }
-    #add-stadium-review {
+    #stadium-user-buttons {
+        margin: 0;
     }
 }
 
@@ -2237,19 +2018,6 @@ footer h5 {
     }
     #stadium-info-container, #stadium-info-container-skeleton {
         flex-direction: column;
-    }
-    #stadium-info2 {
-        margin: 0;
-        margin-top: 20px;
-    }
-    #stadium-info2-skeleton {
-        margin: 30px 0 0;
-    }
-    .stadium-info, .stadium-info-skeleton {
-        margin: 26px 0;
-    }
-    .stadium-info:first-of-type, .stadium-info-skeleton:first-of-type {
-        margin-top: 0;
     }
     #stadium-info1-container, #stadium-info1-container-skeleton {
         justify-content: space-between;
@@ -2267,14 +2035,31 @@ footer h5 {
     #stadium-map-container {
         width: 90%;
     }
-    #friend-activity-container {
-        width: 90%;
+    #stadium-user-controls, #stadium-user-controls-skeleton {
+        flex-direction: column;
+    }
+    .stadium-user-control:nth-of-type(2), .stadium-user-control-skeleton:nth-of-type(2) {
+        margin-top: 25px;
     }
     #add-stadium-menu {
-        width: 93%;
+        width: 92%;
+    }
+    #add-stadium-container {
+        flex-direction: column;
+    }
+    #add-stadium-image {
+        margin: 0 auto;
     }
     #add-stadium-form {
-        margin-left: 40px;
+        display: flex;
+        margin: 30px auto 0;
+    }
+    #add-stadium-date-visited-container {
+        margin-right: 20px;
+    }
+    #add-stadium-note {
+        width: 300px;
+        height: 120px !important;
     }
 }
 

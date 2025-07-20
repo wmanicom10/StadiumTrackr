@@ -16,17 +16,11 @@ const handleLoadStadiumInfo = async (req, res) => {
     }
 
     try {
-        const [stadium] = await db.execute('SELECT stadium_name, city, state, image, capacity, opened_date, construction_cost, visits, ROUND(AVG(latest_ratings.rating), 2) AS average_rating, team_name, league_name FROM stadiums JOIN teams ON stadiums.stadium_id = teams.stadium_id JOIN leagues ON teams.league_id = leagues.league_id LEFT JOIN (SELECT us1.stadium_id, us1.user_id, us1.rating FROM user_stadiums us1 INNER JOIN (SELECT user_id, stadium_id, MAX(rated_on) AS max_time FROM user_stadiums GROUP BY user_id, stadium_id) us2 ON us1.user_id = us2.user_id  AND us1.stadium_id = us2.stadium_id AND us1.rated_on = us2.max_time) latest_ratings ON stadiums.stadium_id = latest_ratings.stadium_id WHERE stadiums.stadium_name = ? GROUP BY teams.team_id', [name]);
+        const [stadium] = await db.execute('SELECT s.stadium_name, s.city, s.state, s.image, s.capacity, s.opened_date, s.construction_cost, s.visits, t.team_name, l.league_name FROM stadiums s JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id WHERE s.stadium_name = ?', [name]);
 
-        const [userActivity] = await db.execute('SELECT s.stadium_name, u.username, us.visited_on, us.rating, us.rated_on, us.review_id, COALESCE(likes.liked_count, 0) AS liked_count FROM user_stadiums us JOIN users u ON us.user_id = u.user_id JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN (SELECT sl.user_id, sl.stadium_id, COUNT(*) AS liked_count FROM stadium_likes sl GROUP BY sl.user_id, sl.stadium_id) likes ON likes.user_id = u.user_id AND likes.stadium_id = s.stadium_id WHERE s.stadium_name = ? AND u.username = ? ORDER BY us.rated_on DESC', [name, username]);
+        const [userVisited] = await db.execute('SELECT username, added_on FROM user_stadiums JOIN users ON user_stadiums.user_id = users.user_id WHERE stadium_id = (SELECT stadium_id FROM stadiums WHERE stadium_name = ?) AND user_stadiums.user_id = (SELECT user_id FROM users WHERE username = ?)', [name, username]);
 
-        const [friendActivity] = await db.execute('SELECT username, rating, rated_on FROM user_followers JOIN user_stadiums ON user_followers.user_id = user_stadiums.user_id JOIN stadiums ON user_stadiums.stadium_id = stadiums.stadium_id JOIN users ON user_followers.user_id = users.user_id WHERE user_follower_id = (SELECT user_id FROM users WHERE username = ?) AND stadium_name = ? ORDER BY rating DESC, rated_on DESC', [username, name]);
-
-        const [friendReviews] = await db.execute('SELECT username, user_stadiums.rating, rated_on, review, like_count FROM user_followers JOIN user_stadiums ON user_followers.user_id = user_stadiums.user_id JOIN stadiums ON user_stadiums.stadium_id = stadiums.stadium_id JOIN users ON user_followers.user_id = users.user_id JOIN stadium_reviews on user_stadiums.review_id = stadium_reviews.review_id WHERE user_follower_id = (SELECT user_id FROM users WHERE username = ?) AND stadium_name = ? ORDER BY like_count DESC, rated_on DESC', [username, name]);
-
-        const [popularReviews] = await db.execute('SELECT username, review, rating, like_count FROM stadium_reviews JOIN users on stadium_reviews.user_id = users.user_id JOIN stadiums on stadium_reviews.stadium_id = stadiums.stadium_id WHERE stadiums.stadium_name = ? ORDER BY like_count desc, reviewed_on desc LIMIT 3', [name]);
-
-        const [recentReviews] = await db.execute('SELECT username, review, rating, like_count, reviewed_on FROM stadium_reviews JOIN users on stadium_reviews.user_id = users.user_id JOIN stadiums on stadium_reviews.stadium_id = stadiums.stadium_id WHERE stadiums.stadium_name = ? ORDER BY reviewed_on desc, reviewed_on desc LIMIT 3', [name]);
+        const [userWishlist] = await db.execute('SELECT username, added_on FROM user_wishlist_stadiums JOIN users ON user_wishlist_stadiums.user_id = users.user_id WHERE stadium_id = (SELECT stadium_id FROM stadiums WHERE stadium_name = ?) AND user_wishlist_stadiums.user_id = (SELECT user_id FROM users WHERE username = ?)', [name, username]);
           
         if (stadium.length === 0) {
             return res.status(404).json({ error: 'Error loading stadium info' });
@@ -42,36 +36,13 @@ const handleLoadStadiumInfo = async (req, res) => {
                 openedDate: stadium[0].opened_date,
                 constructionCost: stadium[0].construction_cost,
                 visits: stadium[0].visits,
-                averageRating: stadium[0].average_rating ?? 0.0
             },
-            userActivity: userActivity.map(({ stadium_name, username, visited_on, rating, rated_on, review_id, liked_count }) => ({
-                stadium_name, 
-                username, 
-                visited_on, 
-                rating, 
-                rated_on, 
-                review_id,
-                liked_count
-            })),
-            friendActivity: friendActivity,
-            friend_reviews: friendReviews,
             teams: stadium.map(({ team_name, league_name }) => ({
                 team_name,
                 league: league_name
             })),
-            popular_reviews: popularReviews.map(({ username, review, rating, like_count }) => ({
-                username,
-                review, 
-                rating,
-                like_count
-            })),
-            recent_reviews: recentReviews.map(({ username, review, rating, like_count, reviewed_on }) => ({
-                username,
-                review,
-                rating,
-                like_count,
-                reviewed_on
-            }))
+            userVisited: userVisited,
+            userWishlist: userWishlist
         };
 
         res.json({ stadiumInfo });
