@@ -9,6 +9,7 @@ const searchStadiumsController = require('../controllers/searchStadiumsControlle
 const loadMapStadiumsController = require('../controllers/loadMapStadiumsController');
 const loadStadiumMapController = require('../controllers/loadStadiumMapController');
 const updateUserActivityController = require('../controllers/updateUserActivityController');
+const loadUserHomeMapController = require('../controllers/loadUserHomeMapController');
 
 router.post('/loadStadiumInfo', loadStadiumInfoController.handleLoadStadiumInfo);
 router.post('/loadStadiums', loadStadiumsController.handleLoadStadiums);
@@ -19,5 +20,6 @@ router.post('/loadMapStadiums', loadMapStadiumsController.handleLoadMapStadiums)
 router.post('/loadStadiumMap', loadStadiumMapController.handleLoadStadiumMap);
 router.post('/updateUserStadium', updateUserActivityController.handleUpdateUserStadium);
 router.post('/updateUserWishlist', updateUserActivityController.handleUpdateUserWishlist);
+router.post('/loadUserHomeMap', loadUserHomeMapController.handleLoadUserHomeMap);
 
 module.exports = router;

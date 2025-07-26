@@ -1256,34 +1256,34 @@ footer h5 {
     margin-right: 3px;
 }
 
-/*  Friend's Reviews / Popular Reviews / Recent Reviews / Upcoming Events  */
-#friend-reviews-container, #popular-reviews-container, #recent-reviews-container, #upcoming-events-container {
+/*  Upcoming Events  */
+#upcoming-events-container {
     width: 1000px;
     margin: 55px auto 0;
 }
 
-#friend-reviews-content, #popular-reviews-content, #recent-reviews-content, #upcoming-events-content {
+#upcoming-events-content {
     display: none;
 }
 
-#friend-reviews-header, #popular-reviews-header, #recent-reviews-header, #upcoming-events-header {
+#upcoming-events-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 0.5px solid #f0f0f0;
 }
 
-#friend-reviews-header h4, #friend-reviews-header h5, #popular-reviews-header h4, #popular-reviews-header h5, #recent-reviews-header h4, #recent-reviews-header h5, #upcoming-events-header h4, #upcoming-events-header h5 {
+#upcoming-events-header h4, #upcoming-events-header h5 {
     font-weight: normal;
     margin: 0;
     margin-bottom: 7px;
 }
 
-#friend-reviews-header h4, #popular-reviews-header h4, #recent-reviews-header h4, #upcoming-events-header h4 {
+#upcoming-events-header h4 {
     font-size: 20px;
 }
 
-#friend-reviews-header h5:hover, #popular-reviews-header h5:hover, #recent-reviews-header h5:hover, #upcoming-events-header h5:hover {
+#upcoming-events-header h5:hover {
     color: rgb(199, 198, 198);
     cursor: pointer;
 }
@@ -1292,24 +1292,24 @@ footer h5 {
     margin: 10px 0;
 }
 
-#no-popular-reviews-container, #no-recent-reviews-container, #no-upcoming-events-container {
+#no-upcoming-events-container {
     display: none;
     width: 50%;
     margin: 40px auto;
     text-align: center;
 }
 
-#no-popular-reviews-message, #no-recent-reviews-message, #no-upcoming-events-message {
+#no-upcoming-events-message {
     margin: 0;
     font-weight: normal;
 }
 
-.friend-review, .popular-review, .recent-review, .upcoming-event {
+.upcoming-event {
     display: flex;
     padding: 20px 0;
 }
 
-#friend-reviews > *:not(:last-child), #popular-reviews > *:not(:last-child), #recent-reviews > *:not(:last-child), #upcoming-events > *:not(:last-child) {
+#upcoming-events > *:not(:last-child) {
     border-bottom: 0.5px solid #f0f0f03a;
 }
 
@@ -1317,15 +1317,10 @@ footer h5 {
     padding: 25px 0 20px;
 }
 
-.friend-review img, .popular-review img, .recent-review img, .upcoming-event img {
+.upcoming-event img {
     width: 50px;
     height: 50px;
     margin-right: 20px;
-}
-
-.user-review {
-    width: 85%;
-    max-width: 85%;
 }
 
 .event-info {
@@ -1335,55 +1330,6 @@ footer h5 {
 
 .event-info h4 {
     overflow-wrap: break-word;
-}
-
-.user-review div {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.user-review h4, .user-review h5 {
-    margin: 0;
-    font-weight: normal;
-}
-
-.user-review div h4 {
-    margin-top: 0px;
-    margin-right: 10px;
-    font-size: 18px;
-    max-width: 90%;
-    overflow-wrap: break-word;
-}
-
-.user-review h4 {
-    margin-top: 15px;
-    font-size: 16px;
-}
-
-.user-review h5 {
-    margin-top: 15px;
-    max-width: 90%;
-    font-size: 15px;
-    overflow-wrap: break-word;
-}
-
-.user-review-stars {
-    display: flex;
-}
-
-.user-review-star {
-    height: 14px !important;
-    width: 14px !important;
-    object-fit: contain;
-    margin: 0 1px 2px 0 !important;
-}
-
-.user-review-half-star {
-    height: 14px !important;
-    width: 7px !important;
-    object-fit: contain;
-    margin: 0 1px 2px 0 !important;
 }
 
 .event-info h4 {
@@ -1396,6 +1342,7 @@ footer h5 {
     margin-top: 15px;
 }
 
+/*  Stadium Map  */
 #stadium-map-container {
     width: 1000px;
     border-top: 0.5px solid #f0f0f0;
@@ -1415,6 +1362,261 @@ footer h5 {
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     background-color: #2d2d2d;
+}
+
+/*  User Home  */
+#user-home-welcome-text {
+    margin: 40px auto;
+    width: 271px;
+    font-weight: normal;
+    font-size: 28px;
+    text-align: center;
+    display: none;
+}
+
+#user-home-content {
+    width: 1205px;
+    margin: 0 auto;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#user-home-stadiums-container {
+    width: 830px;
+    margin-right: 50px;
+    display: none;
+}
+
+#user-home-stadiums-header, #user-home-stats-header, #user-home-wishlist-header, #user-home-achievements-header {
+    font-weight: normal;
+    margin: 0;
+    font-size: 25px;
+    display: inline;
+}
+
+#user-home-stadiums-header, #user-home-wishlist-header, #user-home-achievements-header {
+    cursor: pointer;
+    transition: color 0.1s ease-in-out;
+}
+
+#user-home-stadiums-header:hover, #user-home-wishlist-header:hover, #user-home-achievements-header:hover {
+    color: rgb(171, 171, 171);
+}
+
+#user-home-stats-header {
+    cursor: default;
+}
+
+.user-home-item a {
+    color: #f0f0f0;
+    text-decoration: none;
+}
+
+#user-stadiums, #user-wishlist-stadiums {
+    display: flex;
+    padding-top: 25px;
+    margin-top: 10px;
+    border-top: 0.5px solid #f0f0f0;
+    width: 830px;
+}
+
+.user-stadium {
+    background-color: #2d2d2d;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    will-change: transform;
+    width: 400px;
+    margin-right: 30px;
+}
+
+.user-stadium:hover {
+    transform: scale(0.97);
+    cursor: pointer;
+}
+
+.user-stadium a {
+    text-decoration: none;
+}
+
+.user-stadium img {
+    width: 400px;
+    height: 210px;
+    object-fit: cover;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+
+.user-stadium-text {
+    padding: 5px 0;
+    width: 400px;
+}
+
+.user-stadium-text h3, .user-stadium-text h4 {
+    margin: 10px;
+    font-weight: normal;
+    text-align: center;
+    color: #f0f0f0;
+}
+
+#user-stadiums-no-stadiums-text, #user-wishlist-stadiums-no-stadiums-text {
+    width: 350px;
+    margin: 40px auto 0;
+    display: none;
+}
+
+#user-stadiums-no-stadiums-text h3, #user-wishlist-stadiums-no-stadiums-text h3 {
+    margin: 0;
+    font-weight: normal;
+    text-align: center;
+}
+
+#user-home-stadiums-explore-button, #user-home-wishlist-explore-button {
+    display: block;
+    background-color: #2463eb;
+    width: 200px;
+    padding: 8px 0;
+    border-radius: 25px;
+    text-align: center;
+    margin: 20px auto 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    font-size: 19px;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+}
+
+#user-home-stadiums-explore-button:hover, #user-home-wishlist-explore-button:hover {
+    background-color: dodgerblue;
+}
+
+.user-home-see-all-button {
+    font-weight: normal;
+    margin: 25px auto 0;
+    background-color: #2463eb;
+    border-radius: 25px;
+    width: 220px;
+    text-align: center;
+    padding: 8px 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+}
+
+.user-home-see-all-button:hover {
+    background-color: dodgerblue;
+}
+
+#user-home-stats-container {
+    display: none;
+}
+
+#user-stats {
+    margin-top: 10px;
+    padding-top: 25px;
+    border-top: 0.5px solid #f0f0f0;
+}
+
+.user-stat {
+    background-color: #2d2d2d;
+    border-radius: 25px;
+    width: 325px;
+    height: 89px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.user-stat:last-of-type {
+    margin-bottom: 0;
+}
+
+.user-stat h3 {
+    margin: 5px 0;
+    font-weight: normal;
+    text-align: center;
+    cursor: default;
+}
+
+#user-home-wishlist-container {
+    width: 830px;
+    margin-right: 50px;
+    margin-top: 40px;
+    display: none;
+}
+
+#user-home-achievements-container {
+    display: none;
+    margin-top: 40px;
+}
+
+#user-achievements {
+    margin-top: 10px;
+    padding-top: 25px;
+    border-top: 0.5px solid #f0f0f0;
+}
+
+.user-achievement {
+    background-color: #2d2d2d;
+    display: flex;
+    align-items: center;
+    border-radius: 25px;
+    height: 89px;
+    width: 325px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    margin-bottom: 15px;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    will-change: transform;
+}
+
+.user-achievement:last-of-type {
+    margin-bottom: 0;
+}
+
+.user-achievement:hover {
+    transform: scale(0.96);
+    cursor: pointer;
+}
+
+.user-achievement-image {
+    background-color: #1c1c1c;
+    border-radius: 30px;
+    width: 60px;
+    height: 60px;
+    min-width: 60px;
+    max-width: 60px;
+    margin-right: 25px;
+    margin-left: 20px;
+}
+
+.user-achievement-text h3 {
+    font-weight: normal;
+    margin: 0;
+    margin: 5px 0;
+}
+
+#user-home-stadium-map-container {
+    margin-top: 40px;
+    width: 100%;
+}
+
+#user-home-stadium-map-container h2 {
+    font-weight: normal;
+    margin: 0;
+    font-size: 25px;
+    border-bottom: 0.5px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+#user-home-stadium-map {
+    width: 100%;
+    height: 450px;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    background-color: #2d2d2d;
+    margin-top: 25px;
 }
 
 /*  Skeleton Loading  */
@@ -1620,7 +1822,7 @@ footer h5 {
     margin-top: 13px;
 }
 
-#friend-reviews-header-skeleton, #popular-reviews-header-skeleton, #recent-reviews-header-skeleton, #upcoming-events-header-skeleton {
+#upcoming-events-header-skeleton {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1634,14 +1836,9 @@ footer h5 {
     width: 100%;
 }
 
-#friend-reviews-skeleton, #popular-reviews-skeleton, #recent-reviews-skeleton, #upcoming-events-skeleton {
+#upcoming-events-skeleton {
     margin-top: 10px;
     width: 100%;
-}
-
-.friend-review-skeleton, .popular-review-skeleton, .recent-review-skeleton {
-    display: flex;
-    padding: 15px 0;
 }
 
 .upcoming-event-skeleton {
@@ -1649,7 +1846,7 @@ footer h5 {
     padding: 13px 0;
 }
 
-.friend-review-profile-pic-skeleton, .popular-review-profile-pic-skeleton, .recent-review-profile-pic-skeleton, .upcoming-event-image-skeleton {
+.upcoming-event-image-skeleton {
     min-width: 50px;
     height: 50px;
     margin-right: 20px;
@@ -1659,11 +1856,6 @@ footer h5 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     border-radius: 25px;
     animation: loading 1.2s ease-in-out infinite;
-}
-
-.user-review-skeleton {
-    width: 85%;
-    max-width: 85%;
 }
 
 .event-info-skeleton {
@@ -1687,100 +1879,6 @@ footer h5 {
     margin-bottom: 15px;
 }
 
-.user-review-skeleton div:first-of-type {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.user-review-name-skeleton {
-    margin-top: 0px;
-    margin-right: 10px;
-    max-width: 90%;
-    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
-    background-size: 400% 100%;
-    animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border-radius: 25px;
-    animation: loading 1.2s ease-in-out infinite;
-    height: 22px;
-    width: 250px;
-}
-
-.user-review-review-skeleton {
-    margin-top: 15px;
-    max-width: 90%;
-    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
-    background-size: 400% 100%;
-    animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border-radius: 25px;
-    animation: loading 1.2s ease-in-out infinite;
-    height: 22px;
-    width: 400px;
-}
-
-.user-review-likes-skeleton {
-    margin-top: 15px;
-    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
-    background-size: 400% 100%;
-    animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border-radius: 25px;
-    animation: loading 1.2s ease-in-out infinite;
-    height: 22px;
-    width: 100px;
-}
-
-#friend-activity-header-skeleton {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
-    background-size: 400% 100%;
-    animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border-radius: 25px;
-    animation: loading 1.2s ease-in-out infinite;
-    height: 32px;
-    width: 100%;
-}
-
-#friend-activity-skeleton {
-    display: flex;
-    padding: 20px 0 5px;
-    flex-wrap: wrap;
-}
-
-.friend-activity-item-skeleton {
-    margin: 0 9px 15px;
-    width: 65px;
-}
-
-.friend-activity-profile-pic-skeleton {
-    height: 50px;
-    width: 50px;
-    margin: 0 auto;
-    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
-    background-size: 400% 100%;
-    animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border-radius: 25px;
-    animation: loading 1.2s ease-in-out infinite;
-}
-
-.friend-activity-stars-skeleton {
-    margin-top: 6px;
-    width: 100%;
-    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
-    background-size: 400% 100%;
-    animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border-radius: 25px;
-    animation: loading 1.2s ease-in-out infinite;
-    height: 20px;
-}
-
 #stadium-map-skeleton-header {
     background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
     background-size: 400% 100%;
@@ -1791,6 +1889,145 @@ footer h5 {
     width: 100px;
     height: 50px;  
     margin: 30px auto 30px;
+}
+
+#user-home-welcome-text-skeleton {
+    margin: 40px auto;
+    width: 271px;
+    height: 33px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+#user-home-stadiums-container-skeleton {
+    width: 830px;
+    margin-right: 50px;
+}
+
+#user-home-wishlist-container-skeleton {
+    width: 830px;
+    margin-right: 50px;
+    margin-top: 40px;
+}
+
+#user-home-stadiums-header-skeleton, #user-home-wishlist-header-skeleton, #user-home-achievements-header-skeleton, #user-home-stats-header-skeleton, #user-home-stadium-map-header-skeleton {
+    width: 150px;
+    height: 29px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+#user-stadiums-skeleton, #user-wishlist-skeleton {
+    display: flex;
+    padding-top: 25px;
+    margin-top: 10px;
+    width: 830px;
+}
+
+.user-stadium-skeleton {
+    border-radius: 15px;
+    width: 400px;
+    height: 296px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+.user-stadium-skeleton:first-of-type, .user-stadium-skeleton:nth-of-type(3) {
+    margin-right: 30px;
+}
+
+#user-home-stadiums-see-all-button-skeleton, #user-home-wishlist-see-all-button-skeleton {
+    margin: 25px auto 0;
+    border-radius: 25px;
+    width: 220px;
+    height: 39px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+#user-home-stats-container-skeleton {
+    width: 325px;
+}
+
+#user-stats-skeleton {
+    margin-top: 10px;
+    padding-top: 25px;
+}
+
+.user-stat-skeleton {
+    border-radius: 25px;
+    width: 325px;
+    height: 89px;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+.user-stat-skeleton:last-of-type {
+    margin-bottom: 0;
+}
+
+#user-home-achievements-container-skeleton {
+    width: 325px;
+    margin-top: 40px;
+}
+
+#user-achievements-skeleton {
+    margin-top: 10px;
+    padding-top: 25px;
+}
+
+.user-achievement-skeleton {
+    border-radius: 25px;
+    height: 89px;
+    width: 325px;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+.user-achievement-skeleton:last-of-type {
+    margin-bottom: 0;
+}
+
+#user-home-stadium-map-container-skeleton {
+    margin-top: 40px;
+    width: 100%;
+}
+
+#user-home-stadium-map-skeleton {
+    width: 100%;
+    height: 450px;
+    border-radius: 25px;
+    margin-top: 35px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
 }
 
 /*  Media Queries  */ 
@@ -1807,9 +2044,6 @@ footer h5 {
     #stadium-user-controls {
         flex-wrap: wrap;
     }
-    #stadium-rating {
-        margin-top: 10px;
-    }
 }
 
 @media screen and (max-width: 450px) {
@@ -1819,6 +2053,19 @@ footer h5 {
     .popup-card img {
         width: 250px;
         height: 150px;
+    }
+    #user-home-stats-container, #user-home-achievements-container, #user-home-stats-container-skeleton, #user-home-achievements-container-skeleton {
+        width: 100%;
+    }
+    .user-stat, .user-achievement, .user-stat-skeleton, .user-achievement-skeleton {
+        width: 100%;
+    }
+    .user-achievement-text {
+        margin-right: 25px;
+    }
+    #user-stadiums-no-stadiums-text, #user-wishlist-stadiums-no-stadiums-text {
+        max-width: 350px;
+        width: 100%;
     }
 }
 
@@ -1863,11 +2110,17 @@ footer h5 {
     .stadiums-list-stadium img {
         max-width: 100%;
     }
-}
-
-@media screen and (max-width: 520px) {
-    .user-review-name-skeleton {
-        width: 63%;
+    .user-stadium, .user-stadium-skeleton {
+        width: 100%;
+    }
+    .user-stadium img {
+        max-width: 400px;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        height: auto;
+    }
+    .user-stadium-text {
+        width: 100%;
     }
 }
 
@@ -1957,6 +2210,30 @@ footer h5 {
     }
 }
 
+@media screen and (max-width: 812px) {
+    #user-home-content {
+        flex-direction: column;
+    }
+    #user-home-stats-container, #user-home-achievements-container, #user-home-stats-container-skeleton, #user-home-achievements-container-skeleton {
+        margin: 40px auto 0 !important;
+    }
+    #user-home-stadiums-container, #user-home-wishlist-container, #user-home-stadiums-container-skeleton, #user-home-wishlist-container-skeleton {
+        width: 100%;
+    }
+    #user-home-stats-container, #user-home-achievements-container, #user-home-stats-container-skeleton, #user-home-achievements-container-skeleton {
+        width: 100%;
+    }
+    #user-stats, #user-achievements {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    .user-stat, .user-achievement {
+        margin-right: 50px;
+        margin-left: 50px;
+    }
+}
+
 @media screen and (max-width: 830px) {
     footer {
         height: 760px;
@@ -1986,9 +2263,56 @@ footer h5 {
     #nav-items li {
         display: none;
     }
-
     #nav-items .toggle {
         display: list-item;
+    }
+    #user-home-stadiums-container, #user-home-stadiums-container-skeleton {
+        margin: 0 0 0 0 !important;
+    }
+    #user-home-stadiums-container-skeleton, #user-home-wishlist-container-skeleton {
+        width: 100%;
+    }
+    #user-home-wishlist-container, #user-home-wishlist-container-skeleton {
+        margin: 40px 0 0 0 !important;
+    }
+    #user-home-content {
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    #user-stadiums, #user-wishlist-stadiums {
+        flex-direction: column;
+        width: 100%;
+    }
+    .user-stadium {
+        margin: 0 auto;
+    }
+    .user-stadium:first-of-type, .user-stadium:nth-of-type(3) {
+        margin-right: auto;
+        margin-top: 25px;
+    }
+    #user-home-stats-container {
+        margin-left: max(auto, 40px);
+    }
+    #user-home-achievements-container {
+        margin-right: max(auto, 40px);
+    }
+    #user-stadiums-skeleton, #user-wishlist-skeleton {
+        display: flex;
+        flex-direction: column;
+        margin: 0 auto !important;
+        width: 100%;
+    }
+    .user-stadium-skeleton {
+        margin: 0 auto 25px !important;
+    }
+    #user-home-stadiums-see-all-button-skeleton, #user-home-wishlist-see-all-button-skeleton {
+        margin-top: 0;
+    }
+    #user-home-stats-container-skeleton {
+        margin-left: max(auto, 40px);
+    }
+    #user-home-achievements-container-skeleton {
+        margin-right: max(auto, 40px);
     }
 }
 
@@ -2026,11 +2350,8 @@ footer h5 {
     .user-button:last-of-type {
         margin-bottom: 0 !important;
     }
-    #popular-reviews-container, #recent-reviews-container, #upcoming-events-container {
+    #upcoming-events-container {
         width: 90%;
-    }
-    #popular-reviews-container {
-        margin-top: 40px;
     }
     #stadium-map-container {
         width: 90%;
@@ -2060,6 +2381,38 @@ footer h5 {
     #add-stadium-note {
         width: 300px;
         height: 120px !important;
+    }
+}
+
+@media screen and (max-width: 1250px) {
+    #user-home-content {
+        width: 96%;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+    #user-home-stadiums-container, #user-home-stadiums-container-skeleton {
+        order: 1;
+        margin: 0 auto;
+    }
+    #user-home-stats-container, #user-home-stats-container-skeleton {
+        order: 2;
+        margin-top: 40px;
+        margin-right: 50px;
+        margin: 40px 50px 0 auto;
+    }
+    #user-home-achievements-container, #user-home-achievements-container-skeleton {
+        order: 3;
+        margin: 40px auto 0 0;
+    }
+    #user-home-wishlist-container, #user-home-wishlist-container-skeleton {
+        order: 4;
+        margin: 40px auto 0 ;
+    }
+    #user-home-stadium-map-container {
+        order: 5;
+    }
+    #user-stadiums-no-stadiums-text, #user-wishlist-stadiums-no-stadiums-text {
+        margin: 10px auto 0;
     }
 }
 
