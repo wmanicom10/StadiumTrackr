@@ -39,7 +39,7 @@
             <form id="create-account-form">
                 <input type="text" id="new-username" class="input-field" placeholder="Username"><br>
                 <input type="text" id="new-email" class="input-field" placeholder="Email address"><br>
-                <input type="text" id="new-password" class="input-field" placeholder="Password"><br>
+                <input type="password" id="new-password" class="input-field" placeholder="Password"><br>
                 <div id="terms-and-conditions-container">
                     <input type="checkbox" id="terms-and-conditions">
                     <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html">Terms and Conditions</a></label>
@@ -52,8 +52,8 @@
         <!-- Main Content -->
         <div id="content-wrapper">
 
-            <!-- Header -->
-            <header>
+            <!-- Logged Out Header -->
+            <header id="logged-out-header">
                 <h1>StadiumTrackr</h1>
                 <ul id="nav-items">
                     <li class="nav-item"><a href="./index.html">Home</a></li>
@@ -72,10 +72,12 @@
                             <label for="sidebar-active" class="close-sidebar-button">
                                 <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
                             </label>
-                            <a class="home-link" href="./index.html">Home</a>
-                            <a href="./stadiums.html">Stadiums</a>
-                            <a href="">Events</a>
-                            <a href="">About</a>
+                            <div class="sidebar-links">
+                                <a class="home-link" href="./index.html">Home</a>
+                                <a href="./stadiums.html">Stadiums</a>
+                                <a href="">Events</a>
+                                <a href="">About</a>
+                            </div>
                             <div class="account-buttons">
                                 <span id="sidebar-log-in">Log In</span>
                                 <span id="sidebar-sign-up">Sign Up</span>

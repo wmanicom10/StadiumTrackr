@@ -480,10 +480,10 @@ label img:hover {
     top: -10px;
     left: -10px;
     min-width: calc(100% + 20px);
-    width: max(100%, 150px);
+    width: max(100%, 160px);
     background-color: #2d2d2d;
     padding: 40px 0 5px;
-    border-radius: 20px;
+    border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     z-index: 1;
     opacity: 0;
@@ -500,7 +500,7 @@ label img:hover {
 #logged-in-header-user-container-hidden a {
     display: block;
     margin: 5px 10px;
-    padding: 10px 12px;
+    padding: 10px 15px;
     color: #f0f0f0;
     border-radius: 25px;
     text-decoration: none;
@@ -1367,7 +1367,7 @@ footer h5 {
 /*  User Home  */
 #user-home-welcome-text {
     margin: 40px auto;
-    width: 271px;
+    width: auto;
     font-weight: normal;
     font-size: 28px;
     text-align: center;
