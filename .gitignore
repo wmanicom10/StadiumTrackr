@@ -1,8 +1,4 @@
-ssh.txt
-stadiumtrackr_sshkey.pem
-script.sh
 .DS_Store
 github-token.txt
 node_modules/
-test.html
 .env
