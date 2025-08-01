@@ -114,14 +114,20 @@ async function loadUserStadiums(username, league, sortType) {
         const userStadiums = result.userStadiums;
 
         if (userStadiums.length === 0) {
+            userStadiumsElement.innerHTML = '';
+            userStadiumsElement.appendChild(userStadiumsNoStadiumsText);
             userStadiumsNoStadiumsText.style.display = 'block';
+            userStadiumsPageSelector.style.display = 'none'
+            return;
         }
         else {
             const perPage = 18;
             let currentPage = 1;
 
             function renderPage(page) {
-                userStadiumsElement.innerHTML = ''
+                userStadiumsElement.innerHTML = '';
+                userStadiumsNoStadiumsText.style.display = 'none';
+                userStadiumsPageSelector.style.display = 'flex';
                 const start = (page - 1) * perPage;
                 const end = start + perPage;
                 const pageStadiums = userStadiums.slice(start, end);
