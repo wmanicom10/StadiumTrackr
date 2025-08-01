@@ -301,7 +301,7 @@ body {
 
 /*  Header  */
 header {
-    display: none;
+    display: flex;
     height: 90px;
     justify-content: space-between;
     background-color: rgb(29, 64, 175);
@@ -485,7 +485,7 @@ label img:hover {
     padding: 40px 0 5px;
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    z-index: 1;
+    z-index: 100;
     opacity: 0;
     transition: opacity 0.2s ease-in;
     pointer-events: none;
@@ -1619,6 +1619,214 @@ footer h5 {
     margin-top: 25px;
 }
 
+/*  User Stadiums  */
+#user-stadiums-container {
+    display: none;
+    width: 1260px;
+    margin: 50px auto 0;
+}
+
+#user-stadiums-header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#user-stadiums-header {
+    margin: 0;
+    font-weight: normal;
+    font-size: 25px;
+}
+
+#user-stadiums-header-sort-container {
+    display: flex;
+    align-items: center;
+}
+
+#user-stadiums-header-league-selector, #user-stadiums-header-sort-by {
+    display: flex;
+    align-items: center;
+    background-color: #2d2d2d;
+    border-radius: 25px;
+    padding: 10px 15px;
+}
+
+#user-stadiums-header-league-selector {
+    margin-right: 12px;
+    position: relative;
+}
+
+#user-stadiums-header-sort-by {
+    position: relative;
+}
+
+#user-stadiums-header-sort-container div span {
+    margin: 0 3px;
+    cursor: default;
+}
+
+#user-stadiums-stadiums {
+    margin-top: 10px;
+    padding-top: 25px;
+    border-top: 0.5px solid #f0f0f0;
+    border-bottom: 0.5px solid #f0f0f0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#user-stadiums-stadiums .user-stadium {
+    margin-bottom: 30px;
+}
+
+#user-stadiums-stadiums .user-stadium:nth-child(3n) {
+    margin-right: 0;
+}
+
+#user-stadiums-stadiums .user-stadium:last-child {
+    margin-right: 0;
+}
+
+#user-stadiums-page-selector {
+    display: flex;
+    align-items: center;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+#user-stadiums-page-selector span {
+    border-radius: 25px;
+    width: 32px;
+    text-align: center;
+    cursor: pointer;
+    padding: 6px 0;
+    margin: 0 3px;
+    transition: background-color 0.1s ease-in-out;
+}
+
+#user-stadiums-page-selector span.active {
+    background-color: #2463eb;
+}
+
+#user-stadiums-page-selector span:hover {
+    background-color: #2463eb;
+}
+
+#user-stadiums-stadiums #user-stadiums-no-stadiums-text #user-home-stadiums-explore-button {
+    color: #f0f0f0;
+    text-decoration: none;
+    margin-bottom: 65px;
+}
+
+#user-stadiums-header-league-selector-hidden {
+    position: absolute;
+    top: 0;
+    width: 116px;
+    padding-top: 40px;
+    background-color: #2d2d2d;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in, visibility 0.2s ease-in;
+}
+
+#user-stadiums-header-league-selector-hidden p {
+    padding: 10px 15px;
+    margin: 10px 3px;
+    border-radius: 25px;
+    cursor: pointer;
+    width: auto;
+}
+
+#user-stadiums-header-league-selector-hidden p:first-of-type {
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+#user-stadiums-header-league-selector-hidden p:hover {
+    background-color: #2463eb;
+}
+
+#user-stadiums-league-dropdown-wrapper {
+    position: relative;
+}
+
+#user-stadiums-sort-by-hidden {
+    position: absolute;
+    top: 0;
+    width: 225px;
+    padding-top: 40px;
+    background-color: #2d2d2d;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in, visibility 0.2s ease-in;
+}
+
+#user-stadiums-header-league-selector-hidden.visible, #user-stadiums-sort-by-hidden.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#user-stadiums-sort-by-hidden p {
+    padding: 10px 15px;
+    margin: 10px 3px;
+    border-radius: 25px;
+    cursor: pointer;
+    width: auto;
+}
+
+#user-stadiums-header-league-selector,
+#user-stadiums-header-sort-by {
+    z-index: 11;
+}
+
+#user-stadiums-header-league-selector-hidden,
+#user-stadiums-sort-by-hidden {
+    z-index: 10;
+}
+
+#user-stadiums-sort-by-hidden p:first-of-type {
+    margin-top: 5px;
+    margin-bottom: 0;
+}
+
+#user-stadiums-sort-by-hidden p:hover {
+    background-color: #2463eb;
+}
+
+#user-stadiums-sort-by-dropdown-wrapper {
+    position: relative;
+}
+
+#user-stadiums-sort-by-hidden p:nth-of-type(3):hover, #user-stadiums-sort-by-hidden p:nth-of-type(6):hover {
+    background-color: #2d2d2d;
+    cursor: default;
+}
+
+#user-stadiums-sort-by-hidden p:nth-of-type(4), #user-stadiums-sort-by-hidden p:nth-of-type(5),#user-stadiums-sort-by-hidden p:nth-of-type(7), #user-stadiums-sort-by-hidden p:nth-of-type(8)  {
+    margin-left: 30px;
+}
+
+#user-stadiums-sort-by-hidden p:nth-of-type(3), #user-stadiums-sort-by-hidden p:nth-of-type(6) {
+    margin-bottom: 5px;
+}
+
+#user-stadiums-sort-by-hidden p:nth-of-type(4), #user-stadiums-sort-by-hidden p:nth-of-type(7) {
+    margin-top: 5px;
+}
+
+#user-stadiums-header-league-selector-hidden.visible, #user-stadiums-sort-by-hidden.visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
 /*  Skeleton Loading  */
 .skeleton-card {
     width: 410px;
@@ -2030,6 +2238,70 @@ footer h5 {
     animation: loading 1.2s ease-in-out infinite;
 }
 
+#user-stadiums-container-skeleton {
+    width: 1260px;
+    margin: 50px auto 0;
+}
+
+#user-stadiums-header-container-skeleton {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#user-stadiums-header-skeleton {
+    width: 150px;
+    height: 45px;
+    border-radius: 25px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+#user-stadiums-header-sort-container-skeleton {
+    width: 352px;
+    height: 45px;
+    border-radius: 25px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
+#user-stadiums-stadiums-skeleton {
+    margin-top: 10px;
+    padding-top: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#user-stadiums-stadiums-skeleton .user-stadium-skeleton {
+    margin: 0 30px 30px 0;
+}
+
+#user-stadiums-stadiums-skeleton .user-stadium-skeleton:nth-of-type(3n) {
+    margin: 0 0 30px 0;
+}
+
+#user-stadiums-page-selector-skeleton {
+    margin: 30px auto 0;
+    width: 200px;
+    height: 29px;
+    border-radius: 25px;
+    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 25px;
+    animation: loading 1.2s ease-in-out infinite;
+}
+
 /*  Media Queries  */ 
 @media screen and (max-width: 365px) {
     #stadium-stats {
@@ -2121,6 +2393,54 @@ footer h5 {
     }
     .user-stadium-text {
         width: 100%;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    #user-stadiums-header-container, #user-stadiums-header-container-skeleton {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #user-stadiums-header-sort-container, #user-stadiums-header-sort-container-skeleton {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    #user-stadiums-league-dropdown-wrapper,
+    #user-stadiums-sort-by-dropdown-wrapper {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    #user-stadiums-header-league-selector,
+    #user-stadiums-header-sort-by {
+        justify-content: space-between;
+        width: 100%;
+        padding: 10px 15px;
+        background-color: #2d2d2d;
+        border-radius: 25px;
+    }
+
+    #user-stadiums-header-league-selector img,
+    #user-stadiums-header-sort-by img {
+        margin-left: auto;
+    }
+
+    #user-stadiums-header-league-selector-hidden,
+    #user-stadiums-sort-by-hidden {
+        left: 0;
+        top: 0;
+        width: 100%;
+        border-radius: 25px;
+    }
+    #user-stadiums-header-league-selector-hidden p, #user-stadiums-sort-by-hidden p {
+        margin-left: 3px;
+    }
+    #user-stadiums-header-sort-container-skeleton {
+        height: 100px;
     }
 }
 
@@ -2256,6 +2576,15 @@ footer h5 {
     }
 }
 
+@media screen and (max-width: 922px) {
+    #user-stadiums-stadiums, #user-stadiums-stadiums-skeleton {
+        padding: 25px 40px 0 !important;
+    }
+    #user-stadiums-stadiums .user-stadium, #user-stadiums-stadiums-skeleton .user-stadium-skeleton {
+        margin: 0 0 30px 0 !important;
+    }
+}
+
 @media screen and (max-width: 947px) {
     #nav-items {
         margin-right: 10px;
@@ -2283,10 +2612,10 @@ footer h5 {
         flex-direction: column;
         width: 100%;
     }
-    .user-stadium {
+    #user-stadiums .user-stadium, #user-wishlist-stadiums .user-stadium {
         margin: 0 auto;
     }
-    .user-stadium:first-of-type, .user-stadium:nth-of-type(3) {
+    #user-stadiums .user-stadium:first-of-type, #user-stadiums .user-stadium:nth-of-type(3), #user-wishlist-stadiums .user-stadium:first-of-type, #user-wishlist-stadiums .user-stadium:nth-of-type(3) {
         margin-right: auto;
         margin-top: 25px;
     }
@@ -2302,7 +2631,7 @@ footer h5 {
         margin: 0 auto !important;
         width: 100%;
     }
-    .user-stadium-skeleton {
+    #user-stadiums-skeleton .user-stadium-skeleton, #user-wishlist-skeleton .user-stadium-skeleton {
         margin: 0 auto 25px !important;
     }
     #user-home-stadiums-see-all-button-skeleton, #user-home-wishlist-see-all-button-skeleton {
@@ -2413,6 +2742,32 @@ footer h5 {
     }
     #user-stadiums-no-stadiums-text, #user-wishlist-stadiums-no-stadiums-text {
         margin: 10px auto 0;
+    }
+}
+
+@media screen and (max-width: 1300px) {
+    #user-stadiums-content {
+        width: 90%;
+        margin: 0 auto;
+    }
+    #user-stadiums-container, #user-stadiums-container-skeleton {
+        width: 100%;
+    }
+    #user-stadiums-header-container, #user-stadiums-header-container-skeleton {
+        width: 100%;
+    }
+    #user-stadiums-stadiums, #user-stadiums-stadiums-skeleton {
+        flex-wrap: wrap !important;
+        justify-content: center;
+    }
+    #user-stadiums-stadiums .user-stadium:nth-child(3n), #user-stadiums-stadiums-skeleton .user-stadium-skeleton:nth-child(3n) {
+        margin-right: 30px;
+    }
+    #user-stadiums-stadiums .user-stadium:nth-child(2n), #user-stadiums-stadiums-skeleton .user-stadium-skeleton:nth-child(2n) {
+        margin-right: 0;
+    }
+    #user-stadiums-stadiums .user-stadium:last-of-type, #user-stadiums-stadiums-skeleton .user-stadium-skeleton:last-of-type {
+        margin-right: 0;
     }
 }
 

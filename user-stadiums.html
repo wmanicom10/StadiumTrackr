@@ -19,95 +19,8 @@
 
         <div id="overlay"></div>
 
-        <!-- Login Menu -->
-        <div id="log-in-menu">
-            <h2>Sign In</h2>
-            <h3 id="close-log-in-menu">x</h3>
-            <form id="log-in-form">
-                <input type="text" id="username" class="input-field" placeholder="Username"><br>
-                <input type="password" id="password" class="input-field" placeholder="Password"><br>
-                <span class="forgot-password">Forgot Password?</span>
-                <input type="submit" id="log-in-button" value="Login">
-                <span class="sign-up-link">Don't have an account? <span>Sign up here</span></span>
-            </form>
-        </div>
-
-        <!-- Create Account Menu -->
-        <div id="create-account-menu">
-            <h2>Create Account</h2>
-            <h3 id="close-create-account-menu">x</h3>
-            <form id="create-account-form">
-                <input type="text" id="new-username" class="input-field" placeholder="Username"><br>
-                <input type="text" id="new-email" class="input-field" placeholder="Email address"><br>
-                <input type="text" id="new-password" class="input-field" placeholder="Password"><br>
-                <div id="terms-and-conditions-container">
-                    <input type="checkbox" id="terms-and-conditions">
-                    <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html">Terms and Conditions</a></label>
-                </div>
-                <input type="submit" id="sign-up-button" value="Sign Up"><br>
-                <span class="sign-in-link">Already have an account? <span>Sign in here</span></span>
-            </form>
-        </div>
-
-        <!-- Add Stadium Menu -->
-        <div id="add-stadium-menu">
-            <div id="add-stadium-menu-header">
-                <h2 id="add-stadium-name"></h2>
-                <h2 id="close-add-stadium-menu">x</h2>
-            </div>
-            <div id="add-stadium-container">
-                <img src="" id="add-stadium-image">
-                <form id="add-stadium-form">
-                    <div id="add-stadium-date-visited-container">
-                        <h3 id="add-stadium-date-visited-text">Visited On</h3>
-                        <input type="date" id="add-stadium-date-visited">
-                    </div>
-                    <div id="add-stadium-note-container">
-                        <h3 id="add-stadium-note-text">Note</h3>
-                        <textarea id="add-stadium-note" placeholder="Add a note..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <h3 id="add-stadium-submit-button">Add Stadium</h3>
-        </div>
-
         <!-- Main Content -->
         <div id="content-wrapper">
-            
-            <!-- Logged Out Header -->
-            <header id="logged-out-header">
-                <h1>StadiumTrackr</h1>
-                <ul id="nav-items">
-                    <li class="nav-item"><a href="./index.html">Home</a></li>
-                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="">Events</a></li>
-                    <li class="nav-item"><a href="">About</a></li>
-                    <li class="nav-item button" id="log-in">Log In</li>
-                    <li class="nav-item button" id="create-account">Sign Up</li>
-                    <li class="nav-item toggle">
-                        <input type="checkbox" id="sidebar-active">
-                        <label for="sidebar-active" class="open-sidebar-button">
-                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
-                        </label>
-                        <label id="sidebar-overlay" for="sidebar-active"></label>
-                        <div class="links-container">
-                            <label for="sidebar-active" class="close-sidebar-button">
-                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
-                            </label>
-                            <div class="sidebar-links">
-                                <a class="home-link" href="./index.html">Home</a>
-                                <a href="./stadiums.html">Stadiums</a>
-                                <a href="">Events</a>
-                                <a href="">About</a>
-                            </div>
-                            <div class="account-buttons">
-                                <span id="sidebar-log-in">Log In</span>
-                                <span id="sidebar-sign-up">Sign Up</span>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </header>
 
             <!-- Logged In Header -->
             <header id="logged-in-header">
@@ -169,7 +82,80 @@
 
             <main>
 
-
+                <div id="user-stadiums-content">
+                    <div id="user-stadiums-container">
+                        <div id="user-stadiums-header-container">
+                            <h2 id="user-stadiums-header">My Stadiums</h2>
+                            <div id="user-stadiums-header-sort-container">
+                                <div id="user-stadiums-league-dropdown-wrapper">
+                                    <div id="user-stadiums-header-league-selector">
+                                        <span id="league-text">League</span>
+                                        <img src="images/icons/arrow-down.svg" alt="Arrow Down" height="25" width="25">
+                                    </div>
+                                    <div id="user-stadiums-header-league-selector-hidden">
+                                        <p>Any</p>
+                                        <p>NFL</p>
+                                        <p>NBA</p>
+                                        <p>MLB</p>
+                                        <p>NHL</p>
+                                        <p>MLS</p>
+                                    </div>
+                                </div>
+                                <div id="user-stadiums-sort-by-dropdown-wrapper">
+                                    <div id="user-stadiums-header-sort-by">
+                                        <span>Sort By</span>
+                                        <span id="sort-text">WHEN ADDED</span>
+                                        <img src="images/icons/arrow-down.svg" alt="Arrow Down" height="25" width="25">
+                                    </div>
+                                    <div id="user-stadiums-sort-by-hidden">
+                                        <p>Stadium Name</p>
+                                        <p>Stadium Popularity</p>
+                                        <p>When Added</p>
+                                        <p>Newest First</p>
+                                        <p>Earliest First</p>
+                                        <p>Date Visited</p>
+                                        <p>Newest First</p>
+                                        <p>Earliest First</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="user-stadiums-stadiums">
+                            <div id="user-stadiums-no-stadiums-text">
+                                <h3>You haven't visited any stadiums yet...</h3>
+                                <a href="stadiums.html" id="user-home-stadiums-explore-button">Explore Stadiums</a>
+                            </div>
+                        </div>
+                        <div id="user-stadiums-page-selector"></div>
+                    </div>
+                    <div id="user-stadiums-container-skeleton">
+                        <div id="user-stadiums-header-container-skeleton">
+                            <div id="user-stadiums-header-skeleton"></div>
+                            <div id="user-stadiums-header-sort-container-skeleton"></div>
+                        </div>
+                        <div id="user-stadiums-stadiums-skeleton">
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
+                        </div>
+                        <div id="user-stadiums-page-selector-skeleton"></div>
+                    </div>
+                </div>
 
             </main>
 

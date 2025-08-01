@@ -311,6 +311,10 @@ async function loadStadiumMap(name) {
 }
 
 async function loadUpcomingEvents(name) {
+    console.log(name)
+    if (name === 'PHX Arena') {
+        name = 'PHX Arena (Formerly Footprint Center)';
+    }
     const apiKey = 'WIKkbzK6ciettoJD7CfKieFrtP8BqcvJ';
     const venueSearchUrl = `https://app.ticketmaster.com/discovery/v2/venues.json?keyword=${name}&apikey=${apiKey}`;
 
@@ -323,6 +327,7 @@ async function loadUpcomingEvents(name) {
     })
     .then(response => response.json())
     .then(data => {
+        console.log(data);
         const events = data._embedded.events;
         let eventCounter = 0;
         for (const event of events) {
@@ -449,7 +454,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async () => {
     const username = localStorage.getItem('username');
-    if (username === '') {
+    if (username === '' || username === null) {
         showLoggedOutUI();
     }
     else {

@@ -104,7 +104,7 @@ export function registerEventListeners({
             const result = await response.json();
 
             localStorage.setItem('username', result.username);
-            window.location.replace('user-home.html');
+            window.location.reload();
         } catch (error) {
             alert(error.message);
         }

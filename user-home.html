@@ -19,36 +19,6 @@
         
         <div id="overlay"></div>
 
-        <!-- Login Menu -->
-        <div id="log-in-menu">
-            <h2>Sign In</h2>
-            <h3 id="close-log-in-menu">x</h3>
-            <form id="log-in-form">
-                <input type="text" id="username" class="input-field" placeholder="Username"><br>
-                <input type="password" id="password" class="input-field" placeholder="Password"><br>
-                <span class="forgot-password">Forgot Password?</span>
-                <input type="submit" id="log-in-button" value="Login">
-                <span class="sign-up-link">Don't have an account? <span>Sign up here</span></span>
-            </form>
-        </div>
-
-        <!-- Create Account Menu -->
-        <div id="create-account-menu">
-            <h2>Create Account</h2>
-            <h3 id="close-create-account-menu">x</h3>
-            <form id="create-account-form">
-                <input type="text" id="new-username" class="input-field" placeholder="Username"><br>
-                <input type="text" id="new-email" class="input-field" placeholder="Email address"><br>
-                <input type="text" id="new-password" class="input-field" placeholder="Password"><br>
-                <div id="terms-and-conditions-container">
-                    <input type="checkbox" id="terms-and-conditions">
-                    <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html">Terms and Conditions</a></label>
-                </div>
-                <input type="submit" id="sign-up-button" value="Sign Up"><br>
-                <span class="sign-in-link">Already have an account? <span>Sign in here</span></span>
-            </form>
-        </div>
-
         <!-- Add Stadium Menu -->
         <div id="add-stadium-menu">
             <div id="add-stadium-menu-header">
@@ -73,41 +43,6 @@
 
         <!-- Main Content -->
         <div id="content-wrapper">
-
-            <!-- Logged Out Header -->
-            <header id="logged-out-header">
-                <h1>StadiumTrackr</h1>
-                <ul id="nav-items">
-                    <li class="nav-item"><a href="./index.html">Home</a></li>
-                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="">Events</a></li>
-                    <li class="nav-item"><a href="">About</a></li>
-                    <li class="nav-item button" id="log-in">Log In</li>
-                    <li class="nav-item button" id="create-account">Sign Up</li>
-                    <li class="nav-item toggle">
-                        <input type="checkbox" id="sidebar-active">
-                        <label for="sidebar-active" class="open-sidebar-button">
-                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
-                        </label>
-                        <label id="sidebar-overlay" for="sidebar-active"></label>
-                        <div class="links-container">
-                            <label for="sidebar-active" class="close-sidebar-button">
-                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
-                            </label>
-                            <div class="sidebar-links">
-                                <a class="home-link" href="./index.html">Home</a>
-                                <a href="./stadiums.html">Stadiums</a>
-                                <a href="">Events</a>
-                                <a href="">About</a>
-                            </div>
-                            <div class="account-buttons">
-                                <span id="sidebar-log-in">Log In</span>
-                                <span id="sidebar-sign-up">Sign Up</span>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </header>
 
             <!-- Logged In Header -->
             <header id="logged-in-header">

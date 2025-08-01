@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async () => {
     setView('NFL');
-    if (localStorage.getItem('username') === '') {
+    if (localStorage.getItem('username') === '' || localStorage.getItem('username') === null) {
         showLoggedOutUI();
     }
     else {

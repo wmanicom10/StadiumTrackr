@@ -87,3 +87,32 @@ export async function searchStadiums(name, suggestionsContainer, searchValue) {
         alert(error.message);
     }
 }
+
+export function createUserStadiumElement(stadium) {
+    const userStadium = document.createElement('div');
+    userStadium.classList.add('user-stadium');
+
+    const userStadiumLink = document.createElement('a');
+    userStadiumLink.href = `stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}`;
+
+    const userStadiumImage = document.createElement('img');
+    userStadiumImage.src = stadium.image;
+
+    const userStadiumText = document.createElement('div');
+    userStadiumText.classList.add('user-stadium-text');
+
+    const userStadiumName = document.createElement('h3');
+    userStadiumName.textContent = stadium.stadium_name;
+
+    const userStadiumLocation = document.createElement('h4');
+    userStadiumLocation.textContent = `${stadium.city}, ${stadium.state}`;
+
+    userStadiumText.appendChild(userStadiumName);
+    userStadiumText.appendChild(userStadiumLocation);
+
+    userStadiumLink.appendChild(userStadiumImage);
+    userStadiumLink.appendChild(userStadiumText);
+    userStadium.appendChild(userStadiumLink);
+
+    return userStadium;
+}

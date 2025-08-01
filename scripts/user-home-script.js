@@ -1,4 +1,5 @@
 import { loggedInHeader, loggedInHeaderUsername, logOutButton, sidebarToggle, sidebarToggleLoggedIn, sidebarLogOutButton, sidebarUsername } from "./constants.js";
+import { createUserStadiumElement } from "./utils.js";
 
 /*  Variables  */
 const userHomeWelcomeText = document.getElementById('user-home-welcome-text')
@@ -13,35 +14,6 @@ const userWishlistStadiumsNoStadiumsText = document.getElementById('user-wishlis
 const userHomeWishlistSeeAllButton = document.getElementById('user-home-wishlist-see-all-button')
 
 /*  Functions  */
-function createUserStadiumElement(stadium) {
-    const userStadium = document.createElement('div');
-    userStadium.classList.add('user-stadium');
-
-    const userStadiumLink = document.createElement('a');
-    userStadiumLink.href = `stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}`;
-
-    const userStadiumImage = document.createElement('img');
-    userStadiumImage.src = stadium.image;
-
-    const userStadiumText = document.createElement('div');
-    userStadiumText.classList.add('user-stadium-text');
-
-    const userStadiumName = document.createElement('h3');
-    userStadiumName.textContent = stadium.stadium_name;
-
-    const userStadiumLocation = document.createElement('h4');
-    userStadiumLocation.textContent = `${stadium.city}, ${stadium.state}`;
-
-    userStadiumText.appendChild(userStadiumName);
-    userStadiumText.appendChild(userStadiumLocation);
-
-    userStadiumLink.appendChild(userStadiumImage);
-    userStadiumLink.appendChild(userStadiumText);
-    userStadium.appendChild(userStadiumLink);
-
-    return userStadium;
-}
-
 function showLoggedInUI() {
     let username = localStorage.getItem('username');
     userHomeWelcomeText.textContent = 'Welcome, ' + username + '!';
@@ -216,9 +188,6 @@ window.onload = async () => {
 };
 
 window.addEventListener("resize", () => {
-    if (sidebarToggle.checked) {
-        sidebarToggle.checked = false;
-    }
     if (sidebarToggleLoggedIn.checked) {
         sidebarToggleLoggedIn.checked = false;
     }
