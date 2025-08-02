@@ -78,12 +78,12 @@ async function loadFullStadiumPage(username) {
         document.getElementById('user-stadiums-container-skeleton').style.display = 'block';
         document.getElementById('user-stadiums-container').style.display = 'none';
         
-        const userStadiumsPromise = loadUserStadiums(username, currentLeague, currentSortType);
+        const userWishlistStadiumsPromise = loadUserWishlistStadiums(username, currentLeague, currentSortType);
 
         const minimumLoadingTime = new Promise(resolve => setTimeout(resolve, 1000));
 
         await Promise.all([
-            userStadiumsPromise,
+            userWishlistStadiumsPromise,
             minimumLoadingTime
         ]);
 
@@ -96,9 +96,9 @@ async function loadFullStadiumPage(username) {
     }
 }
 
-async function loadUserStadiums(username, league, sortType) {
+async function loadUserWishlistStadiums(username, league, sortType) {
     try {
-        const response = await fetch('http://localhost:3000/user/loadUserStadiums', {
+        const response = await fetch('http://localhost:3000/user/loadUserWishlistStadiums', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, league, sortType })
@@ -111,9 +111,9 @@ async function loadUserStadiums(username, league, sortType) {
 
         const result = await response.json();
 
-        const userStadiums = result.userStadiums;
+        const userWishlistStadiums = result.userWishlistStadiums;
 
-        if (userStadiums.length === 0) {
+        if (userWishlistStadiums.length === 0) {
             userStadiumsElement.innerHTML = '';
             userStadiumsElement.appendChild(userStadiumsNoStadiumsText);
             userStadiumsNoStadiumsText.style.display = 'block';
@@ -130,7 +130,7 @@ async function loadUserStadiums(username, league, sortType) {
                 userStadiumsPageSelector.style.display = 'flex';
                 const start = (page - 1) * perPage;
                 const end = start + perPage;
-                const pageStadiums = userStadiums.slice(start, end);
+                const pageStadiums = userWishlistStadiums.slice(start, end);
 
                 pageStadiums.forEach(stadium => {
                     userStadiumsElement.appendChild(createUserStadiumElement(stadium));
@@ -182,7 +182,7 @@ async function loadUserStadiums(username, league, sortType) {
                     userStadiumsPageSelector.appendChild(dots);
                 };
 
-                const pageCount = Math.ceil(userStadiums.length / perPage);
+                const pageCount = Math.ceil(userWishlistStadiums.length / perPage);
 
                 if (pageCount <= 4) {
                     for (let i = 1; i <= pageCount; i++) {

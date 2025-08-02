@@ -310,7 +310,8 @@ header {
 }
 
 header h1 {
-    margin-left: 50px;
+    margin-left: 60px;
+    font-weight: normal;
 }
 
 header h1:hover {
