@@ -28,6 +28,7 @@ const userWishlistHeart = document.getElementById('user-wishlist-heart');
 const stadiumLogButton = document.getElementById('stadium-log-button');
 const stadiumActivityButton = document.getElementById('stadium-activity-button')
 const upcomingEventsContainer = document.getElementById('upcoming-events');
+const noUpcomingEventsContainer = document.getElementById('no-upcoming-events-container');
 
 /*  Functions  */
 function showLoggedInUI() {
@@ -328,7 +329,10 @@ async function loadUpcomingEvents(name) {
     .then(response => response.json())
     .then(data => {
         console.log(data);
-        const events = data._embedded.events;
+        const events = data._embedded?.events;
+        if (!events || events.length === 0) {
+            noUpcomingEventsContainer.style.display = 'block';
+        }
         let eventCounter = 0;
         for (const event of events) {
             const upcomingEvent = document.createElement('div');

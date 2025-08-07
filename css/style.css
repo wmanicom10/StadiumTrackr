@@ -1296,13 +1296,14 @@ footer h5 {
 #no-upcoming-events-container {
     display: none;
     width: 50%;
-    margin: 40px auto;
+    margin: 50px auto;
     text-align: center;
 }
 
 #no-upcoming-events-message {
     margin: 0;
     font-weight: normal;
+    font-size: 18px;
 }
 
 .upcoming-event {

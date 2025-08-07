@@ -36,7 +36,10 @@ async function loadMapStadiums() {
         attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
         }).addTo(map);
 
+        console.log(stadiums);
+
         stadiums.forEach(stadium => {
+            console.log(`${`images/stadiums/${stadium.stadium_name.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '').replace(/\./g, '')}.jpg`}`)
         L.marker(stadium.location, { icon: customIcon }).addTo(map)
             .bindPopup(`<div class="popup-card">
                             <h4>${stadium.stadium_name}</h4>
