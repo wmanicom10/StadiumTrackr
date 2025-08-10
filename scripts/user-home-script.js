@@ -11,7 +11,9 @@ const numCountries = document.getElementById('num-countries');
 const numEvents = document.getElementById('num-events');
 const userWishlistStadiumsElement = document.getElementById('user-wishlist-stadiums');
 const userWishlistStadiumsNoStadiumsText = document.getElementById('user-wishlist-stadiums-no-stadiums-text');
-const userHomeWishlistSeeAllButton = document.getElementById('user-home-wishlist-see-all-button')
+const userHomeWishlistSeeAllButton = document.getElementById('user-home-wishlist-see-all-button');
+const userAchievementsNoAchievementsText = document.getElementById('user-home-no-achievements-text');
+const userAchievementsElement = document.getElementById('user-achievements');
 
 /*  Functions  */
 function showLoggedInUI() {
@@ -173,6 +175,39 @@ async function loadUserInfo(username) {
                     }
                 }
             });
+        }
+
+        const userAchievements = result.userAchievements;
+
+        console.log(userAchievements);
+
+        if (userAchievements.length === 0) {
+            userAchievementsNoAchievementsText.style.display = 'block';
+        }
+        else {
+            userAchievementsElement.innerHTML = '';
+            userAchievements.forEach(achievement => {
+                const userAchievement = document.createElement('div');
+                userAchievement.classList.add('user-achievement');
+
+                const userAchievementImage = document.createElement('img');
+                userAchievementImage.classList.add('user-achievement-image');
+                userAchievementImage.src = achievement.achievement_image;
+
+                const userAchievementText = document.createElement('div');
+                userAchievementText.classList.add('user-achievement-text');
+
+                const userAchievementName = document.createElement('h3');
+                userAchievementName.textContent = achievement.achievement_name;
+
+                userAchievementText.appendChild(userAchievementName);
+
+                userAchievement.appendChild(userAchievementImage);
+                userAchievement.appendChild(userAchievementText);
+
+                userAchievementsElement.appendChild(userAchievement);
+
+            })
         }
             
     } catch (error) {

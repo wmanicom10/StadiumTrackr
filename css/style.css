@@ -1570,6 +1570,18 @@ footer h5 {
     margin-top: 40px;
 }
 
+#user-home-no-achievements-text {
+    display: none;
+    text-align: center;
+    width: 325px;
+    margin-top: 40px;
+}
+
+#user-home-no-achievements-text h3 {
+    margin: 0;
+    font-weight: normal;
+}
+
 #user-achievements {
     margin-top: 10px;
     padding-top: 25px;
@@ -1594,13 +1606,11 @@ footer h5 {
 }
 
 .user-achievement-image {
-    background-color: #1c1c1c;
-    border-radius: 30px;
     width: 60px;
     height: 60px;
     min-width: 60px;
     max-width: 60px;
-    margin-right: 25px;
+    margin-right: 20px;
     margin-left: 20px;
 }
 
