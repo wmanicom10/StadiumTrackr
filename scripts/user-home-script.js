@@ -1,4 +1,4 @@
-import { loggedInHeader, loggedInHeaderUsername, logOutButton, sidebarToggle, sidebarToggleLoggedIn, sidebarLogOutButton, sidebarUsername } from "./constants.js";
+import { loggedInHeader, loggedInHeaderUsername, logOutButton, sidebarToggleLoggedIn, sidebarLogOutButton, sidebarUsername } from "./constants.js";
 import { createUserStadiumElement } from "./utils.js";
 
 /*  Variables  */

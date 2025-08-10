@@ -77,6 +77,8 @@ async function loadFullStadiumPage(username) {
     try {
         document.getElementById('user-stadiums-container-skeleton').style.display = 'block';
         document.getElementById('user-stadiums-container').style.display = 'none';
+
+        document.body.style.overflow = 'hidden';
         
         const userWishlistStadiumsPromise = loadUserWishlistStadiums(username, currentLeague, currentSortType);
 
@@ -89,6 +91,8 @@ async function loadFullStadiumPage(username) {
 
         document.getElementById('user-stadiums-container-skeleton').style.display = 'none';
         document.getElementById('user-stadiums-container').style.display = 'block';
+
+        document.body.style.overflow = 'auto';
 
     }
     catch (error) {
@@ -117,7 +121,8 @@ async function loadUserWishlistStadiums(username, league, sortType) {
             userStadiumsElement.innerHTML = '';
             userStadiumsElement.appendChild(userStadiumsNoStadiumsText);
             userStadiumsNoStadiumsText.style.display = 'block';
-            userStadiumsPageSelector.style.display = 'none'
+            userStadiumsPageSelector.style.display = 'none';
+            userStadiumsElement.style.borderBottom = 'none';
             return;
         }
         else {
@@ -279,6 +284,10 @@ document.querySelectorAll('#user-stadiums-header-league-selector-hidden p').forE
 document.querySelectorAll('#user-stadiums-sort-by-hidden p').forEach(p => {
     p.addEventListener('click', async() => {
         const sortBy = p.textContent;
+
+        if (sortBy === 'When Added') {
+            return;
+        }
 
         if (sortBy === 'Stadium Name') {
             sortDropdown.style.width = '238px';

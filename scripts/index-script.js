@@ -36,16 +36,13 @@ async function loadMapStadiums() {
         attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
         }).addTo(map);
 
-        console.log(stadiums);
-
         stadiums.forEach(stadium => {
-            console.log(`${`images/stadiums/${stadium.stadium_name.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '').replace(/\./g, '')}.jpg`}`)
-        L.marker(stadium.location, { icon: customIcon }).addTo(map)
-            .bindPopup(`<div class="popup-card">
-                            <h4>${stadium.stadium_name}</h4>
-                            <p>${stadium.address}</p>
-                            <a href="stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}"><img src=${`images/stadiums/${stadium.stadium_name.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '').replace(/\./g, '')}.jpg`} /></a>
-                        </div>`)
+            L.marker(stadium.location, { icon: customIcon }).addTo(map)
+                .bindPopup(`<div class="popup-card">
+                                <h4>${stadium.stadium_name}</h4>
+                                <p>${stadium.address}</p>
+                                <a href="stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}"><img src=${`images/stadiums/${stadium.stadium_name.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '').replace(/\./g, '')}.jpg`} /></a>
+                            </div>`)
         });
     } catch (error) {
         alert(error.message);
