@@ -1484,7 +1484,7 @@ footer h5 {
 #user-home-stadiums-explore-button, #user-home-wishlist-explore-button {
     display: block;
     background-color: #2463eb;
-    width: 200px;
+    width: 220px;
     padding: 8px 0;
     border-radius: 25px;
     text-align: center;
@@ -1499,9 +1499,14 @@ footer h5 {
     background-color: dodgerblue;
 }
 
+.user-home-button-container {
+    text-align: center;
+    margin: 25px 0 0;
+}
+
 .user-home-see-all-button {
+    display: inline-block;
     font-weight: normal;
-    margin: 25px auto 0;
     background-color: #2463eb;
     border-radius: 25px;
     width: 220px;
@@ -1510,6 +1515,9 @@ footer h5 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     cursor: pointer;
     transition: background-color 0.1s ease-in-out;
+    text-decoration: none; /* Remove underline */
+    color: #fff; /* White text */
+    font-size: 18px;
 }
 
 .user-home-see-all-button:hover {
