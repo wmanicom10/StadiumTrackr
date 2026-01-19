@@ -1,13 +1,7 @@
 <div align="center">
 
-  <img src="images/static/stadiumtrackr.png">
+  <h1>StadiumTrackr</h1>
 
-  <h4>The Stadium Tracker that logs your stadium visits</h4>
-
+  <h2>A platform to log stadium visits across the NFL, NBA, MLB, NHL, MLS</h2>
+  
 </div>
-
-Discover new stadiums from around the world from MLB, NFL and NBA  
-Share with your Friends and Family
-
-### User Experience
-Log your visits and rate the stadiums you experience
