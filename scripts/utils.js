@@ -53,8 +53,6 @@ export async function searchStadiums(name, suggestionsContainer, searchValue) {
         suggestionsContainer.innerHTML = '';
         suggestionsContainer.style.display = 'block';
 
-        searchValue.style.borderBottomLeftRadius = '0px';
-        searchValue.style.borderBottomRightRadius = '0px';
         suggestionsContainer.style.paddingLeft = '11px';
         suggestionsContainer.style.paddingBottom = '1px';
 

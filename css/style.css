@@ -4,19 +4,18 @@
 }
 
 body {
-    font-family: "Rubik", sans-serif;
-    color: #f0f0f0;
+    font-family: "Inter", sans-serif;
+    color: #e4e6eb;
     margin: 0;
     overflow-x: hidden;
-    background-color: #1c1c1c;
+    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
 }
 
 #overlay {
     position: fixed;
-    background-color: rgba(0,0,0,0.9);
+    background: rgba(0, 0, 0, 0.7);
     width: 100%;
     height: 100%;
-    opacity: 0.7;
     z-index: 1000;
     display: none;
 }
@@ -25,14 +24,15 @@ body {
 #create-account-menu, #log-in-menu {
     position: fixed;
     width: 428px;
-    background: linear-gradient(145deg, #3a3939, #181818);
+    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
+    border: 1px solid rgba(79, 172, 254, 0.3);
     z-index: 1001;
     display: none;
     top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 25px;
-    color: #f0f0f0;
+    color: #e4e6eb;
 }
 
 #log-in-menu {
@@ -48,6 +48,7 @@ body {
     font-size: 30px;
     font-weight: normal;
     margin-bottom: 0;
+    color: #4facfe;
 }
 
 #close-create-account-menu, #close-log-in-menu {
@@ -56,10 +57,13 @@ body {
     left: 380px;
     top: 1px;
     font-weight: normal;
+    color: #8b92a8;
+    cursor: pointer;
 }
 
 #close-create-account-menu:hover, #close-log-in-menu:hover {
     cursor: pointer;
+    color: #4facfe;
 }
 
 #create-account-form, #log-in-form{
@@ -74,21 +78,22 @@ body {
     width: 325px;
     border-radius: 20px;
     border: none;
-    background-color: #1c1c1c;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(79, 172, 254, 0.2);
     font-size: 16px;
     padding: 0 10px 0 20px;
     margin-top: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    color: #f0f0f0;
+    color: #e4e6eb;
 }
 
 .input-field::placeholder {
-    color: #f0f0f0;
+    color: #8b92a8;
 }
 
 .input-field:focus {
     outline: none;
-    caret-color: #f0f0f0;
+    caret-color: #e4e6eb;
 }
 
 #log-in-form span, #create-account-menu span {
@@ -108,24 +113,24 @@ body {
 }
 
 #sign-up-button, #log-in-button {
-    background-color: rgb(36,99,235);
-    color: white;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
     font-size: 20px;
     width: 325px;
     height: 40px;
-    border: none;
     border-radius: 20px;
-    margin-top: 15px;
+    margin-top: 20px;
     transition: background-color 0.1s ease-in-out;
 }
 
 #log-in-menu span span, #create-account-menu span span {
     display: inline;
-    color: #2463eb;
+    color: #4facfe;
 }
 
 #create-account-menu label a {
-    color: #f0f0f0;
+    color: #e4e6eb;
     display: inline;
     text-decoration: underline;
 }
@@ -135,7 +140,7 @@ body {
 }
 
 .sign-up-link, .sign-in-link {
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
 .sign-up-link span:hover, .sign-in-link span:hover {
@@ -242,7 +247,7 @@ body {
     border: none;
     border-radius: 25px;
     background-color: #2d2d2d;
-    color: #f0f0f0;
+    color: #e4e6eb;
     padding: 10px 15px;
     font-size: 16px;
     margin-bottom: 20px;
@@ -264,7 +269,7 @@ body {
     height: 149px !important;
     padding: 20px;
     resize: none;
-    color: #f0f0f0;
+    color: #e4e6eb;
     font-size: 18px;
     font-family: "Rubik", sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -275,7 +280,7 @@ body {
 }
 
 #add-stadium-note::placeholder {
-    color: #f0f0f0;
+    color: #e4e6eb;
     font-size: 18px;
     font-family: "Rubik", sans-serif;
 }
@@ -284,7 +289,7 @@ body {
     font-weight: normal;
     font-size: 22px;
     background-color: #2463eb;
-    color: #f0f0f0;
+    color: #e4e6eb;
     border-radius: 25px;
     margin: 40px auto;
     width: 180px;
@@ -301,17 +306,24 @@ body {
 
 /*  Header  */
 header {
-    display: flex;
+    display: none;
     height: 90px;
     justify-content: space-between;
-    background-color: rgb(29, 64, 175);
     align-items: center;
     margin: 0;
+    background: rgba(26, 29, 41, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(79, 172, 254, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 10000;
 }
 
 header h1 {
+    font-size: 2rem;
     margin-left: 60px;
-    font-weight: normal;
+    font-weight: bold;
+    color: #4facfe;
 }
 
 header h1:hover {
@@ -331,12 +343,13 @@ header h1:hover {
 }
 
 .nav-item a {
-    color: #f0f0f0;
+    color: #e4e6eb;
     text-decoration: none;
+    font-size: 1.2rem;
 }
 
 .nav-item a:hover {
-    color: rgb(199, 198, 198);
+    color: #4facfe;
 }
 
 .nav-item:hover {
@@ -344,16 +357,19 @@ header h1:hover {
 }
 
 .nav-item.button {
-    background-color: rgb(36,99,235);
-    padding: 10px 15px;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    padding: 10px 25px;
     border-radius: 20px;
     margin: 0 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    transition: background-color 0.1s ease-in-out;
+    transition: all 0.3s ease;
+    color: #4facfe;
 }
 
 .nav-item.nav-item.button:hover {
-    background-color: dodgerblue;
+    background: rgba(79, 172, 254, 0.2);
+    transform: translateY(-3px);
 }
 
 .toggle {
@@ -389,15 +405,16 @@ label img:hover {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    height: 100%;
-    width: 100%;
     align-items: flex-start;
     position: fixed;
     top: 0;
     right: -100%;
     z-index: 999;
-    width: 220px;
-    background-color: #141414;
+    width: 160px;
+    background: rgba(26, 29, 41, 1);
+    border-left: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom-left-radius: 25px;
     transition: 0.6s ease-out;
 }
 
@@ -415,8 +432,7 @@ label img:hover {
 }
 
 .links-container a:hover {
-    background-color: #2463eb;
-    color: #f0f0f0;
+    color: #4facfe;
 }
 
 #logged-in-header-username {
@@ -438,7 +454,7 @@ label img:hover {
 
 .account-buttons {
     width: 82%;
-    margin: 12px auto;
+    margin: 0 auto 30px;
     text-align: center;
     display: flex;
     flex-wrap: wrap;
@@ -449,17 +465,20 @@ label img:hover {
     display: inline-block;
     font-size: 17px;
     width: 130px;
-    background-color: #2463eb;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
     border-radius: 25px;
     padding: 10px 15px;
     margin-top: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    transition: background-color 0.1s ease-in;
+    transition: all 0.3s ease;
 }
 
 .account-buttons span:hover {
+    background: rgba(79, 172, 254, 0.2);
+    transform: translateY(-3px);
     cursor: pointer;
-    background-color: dodgerblue;
 }
 
 #logged-in-header #nav-items .nav-item:first-of-type {
@@ -506,7 +525,7 @@ label img:hover {
     display: block;
     margin: 5px 10px;
     padding: 10px 15px;
-    color: #f0f0f0;
+    color: #e4e6eb;
     border-radius: 25px;
     text-decoration: none;
 }
@@ -541,15 +560,11 @@ label img:hover {
 }
 
 #sidebar-user-links, .sidebar-links {
+    margin: 0 10px;
     width: 85%;
-    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    border-bottom: 0.5px solid #f0f0f0;
-}
-
-#sidebar-user-links a:last-of-type, .sidebar-links a:last-of-type {
-    margin: 5px 0 15px;
+    background: rgba(26, 29, 41, 1);
 }
 
 .sidebar-links a:first-of-type {
@@ -562,20 +577,19 @@ label img:hover {
 
 /*  Welcome Text  */
 #welcome-text {
-    width: 80%;
+    width: 60%;
     margin: 50px auto 0;
     text-align: center;
 }
 
 #welcome-text h2 {
-    font-size: 30px;
-    font-weight: normal;
-}
-
-#welcome-text h4 {
-    font-size: 25px;
-    font-weight: normal;
-    margin-bottom: 40px;
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 #button-container {
@@ -585,18 +599,22 @@ label img:hover {
 }
 
 #button-container h4 {
-    font-size: 15px;
-    background-color: #2463eb;
-    border-radius: 25px;
-    padding: 14px 20px;
+    font-size: 1.4rem;
+    font-weight: normal;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
+    border-radius: 35px;
+    padding: 14px 25px;
     margin: 0 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    transition: background-color 0.1s ease-in-out;
+    transition: all 0.3s ease;
 }
 
 #button-container h4:hover {
     cursor: pointer;
-    background-color: dodgerblue;
+    background: rgba(79, 172, 254, 0.2);
+    transform: translateY(-3px);
 }
 
 /*  Stadium Search  */
@@ -607,14 +625,16 @@ label img:hover {
 
 #home-search-field {
     border: none;
-    background-color: #2d2d2d;
-    height: 40px;
-    border-radius: 20px;
+    height: 60px;
+    border-radius: 35px;
     padding-left: 21px;
     z-index: 10;
-    width: 450px;
-    color: #f0f0f0;
+    width: 550px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    color: #e4e6eb;
 }
 
 #search-wrapper {
@@ -623,29 +643,28 @@ label img:hover {
     margin: 0 auto;
 }
 
-#home-search-field {
-    font-size: 15px;
-}
-
 #home-search-field:focus {
     outline: none;
     font-size: 15px;
 }
 
 #home-search-field::placeholder {
-    font-size: 15px;
-    color: #f0f0f0;
+    font-size: 1.1rem;
+    color: #8b92a8;
 }
 
 #autocomplete-list {
-    background-color: #2d2d2d;
-    width: 450px;
-    margin: 0 auto;
-    border-bottom-left-radius: 25px;
-    border-bottom-right-radius: 20px;
+    display: none;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    border-radius: 35px;
+    backdrop-filter: blur(40px);
+    width: 550px;
+    margin: 1px auto 0;
     z-index: 999;
     text-align: left;
     padding: 0;
+    padding-top: 10px;
     position: absolute;
     top: 100%;
     max-height: 285px;
@@ -662,8 +681,8 @@ label img:hover {
     font-size: 15px;
     width: 97%;
     padding: 8px 10px;
-    border-radius: 20px;
-    color: #f0f0f0;
+    border-radius: 35px;
+    color: #e4e6eb;
     font-weight: normal;
 }
 
@@ -674,18 +693,18 @@ label img:hover {
 #autocomplete-list .search-result h4 {
     margin: 0;
     font-size: 15px;
-    color: #f0f0f0;
+    color: #e4e6eb;
     padding: 8px 10px;
 }
 
 #autocomplete-list a .search-result h4:hover {
-    background-color: #2463eb;
-    color: #f0f0f0;
+    background-color: #4facfe;
+    color: #e4e6eb;
 }
 
 /*  Popular Stadiums  */
 #popular-stadiums-container {
-    border-top: 0.5px solid #f0f0f0;
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
     width: 95%;
     margin: 45px auto;
 }
@@ -693,7 +712,8 @@ label img:hover {
 #popular-stadiums-container h2 {
     margin: 30px auto 20px;
     text-align: center;
-    font-weight: normal;
+    font-size: 2rem;
+    color: #e4e6eb;
 }
 
 #popular-stadiums {
@@ -707,7 +727,7 @@ label img:hover {
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
     padding: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    margin: 10px 20px;
+    margin: 10px 20px 25px;
     will-change: transform;
 }
 
@@ -721,23 +741,32 @@ label img:hover {
 }
 
 .popular-stadium-text {
-    background-color: #2d2d2d;
-    padding: 5px 0;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    padding: 15px 0 15px 20px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
 
 .popular-stadium-text h3, .popular-stadium-text h4 {
     font-weight: normal;
-    text-align: center;
     margin: 10px;
     border: 0px solid white;
-    color: #f0f0f0;
+}
+
+.popular-stadium-text h3 {
+    font-size: 1.5rem;
+    color: #e4e6eb;
+}
+
+.popular-stadium-text h4 {
+    color: #8b92a8;
 }
 
 .popular-stadium a {
     text-decoration: none;
-    color: #f0f0f0;
+    color: #e4e6eb;
 }
 
 .popular-stadium:hover {
@@ -747,7 +776,7 @@ label img:hover {
 
 /*  StadiumTrackr Info  */
 #stadium-trackr-container {
-    border-top: 0.5px solid #f0f0f0;
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
     width: 95%;
     margin: 0 auto;
 }
@@ -755,7 +784,7 @@ label img:hover {
 #stadium-trackr-container h2 {
     margin: 30px auto 20px;
     text-align: center;
-    font-weight: normal;
+    font-size: 2rem;
 }
 
 #stadium-trackr-infos {
@@ -766,7 +795,9 @@ label img:hover {
 
 .stadium-trackr-info {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background-color: #2d2d2d;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.15);
     width: 297.5px;
     text-align: center;
     border-radius: 25px;
@@ -774,12 +805,11 @@ label img:hover {
 }
 
 .stadium-trackr-info div {
-    margin: 0 auto;
+    margin: 30px auto 20px;
     height: 60px;
     width: 60px;
     border-radius: 30px;
-    margin-top: 20px;
-    background-color: #f0f0f0;
+    background-color: #e4e6eb;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -792,25 +822,30 @@ label img:hover {
 }
 
 .stadium-trackr-info h3, .stadium-trackr-info h4 {
-    margin: 10px;
     font-weight: normal;
 }
 
+.stadium-trackr-info h3 {
+    font-size: 1.5rem;
+    margin: 10px;
+}
+
 .stadium-trackr-info h4 {
-    margin-bottom: 20px;
+    margin: 10px 22px 30px;
+    color: #8b92a8;
 }
 
 /*  Home Stadium Map  */
 #home-stadium-map-container {
     width: 95%;
-    border-top: 0.5px solid #f0f0f0;
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
     margin: 20px auto;
 }
 
 #home-stadium-map-container h2 {
     text-align: center;
     margin: 30px auto 30px;
-    font-weight: normal;
+    font-size: 2rem;
 }
 
 #home-stadium-map {
@@ -819,15 +854,18 @@ label img:hover {
     height: 500px;
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background-color: #2d2d2d;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.15);
 }
 
 .leaflet-popup-content-wrapper {
-    background-color: #2d2d2d !important;
+    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%) !important; 
+    border: 1px solid rgba(79, 172, 254, 0.15);
     width: 350px;
     border-radius: 10px;
     padding: 10px;
-    font-family: 'Rubik', sans-serif;
+    font-family: "Inter", sans-serif;
 }
 
 .leaflet-popup-close-button {
@@ -835,11 +873,13 @@ label img:hover {
 }
 
 .leaflet-popup-tip {
-    background-color: #2d2d2d !important;
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.15);
 }
 
 .leaflet-container a.leaflet-popup-close-button {
-    color: #f0f0f0 !important;
+    color: #e4e6eb !important;
 }
 
 .leaflet-bottom {
@@ -863,27 +903,34 @@ label img:hover {
 .leaflet-control-zoom-in, .leaflet-control-zoom-out {
     height: 40px !important;
     width: 35px !important;
-    background-color: #1c1c1c !important;
+    background: rgba(45, 49, 66, 0.95) !important;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.3) !important;
+    transition: all 0.3s ease;
+}
+
+.leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
+    background: rgba(79, 172, 254, 0.2) !important;
 }
 
 .leaflet-control-zoom-in span, .leaflet-control-zoom-out span {
-    font-family: "Rubik", sans-serif;
+    font-family: "Inter", sans-serif;
     font-weight: normal;
-    color: #f0f0f0;
+    color: #e4e6eb;
     position: relative;
     display: block;
     padding-top: 5px !important;
 }
 
 .popup-card h4 {
-    color: #f0f0f0;
+    color: #e4e6eb;
     margin: 0;
     font-size: 16px;
 }
 
 .popup-card p {
     margin: 10px 0 !important;
-    color: #f0f0f0;
+    color: #e4e6eb;
 }
 
 .popup-card img {
@@ -901,7 +948,8 @@ label img:hover {
 
 /*  Footer  */
 footer {
-    background-color: rgb(20, 20, 20);
+    background: rgba(26, 29, 41, 0.9);
+    backdrop-filter: blur(10px);
     height: 330px;
     text-align: left;
     margin-top: 50px;
@@ -915,7 +963,16 @@ footer {
     display: flex;
     justify-content: space-between;
     padding-bottom: 20px;
-    border-bottom: 0.5px solid #f0f0f0;
+    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+}
+
+.footer-item h4 {
+    color: #4facfe;
+    font-size: 1.2rem;
+}
+
+.footer-item h5 {
+    color: #8b92a8;
 }
 
 .footer-links h4 {
@@ -929,7 +986,7 @@ footer {
 
 .footer-links h5:hover {
     cursor: pointer;
-    color: #f0f0f0;
+    color: #e4e6eb;
 }
 
 .footer-item {
@@ -953,19 +1010,18 @@ footer h5 {
 }
 
 #email-field {
-    height: 35px;
-    width: 195px;
     border-top-left-radius: 20px;
     border-bottom-left-radius: 20px;
     border: none;
     margin: 0;
-    padding-left: 15px;
-    background-color: #2d2d2d;
-    color: #f0f0f0;
+    padding: 12px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    color: #e4e6eb;
 }
 
 #email-field::placeholder {
-    color: #f0f0f0;
+    color: #8b92a8;
 }
 
 #email-field:focus {
@@ -974,25 +1030,25 @@ footer h5 {
 }
 
 #subscribe-button {
-    height: 35px;
-    background-color: rgb(36,99,235);
-    border: none;
+    padding: 12px 25px;
+    background: rgba(79, 172, 254, 0.1);
+    border: 0.5px solid rgba(79, 172, 254, 0.3);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     margin: 0;
     padding: 0 15px 0 12px;
-    color: white;
+    color: #4facfe;
     transition: background-color 0.1s ease-in-out;
 }
 
 #subscribe-button:hover {
     cursor: pointer;
-    background-color: dodgerblue;
+    background: rgba(79, 172, 254, 0.2);
 }
 
 #copyright {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 27px;
 }
 
 /*  League Selector  */
@@ -1089,12 +1145,12 @@ footer h5 {
     text-align: center;
     margin: 10px;
     border: 0px solid white;
-    color: #f0f0f0;
+    color: #e4e6eb;
 }
 
 .stadiums-list-stadium a {
     text-decoration: none;
-    color: #f0f0f0;
+    color: #e4e6eb;
 }
 
 .stadiums-list-stadium:hover {
@@ -1414,7 +1470,7 @@ footer h5 {
 }
 
 .user-home-item a {
-    color: #f0f0f0;
+    color: #e4e6eb;
     text-decoration: none;
 }
 
@@ -1462,7 +1518,7 @@ footer h5 {
     margin: 10px;
     font-weight: normal;
     text-align: center;
-    color: #f0f0f0;
+    color: #e4e6eb;
 }
 
 #user-stadiums-no-stadiums-text, #user-wishlist-stadiums-no-stadiums-text, #user-achievements-no-achievements-text {
@@ -1736,7 +1792,7 @@ footer h5 {
 }
 
 #user-stadiums-stadiums #user-stadiums-no-stadiums-text #user-home-stadiums-explore-button {
-    color: #f0f0f0;
+    color: #e4e6eb;
     text-decoration: none;
     margin-bottom: 65px;
 }
@@ -1906,7 +1962,7 @@ footer h5 {
 }
 
 #user-achievements-achievements #user-achievements-no-achievements-text #user-home-stadiums-explore-button {
-    color: #f0f0f0;
+    color: #e4e6eb;
     text-decoration: none;
     margin-bottom: 65px;
 }
@@ -2116,7 +2172,7 @@ footer h5 {
 .skeleton-card {
     width: 410px;
     height: 302px;
-    background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     border-radius: 15px;
@@ -2878,7 +2934,7 @@ footer h5 {
     }
     #home-search-field {
         width: 100%;
-        max-width: 450px;
+        max-width: 550px;
     }
     #autocomplete-list {
         width: 100%;
@@ -3023,7 +3079,7 @@ footer h5 {
         margin: 0;
     }
     #copyright {
-        margin-bottom: 30px;
+        padding-bottom: 27px;
     }
     .footer-item {
         margin-top: 10px;
@@ -3040,15 +3096,6 @@ footer h5 {
 }
 
 @media screen and (max-width: 947px) {
-    #nav-items {
-        margin-right: 10px;
-    }
-    #nav-items li {
-        display: none;
-    }
-    #nav-items .toggle {
-        display: list-item;
-    }
     #user-home-stadiums-container, #user-home-stadiums-container-skeleton {
         margin: 0 0 0 0 !important;
     }
@@ -3100,6 +3147,26 @@ footer h5 {
 }
 
 @media screen and (max-width: 1000px) {
+    #nav-items {
+        margin-right: 10px;
+    }
+    #nav-items li {
+        display: none;
+    }
+    #nav-items .toggle {
+        display: list-item;
+    }
+    #search-wrapper {
+        width: 100%;
+    }
+    #home-search-field {
+        width: 100%;
+        max-width: 550px;
+    }
+    #autocomplete-list {
+        width: 100%;
+        max-width: 450px;
+    }
     #stadium-info1, #stadium-info1-skeleton {
         flex-direction: column;
     }

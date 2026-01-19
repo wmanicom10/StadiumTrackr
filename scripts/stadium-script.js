@@ -49,6 +49,35 @@ function showLoggedOutUI() {
 }
 
 /*  Async Functions  */
+async function loadFullStadiumPage(name, username) {
+    try {
+        const stadiumInfoPromise = loadStadiumInfo(name, username);
+        const stadiumMapPromise = loadStadiumMap(name);
+        const upcomingEventsPromise = loadUpcomingEvents(name);
+
+        const minimumLoadingTime = new Promise(resolve => setTimeout(resolve, 750));
+
+        await Promise.all([
+            stadiumInfoPromise,
+            stadiumMapPromise,
+            upcomingEventsPromise,
+            minimumLoadingTime
+        ]);
+
+        document.getElementById('stadium-image-skeleton').style.display = 'none';
+        document.getElementById('stadium-image').style.display = 'flex';
+
+        document.getElementById('stadium-skeleton').style.display = 'none';
+        document.getElementById('stadium-content').style.display = 'block';
+
+        document.getElementById('upcoming-events-skeleton-container').style.display = 'none';
+        document.getElementById('upcoming-events-content').style.display = 'block';
+    }
+    catch (error) {
+        alert('Failed to load stadium content: ' + error.message);
+    }
+}
+
 async function loadStadiumInfo(name, username) {
     try {
         const response = await fetch('http://localhost:3000/stadium/loadStadiumInfo', {
@@ -64,7 +93,7 @@ async function loadStadiumInfo(name, username) {
         
         const result = await response.json();
 
-        stadiumName.innerHTML = result.stadiumInfo.stadium.name;
+        stadiumName.textContent = result.stadiumInfo.stadium.name;
 
         stadiumImage.src = result.stadiumInfo.stadium.image;
         const imagePromise = new Promise(resolve => {
@@ -180,6 +209,10 @@ async function loadStadiumInfo(name, username) {
                         const errorData = await response.json();
                         throw new Error(errorData.error || 'Unknown error');
                     }
+
+                    const result = await response.json();
+
+                    console.log(result);
                 }
                 catch (error) {
                     alert(error.message);
@@ -312,7 +345,6 @@ async function loadStadiumMap(name) {
 }
 
 async function loadUpcomingEvents(name) {
-    console.log(name)
     if (name === 'PHX Arena') {
         name = 'PHX Arena (Formerly Footprint Center)';
     }
@@ -328,7 +360,6 @@ async function loadUpcomingEvents(name) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
         const events = data._embedded?.events;
         if (!events || events.length === 0) {
             noUpcomingEventsContainer.style.display = 'block';
@@ -406,35 +437,6 @@ async function loadUpcomingEvents(name) {
     .catch(error => {
         console.error('Error fetching data:', error);
     });
-}
-
-async function loadFullStadiumPage(name, username) {
-    try {
-        const stadiumInfoPromise = loadStadiumInfo(name, username);
-        const stadiumMapPromise = loadStadiumMap(name);
-        const upcomingEventsPromise = loadUpcomingEvents(name);
-
-        const minimumLoadingTime = new Promise(resolve => setTimeout(resolve, 750));
-
-        await Promise.all([
-            stadiumInfoPromise,
-            stadiumMapPromise,
-            upcomingEventsPromise,
-            minimumLoadingTime
-        ]);
-
-        document.getElementById('stadium-image-skeleton').style.display = 'none';
-        document.getElementById('stadium-image').style.display = 'flex';
-
-        document.getElementById('stadium-skeleton').style.display = 'none';
-        document.getElementById('stadium-content').style.display = 'block';
-
-        document.getElementById('upcoming-events-skeleton-container').style.display = 'none';
-        document.getElementById('upcoming-events-content').style.display = 'block';
-    }
-    catch (error) {
-        alert('Failed to load stadium content: ' + error.message);
-    }
 }
 
 /*  Events  */

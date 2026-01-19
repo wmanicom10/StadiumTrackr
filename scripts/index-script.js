@@ -32,9 +32,8 @@ async function loadMapStadiums() {
             popupAnchor: [-3, -40]
         });
 
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
-        }).addTo(map);
+        L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
+	        attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors', ext: 'jpg'}).addTo(map);
 
         stadiums.forEach(stadium => {
             L.marker(stadium.location, { icon: customIcon }).addTo(map)
@@ -86,7 +85,12 @@ window.addEventListener("resize", () => {
     }
 });
 
-createAccountButtons.forEach(button => button.addEventListener('click', () => toggleMenu(createAccountMenu, true, overlay)));
+createAccountButtons.forEach(button => button.addEventListener('click', () => {
+    if (logInMenu.style.display === 'block') {
+        toggleMenu(logInMenu, false, overlay, true);
+    }
+    toggleMenu(createAccountMenu, true, overlay);
+}));
 
 let typingTimer;
 const debounceTime = 500;
@@ -99,8 +103,8 @@ searchValue.addEventListener('input', (event) => {
         }
         else {
             suggestionsContainer.style.display = 'none';
-            searchValue.style.borderBottomLeftRadius = '20px';
-            searchValue.style.borderBottomRightRadius = '20px';
+            searchValue.style.borderBottomLeftRadius = '35px';
+            searchValue.style.borderBottomRightRadius = '35px';
         }
     }, debounceTime);
 });
@@ -111,8 +115,8 @@ document.addEventListener('click', function (event) {
     if (!isClickInside) {
         suggestionsContainer.style.display = 'none';
         searchValue.value = '';
-        searchValue.style.borderBottomLeftRadius = '20px';
-        searchValue.style.borderBottomRightRadius = '20px';
+        searchValue.style.borderBottomLeftRadius = '35px';
+        searchValue.style.borderBottomRightRadius = '35px';
     }
 });
 
@@ -124,7 +128,12 @@ createAccountForm.addEventListener('submit', function(event) {
     event.preventDefault();
 });
 
-logInButton.addEventListener('click', () => toggleMenu(logInMenu, true, overlay));
+logInButton.addEventListener('click', () => {
+    if (createAccountMenu.style.display === 'block') {
+        toggleMenu(createAccountMenu, false, overlay, true);
+    }
+    toggleMenu(logInMenu, true, overlay);
+});
 
 closeButtons['create-account-menu'].addEventListener('click', () => toggleMenu(createAccountMenu, false, overlay));
 closeButtons['log-in-menu'].addEventListener('click', () => toggleMenu(logInMenu, false, overlay));
@@ -220,10 +229,16 @@ logInForm.addEventListener("submit", function(event) {
 });
 
 sidebarLogInButton.addEventListener('click', () => {
+    if (createAccountMenu.style.display === 'block') {
+        toggleMenu(createAccountMenu, false, overlay, true);
+    }
     toggleMenu(logInMenu, true, overlay);
 });
 
 sidebarSignUpButton.addEventListener('click', () => {
+    if (logInMenu.style.display === 'block') {
+        toggleMenu(logInMenu, false, overlay, true);
+    }
     toggleMenu(createAccountMenu, true, overlay);
 });
 
