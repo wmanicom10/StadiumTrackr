@@ -26,7 +26,7 @@ body {
     width: 428px;
     background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
     border: 1px solid rgba(79, 172, 254, 0.3);
-    z-index: 1001;
+    z-index: 10001;
     display: none;
     top: 48%;
     left: 50%;
@@ -359,12 +359,13 @@ header h1:hover {
 .nav-item.button {
     background: rgba(79, 172, 254, 0.1);
     border: 1px solid rgba(79, 172, 254, 0.3);
-    padding: 10px 25px;
+    padding: 7px 25px;
     border-radius: 20px;
     margin: 0 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
     color: #4facfe;
+    font-size: 1.2rem;
 }
 
 .nav-item.nav-item.button:hover {
@@ -409,7 +410,7 @@ label img:hover {
     position: fixed;
     top: 0;
     right: -100%;
-    z-index: 999;
+    z-index: 1001;
     width: 160px;
     background: rgba(26, 29, 41, 1);
     border-left: 1px solid rgba(79, 172, 254, 0.2);
@@ -429,13 +430,17 @@ label img:hover {
     border-radius: 25px;
     transition: background-color 0.1s ease-in;
     margin: 5px 0;
+    border: 1px solid transparent;
 }
 
 .links-container a:hover {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
     color: #4facfe;
 }
 
 #logged-in-header-username {
+    font-size: 1.2rem;
     margin-right: 3px;
 }
 
@@ -502,16 +507,20 @@ label img:hover {
 #logged-in-header-user-container-hidden {
     position: absolute;
     top: -10px;
-    left: -10px;
+    left: -20px;
     min-width: calc(100% + 20px);
-    width: max(100%, 160px);
-    background-color: #2d2d2d;
+    width: max(100%, 175px);
+    background: rgba(45, 49, 66, 0.98);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(79, 172, 254, 0.3);
     padding: 40px 0 5px;
-    border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     z-index: 100;
     opacity: 0;
-    transition: opacity 0.2s ease-in;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
     pointer-events: none;
 }
 
@@ -524,19 +533,28 @@ label img:hover {
 #logged-in-header-user-container-hidden a {
     display: block;
     margin: 5px 10px;
-    padding: 10px 15px;
+    padding: 12px 15px;
     color: #e4e6eb;
     border-radius: 25px;
     text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.user-dropdown-arrow {
+    width: 12px;
+    height: 8px;
+    margin-left: 8px;
 }
 
 #logged-in-header-user-container-hidden a:first-of-type {
-    margin: 15px 10px 5px;
+    margin: 25px 10px 5px;
 }
 
 #logged-in-header-user-container-hidden a:hover {
-    background-color: #2463eb;
-    color: white;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
 }
 
 #user-dropdown-wrapper {
@@ -573,6 +591,15 @@ label img:hover {
 
 #logged-out-header .sidebar-links a:first-of-type {
     margin: 5px 0;
+}
+
+#logged-in-header .links-container {
+    width: 195px;
+}
+
+#logged-in-header .sidebar-links {
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    margin-top: 10px;
 }
 
 /*  Welcome Text  */
@@ -661,7 +688,7 @@ label img:hover {
     backdrop-filter: blur(40px);
     width: 550px;
     margin: 1px auto 0;
-    z-index: 999;
+    z-index: 1001;
     text-align: left;
     padding: 0;
     padding-top: 10px;
@@ -695,11 +722,13 @@ label img:hover {
     font-size: 15px;
     color: #e4e6eb;
     padding: 8px 10px;
+    border: 1px solid transparent;
 }
 
 #autocomplete-list a .search-result h4:hover {
-    background-color: #4facfe;
-    color: #e4e6eb;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
 }
 
 /*  Popular Stadiums  */
@@ -1051,65 +1080,210 @@ footer h5 {
     margin-top: 27px;
 }
 
-/*  League Selector  */
-#league-selector-container {
-    width: 530px;
-    margin: 30px auto;
+/*  Explore Text  */
+#explore-text {
+    width: 60%;
+    margin: 50px auto 30px;
     text-align: center;
 }
 
-#league-text {
-    font-weight: normal;
+#explore-text h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin: 0;
 }
 
-#league-selector {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    background-color: #2d2d2d;
-    border-radius: 35px;
-    padding: 10px;
-    margin-top: 15px;
+/*  Filter Bar  */
+#filter-bar {
+    max-width: 930px;
+    margin: 30px auto 50px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 1000;
 }
 
-.league {
+#filter-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 25px 30px;
+}
+
+.filter-label {
+    color: #8b92a8;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.filter-group {
     display: flex;
     align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.custom-select-wrapper {
+    position: relative;
+    min-width: 180px;
+    z-index: 100;
+}
+
+.custom-select-trigger {
+    padding: 12px 20px 12px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(79, 172, 254, 0.2);
     border-radius: 25px;
-    padding: 8px 12px;
-}
-
-.league:hover {
+    color: #e4e6eb;
+    font-size: 1rem;
+    font-family: "Inter", sans-serif;
     cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
 }
 
-.league h3 {
-    font-weight: normal;
-    margin: 0 5px 0 5px;
+.custom-select-trigger:hover {
+    border-color: rgba(79, 172, 254, 0.4);
 }
 
-.league img {
-    width: 30px;
+.custom-select-trigger.active {
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+}
+
+.custom-select-arrow {
+    width: 12px;
+    height: 8px;
+    transition: transform 0.2s ease;
+}
+
+.custom-select-trigger.active .custom-select-arrow {
+    transform: rotate(180deg);
+}
+
+.custom-select-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: rgba(45, 49, 66, 1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    z-index: 10001;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.custom-select-wrapper:has(.custom-select-dropdown.active) {
+    z-index: 10002;
+}
+
+.custom-select-dropdown.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.custom-select-option {
+    padding: 12px 18px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #e4e6eb;
+    font-size: 1rem;
+}
+
+.custom-select-option:first-child {
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+}
+
+.custom-select-option:last-child {
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+.custom-select-option:hover {
+    background: rgba(79, 172, 254, 0.15);
+    color: #4facfe;
+}
+
+.custom-select-option.selected {
+    background: rgba(79, 172, 254, 0.2);
+    color: #4facfe;
+    font-weight: 500;
+}
+
+.filter-select {
+    display: none;
+}
+
+.filter-divider {
+    width: 1px;
     height: 30px;
-    object-fit: contain;
+    background: rgba(79, 172, 254, 0.2);
+    margin: 0 10px;
+}
+
+.clear-filters {
+    padding: 10px 20px;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 20px;
+    color: #4facfe;
+    font-size: 0.95rem;
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.clear-filters:hover {
+    background: rgba(79, 172, 254, 0.2);
+    transform: translateY(-2px);
+}
+
+.filter-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 30px 20px;
+    border-top: 1px solid rgba(79, 172, 254, 0.1);
+    padding-top: 20px;
+}
+
+#results-count {
+    color: #8b92a8;
+    font-size: 0.95rem;
 }
 
 /*  Stadiums List  */
-.stadiums-list-container {
-    border-top: 0.5px solid #f0f0f0;
+#stadiums-list-container {
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
     width: 95%;
     margin: 45px auto;
+    padding-top: 50px;
+    z-index: 100;
 }
 
-.stadiums-list-container h2 {
-    margin: 30px auto 20px;
-    text-align: center;
-    font-weight: normal;
-}
-
-.stadiums-list {
+#stadiums-list {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -1120,7 +1294,7 @@ footer h5 {
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
     padding: 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    margin: 10px 20px;
+    margin: 10px 20px 25px;
     will-change: transform;
 }
 
@@ -1134,18 +1308,27 @@ footer h5 {
 }
 
 .stadiums-list-stadium-text {
-    background-color: #2d2d2d;
-    padding: 5px 0;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    padding: 15px 20px 15px 20px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
 
 .stadiums-list-stadium-text h3, .stadiums-list-stadium-text h4 {
     font-weight: normal;
-    text-align: center;
     margin: 10px;
     border: 0px solid white;
+}
+
+.stadiums-list-stadium-text h3 {
+    font-size: 1.5rem;
     color: #e4e6eb;
+}
+
+.stadiums-list-stadium-text h4 {
+    color: #8b92a8;
 }
 
 .stadiums-list-stadium a {
@@ -1158,12 +1341,90 @@ footer h5 {
     transform: scale(0.97);
 }
 
+#stadiums-page-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    min-width: 40px;
+    height: 40px;
+    padding: 0 12px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 12px;
+    color: #e4e6eb;
+    font-family: "Inter", sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.page-btn:hover:not(.active):not(:disabled) {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    transform: translateY(-2px);
+}
+
+.page-btn.active {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
+    font-weight: 600;
+}
+
+.page-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.page-btn.arrow {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.page-ellipsis {
+    color: #8b92a8;
+    padding: 0 8px;
+    font-size: 1.2rem;
+    cursor: default;
+}
+
+#no-stadiums-container {
+    text-align: center;
+    padding: 80px 40px;
+    max-width: 600px;
+    margin: 0 auto;
+    display: none;
+}
+
+#no-stadiums-container h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 15px;
+    color: #e4e6eb;
+}
+
+#no-stadiums-container p {
+    font-size: 1.1rem;
+    color: #8b92a8;
+    margin: 0 0 30px;
+    line-height: 1.6;
+}
+
 /*  Stadiums Search  */
 #stadiums-search-container {
     width: 95%;
     margin: 0 auto;
     text-align: center;
-    border-top: 0.5px solid #f0f0f0;
 }
 
 #stadiums-search-container h3 {
@@ -2178,12 +2439,37 @@ footer h5 {
     border-radius: 15px;
     margin: 10px 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
 }
 
 #popular-stadiums-skeleton {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+}
+
+#filter-bar-skeleton {
+    max-width: 930px;
+    margin: 30px auto 50px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 1000;
+    height: 180px;
+}
+
+#stadiums-container-skeleton {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    width: 95%;
+    margin: 0 auto;
+    padding-top: 50px;
 }
 
 #stadium-name-skeleton {
@@ -3038,6 +3324,60 @@ footer h5 {
         justify-content: start;
         flex-direction: column;
     }
+    #stadiums-search-container {
+        width: 80%;
+    }
+    #filter-bar, #filter-bar-skeleton {
+        width: 90%;
+        margin: 20px auto 40px;
+    }
+    #filter-bar-skeleton {
+        height: 409px !important;
+        margin-bottom: 45px;
+    }
+    #filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px;
+        gap: 20px;
+    }
+    .filter-group {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .custom-select-wrapper {
+        width: 100%;
+    }
+
+    .custom-select-trigger {
+        width: 100%;
+    }
+
+    .filter-label {
+        margin-bottom: 0;
+    }
+
+    .filter-divider {
+        display: none;
+    }
+
+    .filter-actions {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px 20px 20px;
+        gap: 12px;
+    }
+
+    .clear-filters {
+        width: 100%;
+    }
+
+    .results-count {
+        text-align: center;
+    }
 }
 
 @media screen and (max-width: 812px) {
@@ -3183,6 +3523,12 @@ footer h5 {
     }
     #stadium-user-buttons {
         margin: 0;
+    }
+    #filter-bar, #filter-bar-skeleton {
+        max-width: 93%;
+    }
+    #filter-bar-skeleton {
+        height: 241px;
     }
 }
 

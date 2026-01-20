@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
     </head>
@@ -94,7 +94,9 @@
                             <div id="logged-in-header-user-container">
                                 <img src="images/icons/person-gray.png" alt="" id="logged-in-header-user-profile-pic">
                                 <span id="logged-in-header-username"></span>
-                                <img src="images/icons/arrow-down.svg" alt="Arrow Down" height="25" width="25">
+                                <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
                             </div>
                             <div id="logged-in-header-user-container-hidden">
                                 <a href="user-home.html">Home</a>
@@ -144,73 +146,120 @@
             </header>
 
             <main>
-                
-                <!-- League Selector -->
-                <div id="league-selector-container">
-                    <h2 id="league-text">Choose a league to explore its stadiums...</h2>
-                    <div id="league-selector">
-                        <div class="league" id="nfl">
-                            <h3>NFL</h3>
-                            <img src="../images/logos/nfl-logo.png" alt="">
-                        </div>
-                        <div class="league" id="nba">
-                            <h3>NBA</h3>
-                            <img src="../images/logos/nba-logo.png" alt="">
-                        </div>
-                        <div class="league" id="mlb">
-                            <h3>MLB</h3>
-                            <img src="../images/logos/mlb-logo.png" alt="">
-                        </div>
-                        <div class="league" id="nhl">
-                            <h3>NHL</h3>
-                            <img src="../images/logos/nhl-logo.png" alt="">
-                        </div>
-                        <div class="league" id="mls">
-                            <h3>MLS</h3>
-                            <img src="../images/logos/mls-logo.png" alt="">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- NFL Stadiums -->
-                <div class="stadiums-list-container" id="nfl-stadiums-list">
-                    <h2>NFL Stadiums</h2>
-                    <div class="stadiums-list"></div>
-                </div>
-
-                <!-- NBA Stadiums -->
-                <div class="stadiums-list-container" id="nba-stadiums-list">
-                    <h2>NBA Stadiums</h2>
-                    <div class="stadiums-list"></div>
-                </div>
-
-                <!-- MLB Stadiums -->
-                <div class="stadiums-list-container" id="mlb-stadiums-list">
-                    <h2>MLB Stadiums</h2>
-                    <div class="stadiums-list"></div>
-                </div>
-
-                <!-- NHL Stadiums -->
-                <div class="stadiums-list-container" id="nhl-stadiums-list">
-                    <h2>NHL Stadiums</h2>
-                    <div class="stadiums-list"></div>
-                </div>
-
-                <!-- MLS Stadiums -->
-                <div class="stadiums-list-container" id="mls-stadiums-list">
-                    <h2>MLS Stadiums</h2>
-                    <div class="stadiums-list"></div>
+                <!-- Explore Text -->
+                <div id="explore-text">
+                    <h2>Explore Stadiums</h2>
                 </div>
 
                 <!-- Stadium Search -->
                 <div id="stadiums-search-container">
-                    <h3>Can't find what you're looking for? Search for a stadium</h3>
                     <form id="search-stadiums" autocomplete="off">
                         <div id="search-wrapper">
                             <input type="text" placeholder="Search stadiums..." id="home-search-field">
                             <div id="autocomplete-list"></div>
                         </div>
                     </form>
+                </div>
+
+                <!-- Filter Bar -->
+                <div id="filter-bar">
+                    <div id="filter-controls">
+                        <div class="filter-group">
+                            <label class="filter-label">League:</label>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select-trigger" data-select="league">
+                                    <span class="custom-select-value">All Leagues</span>
+                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="custom-select-dropdown">
+                                    <div class="custom-select-option selected" data-value="all">All Leagues</div>
+                                    <div class="custom-select-option" data-value="nfl">NFL</div>
+                                    <div class="custom-select-option" data-value="nba">NBA</div>
+                                    <div class="custom-select-option" data-value="mlb">MLB</div>
+                                    <div class="custom-select-option" data-value="nhl">NHL</div>
+                                    <div class="custom-select-option" data-value="mls">MLS</div>
+                                </div>
+                                <select class="filter-select" id="league-filter">
+                                    <option value="all">All Leagues</option>
+                                    <option value="nfl">NFL</option>
+                                    <option value="nba">NBA</option>
+                                    <option value="mlb">MLB</option>
+                                    <option value="nhl">NHL</option>
+                                    <option value="mls">MLS</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-divider"></div>
+                        <div class="filter-group">
+                            <label class="filter-label">Country:</label>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select-trigger" data-select="country">
+                                    <span class="custom-select-value">All Countries</span>
+                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="custom-select-dropdown">
+                                    <div class="custom-select-option selected" data-value="all">All Countries</div>
+                                    <div class="custom-select-option" data-value="us">USA</div>
+                                    <div class="custom-select-option" data-value="canada">Canada</div>
+                                </div>
+                                <select class="filter-select" id="country-filter">
+                                    <option value="all">All Countries</option>
+                                    <option value="us">USA</option>
+                                    <option value="canada">Canada</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="filter-divider"></div>
+                        <div class="filter-group">
+                            <label class="filter-label">Sort By:</label>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select-trigger" data-select="sort">
+                                    <span class="custom-select-value">Name (A-Z)</span>
+                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="custom-select-dropdown">
+                                    <div class="custom-select-option selected" data-value="name-asc">Name (A-Z)</div>
+                                    <div class="custom-select-option" data-value="name-desc">Name (Z-A)</div>
+                                </div>
+                                <select class="filter-select" id="sort-filter">
+                                    <option value="name-asc">Name (A-Z)</option>
+                                    <option value="name-desc">Name (Z-A)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="clear-filters" id="clear-filters">Clear Filters</button>
+                        <div id="results-count"></div>
+                    </div>
+                </div>
+
+                <!-- Stadium List -->
+                <div id="stadiums-list-container">
+                    <div id="stadiums-list"></div>
+                    <div id="no-stadiums-container">
+                        <h3>No Stadiums Found</h3>
+                        <p>We couldn't find any stadiums matching your current filters.</p>
+                    </div>
+                    <div id="stadiums-page-selector"></div>
+                </div>
+
+                <div id="stadiums-skeleton">
+                    <div id="filter-bar-skeleton"></div>
+                    <div id="stadiums-container-skeleton">
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                    </div>
                 </div>
             </main>
                 
@@ -219,7 +268,7 @@
                 <div id="footer-items">
                     <div class="footer-item">
                         <h4>StadiumTrackr</h4>
-                        <h5>Track your stadium visits and discover new venues worldwide</h5>
+                        <h5>Track the sports venues you've visited and discover new ones to explore</h5>
                     </div>
                     <div class="footer-item footer-links">
                         <h4>Quick Links</h4>
@@ -244,7 +293,7 @@
                         </form>
                     </div>
                 </div>
-                <h5 id="copyright">&copy;2025 StadiumTrackr. All rights reserved.</h5>
+                <h5 id="copyright">&copy;StadiumTrackr. All rights reserved.</h5>
             </footer>
 
         </div>
