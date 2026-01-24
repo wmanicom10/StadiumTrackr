@@ -22,13 +22,13 @@ const stadiumConstructionCost = document.getElementById('stadium-construction-co
 const stadiumUserControlVisited = document.getElementById('stadium-user-control-visited');
 const stadiumUserControlWishlist = document.getElementById('stadium-user-control-wishlist');
 const stadiumUserControlVisitedText = document.getElementById('stadium-user-control-visited-text');
-const userVisitedCheckmark = document.getElementById('user-visited-checkmark');
 const stadiumUserControlWishlistText = document.getElementById('stadium-user-control-wishlist-text');
-const userWishlistHeart = document.getElementById('user-wishlist-heart');
 const stadiumLogButton = document.getElementById('stadium-log-button');
 const stadiumActivityButton = document.getElementById('stadium-activity-button')
 const upcomingEventsContainer = document.getElementById('upcoming-events');
 const noUpcomingEventsContainer = document.getElementById('no-upcoming-events-container');
+const userVisitedImage = document.getElementById('user-visited-image');
+const userWishlistImage = document.getElementById('user-wishlist-image');
 
 /*  Functions  */
 function showLoggedInUI() {
@@ -64,14 +64,37 @@ async function loadFullStadiumPage(name, username) {
             minimumLoadingTime
         ]);
 
-        document.getElementById('stadium-image-skeleton').style.display = 'none';
-        document.getElementById('stadium-image').style.display = 'flex';
-
         document.getElementById('stadium-skeleton').style.display = 'none';
         document.getElementById('stadium-content').style.display = 'block';
 
         document.getElementById('upcoming-events-skeleton-container').style.display = 'none';
         document.getElementById('upcoming-events-content').style.display = 'block';
+
+        document.getElementById('stadium-map-skeleton-container').style.display = 'none';
+        document.getElementById('stadium-map-content').style.display = 'block';
+
+        if (window.stadiumMapData) {
+            const { latitude, longitude, name: stadiumName } = window.stadiumMapData;
+            
+            const map = L.map('stadium-map').setView([latitude, longitude], 6);
+
+            const customIcon = L.icon({
+                iconUrl: 'images/icons/pin-blue.png',
+                iconSize: [25, 35],      
+                iconAnchor: [16, 40],      
+                popupAnchor: [-3, -40]
+            });
+
+            L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
+                attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                ext: 'jpg'
+            }).addTo(map);
+
+            L.marker([latitude, longitude], { icon: customIcon }).addTo(map)
+                .bindPopup(`<div class="popup-card">
+                                <h4>${stadiumName}</h4>
+                            </div>`);
+        }
     }
     catch (error) {
         alert('Failed to load stadium content: ' + error.message);
@@ -130,22 +153,6 @@ async function loadStadiumInfo(name, username) {
         const teams = teamsSQL.map(team => team.team_name).join(', ');
         stadiumTeams.innerHTML = teams;
 
-        const leagueImages = {
-            NFL: '../images/icons/football-emoji.png',
-            NBA: '../images/icons/basketball-emoji.png',
-            MLB: '../images/icons/baseball-emoji.png',
-            NHL: '../images/icons/hockey-emoji.png',
-            MLS: '../images/icons/soccer-emoji.png'
-        };
-        const innerDiv = document.getElementsByClassName('stadium-info')[5].querySelector('div');
-        Object.keys(leagueCounts).forEach(league => {
-            if (leagueCounts[league] > 0) {
-                const img = document.createElement('img');
-                img.src = leagueImages[league];
-                innerDiv.appendChild(img);
-            }
-        });
-
         const capacity = result.stadiumInfo.stadium.capacity;
         stadiumCapacity.innerHTML = capacity;
 
@@ -157,52 +164,66 @@ async function loadStadiumInfo(name, username) {
 
         let isVisited = result.stadiumInfo.userVisited.length > 0;
         stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
-        userVisitedCheckmark.src = isVisited ? 'images/icons/checkmark-blue.png' : 'images/icons/checkmark-white.png';
+        userVisitedImage.src = isVisited ? 'images/icons/checkmark.png' : 'images/icons/plus.png';
 
         let isWishlist = result.stadiumInfo.userWishlist.length > 0;
         stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
-        userWishlistHeart.src = isWishlist ? 'images/icons/blue-heart.png' : 'images/icons/gray-heart.png';
+        userWishlistImage.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
 
         stadiumUserControlVisited.addEventListener('click', async () => {
             if (username == '') {
                 toggleMenu(createAccountMenu, true, overlay);
             }
             else {
-                if (isVisited) {
-                    userVisitedCheckmark.src = 'images/icons/checkmark-white.png';
-                    stadiumUserControlVisitedText.textContent = 'Visit';
-                }
-                else if (!isVisited && isWishlist) {
-                    userVisitedCheckmark.src = 'images/icons/checkmark-blue.png';
-                    stadiumUserControlVisitedText.textContent = 'Visited';
-                    userWishlistHeart.src = 'images/icons/gray-heart.png';
-                    stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
-                    try {
-                        const response = await fetch('http://localhost:3000/stadium/updateUserWishlist', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ name: name, username: username, isWishlist: isWishlist })
-                        });
-
-                        if (!response.ok) {
-                            const errorData = await response.json();
-                            throw new Error(errorData.error || 'Unknown error');
+                stadiumUserControlVisited.classList.add('animating');
+                
+                const currentIsVisited = isVisited;
+                const newIsVisited = !isVisited;
+                
+                setTimeout(() => {
+                    if (newIsVisited) {
+                        userVisitedImage.src = 'images/icons/checkmark.png';
+                        stadiumUserControlVisitedText.textContent = 'Visited';
+                        
+                        if (isWishlist) {
+                            stadiumUserControlWishlist.classList.add('animating');
+                            
+                            setTimeout(() => {
+                                userWishlistImage.src = 'images/icons/heart-plus.png';
+                                stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
+                            }, 200);
+                            
+                            setTimeout(() => {
+                                stadiumUserControlWishlist.classList.remove('animating');
+                            }, 400);
+                            
+                            fetch('http://localhost:3000/stadium/updateUserWishlist', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ name: name, username: username, isWishlist: isWishlist })
+                            })
+                            .catch(error => {
+                                alert(error.message);
+                            });
+                            
+                            isWishlist = !isWishlist;
                         }
                     }
-                    catch (error) {
-                        alert(error.message);
+                    else {
+                        userVisitedImage.src = 'images/icons/plus.png';
+                        stadiumUserControlVisitedText.textContent = 'Visit';
                     }
-                    isWishlist = !isWishlist;
-                }
-                else {
-                    userVisitedCheckmark.src = 'images/icons/checkmark-blue.png';
-                    stadiumUserControlVisitedText.textContent = 'Visited';
-                }
+                }, 200);
+                
+                setTimeout(() => {
+                    stadiumUserControlVisited.classList.remove('animating');
+                }, 400);
+                
                 try {
                     const response = await fetch('http://localhost:3000/stadium/updateUserStadium', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: name, username: username, isVisited: isVisited })
+                        body: JSON.stringify({ name: name, username: username, isVisited: currentIsVisited })
                     });
 
                     if (!response.ok) {
@@ -211,12 +232,11 @@ async function loadStadiumInfo(name, username) {
                     }
 
                     const result = await response.json();
-
-                    console.log(result);
                 }
                 catch (error) {
                     alert(error.message);
                 }
+                
                 isVisited = !isVisited;
             }
         });
@@ -226,21 +246,33 @@ async function loadStadiumInfo(name, username) {
                 toggleMenu(createAccountMenu, true, overlay);
             }
             else {
-                if (isWishlist) {
-                    userWishlistHeart.src = 'images/icons/gray-heart.png';
-                    stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
-                }
-                else {
-                    userWishlistHeart.src = 'images/icons/blue-heart.png';
-                    stadiumUserControlWishlistText.textContent = 'In Wishlist';
-                }
+                stadiumUserControlWishlist.classList.add('animating');
+                
+                const currentIsWishlist = isWishlist;
+                const newIsWishlist = !isWishlist;
+                
+                setTimeout(() => {
+                    if (newIsWishlist) {
+                        userWishlistImage.src = 'images/icons/heart-check.png';
+                        stadiumUserControlWishlistText.textContent = 'In Wishlist';
+                    }
+                    else {
+                        userWishlistImage.src = 'images/icons/heart-plus.png';
+                        stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
+                    }
+                }, 200);
+                
+                setTimeout(() => {
+                    stadiumUserControlWishlist.classList.remove('animating');
+                }, 400);
+                
                 try {
                     const response = await fetch('http://localhost:3000/stadium/updateUserWishlist', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: name, username: username, isWishlist: isWishlist })
+                        body: JSON.stringify({ name: name, username: username, isWishlist: currentIsWishlist })
                     });
-
+                    
                     if (!response.ok) {
                         const errorData = await response.json();
                         throw new Error(errorData.error || 'Unknown error');
@@ -249,9 +281,10 @@ async function loadStadiumInfo(name, username) {
                 catch (error) {
                     alert(error.message);
                 }
+                
                 isWishlist = !isWishlist;
             }
-        })
+        });
 
         stadiumLogButton.addEventListener('click', () => {
             if (username == '') {
@@ -266,9 +299,9 @@ async function loadStadiumInfo(name, username) {
             if (username == '') {
                 toggleMenu(createAccountMenu, true, overlay);
             }
-            else {
+            /*else {
                 toggleMenu(addStadiumMenu, true, overlay);
-            }
+            }*/
         })
 
         addStadiumName.textContent = name;
@@ -315,30 +348,14 @@ async function loadStadiumMap(name) {
         }
 
         const result = await response.json();
-
         const stadium = result.result;
 
-        const latitude = stadium.latitude;
-        const longitude = stadium.longitude;
+        window.stadiumMapData = {
+            latitude: stadium.latitude,
+            longitude: stadium.longitude,
+            name: stadium.stadium_name
+        };
 
-        const map = L.map('stadium-map').setView([latitude, longitude], 6);
-
-        const customIcon = L.icon({
-            iconUrl: 'images/icons/pin-blue.png',
-            iconSize: [25, 35],      
-            iconAnchor: [16, 40],      
-            popupAnchor: [-3, -40]
-        });
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
-        }).addTo(map);
-
-        L.marker([latitude, longitude], { icon: customIcon }).addTo(map)
-            .bindPopup(`<div class="popup-card">
-                            <h4>${stadium.stadium_name}</h4>
-                        </div>`)
-            
     } catch (error) {
         alert(error.message);
     }
@@ -373,22 +390,22 @@ async function loadUpcomingEvents(name) {
             const eventType = event.classifications[0].genre.name
             switch(eventType) {
                 case "Football":
-                    upcomingEventImage.src = 'images/icons/football-emoji.png';
+                    upcomingEventImage.src = 'images/icons/football.png';
                     break;
                 case "Basketball":
-                    upcomingEventImage.src = 'images/icons/basketball-emoji.png';
+                    upcomingEventImage.src = 'images/icons/basketball.png';
                     break;
                 case "Baseball":
-                    upcomingEventImage.src = 'images/icons/baseball-emoji.png';
+                    upcomingEventImage.src = 'images/icons/baseball.png';
                     break;
                 case "Hockey":
-                    upcomingEventImage.src = 'images/icons/hockey-emoji.png';
+                    upcomingEventImage.src = 'images/icons/hockey.png';
                     break;
                 case "Soccer":
-                    upcomingEventImage.src = 'images/icons/soccer-emoji.png';
+                    upcomingEventImage.src = 'images/icons/soccer.png';
                     break;
                 default:
-                    upcomingEventImage.src = 'images/icons/ticket-emoji.png';
+                    upcomingEventImage.src = 'images/icons/ticket.png';
                     break;
             }
 
@@ -397,6 +414,7 @@ async function loadUpcomingEvents(name) {
 
             const eventName = document.createElement('h4');
             eventName.textContent = event.name;
+            eventName.classList.add('event-stadium-name');
 
             const eventDate = document.createElement('h4');
 
@@ -421,9 +439,14 @@ async function loadUpcomingEvents(name) {
                 eventTime.textContent = "Time TBD";
             }
 
+            const eventInfoContainer = document.createElement('div');
+            eventInfoContainer.classList.add('event-info-container');
+
+            eventInfoContainer.appendChild(eventDate);
+            eventInfoContainer.appendChild(eventTime);
+
             eventInfo.appendChild(eventName);
-            eventInfo.appendChild(eventDate);
-            eventInfo.appendChild(eventTime);
+            eventInfo.appendChild(eventInfoContainer);
 
             upcomingEvent.appendChild(upcomingEventImage);
             upcomingEvent.appendChild(eventInfo);

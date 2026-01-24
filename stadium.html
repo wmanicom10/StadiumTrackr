@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -52,14 +52,15 @@
         <!-- Add Stadium Menu -->
         <div id="add-stadium-menu">
             <div id="add-stadium-menu-header">
-                <h2 id="add-stadium-name"></h2>
-                <h2 id="close-add-stadium-menu">x</h2>
+                <h2>Log Your Visit</h2>
+                <h2 id="close-add-stadium-menu">×</h2>
             </div>
+            <h2 id="add-stadium-name"></h2>
             <div id="add-stadium-container">
                 <img src="" id="add-stadium-image">
                 <form id="add-stadium-form">
                     <div id="add-stadium-date-visited-container">
-                        <h3 id="add-stadium-date-visited-text">Visited On</h3>
+                        <h3 id="add-stadium-date-visited-text">Date Visited</h3>
                         <input type="date" id="add-stadium-date-visited">
                     </div>
                     <div id="add-stadium-note-container">
@@ -118,7 +119,9 @@
                             <div id="logged-in-header-user-container">
                                 <img src="images/icons/person-gray.png" alt="" id="logged-in-header-user-profile-pic">
                                 <span id="logged-in-header-username"></span>
-                                <img src="images/icons/arrow-down.svg" alt="Arrow Down" height="25" width="25">
+                                <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
                             </div>
                             <div id="logged-in-header-user-container-hidden">
                                 <a href="user-home.html">Home</a>
@@ -130,8 +133,8 @@
                         </div>
                     </li>
                     <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="">Events</a></li>
-                    <li class="nav-item"><a href="">About</a></li>
+                    <li class="nav-item"><a href="./index.html">Events</a></li>
+                    <li class="nav-item"><a href="./index.html">About</a></li>
                     <li class="nav-item button" id="log-out">Log Out</li>
                     <li class="nav-item toggle">
                         <input type="checkbox" id="sidebar-active-logged-in">
@@ -168,119 +171,89 @@
             </header>
 
             <main>
-                
                 <!-- Stadium Container -->
                 <div id="stadium-container">
                     <div id="stadium-skeleton">
                         <div id="stadium-name-skeleton"></div>
                         <div id="stadium-info-container-skeleton">
-                            <div id="stadium-info1-skeleton">
-                                <div id="stadium-image-skeleton"></div>
-                                <div id="stadium-info2-skeleton">
-                                    <div id="stadium-user-controls-skeleton">
-                                        <div class="stadium-user-control-skeleton">
-                                            <div></div>
-                                            <div></div>
-                                        </div>
-                                        <div class="stadium-user-control-skeleton">
-                                            <div></div>
-                                            <div></div>
-                                        </div>
-                                    </div>
-                                    <div id="stadium-user-buttons-skeleton">
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                </div>
+                            <div id="stadium-image-skeleton"></div>
+                            <div id="stadium-user-controls-skeleton">
+                                <div class="stadium-user-control-skeleton"></div>
+                                <div class="stadium-user-control-skeleton"></div>
+                                <div class="stadium-user-control-skeleton"></div>
+                                <div class="stadium-user-control-skeleton"></div>
                             </div>
-                            <div id="stadium-info1-container-skeleton">
-                                    <div class="stadium-info-skeleton">
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div class="stadium-info-skeleton">
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div class="stadium-info-skeleton">
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div class="stadium-info-skeleton">
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div class="stadium-info-skeleton">
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                    <div class="stadium-info-skeleton">
-                                        <div></div>
-                                        <div></div>
-                                    </div>
-                                </div>
+                            <div id="stadium-info-skeleton">
+                                <div class="stadium-info-skeleton"></div>
+                                <div class="stadium-info-skeleton"></div>
+                                <div class="stadium-info-skeleton"></div>
+                                <div class="stadium-info-skeleton"></div>
+                                <div class="stadium-info-skeleton"></div>
+                                <div class="stadium-info-skeleton"></div>
+                            </div>
                         </div>
                     </div>
                     <div id="stadium-content">
                         <h2 id="stadium-name"></h2>
                         <div id="stadium-info-container">
-                            <div id="stadium-info1">
-                                <img id="stadium-image">
-                                <div id="stadium-info1-container">
-                                    <div id="stadium-user-controls">
-                                        <div class="stadium-user-control" id="stadium-user-control-visited">
-                                            <h3 id="stadium-user-control-visited-text">Visited</h3>
-                                            <img src="images/icons/checkmark-white.png" alt="" id="user-visited-checkmark">
-                                        </div>
-                                        <div class="stadium-user-control" id="stadium-user-control-wishlist">
-                                            <h3 id="stadium-user-control-wishlist-text">Add to Wishlist</h3>
-                                            <img src="images/icons/gray-heart.png" alt="" id="user-wishlist-heart">
-                                        </div>
-                                    </div>
-                                    <div id="stadium-user-buttons">
-                                        <h3 id="stadium-log-button">Log Your Visit</h3>
-                                        <h3 id="stadium-activity-button">Show Your Activity</h3>
-                                    </div>
+                            <img id="stadium-image">
+                            <div id="stadium-user-controls">
+                                <div class="stadium-user-control" id="stadium-user-control-visited">
+                                    <img src="images/icons/plus.png" alt="Plus icon" id="user-visited-image">
+                                    <h3 id="stadium-user-control-visited-text">Visited</h3>
+                                </div>
+                                <div class="stadium-user-control" id="stadium-user-control-wishlist">
+                                    <img src="images/icons/heart-plus.png" alt="Heart icon" id="user-wishlist-image">
+                                    <h3 id="stadium-user-control-wishlist-text">Add to Wishlist</h3>
+                                </div>
+                                <div class="stadium-user-control" id="stadium-log-button">
+                                    <img src="images/icons/log.png" alt="Document with plus icon">
+                                    <h3 id="stadium-user-control-log-text">Log Your Visit</h3>
+                                </div>
+                                <div class="stadium-user-control" id="stadium-activity-button">
+                                    <img src="images/icons/clock.png" alt="Clock icon">
+                                    <h3 id="stadium-user-control-activity-text">Show Your Activity</h3>
                                 </div>
                             </div>
-                            <div id="stadium-info2">
+                            <div id="stadium-info">
                                 <div class="stadium-info">
                                     <div>
+                                        <img src="images/icons/person.png" alt="Person icon">
                                         <h4>Visits</h4>
-                                        <img src="images/icons/person-emoji.png" alt="">
                                     </div>
                                     <h3 id="stadium-visits"></h3>
                                 </div>
                                 <div class="stadium-info">
                                     <div>
+                                        <img src="images/icons/pin.png" alt="Pin icon">
                                         <h4 id="location-header">Location</h4>
-                                        <img src="images/icons/pin-emoji.png" alt="">
                                     </div>
                                     <h3 id="stadium-location"></h3>
                                 </div>
                                 <div class="stadium-info">
                                     <div>
+                                        <img src="images/icons/calendar.png" alt="Calendar icon">
                                         <h4>Opened</h4>
-                                        <img src="images/icons/calendar-emoji.png" alt="">
                                     </div>
                                     <h3 id="stadium-opened-date"></h3>
                                 </div>
                                 <div class="stadium-info">
                                     <div>
+                                        <img src="images/icons/stadium.png" alt="Ticket icon">
                                         <h4>Capacity</h4>
-                                        <img src="images/icons/stadium-emoji.png" alt="">
                                     </div>
                                     <h3 id="stadium-capacity"></h3>
                                 </div>
                                 <div class="stadium-info">
                                     <div>
+                                        <img src="images/icons/dollar.png" alt="Dollar icon">
                                         <h4>Construction Cost</h4>
-                                        <img src="images/icons/money-emoji.png" alt="">
                                     </div>
                                     <h3 id="stadium-construction-cost"></h3>
                                 </div>
                                 <div class="stadium-info">
                                     <div>
+                                        <img src="images/icons/jersey.png" alt="Jersey icon">
                                         <h4>Teams</h4>
                                     </div>
                                     <h3 id="stadium-teams"></h3>
@@ -295,36 +268,14 @@
                     <div id="upcoming-events-skeleton-container">
                         <div id="upcoming-events-header-skeleton"></div>
                         <div id="upcoming-events-skeleton">
-                            <div class="upcoming-event-skeleton">
-                                <div class="upcoming-event-image-skeleton"></div>
-                                <div class="event-info-skeleton">
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                            </div>
-                            <div class="upcoming-event-skeleton">
-                                <div class="upcoming-event-image-skeleton"></div>
-                                <div class="event-info-skeleton">
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                            </div>
-                            <div class="upcoming-event-skeleton">
-                                <div class="upcoming-event-image-skeleton"></div>
-                                <div class="event-info-skeleton">
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                </div>
-                            </div>
+                            <div class="upcoming-event-skeleton"></div>
+                            <div class="upcoming-event-skeleton"></div>
+                            <div class="upcoming-event-skeleton"></div>
                         </div>
                     </div>
                     <div id="upcoming-events-content">
                         <div id="upcoming-events-header">
-                            <h4>Upcoming Events</h4>
-                            <h5>MORE</h5>
+                            <h2>Upcoming Events</h2>
                         </div>
                         <div id="no-upcoming-events-container">
                             <h4 id="no-upcoming-events-message">No upcoming events...</h4>
@@ -335,12 +286,16 @@
 
                 <!-- Stadium Map -->
                 <div id="stadium-map-container">
-                    <!--<div id="stadium-map-skeleton-container">
-                        <div id="stadium-map-skeleton-header"></div>
+                    <div id="stadium-map-skeleton-container">
+                        <div id="stadium-map-skeleton-header-container">
+                            <div id="stadium-map-skeleton-header"></div>
+                        </div>
                         <div id="stadium-map-skeleton"></div>
-                    </div>-->
+                    </div>
                     <div id="stadium-map-content">
-                        <h2>Stadium Map</h2>
+                        <div id="stadium-map-header">
+                            <h2>Stadium Map</h2>
+                        </div>
                         <div id="stadium-map"></div>
                     </div>
                 </div>
