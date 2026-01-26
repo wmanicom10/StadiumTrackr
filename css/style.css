@@ -1123,7 +1123,7 @@ footer h5 {
 
 /*  Filter Bar  */
 #filter-bar {
-    max-width: 930px;
+    max-width: 960px;
     margin: 30px auto 50px;
     background: rgba(255, 255, 255, 0.03);
     backdrop-filter: blur(10px);
@@ -1158,7 +1158,7 @@ footer h5 {
 
 .custom-select-wrapper {
     position: relative;
-    min-width: 180px;
+    min-width: 190px;
     z-index: 100;
 }
 
@@ -1212,7 +1212,6 @@ footer h5 {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    max-height: 300px;
     overflow-y: auto;
 }
 
@@ -1983,211 +1982,21 @@ footer h5 {
 }
 
 /*  User Stadiums  */
-#user-stadiums-container {
-    display: none;
-    width: 1260px;
-    margin: 50px auto 0;
-}
-
-#user-stadiums-header-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-#user-stadiums-header {
-    margin: 0;
-    font-weight: normal;
-    font-size: 25px;
-}
-
-#user-stadiums-header-sort-container {
-    display: flex;
-    align-items: center;
-}
-
-#user-stadiums-header-league-selector, #user-stadiums-header-sort-by {
-    display: flex;
-    align-items: center;
-    background-color: #2d2d2d;
-    border-radius: 25px;
-    padding: 10px 15px;
-}
-
-#user-stadiums-header-league-selector {
-    margin-right: 12px;
-    position: relative;
-}
-
-#user-stadiums-header-sort-by {
-    position: relative;
-}
-
-#user-stadiums-header-sort-container div span {
-    margin: 0 3px;
-    cursor: default;
-}
-
-#user-stadiums-stadiums {
-    margin-top: 10px;
-    padding-top: 25px;
-    border-top: 0.5px solid #f0f0f0;
-    border-bottom: 0.5px solid #f0f0f0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-
-#user-stadiums-stadiums .user-stadium {
-    margin-bottom: 30px;
-}
-
-#user-stadiums-stadiums .user-stadium:nth-child(3n) {
-    margin-right: 0;
-}
-
-#user-stadiums-stadiums .user-stadium:last-child {
-    margin-right: 0;
-}
-
-#user-stadiums-page-selector {
-    display: flex;
-    align-items: center;
-    margin-top: 30px;
-    justify-content: center;
-}
-
-#user-stadiums-page-selector span {
-    border-radius: 25px;
-    width: 32px;
+#my-stadiums-text {
+    width: 60%;
+    margin: 50px auto 30px;
     text-align: center;
-    cursor: pointer;
-    padding: 6px 0;
-    margin: 0 3px;
-    transition: background-color 0.1s ease-in-out;
 }
 
-#user-stadiums-page-selector span.active {
-    background-color: #2463eb;
-}
-
-#user-stadiums-page-selector span:hover {
-    background-color: #2463eb;
-}
-
-#user-stadiums-stadiums #user-stadiums-no-stadiums-text #user-home-stadiums-explore-button {
-    color: #e4e6eb;
-    text-decoration: none;
-    margin-bottom: 65px;
-}
-
-#user-stadiums-header-league-selector-hidden {
-    position: absolute;
-    top: 0;
-    width: 116px;
-    padding-top: 40px;
-    background-color: #2d2d2d;
-    border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.2s ease-in, visibility 0.2s ease-in;
-}
-
-#user-stadiums-header-league-selector-hidden p {
-    padding: 10px 15px;
-    margin: 10px 3px;
-    border-radius: 25px;
-    cursor: pointer;
-    width: auto;
-}
-
-#user-stadiums-header-league-selector-hidden p:first-of-type {
-    margin-top: 5px;
-    margin-bottom: 0;
-}
-
-#user-stadiums-header-league-selector-hidden p:hover {
-    background-color: #2463eb;
-}
-
-#user-stadiums-league-dropdown-wrapper {
-    position: relative;
-}
-
-#user-stadiums-sort-by-hidden {
-    position: absolute;
-    top: 0;
-    width: 225px;
-    padding-top: 40px;
-    background-color: #2d2d2d;
-    border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: opacity 0.2s ease-in, visibility 0.2s ease-in;
-}
-
-#user-stadiums-header-league-selector-hidden.visible, #user-stadiums-sort-by-hidden.visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
-}
-
-#user-stadiums-sort-by-hidden p {
-    padding: 10px 15px;
-    margin: 10px 3px;
-    border-radius: 25px;
-    cursor: pointer;
-    width: auto;
-}
-
-#user-stadiums-header-league-selector,
-#user-stadiums-header-sort-by {
-    z-index: 11;
-}
-
-#user-stadiums-header-league-selector-hidden,
-#user-stadiums-sort-by-hidden {
-    z-index: 10;
-}
-
-#user-stadiums-sort-by-hidden p:first-of-type {
-    margin-top: 5px;
-    margin-bottom: 0;
-}
-
-#user-stadiums-sort-by-hidden p:hover {
-    background-color: #2463eb;
-}
-
-#user-stadiums-sort-by-dropdown-wrapper {
-    position: relative;
-}
-
-#user-stadiums-sort-by-hidden p:nth-of-type(3):hover, #user-stadiums-sort-by-hidden p:nth-of-type(6):hover {
-    background-color: #2d2d2d;
-    cursor: default;
-}
-
-#user-stadiums-sort-by-hidden p:nth-of-type(4), #user-stadiums-sort-by-hidden p:nth-of-type(5),#user-stadiums-sort-by-hidden p:nth-of-type(7), #user-stadiums-sort-by-hidden p:nth-of-type(8)  {
-    margin-left: 30px;
-}
-
-#user-stadiums-sort-by-hidden p:nth-of-type(3), #user-stadiums-sort-by-hidden p:nth-of-type(6) {
-    margin-bottom: 5px;
-}
-
-#user-stadiums-sort-by-hidden p:nth-of-type(4), #user-stadiums-sort-by-hidden p:nth-of-type(7) {
-    margin-top: 5px;
-}
-
-#user-stadiums-header-league-selector-hidden.visible, #user-stadiums-sort-by-hidden.visible {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: auto;
+#my-stadiums-text h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
 }
 
 /*  User Achievements  */
@@ -2473,7 +2282,7 @@ footer h5 {
 }
 
 #filter-bar-skeleton {
-    max-width: 930px;
+    max-width: 960px;
     margin: 30px auto 50px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
     background-size: 400% 100%;

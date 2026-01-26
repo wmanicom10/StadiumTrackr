@@ -271,12 +271,12 @@ searchStadiumsForm.addEventListener("submit", function (e) {
 logOutButton.addEventListener('click', () => {
     localStorage.setItem('username', '');
     window.location.reload();
-})
+});
 
 sidebarLogOutButton.addEventListener('click', () => {
     localStorage.setItem('username', '');
     window.location.reload();
-})
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const triggers = document.querySelectorAll('.custom-select-trigger');

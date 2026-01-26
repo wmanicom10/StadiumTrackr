@@ -9,37 +9,70 @@ const db = mysql.createPool({
 });
 
 const handleLoadUserStadiums = async (req, res) => {
-    const { username, league, sortType } = req.body;
-
+    const { username, league, country, sortBy } = req.body;
+    
     try {
-        let orderByClause;
-        switch (sortType) {
-            case 'stadiumName':
-                orderByClause = 'ORDER BY stadium_name ASC';
+        let query = `
+            SELECT DISTINCT 
+                stadiums.stadium_id,
+                stadiums.stadium_name, 
+                stadiums.image, 
+                stadiums.city, 
+                stadiums.state,
+                stadiums.country_id,
+                user_stadiums.added_on,
+                user_stadiums.visited_on,
+                user_stadiums.user_note
+            FROM user_stadiums
+            JOIN stadiums ON user_stadiums.stadium_id = stadiums.stadium_id
+            JOIN users ON user_stadiums.user_id = users.user_id
+            JOIN teams ON stadiums.stadium_id = teams.stadium_id
+            JOIN leagues ON teams.league_id = leagues.league_id
+            JOIN countries ON stadiums.country_id = countries.country_id
+            WHERE users.username = ?
+        `;
+        
+        const params = [username];
+        
+        if (league && league !== 'all') {
+            query += ` AND leagues.league_name = ?`;
+            params.push(league.toUpperCase());
+        }
+        
+        if (country && country !== 'all') {
+            if (country === 'us') {
+                query += ` AND countries.country_name = ?`;
+                params.push('The United States of America');
+            } else if (country === 'canada') {
+                query += ` AND countries.country_name = ?`;
+                params.push('Canada');
+            }
+        }
+        
+        switch (sortBy) {
+            case 'name-desc':
+                query += ` ORDER BY stadiums.stadium_name DESC`;
                 break;
-            case 'stadiumPopularity':
-                orderByClause = 'ORDER BY visits DESC, added_on DESC';
+            case 'name-asc':
+                query += ` ORDER BY stadiums.stadium_name ASC`;
                 break;
-            case 'whenAddedNewest':
-                orderByClause = 'ORDER BY added_on DESC';
+            case 'added-desc':
+                query += ` ORDER BY user_stadiums.added_on DESC`;
                 break;
-            case 'whenAddedEarliest':
-                orderByClause = 'ORDER BY added_on ASC';
+            case 'added-asc':
+                query += ` ORDER BY user_stadiums.added_on ASC`;
                 break;
-            case 'dateVisitedNewest':
-                orderByClause = 'ORDER BY visited_on DESC, added_on DESC';
+            case 'visited-desc':
+                query += ` ORDER BY user_stadiums.visited_on IS NULL, user_stadiums.visited_on DESC, user_stadiums.added_on DESC`;
                 break;
-            case 'dateVisitedEarliest':
-                orderByClause = 'ORDER BY CASE WHEN visited_on IS NULL THEN 1 ELSE 0 END, visited_on ASC, added_on DESC';
+            case 'visited-asc':
+                query += ` ORDER BY user_stadiums.visited_on IS NULL, user_stadiums.visited_on ASC, user_stadiums.added_on ASC`;
                 break;
             default:
-                return res.status(400).json({ error: 'Invalid sort type' });
+                query += ` ORDER BY stadiums.stadium_name ASC`;
         }
-
-        const baseSelect = `WITH ranked_stadiums AS (SELECT stadiums.stadium_name, stadiums.city, stadiums.state, stadiums.image, user_stadiums.visited_on, user_stadiums.added_on, ${sortType === 'stadiumPopularity' ? 'stadiums.visits,' : ''} ROW_NUMBER() OVER (PARTITION BY stadiums.stadium_name ORDER BY user_stadiums.added_on DESC) AS rn FROM user_stadiums JOIN stadiums ON user_stadiums.stadium_id = stadiums.stadium_id ${league !== 'any' ? `JOIN teams ON stadiums.stadium_id = teams.stadium_id JOIN leagues ON teams.league_id = leagues.league_id` : ''} WHERE user_stadiums.user_id = (SELECT user_id FROM users WHERE username = ?) ${league !== 'any' ? `AND leagues.league_id = (SELECT league_id FROM leagues WHERE league_name = ?)` : ''}) SELECT stadium_name, city, state, image, visited_on, added_on ${sortType === 'stadiumPopularity' ? ', visits' : ''} FROM ranked_stadiums WHERE rn = 1 ${orderByClause}`;
-
-        const queryParams = league === 'any' ? [username] : [username, league];
-        const [userStadiums] = await db.execute(baseSelect, queryParams);
+        
+        const [userStadiums] = await db.query(query, params);
 
         res.json({ userStadiums });
     } catch (err) {
