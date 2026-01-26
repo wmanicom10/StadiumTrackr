@@ -164,7 +164,7 @@ async function loadStadiumInfo(name, username) {
 
         let isVisited = result.stadiumInfo.userVisited.length > 0;
         stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
-        userVisitedImage.src = isVisited ? 'images/icons/checkmark.png' : 'images/icons/plus.png';
+        userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
 
         let isWishlist = result.stadiumInfo.userWishlist.length > 0;
         stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
@@ -182,7 +182,7 @@ async function loadStadiumInfo(name, username) {
                 
                 setTimeout(() => {
                     if (newIsVisited) {
-                        userVisitedImage.src = 'images/icons/checkmark.png';
+                        userVisitedImage.src = 'images/icons/check.png';
                         stadiumUserControlVisitedText.textContent = 'Visited';
                         
                         if (isWishlist) {

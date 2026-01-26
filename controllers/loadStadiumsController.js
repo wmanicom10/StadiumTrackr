@@ -51,8 +51,6 @@ const handleLoadStadiums = async (req, res) => {
         }
         
         const [stadiums] = await db.query(query, params);
-
-        console.log(stadiums);
         
         res.json({ stadiums });
     } catch (err) {

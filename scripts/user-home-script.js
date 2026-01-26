@@ -56,6 +56,41 @@ async function loadFullStadiumPage(username) {
         document.getElementById('user-home-achievements-container-skeleton').style.display = 'none';
         document.getElementById('user-home-achievements-container').style.display = 'block';
 
+        document.getElementById('user-home-stadium-map-container-skeleton').style.display = 'none'
+        document.getElementById('user-home-stadium-map-container').style.display = 'block';
+
+        if (window.userHomeMapData) {
+            const { stadiums } = window.userHomeMapData;
+            
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            const map = L.map('user-home-stadium-map').setView([40.8283, -96.5795], 4);
+
+            const customIcon = L.icon({
+                iconUrl: 'images/icons/pin-blue.png',
+                iconSize: [25, 35],      
+                iconAnchor: [16, 40],      
+                popupAnchor: [-3, -40]
+            });
+
+            L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
+                attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                ext: 'jpg'
+            }).addTo(map);
+
+            stadiums.forEach(stadium => {
+                L.marker(stadium.location, { icon: customIcon }).addTo(map)
+                .bindPopup(`<div class="popup-card">
+                                <h4>${stadium.stadium_name}</h4>
+                                <p>${stadium.address}</p>
+                                <a href="stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}"><img src=${`images/stadiums/${stadium.stadium_name.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '').replace(/\./g, '')}.jpg`} /></a>
+                            </div>`);
+            });
+
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 100);
+        }
     }
     catch (error) {
         alert('Failed to load stadium content: ' + error.message);
@@ -76,31 +111,12 @@ async function loadStadiumMap(username) {
         }
 
         const result = await response.json();
-
         const stadiums = result.formattedRows;
 
-        const map = L.map('user-home-stadium-map').setView([40.8283, -96.5795], 4);
+        window.userHomeMapData = {
+            stadiums: stadiums
+        };
 
-        const customIcon = L.icon({
-            iconUrl: 'images/icons/pin-blue.png',
-            iconSize: [25, 35],      
-            iconAnchor: [16, 40],      
-            popupAnchor: [-3, -40]
-        });
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
-        }).addTo(map);
-
-        stadiums.forEach(stadium => {
-            L.marker(stadium.location, { icon: customIcon }).addTo(map)
-            .bindPopup(`<div class="popup-card">
-                            <h4>${stadium.stadium_name}</h4>
-                            <p>${stadium.address}</p>
-                            <a href="stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}"><img src=${`images/stadiums/${stadium.stadium_name.toLowerCase().replace(/\s+/g, '-').replace(/'/g, '').replace(/\./g, '')}.jpg`} /></a>
-                        </div>`)
-        });
-            
     } catch (error) {
         alert(error.message);
     }
@@ -136,11 +152,6 @@ async function loadUserInfo(username) {
 
                 if (userStadiums.length === 1) {
                     userStadiumsElement.style.justifyContent = 'center';
-                    stadiumElement.style.marginRight = '0';
-
-                    if (window.matchMedia("(max-width: 947px)")) {
-                        stadiumElement.style.margin = '0 auto';
-                    }
                 }
             });
         }
@@ -168,18 +179,11 @@ async function loadUserInfo(username) {
 
                 if (userWishlistStadiums.length === 1) {
                     userWishlistStadiumsElement.style.justifyContent = 'center';
-                    stadiumElement.style.marginRight = '0';
-
-                    if (window.matchMedia("(max-width: 947px)")) {
-                        stadiumElement.style.margin = '0 auto';
-                    }
                 }
             });
         }
 
         const userAchievements = result.userAchievements;
-
-        console.log(userAchievements);
 
         if (userAchievements.length === 0) {
             userAchievementsNoAchievementsText.style.display = 'block';
@@ -200,7 +204,11 @@ async function loadUserInfo(username) {
                 const userAchievementName = document.createElement('h3');
                 userAchievementName.textContent = achievement.achievement_name;
 
+                const userAchievementDescription = document.createElement('h4');
+                userAchievementDescription.textContent = achievement.achievement_description;
+
                 userAchievementText.appendChild(userAchievementName);
+                userAchievementText.appendChild(userAchievementDescription);
 
                 userAchievement.appendChild(userAchievementImage);
                 userAchievement.appendChild(userAchievementText);

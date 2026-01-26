@@ -136,13 +136,9 @@ async function updateAchievementProgress(name, username, isVisited) {
 
         const [lockedAchievements] = await db.execute('select * from user_achievements where user_id = (select user_id from users where username = "test") and unlocked = false');
 
-        console.log(lockedAchievements);
-
         lockedAchievements.forEach(lockedAchievement => {
             achievementIds = achievementIds.filter(achievementId => achievementId === lockedAchievement.achievement_id);
         })
-
-        console.log(achievementIds);
 
         for (const achievementId of achievementIds) {
             if (achievementId >= 1 && achievementId <= 7) {

@@ -38,7 +38,7 @@ const handleLoadUserAchievements = async (req, res) => {
                 baseQuery += ' ORDER BY (ua.unlocked IS NOT TRUE) ASC, ua.unlocked_on ASC, a.achievement_id ASC';
                 break;
             default:
-                console.log('Invalid sort type');
+                alert('Invalid sort type');
         }
 
         const [userAchievements] = await db.execute(baseQuery, [username]);

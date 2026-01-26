@@ -333,8 +333,6 @@ document.getElementById('league-filter').addEventListener('change', () => {
     const league = document.getElementById('league-filter').value;
     const country = document.getElementById('country-filter').value;
     const sort = document.getElementById('sort-filter').value;
-
-    console.log(league + ' ' + country + ' '+ sort);
     
     setView(league, country, sort);
 });
@@ -343,8 +341,6 @@ document.getElementById('country-filter').addEventListener('change', () => {
     const league = document.getElementById('league-filter').value;
     const country = document.getElementById('country-filter').value;
     const sort = document.getElementById('sort-filter').value;
-
-    console.log(league + ' ' + country + ' '+ sort);
     
     setView(league, country, sort);
 });
@@ -353,8 +349,6 @@ document.getElementById('sort-filter').addEventListener('change', () => {
     const league = document.getElementById('league-filter').value;
     const country = document.getElementById('country-filter').value;
     const sort = document.getElementById('sort-filter').value;
-
-    console.log(league + ' ' + country + ' '+ sort);
     
     setView(league, country, sort);
 });
