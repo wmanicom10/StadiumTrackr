@@ -1,201 +1,137 @@
 import { loggedInHeader, loggedInHeaderUsername, logOutButton, sidebarToggleLoggedIn, sidebarLogOutButton, sidebarUsername } from "./constants.js";
-import { createUserStadiumElement } from "./utils.js";
 
 /*  Variables  */
-const userStadiumsNoStadiumsText = document.getElementById('user-stadiums-no-stadiums-text');
-const userStadiumsElement = document.getElementById('user-stadiums-stadiums');
-const userStadiumsPageSelector = document.getElementById('user-stadiums-page-selector');
-const leagueSelector = document.getElementById('user-stadiums-header-league-selector');
-const leagueDropdown = document.getElementById('user-stadiums-header-league-selector-hidden');
-const sortBy = document.getElementById('user-stadiums-header-sort-by');
-const sortDropdown = document.getElementById('user-stadiums-sort-by-hidden');
-
-let currentLeague = 'any';
-let currentSortType = 'whenAddedNewest';
-let leagueShowTimeout, leagueHideTimeout;
-let sortShowTimeout, sortHideTimeout;
+const stadiumsList = document.getElementById('stadiums-list');
+const stadiumsPageSelector = document.getElementById('stadiums-page-selector');
+const noStadiumsContainer = document.getElementById('no-stadiums-container');
+const clearFiltersButton = document.getElementById('clear-filters');
+const stadiumCount = document.getElementById('results-count');
 
 /*  Functions  */
-function showLoggedInUI() {
-    let username = localStorage.getItem('username');
-    if (username.length > 10) {
-        username = username.slice(0,10) + '...';
-    }
-    loggedInHeaderUsername.textContent = username;
-    loggedInHeader.style.display = 'flex';
-    sidebarUsername.textContent = username;
-}
-
-function showLeagueDropdown() {
-    clearTimeout(leagueHideTimeout);
-    leagueShowTimeout = setTimeout(() => {
-        leagueDropdown.classList.add('visible');
-        leagueSelector.style.zIndex = '1001';
-        leagueDropdown.style.zIndex = '1000';
-
-        sortBy.style.zIndex = '11';
-        sortDropdown.style.zIndex = '10';
-    }, 300);
-}
-
-function hideLeagueDropdown() {
-    clearTimeout(leagueShowTimeout);
-    leagueHideTimeout = setTimeout(() => {
-        if (!leagueDropdown.matches(':hover') && !leagueSelector.matches(':hover')) {
-            leagueDropdown.classList.remove('visible');
-            leagueSelector.style.zIndex = '11';
-            leagueDropdown.style.zIndex = '10';
-        }
-    }, 300);
-}
-
-function showSortDropdown() {
-    clearTimeout(sortHideTimeout);
-    sortShowTimeout = setTimeout(() => {
-        sortDropdown.classList.add('visible');
-        sortBy.style.zIndex = '1001';
-        sortDropdown.style.zIndex = '1000';
-
-        leagueSelector.style.zIndex = '11';
-        leagueDropdown.style.zIndex = '10';
-    }, 300);
-}
-
-function hideSortDropdown() {
-    clearTimeout(sortShowTimeout);
-    sortHideTimeout = setTimeout(() => {
-        if (!sortDropdown.matches(':hover') && !sortBy.matches(':hover')) {
-            sortDropdown.classList.remove('visible');
-            sortBy.style.zIndex = '11';
-            sortDropdown.style.zIndex = '10';
-        }
-    }, 300);
-}
-
-/*  Async Functions  */
-async function loadFullStadiumPage(username) {
+async function setView(username, league, country, sortBy) {
     try {
-        document.getElementById('user-stadiums-container-skeleton').style.display = 'block';
-        document.getElementById('user-stadiums-container').style.display = 'none';
+        document.getElementById('stadiums-skeleton').style.display = 'block';
+        document.getElementById('stadiums-list-container').style.display = 'none';
+        document.getElementById('filter-bar').style.display = 'none';
 
-        document.body.style.overflow = 'hidden';
-        
-        const userWishlistStadiumsPromise = loadUserWishlistStadiums(username, currentLeague, currentSortType);
-
-        const minimumLoadingTime = new Promise(resolve => setTimeout(resolve, 1000));
-
-        await Promise.all([
-            userWishlistStadiumsPromise,
-            minimumLoadingTime
-        ]);
-
-        document.getElementById('user-stadiums-container-skeleton').style.display = 'none';
-        document.getElementById('user-stadiums-container').style.display = 'block';
-
-        document.body.style.overflow = 'auto';
-
-    }
-    catch (error) {
-        alert('Failed to load stadium content: ' + error.message);
-    }
-}
-
-async function loadUserWishlistStadiums(username, league, sortType) {
-    try {
-        const response = await fetch('http://localhost:3000/user/loadUserWishlistStadiums', {
+        await new Promise(resolve => setTimeout(resolve, 750));
+        const response = await fetch('http://localhost:3000/user/loadUserWishlist', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, league, sortType })
+            body: JSON.stringify({username, league, country, sortBy})
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Unknown error');
-        }
+        if (!response.ok) throw new Error('Failed to load stadiums');
 
         const result = await response.json();
+        const stadiums = result.userWishlist;
 
-        const userWishlistStadiums = result.userWishlistStadiums;
-
-        if (userWishlistStadiums.length === 0) {
-            userStadiumsElement.innerHTML = '';
-            userStadiumsElement.appendChild(userStadiumsNoStadiumsText);
-            userStadiumsNoStadiumsText.style.display = 'block';
-            userStadiumsPageSelector.style.display = 'none';
-            userStadiumsElement.style.borderBottom = 'none';
-            return;
+        if (stadiums.length === 1) {
+            stadiumCount.textContent = 'Showing ' + stadiums.length + ' stadium';
         }
         else {
+            stadiumCount.textContent = 'Showing ' + stadiums.length + ' stadiums';
+        }
+        
+        if (stadiums.length === 0) {
+            stadiumsList.style.display = 'none';
+            stadiumsPageSelector.style.display = 'none';
+            noStadiumsContainer.style.display = 'block';
+            document.getElementById('stadiums-skeleton').style.display = 'none';
+            document.getElementById('stadiums-list-container').style.display = 'block';
+            document.getElementById('filter-bar').style.display = 'block';
+        }
+        else {
+            stadiumsList.style.display = 'flex';
+            stadiumsPageSelector.style.display = 'flex';
+            noStadiumsContainer.style.display = 'none';
+
             const perPage = 18;
             let currentPage = 1;
 
             function renderPage(page) {
-                userStadiumsElement.innerHTML = '';
-                userStadiumsNoStadiumsText.style.display = 'none';
-                userStadiumsPageSelector.style.display = 'flex';
+                stadiumsList.innerHTML = '';
+                stadiumsPageSelector.style.display = 'flex';
                 const start = (page - 1) * perPage;
                 const end = start + perPage;
-                const pageStadiums = userWishlistStadiums.slice(start, end);
+                const pageStadiums = stadiums.slice(start, end);
 
                 pageStadiums.forEach(stadium => {
-                    userStadiumsElement.appendChild(createUserStadiumElement(stadium));
-                })
+                    const stadiumElement = document.createElement('div');
+                    stadiumElement.classList.add('stadiums-list-stadium');
+                    const stadiumLink = document.createElement('a');
+                    stadiumLink.href = `stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}`;
+                    const img = document.createElement('img');
+                    img.src = stadium.image;
 
-                if (sortType === 'stadiumName') {
-                    document.getElementById('sort-text').textContent = 'STADIUM NAME'
-                }
+                    const div = document.createElement('div');
+                    div.classList.add('stadiums-list-stadium-text');
+                    const h3 = document.createElement('h3');
+                    h3.innerHTML = stadium.stadium_name;
+                    const h4 = document.createElement('h4');
+                    h4.textContent = stadium.city + ', ' + stadium.state;
+                    div.appendChild(h3);
+                    div.appendChild(h4);
+                    stadiumLink.appendChild(img);
+                    stadiumLink.appendChild(div);
+                    stadiumElement.appendChild(stadiumLink);
+                    stadiumsList.appendChild(stadiumElement);
+                });
             }
 
             function renderPageNumbers() {
-                userStadiumsPageSelector.innerHTML = '';
+                stadiumsPageSelector.innerHTML = '';
 
-                const createPageButton = (i) => {
-                    const pageNumber = document.createElement('span');
-                    pageNumber.textContent = i;
-                    if (i === currentPage) pageNumber.classList.add('active');
-                    pageNumber.addEventListener('click', async () => {
+                const pageCount = Math.ceil(stadiums.length / perPage);
+
+                const prevBtn = document.createElement('button');
+                prevBtn.className = 'page-btn arrow';
+                prevBtn.id = 'prev-btn';
+                prevBtn.textContent = '←';
+                prevBtn.disabled = currentPage === 1;
+                prevBtn.addEventListener('click', () => {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        renderPage(currentPage);
+                        renderPageNumbers();
                         requestAnimationFrame(() => {
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                         });
+                    }
+                });
+                stadiumsPageSelector.appendChild(prevBtn);
 
-                        document.getElementById('user-stadiums-container-skeleton').style.display = 'block';
-                        document.getElementById('user-stadiums-container').style.display = 'none';
-
+                const createPageButton = (i) => {
+                    const pageNumber = document.createElement('button');
+                    pageNumber.className = 'page-btn';
+                    pageNumber.textContent = i;
+                    pageNumber.dataset.page = i;
+                    if (i === currentPage) pageNumber.classList.add('active');
+                    pageNumber.addEventListener('click', () => {
                         currentPage = i;
-                        const renderPagePromise = renderPage(currentPage);
-                        const renderPageNumbersPromise = renderPageNumbers();
-                        const minimumLoadingTime = new Promise(resolve => setTimeout(resolve, 750));
-
-                        await Promise.all([
-                            renderPagePromise,
-                            renderPageNumbersPromise,
-                            minimumLoadingTime
-                        ]);
-
-                        document.getElementById('user-stadiums-container-skeleton').style.display = 'none';
-                        document.getElementById('user-stadiums-container').style.display = 'block';
-
+                        renderPage(currentPage);
+                        renderPageNumbers();
+                        requestAnimationFrame(() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        });
                     });
-                    userStadiumsPageSelector.appendChild(pageNumber);
+                    stadiumsPageSelector.appendChild(pageNumber);
                 };
 
                 const addEllipsis = () => {
                     const dots = document.createElement('span');
+                    dots.className = 'page-ellipsis';
                     dots.textContent = '...';
-                    dots.style.pointerEvents = 'none';
-                    dots.style.width = 'auto';
-                    userStadiumsPageSelector.appendChild(dots);
+                    stadiumsPageSelector.appendChild(dots);
                 };
 
-                const pageCount = Math.ceil(userWishlistStadiums.length / perPage);
-
-                if (pageCount <= 4) {
+                if (pageCount <= 7) {
                     for (let i = 1; i <= pageCount; i++) {
                         createPageButton(i);
                     }
                 } else {
                     if (currentPage <= 3) {
-                        for (let i = 1; i <= 3; i++) {
+                        for (let i = 1; i <= 5; i++) {
                             createPageButton(i);
                         }
                         addEllipsis();
@@ -203,7 +139,7 @@ async function loadUserWishlistStadiums(username, league, sortType) {
                     } else if (currentPage >= pageCount - 2) {
                         createPageButton(1);
                         addEllipsis();
-                        for (let i = pageCount - 2; i <= pageCount; i++) {
+                        for (let i = pageCount - 4; i <= pageCount; i++) {
                             createPageButton(i);
                         }
                     } else {
@@ -216,21 +152,51 @@ async function loadUserWishlistStadiums(username, league, sortType) {
                         createPageButton(pageCount);
                     }
                 }
+
+                const nextBtn = document.createElement('button');
+                nextBtn.className = 'page-btn arrow';
+                nextBtn.id = 'next-btn';
+                nextBtn.textContent = '→';
+                nextBtn.disabled = currentPage === pageCount;
+                nextBtn.addEventListener('click', () => {
+                    if (currentPage < pageCount) {
+                        currentPage++;
+                        renderPage(currentPage);
+                        renderPageNumbers();
+                        requestAnimationFrame(() => {
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                        });
+                    }
+                });
+                stadiumsPageSelector.appendChild(nextBtn);
             }
+
             renderPage(currentPage);
             renderPageNumbers();
+
+            document.getElementById('stadiums-skeleton').style.display = 'none';
+            document.getElementById('stadiums-list-container').style.display = 'block';
+            document.getElementById('filter-bar').style.display = 'block';
         }
-            
-    } catch (error) {
-        alert(error.message);
+    } catch (err) {
+        alert(err.message);
     }
 }
 
-/*  Events  */
+function showLoggedInUI() {
+    let username = localStorage.getItem('username');
+    if (username.length > 10) {
+        username = username.slice(0,10) + '...';
+    }
+    loggedInHeaderUsername.textContent = username;
+    loggedInHeader.style.display = 'flex';
+    sidebarUsername.textContent = username;
+}
+
 window.onload = async () => {
     const username = localStorage.getItem('username');
+    setView(username, 'all', 'all', 'name-asc');
     showLoggedInUI();
-    loadFullStadiumPage(username);
 };
 
 window.addEventListener("resize", () => {
@@ -239,99 +205,108 @@ window.addEventListener("resize", () => {
     }
 });
 
-sidebarLogOutButton.addEventListener('click', () => {
-    localStorage.setItem('username', '');
-    window.location.replace('index.html');
-})
-
 logOutButton.addEventListener('click', () => {
     localStorage.setItem('username', '');
     window.location.replace('index.html');
 });
 
-leagueSelector.addEventListener('mouseenter', showLeagueDropdown);
-leagueSelector.addEventListener('mouseleave', hideLeagueDropdown);
-leagueDropdown.addEventListener('mouseenter', () => clearTimeout(leagueHideTimeout));
-leagueDropdown.addEventListener('mouseleave', hideLeagueDropdown);
+sidebarLogOutButton.addEventListener('click', () => {
+    localStorage.setItem('username', '');
+    window.location.replace('index.html');
+});
 
-sortBy.addEventListener('mouseenter', showSortDropdown);
-sortBy.addEventListener('mouseleave', hideSortDropdown);
-sortDropdown.addEventListener('mouseenter', () => clearTimeout(sortHideTimeout));
-sortDropdown.addEventListener('mouseleave', hideSortDropdown);
+document.addEventListener('DOMContentLoaded', () => {
+    const triggers = document.querySelectorAll('.custom-select-trigger');
+    
+    triggers.forEach(trigger => {
+        const wrapper = trigger.parentElement;
+        const dropdown = wrapper.querySelector('.custom-select-dropdown');
+        const options = dropdown.querySelectorAll('.custom-select-option');
+        const valueDisplay = trigger.querySelector('.custom-select-value');
+        const hiddenSelect = wrapper.querySelector('.filter-select');
+        
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            
+            document.querySelectorAll('.custom-select-dropdown.active').forEach(d => {
+                if (d !== dropdown) {
+                    d.classList.remove('active');
+                    d.parentElement.querySelector('.custom-select-trigger').classList.remove('active');
+                }
+            });
+            
+            dropdown.classList.toggle('active');
+            trigger.classList.toggle('active');
+        });
+        
+        options.forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                
+                options.forEach(opt => opt.classList.remove('selected'));
+                option.classList.add('selected');
+                
+                valueDisplay.textContent = option.textContent;
+                
+                hiddenSelect.value = option.dataset.value;
+                
+                hiddenSelect.dispatchEvent(new Event('change'));
+                
+                dropdown.classList.remove('active');
+                trigger.classList.remove('active');
+            });
+        });
+    });
+    
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.custom-select-dropdown.active').forEach(dropdown => {
+            dropdown.classList.remove('active');
+            dropdown.parentElement.querySelector('.custom-select-trigger').classList.remove('active');
+        });
+    });
+});
 
-document.querySelectorAll('#user-stadiums-header-league-selector-hidden p').forEach(p => {
-    p.addEventListener('click', async() => {
-        const league = p.textContent;
+document.getElementById('league-filter').addEventListener('change', () => {
+    const username = localStorage.getItem('username');
+    const league = document.getElementById('league-filter').value;
+    const country = document.getElementById('country-filter').value;
+    const sort = document.getElementById('sort-filter').value;
+    
+    setView(username, league, country, sort);
+});
 
-        if (league === 'Any') {
-            currentLeague = 'any';
-            leagueDropdown.style.width = '116px';
-            document.querySelector('#league-text').textContent = 'League';
-            loadFullStadiumPage(localStorage.getItem('username'));
-            return;
+document.getElementById('country-filter').addEventListener('change', () => {
+    const username = localStorage.getItem('username');
+    const league = document.getElementById('league-filter').value;
+    const country = document.getElementById('country-filter').value;
+    const sort = document.getElementById('sort-filter').value;
+    
+    setView(username, league, country, sort);
+});
+
+document.getElementById('sort-filter').addEventListener('change', () => {
+    const username = localStorage.getItem('username');
+    const league = document.getElementById('league-filter').value;
+    const country = document.getElementById('country-filter').value;
+    const sort = document.getElementById('sort-filter').value;
+    
+    setView(username, league, country, sort);
+});
+
+clearFiltersButton.addEventListener('click', () => {
+    document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+        const firstOption = wrapper.querySelector('.custom-select-option[data-value="all"], .custom-select-option[data-value="name-asc"]');
+        const valueDisplay = wrapper.querySelector('.custom-select-value');
+        const allOptions = wrapper.querySelectorAll('.custom-select-option');
+        
+        allOptions.forEach(opt => opt.classList.remove('selected'));
+        if (firstOption) {
+            firstOption.classList.add('selected');
+            valueDisplay.textContent = firstOption.textContent;
         }
-        else {
-            currentLeague = league;
-            leagueDropdown.style.width = '93px';
-        }
+    });
 
-        document.querySelector('#league-text').textContent = league.toUpperCase();
-
-        loadFullStadiumPage(localStorage.getItem('username'));
-    })
-})
-
-document.querySelectorAll('#user-stadiums-sort-by-hidden p').forEach(p => {
-    p.addEventListener('click', async() => {
-        const sortBy = p.textContent;
-
-        if (sortBy === 'When Added') {
-            return;
-        }
-
-        if (sortBy === 'Stadium Name') {
-            sortDropdown.style.width = '238px';
-            currentSortType = 'stadiumName';
-        }
-        else if (sortBy === 'Stadium Popularity') {
-            sortDropdown.style.width = '291px';
-            currentSortType = 'stadiumPopularity';
-        }
-        else if (sortBy === 'Newest First' && p.previousElementSibling.textContent === 'When Added') {
-            sortDropdown.style.width = '225px';
-            document.querySelector('#sort-text').textContent = 'WHEN ADDED';
-            currentSortType = 'whenAddedNewest';
-            loadFullStadiumPage(localStorage.getItem('username'))
-            return;
-        } 
-        else if (sortBy === 'Earliest First' && p.previousElementSibling.previousElementSibling.textContent === 'When Added') {
-            sortDropdown.style.width = '225px';
-            document.querySelector('#sort-text').textContent = 'WHEN ADDED';
-            currentSortType = 'whenAddedEarliest';
-            loadFullStadiumPage(localStorage.getItem('username'))
-            return;
-        }
-        else if (sortBy === 'Newest First' && p.previousElementSibling.textContent === 'Date Visited') {
-            sortDropdown.style.width = '225px';
-            document.querySelector('#sort-text').textContent = 'DATE VISITED';
-            currentSortType = 'dateVisitedNewest';
-            loadFullStadiumPage(localStorage.getItem('username'))
-            return;
-        } 
-        else if (sortBy === 'Earliest First' && p.previousElementSibling.previousElementSibling.textContent === 'Date Visited') {
-            sortDropdown.style.width = '225px';
-            document.querySelector('#sort-text').textContent = 'DATE VISITED';
-            currentSortType = 'dateVisitedEarliest';
-            loadFullStadiumPage(localStorage.getItem('username'))
-            return;
-        }
-        else {
-            sortDropdown.style.width = '225px';
-        }
-
-        document.querySelector('#sort-text').textContent = sortBy.toUpperCase();
-
-        loadFullStadiumPage(localStorage.getItem('username'));
-
-    })
-})
+    const username = localStorage.getItem('username');
+    
+    setView(username, 'all', 'all', 'name-asc');
+});
