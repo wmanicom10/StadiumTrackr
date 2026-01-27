@@ -83,68 +83,83 @@
             </header>
 
             <main>
+                <!-- Achievements Text -->
+                <div id="achievements-text">
+                    <h2>Achievements</h2>
+                </div>
 
-                <div id="user-achievements-content">
-                    <div id="user-achievements-container">
-                        <div id="user-achievements-header-container">
-                            <h2 id="user-achievements-header">Achievements</h2>
-                            <div id="user-achievements-header-sort-container">
-                                <div id="user-achievements-earned-dropdown-wrapper">
-                                    <div id="user-achievements-header-earned-selector">
-                                        <span>Show</span>
-                                        <span id="earned-text">ALL</span>
-                                        <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                </svg>
-                                    </div>
-                                    <div id="user-achievements-header-earned-selector-hidden">
-                                        <p>All</p>
-                                        <p>Earned</p>
-                                        <p>Not Earned</p>
-                                    </div>
+                <!-- Filter Bar -->
+                <div id="achievements-filter-bar">
+                    <div id="achievements-filter-controls">
+                        <div class="filter-group">
+                            <label class="filter-label">Show:</label>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select-trigger" data-select="earned">
+                                    <span class="custom-select-value">All Achievements</span>
+                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
                                 </div>
-                                <div id="user-achievements-sort-by-dropdown-wrapper">
-                                    <div id="user-achievements-header-sort-by">
-                                        <span>Sort By</span>
-                                        <span id="sort-text">WHEN EARNED</span>
-                                        <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                </svg>
-                                    </div>
-                                    <div id="user-achievements-sort-by-hidden">
-                                        <p>Achievement Name</p>
-                                        <p>Achievement Progress</p>
-                                        <p>Achievement Rarity</p>
-                                        <p>When Earned</p>
-                                        <p>Newest First</p>
-                                        <p>Earliest First</p>
-                                    </div>
+                                <div class="custom-select-dropdown">
+                                    <div class="custom-select-option selected" data-value="all">All Achievements</div>
+                                    <div class="custom-select-option" data-value="earned">Earned</div>
+                                    <div class="custom-select-option" data-value="not-earned">Not Earned</div>
                                 </div>
+                                <select class="filter-select" id="earned-filter">
+                                    <option value="all">All Achievements</option>
+                                    <option value="earned">Earned</option>
+                                    <option value="not-earned">Not Earned</option>
+                                </select>
                             </div>
                         </div>
-                        <div id="user-achievements-achievements">
-                            <div id="user-achievements-no-achievements-text">
-                                <h3>You haven't earned any achievements yet...</h3>
-                                <a href="stadiums.html" id="user-home-stadiums-explore-button">Explore Stadiums</a>
+                        <div class="filter-divider"></div>
+                        <div class="filter-group">
+                            <label class="filter-label">Sort By:</label>
+                            <div class="custom-select-wrapper">
+                                <div class="custom-select-trigger" data-select="sort">
+                                    <span class="custom-select-value">Name (A-Z)</span>
+                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                                <div class="custom-select-dropdown">
+                                    <div class="custom-select-option selected" data-value="name-asc">Name (A-Z)</div>
+                                    <div class="custom-select-option" data-value="name-desc">Name (Z-A)</div>
+                                    <div class="custom-select-option" data-value="progress">Progress</div>
+                                    <div class="custom-select-option" data-value="earned-asc">Earned (Earliest)</div>
+                                    <div class="custom-select-option" data-value="earned-desc">Earned (Newest)</div>
+                                </div>
+                                <select class="filter-select" id="sort-filter">
+                                    <option value="name-asc">Name (A-Z)</option>
+                                    <option value="name-desc">Name (Z-A)</option>
+                                    <option value="progress">Progress</option>
+                                    <option value="earned-asc">Earned (Earliest)</option>
+                                    <option value="earned-desc">Earned (Newest)</option>
+                                </select>
                             </div>
-                        </div>
-                    </div>
-                    <div id="user-achievements-container-skeleton">
-                        <div id="user-achievements-header-container-skeleton">
-                            <div id="user-achievements-header-skeleton"></div>
-                            <div id="user-achievements-header-sort-container-skeleton"></div>
-                        </div>
-                        <div id="user-achievements-achievements-skeleton">
-                            <div class="user-achievements-achievement-skeleton"></div>
-                            <div class="user-achievements-achievement-skeleton"></div>
-                            <div class="user-achievements-achievement-skeleton"></div>
-                            <div class="user-achievements-achievement-skeleton"></div>
-                            <div class="user-achievements-achievement-skeleton"></div>
-                            <div class="user-achievements-achievement-skeleton"></div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Achievements List -->
+                <div id="achievements-list-container">
+                    <div id="achievements-list"></div>
+                    <div id="no-achievements-container">
+                        <h3>No Achievements Found</h3>
+                        <p>We couldn't find any achievements matching your current filters.</p>
+                    </div>
+                </div>
+                <div id="achievements-skeleton">
+                    <div id="achievements-filter-bar-skeleton"></div>
+                    <div id="achievements-container-skeleton">
+                        <div class="achievements-skeleton-card"></div>
+                        <div class="achievements-skeleton-card"></div>
+                        <div class="achievements-skeleton-card"></div>
+                        <div class="achievements-skeleton-card"></div>
+                        <div class="achievements-skeleton-card"></div>
+                        <div class="achievements-skeleton-card"></div>
+                    </div>
+                </div>
             </main>
 
             <!-- Footer -->

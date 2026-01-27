@@ -9,40 +9,59 @@ const db = mysql.createPool({
 });
 
 const handleLoadUserAchievements = async (req, res) => {
-    const { username, earned, sortType } = req.body;
-
+    const { username, earned, sortBy } = req.body;
     try {
-        let baseQuery = `SELECT a.achievement_id, a.achievement_name, a.achievement_description, a.achievement_image, a.progress_goal, ua.progress_value, ua.unlocked, ua.unlocked_on FROM achievements a LEFT JOIN user_achievements ua ON a.achievement_id = ua.achievement_id AND ua.user_id = (SELECT user_id FROM users WHERE username = ?)`;
-
-        if (earned === 'Earned') {
-            baseQuery += ' WHERE ua.unlocked = TRUE';
-        } 
-        else if (earned === 'Not Earned') {
-            baseQuery += ' WHERE (ua.unlocked = FALSE OR ua.unlocked IS NULL)';
-        } 
-
-        switch (sortType) {
-            case 'achievementName':
-                baseQuery += ' ORDER BY a.achievement_name ASC';
+        let query = `
+            SELECT DISTINCT 
+                achievements.achievement_id,
+                achievements.achievement_name, 
+                achievements.achievement_description,
+                achievements.achievement_image,
+                achievements.progress_goal, 
+                user_achievements.progress_value,
+                user_achievements.unlocked,
+                user_achievements.unlocked_on
+            FROM achievements
+            LEFT JOIN user_achievements ON user_achievements.achievement_id = achievements.achievement_id
+                AND user_achievements.user_id = (SELECT user_id FROM users WHERE username = ?)
+        `;
+        
+        const params = [username];
+        
+        // Build WHERE clause for filtering
+        let whereConditions = [];
+        
+        if (earned === 'earned') {
+            whereConditions.push('user_achievements.unlocked = TRUE');
+        } else if (earned === 'not-earned') {
+            whereConditions.push('(user_achievements.unlocked = FALSE OR user_achievements.unlocked IS NULL)');
+        }
+        
+        if (whereConditions.length > 0) {
+            query += ' WHERE ' + whereConditions.join(' AND ');
+        }
+        
+        switch (sortBy) {
+            case 'name-desc':
+                query += ` ORDER BY achievements.achievement_name DESC`;
                 break;
-            case 'achievementProgress':
-                baseQuery += ' ORDER BY COALESCE(ua.progress_value, 0) / a.progress_goal DESC, a.achievement_id ASC';
+            case 'name-asc':
+                query += ` ORDER BY achievements.achievement_name ASC`;
                 break;
-            case 'achievementRarity':
-                baseQuery += `ORDER BY (SELECT COUNT(*) FROM user_achievements ua2 WHERE ua2.achievement_id = a.achievement_id AND ua2.unlocked_on IS NOT NULL) ASC, a.achievement_id ASC`;
+            case 'progress':
+                query += ` ORDER BY COALESCE(user_achievements.progress_value, 0) / achievements.progress_goal DESC, achievements.achievement_id ASC`;
                 break;
-            case 'whenEarnedNewest':
-                baseQuery += ' ORDER BY ua.unlocked_on DESC, a.achievement_id ASC';
+            case 'earned-asc':
+                query += ` ORDER BY (user_achievements.unlocked IS NOT TRUE) ASC, user_achievements.unlocked_on ASC, achievements.achievement_id ASC`;
                 break;
-            case 'whenEarnedEarliest':
-                baseQuery += ' ORDER BY (ua.unlocked IS NOT TRUE) ASC, ua.unlocked_on ASC, a.achievement_id ASC';
+            case 'earned-desc':
+                query += ` ORDER BY user_achievements.unlocked_on DESC, achievements.achievement_id ASC`;
                 break;
             default:
-                alert('Invalid sort type');
+                query += ` ORDER BY achievements.achievement_name ASC`;
         }
-
-        const [userAchievements] = await db.execute(baseQuery, [username]);
-
+        
+        const [userAchievements] = await db.query(query, params);
         res.json({ userAchievements });
     } catch (err) {
         console.error(err);
