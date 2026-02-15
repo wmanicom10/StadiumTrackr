@@ -220,7 +220,7 @@ async function loadStadiumInfo(name, username) {
                                     stadiumUserControlWishlist.classList.remove('animating');
                                 }, 400);
                                 
-                                fetch('http://localhost:3000/stadium/updateUserWishlist', {
+                                fetch('http://localhost:3000/activity/updateUserWishlist', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({ name: name, username: username, isWishlist: isWishlist })
@@ -243,7 +243,7 @@ async function loadStadiumInfo(name, username) {
                     }, 400);
                     
                     try {
-                        const response = await fetch('http://localhost:3000/stadium/updateUserStadium', {
+                        const response = await fetch('http://localhost:3000/activity/updateUserStadium', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ name: name, username: username, isVisited: currentIsVisited })
@@ -289,7 +289,7 @@ async function loadStadiumInfo(name, username) {
                 }, 400);
                 
                 try {
-                    const response = await fetch('http://localhost:3000/stadium/updateUserWishlist', {
+                    const response = await fetch('http://localhost:3000/activity/updateUserWishlist', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ name: name, username: username, isWishlist: currentIsWishlist })
@@ -333,7 +333,7 @@ async function loadStadiumInfo(name, username) {
             const note = addStadiumNote.value.trim() === '' ? null : addStadiumNote.value.trim();
 
             try {
-                const response = await fetch('http://localhost:3000/stadium/addStadium', {
+                const response = await fetch('http://localhost:3000/activity/addStadium', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: name, username: username, dateVisited: dateVisited, note: note })

@@ -182,13 +182,13 @@ async function setView(username, activity, stadium, sortBy) {
                         const username = localStorage.getItem('username');
                         
                         if (activity.activity_type === 'wishlist') {
-                            await fetch('http://localhost:3000/stadium/removeActivityWishlist', {
+                            await fetch('http://localhost:3000/activity/removeActivityWishlist', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ stadiumId: activity.stadium_id, username })
                             });
                         } else {
-                            await fetch('http://localhost:3000/stadium/removeActivityVisited', {
+                            await fetch('http://localhost:3000/activity/removeActivityVisited', {
                                 method: 'POST',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ stadiumId: activity.stadium_id, username })
@@ -371,7 +371,7 @@ editLogSaveButton.addEventListener('click', async () => {
         const editDateVisited = editLogDateVisited.value;
         const editNote = editLogNote.value;
 
-        const response = await fetch('http://localhost:3000/stadium/editLog', {
+        const response = await fetch('http://localhost:3000/activity/editLog', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ visitId: currentData.visit_id, editDateVisited, editNote })
@@ -418,7 +418,7 @@ deleteLogDeleteButton.addEventListener('click', async () => {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/stadium/deleteLog', {
+        const response = await fetch('http://localhost:3000/activity/deleteLog', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ visitId: currentData.visit_id })
