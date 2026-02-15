@@ -9,7 +9,8 @@ const addStadiumNote = document.getElementById('add-stadium-note')
 const closeAddStadiumMenu = document.getElementById('close-add-stadium-menu');
 const addStadiumName = document.getElementById('add-stadium-name');
 const addStadiumImage = document.getElementById('add-stadium-image');
-const addStadiumSubmitButton = document.getElementById('add-stadium-submit-button');
+const addStadiumLogButton = document.getElementById('add-stadium-log-button');
+const addStadiumCancelButton = document.getElementById('add-stadium-cancel-button');
 const stadiumName = document.getElementById('stadium-name');
 const stadiumImage = document.getElementById('stadium-image');
 const stadiumUserControls = document.getElementById('stadium-user-controls')
@@ -162,84 +163,105 @@ async function loadStadiumInfo(name, username) {
         const visits = result.stadiumInfo.stadium.visits;
         stadiumVisits.innerHTML = visits;
 
-        let isVisited = result.stadiumInfo.userVisited.length > 0;
-        stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
-        userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+        let hasLogged = false;
+        const userActivity = result.stadiumInfo.userVisited;
+        userActivity.forEach(activity => {
+            if (activity.visited_on !== null) {
+                hasLogged = true;
+            }
+        });
 
         let isWishlist = result.stadiumInfo.userWishlist.length > 0;
         stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
         userWishlistImage.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
 
-        stadiumUserControlVisited.addEventListener('click', async () => {
-            if (username == '') {
-                toggleMenu(createAccountMenu, true, overlay);
-            }
-            else {
-                stadiumUserControlVisited.classList.add('animating');
-                
-                const currentIsVisited = isVisited;
-                const newIsVisited = !isVisited;
-                
-                setTimeout(() => {
-                    if (newIsVisited) {
-                        userVisitedImage.src = 'images/icons/check.png';
-                        stadiumUserControlVisitedText.textContent = 'Visited';
-                        
-                        if (isWishlist) {
-                            stadiumUserControlWishlist.classList.add('animating');
+        if (hasLogged) {
+            const visitLink = document.createElement('a');
+            visitLink.href = `user-activity.html?stadium=${encodeURIComponent(result.stadiumInfo.stadium.name)}`;
+            visitLink.className = 'stadium-user-control';
+            visitLink.id = 'stadium-user-control-visited';
+            
+            visitLink.innerHTML = `
+                <img src="images/icons/check.png" alt="Check icon" id="user-visited-image">
+                <h3 id="stadium-user-control-visited-text">Logged</h3>
+            `;
+            
+            stadiumUserControlVisited.parentNode.replaceChild(visitLink, stadiumUserControlVisited);
+        }
+        else {
+            let isVisited = result.stadiumInfo.userVisited.length > 0;
+            stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
+            userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+
+            stadiumUserControlVisited.addEventListener('click', async () => {
+                if (username == '') {
+                    toggleMenu(createAccountMenu, true, overlay);
+                }
+                else {
+                    stadiumUserControlVisited.classList.add('animating');
+                    
+                    const currentIsVisited = isVisited;
+                    const newIsVisited = !isVisited;
+                    
+                    setTimeout(() => {
+                        if (newIsVisited) {
+                            userVisitedImage.src = 'images/icons/check.png';
+                            stadiumUserControlVisitedText.textContent = 'Visited';
                             
-                            setTimeout(() => {
-                                userWishlistImage.src = 'images/icons/heart-plus.png';
-                                stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
-                            }, 200);
-                            
-                            setTimeout(() => {
-                                stadiumUserControlWishlist.classList.remove('animating');
-                            }, 400);
-                            
-                            fetch('http://localhost:3000/stadium/updateUserWishlist', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ name: name, username: username, isWishlist: isWishlist })
-                            })
-                            .catch(error => {
-                                alert(error.message);
-                            });
-                            
-                            isWishlist = !isWishlist;
+                            if (isWishlist) {
+                                stadiumUserControlWishlist.classList.add('animating');
+                                
+                                setTimeout(() => {
+                                    userWishlistImage.src = 'images/icons/heart-plus.png';
+                                    stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
+                                }, 200);
+                                
+                                setTimeout(() => {
+                                    stadiumUserControlWishlist.classList.remove('animating');
+                                }, 400);
+                                
+                                fetch('http://localhost:3000/stadium/updateUserWishlist', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name: name, username: username, isWishlist: isWishlist })
+                                })
+                                .catch(error => {
+                                    alert(error.message);
+                                });
+                                
+                                isWishlist = !isWishlist;
+                            }
+                        }
+                        else {
+                            userVisitedImage.src = 'images/icons/plus.png';
+                            stadiumUserControlVisitedText.textContent = 'Visit';
+                        }
+                    }, 200);
+                    
+                    setTimeout(() => {
+                        stadiumUserControlVisited.classList.remove('animating');
+                    }, 400);
+                    
+                    try {
+                        const response = await fetch('http://localhost:3000/stadium/updateUserStadium', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: name, username: username, isVisited: currentIsVisited })
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.error || 'Unknown error');
                         }
                     }
-                    else {
-                        userVisitedImage.src = 'images/icons/plus.png';
-                        stadiumUserControlVisitedText.textContent = 'Visit';
+                    catch (error) {
+                        alert(error.message);
                     }
-                }, 200);
-                
-                setTimeout(() => {
-                    stadiumUserControlVisited.classList.remove('animating');
-                }, 400);
-                
-                try {
-                    const response = await fetch('http://localhost:3000/stadium/updateUserStadium', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ name: name, username: username, isVisited: currentIsVisited })
-                    });
-
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        throw new Error(errorData.error || 'Unknown error');
-                    }
-
-                    const result = await response.json();
+                    
+                    isVisited = !isVisited;
                 }
-                catch (error) {
-                    alert(error.message);
-                }
-                
-                isVisited = !isVisited;
-            }
-        });
+            });
+        }
 
         stadiumUserControlWishlist.addEventListener('click', async() => {
             if (username == '') {
@@ -293,21 +315,20 @@ async function loadStadiumInfo(name, username) {
             else {
                 toggleMenu(addStadiumMenu, true, overlay);
             }
-        })
+        });
 
         stadiumActivityButton.addEventListener('click', () => {
             if (username == '') {
                 toggleMenu(createAccountMenu, true, overlay);
             }
-            /*else {
-                toggleMenu(addStadiumMenu, true, overlay);
-            }*/
-        })
+        });
+
+        stadiumActivityButton.href = `user-activity.html?stadium=${encodeURIComponent(result.stadiumInfo.stadium.name)}`;
 
         addStadiumName.textContent = name;
         addStadiumImage.src = result.stadiumInfo.stadium.image;
 
-        addStadiumSubmitButton.addEventListener('click', async () => {
+        addStadiumLogButton.addEventListener('click', async () => {
             const dateVisited = addStadiumDateVisited.value;
             const note = addStadiumNote.value.trim() === '' ? null : addStadiumNote.value.trim();
 
@@ -327,7 +348,11 @@ async function loadStadiumInfo(name, username) {
                 alert(error.message);
             }
             window.location.reload();
-        })
+        });
+
+        addStadiumCancelButton.addEventListener('click', () => {
+            toggleMenu(addStadiumMenu, false, overlay);
+        });
 
     } catch (error) {
         alert(error.message);

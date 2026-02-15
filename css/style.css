@@ -208,7 +208,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 35px;
+    padding: 30px 40px;
     border-bottom: 1px solid rgba(79, 172, 254, 0.2);
 }
 
@@ -239,7 +239,7 @@ body {
 }
 
 #add-stadium-name {
-    margin: 20px 0 0;
+    margin: 30px 0 0;
     text-align: center;
     font-weight: normal;
     font-size: 2rem;
@@ -253,11 +253,15 @@ body {
 }
 
 #add-stadium-image {
-    width: 460px;
+    width: 48%;
     height: 290px;
     object-fit: cover;
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#add-stadium-form {
+    width: 48%;
 }
 
 #add-stadium-date-visited-text, #add-stadium-note-text {
@@ -290,7 +294,7 @@ body {
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(79, 172, 254, 0.2);
-    width: 420px;
+    width: 100%;
     padding: 20px;
     height: 161px !important;
     resize: none;
@@ -309,15 +313,19 @@ body {
     font-family: "Inter", sans-serif;
 }
 
-#add-stadium-submit-button {
+#add-stadium-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 37%;
+    margin: 0 auto;
+}
+
+#add-stadium-log-button, #add-stadium-cancel-button {
     font-weight: normal;
-    font-size: 22px;
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    font-size: 1.2rem;
     border-radius: 25px;
     margin: 0 auto 30px;
-    width: 180px;
+    width: 170px;
     padding: 10px 0;
     text-align: center;
     cursor: pointer;
@@ -325,9 +333,26 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-#add-stadium-submit-button:hover {
+#add-stadium-log-button {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
+}
+
+#add-stadium-log-button:hover {
     background: rgba(79, 172, 254, 0.2);
-    transform: translateY(-3px);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#add-stadium-cancel-button {
+    background: rgba(255, 79, 79, 0.2);
+    border: 1px solid rgba(255, 79, 79, 0.4);
+    color: #ff4f4f;
+}
+
+#add-stadium-cancel-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
 }
 
 /*  Header  */
@@ -535,7 +560,7 @@ label img:hover {
     top: -10px;
     left: -20px;
     min-width: calc(100% + 20px);
-    width: max(100%, 175px);
+    width: max(100%, 185px);
     background: rgba(45, 49, 66, 0.98);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(79, 172, 254, 0.3);
@@ -1106,7 +1131,7 @@ footer h5 {
 /*  Explore Text  */
 #explore-text {
     width: 60%;
-    margin: 50px auto 30px;
+    margin: 40px auto;
     text-align: center;
 }
 
@@ -1465,27 +1490,27 @@ footer h5 {
 }
 
 #stadium-name {
-    font-size: 2.4rem;
-    margin-top: 25px;
-    margin-bottom: 10px;
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.4;
     background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    margin: 40px 0;
 }
 
 #stadium-info-container {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
     display: flex;
     flex-direction: column;
 }
 
 #stadium-image {
     width: 100%;
-    aspect-ratio: 16/8;
+    aspect-ratio: 16/7.5;
     object-fit: cover;
     border-radius: 25px;
-    margin-top: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     flex-shrink: 0;
 }
@@ -1510,6 +1535,7 @@ footer h5 {
     width: 24%;
     padding: 25px 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    text-decoration: none;
 }
 
 .stadium-user-control:hover {
@@ -1521,6 +1547,10 @@ footer h5 {
 .stadium-user-control img {
     height: 20px;
     margin-right: 10px;
+}
+
+#stadium-activity-button img {
+    height: 20px;
 }
 
 .stadium-user-control:first-of-type img {
@@ -1984,7 +2014,7 @@ footer h5 {
 /*  User Stadiums, Wishlist  */
 #my-stadiums-text, #wishlist-text {
     width: 60%;
-    margin: 50px auto 30px;
+    margin: 40px auto;
     text-align: center;
 }
 
@@ -2002,7 +2032,7 @@ footer h5 {
 /*  User Achievements  */
 #achievements-text {
     width: 60%;
-    margin: 50px auto 30px;
+    margin: 40px auto;
     text-align: center;
 }
 
@@ -2161,6 +2191,494 @@ footer h5 {
     line-height: 1.6;
 }
 
+/*  User Activity  */
+#user-activity-welcome-text {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 1.4;
+    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 40px 0;
+}
+
+#activity-filter-bar {
+    max-width: 665px;
+    margin: 30px auto 50px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 1000;
+}
+
+#activity-filter-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 25px 30px;
+}
+
+#activity-filter-controls .filter-group:first-child .custom-select-wrapper {
+    min-width: 200px;
+}
+
+#activity-filter-controls .filter-group:last-child .custom-select-wrapper {
+    min-width: 215px;
+}
+
+#activity-list-container {
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    width: 95%;
+    margin: 0 auto;
+    padding-top: 50px;
+    z-index: 100;
+}
+
+.activity-item {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    width: 1075px;
+    margin: 0 auto;
+    display: flex;
+    margin-bottom: 30px;
+}
+
+.activity-log-image {
+    border-radius: 25px;
+    object-fit: cover;
+    width: 50%;
+    height: 336px;
+    flex-shrink: 0;
+}
+
+.activity-image {
+    border-radius: 25px;
+    object-fit: cover;
+    width: 40%;
+    height: 246px;
+    flex-shrink: 0;
+}
+
+.activity-details-container {
+    width: 100%;
+    padding: 25px 30px 20px;
+}
+
+.activity-details-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.activity-details-name {
+    color: #4facfe;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin: 0;
+    margin-right: 20px;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.activity-details-name:hover {
+    color: #3f8acc;
+}
+
+.activity-details-time {
+    color: #8b92a8;
+}
+
+.activity-details-location {
+    color: #8b92a8;
+    margin: 0;
+    margin-top: 8px;
+    font-weight: normal;
+    font-size: 1.1rem;
+}
+
+.activity-details, .activity-log-details {
+    margin-top: 20px;
+    background: rgba(79, 172, 254, 0.05);
+    border: 1px solid transparent;
+    border-left: 3px solid #4facfe;
+    border-radius: 8px;
+    padding: 18px 20px;
+}
+
+.activity-log-details h4 {
+    margin: 0;
+    color: #4facfe;
+    font-weight: normal;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.activity-log-details h4:nth-of-type(2) {
+    margin-top: 15px;
+}
+
+.activity-log-details span {
+    display: block;
+    margin-top: 10px;
+}
+
+.no-note {
+    color: #8b92a8;
+    font-style: italic;
+}
+
+.activity-details h4 {
+    margin: 0;
+    color: #4facfe;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+}
+
+.activity-buttons {
+    margin-top: 20px;
+}
+
+.activity-buttons button {
+    border-radius: 25px;
+    font-size: 1.1rem;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+}
+
+.activity-buttons button:hover {
+    transform: translateY(-3px) translateZ(0);
+}
+
+.edit-log-button {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
+    margin-right: 10px;
+}
+
+.edit-log-button:hover {
+    background: rgba(79, 172, 254, 0.2);
+}
+
+.delete-log-button, .remove-button {
+    background: rgba(255, 79, 79, 0.2);
+    border: 1px solid rgba(255, 79, 79, 0.4);
+    color: #ff4f4f;
+}
+
+.delete-log-button:hover, .remove-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+}
+
+#no-activity-container {
+    text-align: center;
+    padding: 80px 40px;
+    max-width: 610px;
+    margin: 0 auto;
+    display: none;
+}
+
+#no-activity-container h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: 0 0 15px;
+    color: #e4e6eb;
+}
+
+#no-activity-container p {
+    font-size: 1.1rem;
+    color: #8b92a8;
+    margin: 0 0 30px;
+    line-height: 1.6;
+}
+
+#edit-log-menu {
+    position: fixed;
+    display: none;
+    width: 1000px;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 25px;
+    z-index: 10001;
+}
+
+#edit-log-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 40px;
+    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+}
+
+#edit-log-menu-header h2 {
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 0;
+}
+
+#edit-log-menu-header h2:first-of-type {
+    color: #4facfe;
+    font-weight: bold;
+}
+
+#close-edit-log-menu {
+    font-size: 2.2rem;
+    color: #8b92a8;
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+}
+
+#close-edit-log-menu:hover {
+    color: #4facfe;
+}
+
+#edit-log-name {
+    margin: 30px 0 0;
+    text-align: center;
+    font-weight: normal;
+    font-size: 2rem;
+}
+
+#edit-log-container {
+    justify-content: space-between;
+    display: flex;
+    width: 92%;
+    margin: 30px auto 10px;
+}
+
+#edit-log-image {
+    width: 48%;
+    height: 290px;
+    object-fit: cover;
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#edit-log-form {
+    width: 48%;
+}
+
+#edit-log-date-visited-text, #edit-log-note-text {
+    font-weight: normal;
+    font-size: 1.1rem;
+    margin: 0;
+    color: #8b92a8;
+}
+
+#edit-log-date-visited {
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    color: #e4e6eb;
+    padding: 10px 20px;
+    font-size: 1rem;
+    margin: 10px 0 20px 0;
+    font-family: "Inter", sans-serif;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#edit-log-date-visited::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+
+#edit-log-note {
+    margin: 10px 0 20px 0;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    width: 100%;
+    padding: 20px;
+    height: 161px !important;
+    resize: none;
+    color: #e4e6eb;
+    font-size: 18px;
+    font-family: "Inter", sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#edit-log-note:focus {
+    outline: none;
+}
+
+#edit-log-note::placeholder {
+    color: #8b92a8;
+    font-family: "Inter", sans-serif;
+}
+
+#edit-log-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 37%;
+    margin: 0 auto;
+}
+
+#edit-log-save-button, #edit-log-cancel-button {
+    font-weight: normal;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    margin: 0 auto 30px;
+    width: 170px;
+    padding: 10px 0;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#edit-log-save-button {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
+}
+
+#edit-log-save-button:hover {
+    background: rgba(79, 172, 254, 0.2);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#edit-log-cancel-button {
+    background: rgba(255, 79, 79, 0.2);
+    border: 1px solid rgba(255, 79, 79, 0.4);
+    color: #ff4f4f;
+}
+
+#edit-log-cancel-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#delete-log-menu {
+    position: fixed;
+    display: none;
+    width: 475px;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 25px;
+    z-index: 10001;
+    text-align: center;
+}
+
+#delete-log-menu-header {
+    position: relative;
+    text-align: center;
+    padding: 30px 40px;
+    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+}
+
+#delete-log-menu h2 {
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 0;
+}
+
+#delete-log-menu-header h2:first-of-type {
+    color: #4facfe;
+    font-weight: bold;
+}
+
+#close-delete-log-menu {
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 2.2rem;
+    color: #8b92a8;
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+}
+
+#close-delete-log-menu:hover {
+    color: #4facfe;
+}
+
+#delete-log-menu p {
+    color: #8b92a8;
+    margin: 20px 40px 20px;
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+#delete-log-warning {
+    font-weight: normal;
+    color: #ff4f4f;
+}
+
+#delete-log-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 35px auto 0;
+}
+
+#delete-log-cancel-button, #delete-log-delete-button {
+    font-weight: normal;
+    font-size: 1.2rem;
+    border-radius: 25px;
+    margin: 0 auto 30px;
+    padding: 10px 0;
+    width: 170px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#delete-log-cancel-button {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    color: #4facfe;
+}
+
+#delete-log-cancel-button:hover {
+    background: rgba(79, 172, 254, 0.2);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#delete-log-delete-button {
+    background: rgba(255, 79, 79, 0.2);
+    border: 1px solid rgba(255, 79, 79, 0.4);
+    color: #ff4f4f;
+}
+
+#delete-log-delete-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
+}
+
 /*  Skeleton Loading  */
 .skeleton-card {
     width: 410px;
@@ -2205,11 +2723,10 @@ footer h5 {
 }
 
 #stadium-name-skeleton {
-    width: 60%;
-    height: 46px;
-    border-radius: 25px;
-    margin-top: 25px;
-    margin-bottom: 10px;
+    width: 50%;
+    height: 56px;
+    border-radius: 30px;
+    margin: 40px auto;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
     border: 1px solid rgba(79, 172, 254, 0.15);
     background-size: 400% 100%;
@@ -2218,21 +2735,19 @@ footer h5 {
 }
 
 #stadium-info-container-skeleton {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
     display: flex;
     flex-direction: column;
 }
 
 #stadium-image-skeleton {
     width: 100%;
-    aspect-ratio: 16/8;
+    aspect-ratio: 16/7.5;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
     border: 1px solid rgba(79, 172, 254, 0.15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     border-radius: 25px;
-    margin-top: 20px;
 }
 
 #stadium-user-controls-skeleton {
@@ -2343,7 +2858,7 @@ footer h5 {
 
 #user-home-stadiums-container-skeleton, #user-home-wishlist-container-skeleton {
     width: 69%;
-    height: 455px;
+    height: 450px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
     border: 1px solid rgba(79, 172, 254, 0.15);
     background-size: 400% 100%;
@@ -2355,7 +2870,7 @@ footer h5 {
 
 #user-home-stats-container-skeleton, #user-home-achievements-container-skeleton {
     width: 29%;
-    height: 455px;
+    height: 450px;
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
     border: 1px solid rgba(79, 172, 254, 0.15);
     background-size: 400% 100%;
@@ -2477,8 +2992,49 @@ footer h5 {
     border: 1px solid rgba(79, 172, 254, 0.15);
 }
 
+#activity-filter-bar-skeleton {
+    max-width: 665px;
+    margin: 30px auto 50px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    position: relative;
+    z-index: 1000;
+    height: 98px;
+}
+
+#activity-container-skeleton {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    width: 95%;
+    margin: 0 auto;
+    padding-top: 50px;
+}
+
+.activity-skeleton-card {
+    width: 1075px;
+    height: 248px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    border-radius: 25px;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+}
+
 /*  Media Queries  */ 
 @media screen and (max-width: 450px) {
+    header h1 {
+        margin-left: 30px;
+        font-size: 1.7rem !important;
+    }
     .leaflet-popup-content-wrapper {
         width: 300px;
     }
@@ -2492,6 +3048,24 @@ footer h5 {
     #user-stadiums-no-stadiums-text, #user-wishlist-stadiums-no-stadiums-text {
         max-width: 350px;
         width: 100%;
+    }
+    .activity-details-name {
+        font-size: 1.3rem;
+    }
+    .activity-details-time {
+        font-size: 0.9rem;
+    }
+    .activity-details-location {
+        font-size: 1rem;
+    }
+    .activity-details h4 {
+        font-size: 0.9rem;
+    }
+    .remove-button {
+        font-size: 0.9rem !important;
+    }
+    .activity-buttons button {
+        font-size: 0.9rem !important;
     }
 }
 
@@ -2703,6 +3277,17 @@ footer h5 {
         width: 100%;
         max-width: 450px;
     }
+    .activity-item {
+        width: 95% !important;
+    }
+    .activity-skeleton-card {
+        width: 95% !important;
+        max-height: 450px;
+    }
+    .activity-log-image, .activity-image {
+        height: auto !important;
+        aspect-ratio: 16/9;
+    }
 }
 
 @media screen and (max-width: 630px) {
@@ -2760,7 +3345,7 @@ footer h5 {
     #stadiums-search-container {
         width: 80%;
     }
-    #filter-bar, #filter-bar-skeleton, #achievements-filter-bar, #achievements-filter-bar-skeleton {
+    #filter-bar, #filter-bar-skeleton, #achievements-filter-bar, #achievements-filter-bar-skeleton, #activity-filter-bar, #activity-filter-bar-skeleton {
         width: 90%;
         margin: 20px auto 40px;
     }
@@ -2771,6 +3356,9 @@ footer h5 {
     #achievements-filter-bar-skeleton {
         height: 213px !important;
         margin-bottom: 45px;
+    }
+    #activity-filter-bar-skeleton {
+        height: 210px !important;
     }
     #filter-controls {
         flex-direction: column;
@@ -2932,6 +3520,23 @@ footer h5 {
     #add-stadium-note {
         width: 300px;
         height: 120px !important;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    .activity-item {
+        display: block;
+        width: 536px;
+        margin: 0 auto 30px;
+    }
+    .activity-skeleton-card {
+        height: 605px;
+        width: 536px;
+        margin: 0 auto 30px;
+    }
+    .activity-log-image, .activity-image {
+        width: 100%;
+        height: 356px;
     }
 }
 

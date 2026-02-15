@@ -244,4 +244,4 @@ logOutButton.addEventListener('click', () => {
 sidebarLogOutButton.addEventListener('click', () => {
     localStorage.setItem('username', '');
     window.location.replace('index.html');
-})
+});

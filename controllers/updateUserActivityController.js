@@ -181,15 +181,15 @@ const handleUpdateUserStadium = async (req, res) => {
 
             await db.execute('UPDATE stadiums SET visits = visits + 1 WHERE stadium_name = ?', [name]);
 
-            const newAchievements = await updateAchievementProgress(name, username, isVisited);
+            //const newAchievements = await updateAchievementProgress(name, username, isVisited);
 
-            res.json({ rows, newAchievements });
+            res.json({ rows/*, newAchievements*/ });
         } else {
             const [rows] = await db.execute(`DELETE FROM user_stadiums WHERE stadium_id = (SELECT stadium_id FROM stadiums WHERE stadium_name = ?) AND user_id = (SELECT user_id FROM users WHERE username = ?)`, [name, username]);
 
             await db.execute('UPDATE stadiums SET visits = visits - 1 WHERE stadium_name = ? AND visits > 0', [name]);
 
-            await updateAchievementProgress(name, username, isVisited);
+            // await updateAchievementProgress(name, username, isVisited);
 
             res.json({ rows });
         }
@@ -222,4 +222,92 @@ const handleUpdateUserWishlist = async (req, res) => {
     }
 };
 
-module.exports = { handleUpdateUserStadium, handleUpdateUserWishlist };
+const handleRemoveActivityWishlist = async (req, res) => {
+    const { stadiumId, username } = req.body;
+
+    if (!stadiumId || !username) {
+        return res.status(400).json({ error: 'Stadium ID and username are required' });
+    }
+
+    try {
+        const [rows] = await db.execute(
+            `DELETE FROM user_wishlist_stadiums 
+             WHERE stadium_id = ? 
+             AND user_id = (SELECT user_id FROM users WHERE username = ?)
+             ORDER BY added_on DESC
+             LIMIT 1`,
+            [stadiumId, username]
+        );
+
+        res.json({ rows });
+    } catch (err) {
+        console.error('Error in handleRemoveActivityWishlist:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+const handleRemoveActivityVisited = async (req, res) => {
+    const { stadiumId, username } = req.body;
+
+    if (!stadiumId || !username) {
+        return res.status(400).json({ error: 'Stadium ID and username are required' });
+    }
+
+    try {
+        const [rows] = await db.execute(
+            `DELETE FROM user_stadiums 
+             WHERE stadium_id = ? 
+             AND user_id = (SELECT user_id FROM users WHERE username = ?)
+             AND visited_on IS NULL
+             ORDER BY added_on DESC
+             LIMIT 1`,
+            [stadiumId, username]
+        );
+
+        await db.execute(
+            'UPDATE stadiums SET visits = visits - 1 WHERE stadium_id = ? AND visits > 0',
+            [stadiumId]
+        );
+
+        res.json({ rows });
+    } catch (err) {
+        console.error('Error in handleRemoveActivityVisited:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+const handleEditLog = async (req, res) => {
+    const { visitId, editDateVisited, editNote } = req.body;
+
+    if (!visitId) {
+        return res.status(400).json({ error: 'Visit ID is required' });
+    }
+
+    try {
+        const [rows] = await db.execute('UPDATE user_stadiums SET visited_on = ?, user_note = ? WHERE visit_id = ?', [editDateVisited, editNote, visitId]);
+
+        res.json({ rows });
+    } catch (err) {
+        console.error('Error in handleEditLog:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+const handleDeleteLog = async (req, res) => {
+    const { visitId } = req.body;
+
+    if (!visitId) {
+        return res.status(400).json({ error: 'Visit ID is required' });
+    }
+
+    try {
+        const [rows] = await db.execute('DELETE FROM user_stadiums WHERE visit_id = ?', [visitId]);
+
+        res.json({ rows });
+    } catch (err) {
+        console.error('Error in handleDeleteLog:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+module.exports = { handleUpdateUserStadium, handleUpdateUserWishlist, handleRemoveActivityWishlist, handleRemoveActivityVisited, handleEditLog, handleDeleteLog };

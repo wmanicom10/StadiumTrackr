@@ -69,7 +69,10 @@
                     </div>
                 </form>
             </div>
-            <h3 id="add-stadium-submit-button">Add Stadium</h3>
+            <div id="add-stadium-buttons">
+                <h3 id="add-stadium-log-button">Log Visit</h3>
+                <h3 id="add-stadium-cancel-button">Cancel</h3>
+            </div>
         </div>
 
         <!-- Main Content -->
@@ -127,6 +130,7 @@
                                 <a href="user-home.html">Home</a>
                                 <a href="user-stadiums.html">My Stadiums</a>
                                 <a href="user-wishlist.html">Wishlist</a>
+                                <a href="user-activity.html">Activity</a>
                                 <a href="user-achievements.html">Achievements</a>
                                 <a href="">Settings</a>
                             </div>
@@ -154,6 +158,7 @@
                                 <a href="user-home.html">Home</a>
                                 <a href="user-stadiums.html">My Stadiums</a>
                                 <a href="user-wishlist.html">Wishlist</a>
+                                <a href="user-activity.html">Activity</a>
                                 <a href="user-achievements.html">Achievements</a>
                                 <a href="">Settings</a>
                             </div>
@@ -198,10 +203,10 @@
                         <div id="stadium-info-container">
                             <img id="stadium-image">
                             <div id="stadium-user-controls">
-                                <div class="stadium-user-control" id="stadium-user-control-visited">
+                                <a class="stadium-user-control" id="stadium-user-control-visited">
                                     <img src="images/icons/plus.png" alt="Plus icon" id="user-visited-image">
-                                    <h3 id="stadium-user-control-visited-text">Visit</h3>
-                                </div>
+                                    <h3 id="stadium-user-control-visited-text"></h3>
+                                </a>
                                 <div class="stadium-user-control" id="stadium-user-control-wishlist">
                                     <img src="images/icons/heart-plus.png" alt="Heart icon" id="user-wishlist-image">
                                     <h3 id="stadium-user-control-wishlist-text">Add to Wishlist</h3>
@@ -210,10 +215,10 @@
                                     <img src="images/icons/log.png" alt="Document with plus icon">
                                     <h3 id="stadium-user-control-log-text">Log Your Visit</h3>
                                 </div>
-                                <div class="stadium-user-control" id="stadium-activity-button">
+                                <a href="" class="stadium-user-control" id="stadium-activity-button">
                                     <img src="images/icons/clock.png" alt="Clock icon">
                                     <h3 id="stadium-user-control-activity-text">Show Your Activity</h3>
-                                </div>
+                                </a>
                             </div>
                             <div id="stadium-info">
                                 <div class="stadium-info">

@@ -20,6 +20,10 @@ router.post('/loadMapStadiums', loadMapStadiumsController.handleLoadMapStadiums)
 router.post('/loadStadiumMap', loadStadiumMapController.handleLoadStadiumMap);
 router.post('/updateUserStadium', updateUserActivityController.handleUpdateUserStadium);
 router.post('/updateUserWishlist', updateUserActivityController.handleUpdateUserWishlist);
+router.post('/removeActivityWishlist', updateUserActivityController.handleRemoveActivityWishlist);
+router.post('/removeActivityVisited', updateUserActivityController.handleRemoveActivityVisited);
+router.post('/editLog', updateUserActivityController.handleEditLog);
+router.post('/deleteLog', updateUserActivityController.handleDeleteLog);
 router.post('/loadUserHomeMap', loadUserHomeMapController.handleLoadUserHomeMap);
 
 module.exports = router;
