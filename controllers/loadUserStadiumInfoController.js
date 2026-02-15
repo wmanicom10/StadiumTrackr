@@ -1,24 +1,21 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
-
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+const db = require('../config/db.js');
+const { getUserId } = require('../utils/dbHelpers.js');
 
 const handleLoadUserStadiumInfo = async (req, res) => {
     const { username } = req.body;
 
     try {
-        const leagues = ["NFL", "NBA", "MLB", "NHL", "MLS"];
+        const userId = await getUserId(username);
+        
+        if (!userId) {
+            return res.status(404).json({ error: 'User not found' });
+        }
 
+        const leagues = ["NFL", "NBA", "MLB", "NHL", "MLS", "WNBA"];
         const userStadiums = {};
 
         for (const league of leagues) {
-            const [stadiums] = await db.execute('select distinct stadium_name, location, image from user_stadiums join stadiums on user_stadiums.stadium_id = stadiums.stadium_id join teams on stadiums.stadium_id = teams.stadium_id join leagues on teams.league_id = leagues.league_id where user_stadiums.user_id = (select user_id from users where username = ?) and league_name = ? order by stadium_name', [username, league]);
-
+            const [stadiums] = await db.execute('SELECT DISTINCT stadium_name, location, image FROM user_stadiums JOIN stadiums ON user_stadiums.stadium_id = stadiums.stadium_id JOIN teams ON stadiums.stadium_id = teams.stadium_id JOIN leagues ON teams.league_id = leagues.league_id WHERE user_stadiums.user_id = ? AND league_name = ? ORDER BY stadium_name', [userId, league]);
             userStadiums[league] = stadiums;
         }
 

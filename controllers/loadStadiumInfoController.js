@@ -1,12 +1,5 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
-
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+const db = require('../config/db.js');
+const { getStadiumId, getUserId } = require('../utils/dbHelpers.js');
 
 const handleLoadStadiumInfo = async (req, res) => {
     const { name, username } = req.body;
@@ -16,11 +9,18 @@ const handleLoadStadiumInfo = async (req, res) => {
     }
 
     try {
-        const [stadium] = await db.execute('SELECT s.stadium_name, s.city, s.state, s.image, s.capacity, s.opened_date, s.construction_cost, s.visits, t.team_name, l.league_name FROM stadiums s JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id WHERE s.stadium_name = ?', [name]);
+        const stadiumId = await getStadiumId(name);
+        const userId = username ? await getUserId(username) : null;
 
-        const [userVisited] = await db.execute('SELECT username, added_on, visited_on FROM user_stadiums JOIN users ON user_stadiums.user_id = users.user_id WHERE stadium_id = (SELECT stadium_id FROM stadiums WHERE stadium_name = ?) AND user_stadiums.user_id = (SELECT user_id FROM users WHERE username = ?)', [name, username]);
+        if (!stadiumId) {
+            return res.status(404).json({ error: 'Stadium not found' });
+        }
 
-        const [userWishlist] = await db.execute('SELECT username, added_on FROM user_wishlist_stadiums JOIN users ON user_wishlist_stadiums.user_id = users.user_id WHERE stadium_id = (SELECT stadium_id FROM stadiums WHERE stadium_name = ?) AND user_wishlist_stadiums.user_id = (SELECT user_id FROM users WHERE username = ?)', [name, username]);
+        const [stadium] = await db.execute('SELECT s.stadium_name, s.city, s.state, s.image, s.capacity, s.opened_date, s.construction_cost, s.visits, t.team_name, l.league_name FROM stadiums s JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id WHERE s.stadium_id = ?', [stadiumId]);
+
+        const [userVisited] = userId ? await db.execute('SELECT username, added_on, visited_on FROM user_stadiums JOIN users ON user_stadiums.user_id = users.user_id WHERE stadium_id = ? AND user_stadiums.user_id = ?', [stadiumId, userId]) : [[]];
+
+        const [userWishlist] = userId ? await db.execute('SELECT username, added_on FROM user_wishlist_stadiums JOIN users ON user_wishlist_stadiums.user_id = users.user_id WHERE stadium_id = ? AND user_wishlist_stadiums.user_id = ?', [stadiumId, userId]) : [[]];
           
         if (stadium.length === 0) {
             return res.status(404).json({ error: 'Error loading stadium info' });

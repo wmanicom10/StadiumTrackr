@@ -1,17 +1,16 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
-
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+const db = require('../config/db.js');
+const { getUserId, buildSortOrder } = require('../utils/dbHelpers.js');
 
 const handleLoadUserActivity = async (req, res) => {
     const { username, activity, stadium, sortBy } = req.body;
     
     try {
+        const userId = await getUserId(username);
+        
+        if (!userId) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         let query = '';
         let params = [];
         
@@ -31,16 +30,15 @@ const handleLoadUserActivity = async (req, res) => {
                     'stadium' as activity_type
                 FROM user_stadiums
                 JOIN stadiums ON user_stadiums.stadium_id = stadiums.stadium_id
-                JOIN users ON user_stadiums.user_id = users.user_id
-                WHERE users.username = ?
+                WHERE user_stadiums.user_id = ?
             `;
-            params.push(username);
+            params.push(userId);
             
             if (stadium && stadium !== '') {
                 query += ` AND stadiums.stadium_name = ?`;
                 params.push(stadium);
             }
-            
+
             if (activity === 'logged') {
                 query += ` AND user_stadiums.visited_on IS NOT NULL`;
             } else if (activity === 'visited') {
@@ -64,16 +62,15 @@ const handleLoadUserActivity = async (req, res) => {
                     'wishlist' as activity_type
                 FROM user_wishlist_stadiums
                 JOIN stadiums ON user_wishlist_stadiums.stadium_id = stadiums.stadium_id
-                JOIN users ON user_wishlist_stadiums.user_id = users.user_id
-                WHERE users.username = ?
+                WHERE user_wishlist_stadiums.user_id = ?
             `;
-            params.push(username);
+            params.push(userId);
             
             if (stadium && stadium !== '') {
                 wishlistQuery += ` AND stadiums.stadium_name = ?`;
                 params.push(stadium);
             }
-            
+
             if (activity === 'all') {
                 query = `(${query}) UNION ALL (${wishlistQuery})`;
             } else if (activity === 'wishlist') {
@@ -81,22 +78,7 @@ const handleLoadUserActivity = async (req, res) => {
             }
         }
         
-        switch (sortBy) {
-            case 'date-desc':
-                query += ` ORDER BY added_on DESC`;
-                break;
-            case 'date-asc':
-                query += ` ORDER BY added_on ASC`;
-                break;
-            case 'name-desc':
-                query += ` ORDER BY stadium_name DESC`;
-                break;
-            case 'name-asc':
-                query += ` ORDER BY stadium_name ASC`;
-                break;
-            default:
-                query += ` ORDER BY added_on DESC`;
-        }
+        query += buildSortOrder(sortBy);
         
         const [userActivity] = await db.query(query, params);
 

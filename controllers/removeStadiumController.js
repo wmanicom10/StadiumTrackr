@@ -1,12 +1,5 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
-
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+const db = require('../config/db.js');
+const { getUserId, getStadiumId } = require('../utils/dbHelpers.js');
 
 const handleRemoveStadium = async (req, res) => {
     const { stadiumName, username } = req.body;
@@ -16,7 +9,14 @@ const handleRemoveStadium = async (req, res) => {
     }
 
     try {
-        const [result] = await db.execute('delete from user_stadiums where stadium_id = (select stadium_id from stadiums where stadium_name = ?) and user_id = (select user_id from users where username = ?)', [stadiumName, username]);
+        const userId = await getUserId(username);
+        const stadiumId = await getStadiumId(stadiumName);
+
+        if (!userId || !stadiumId) {
+            return res.status(404).json({ error: 'User or stadium not found' });
+        }
+
+        const [result] = await db.execute('DELETE FROM user_stadiums WHERE stadium_id = ? AND user_id = ?', [stadiumId, userId]);
 
         if (result.affectedRows === 0) {
             return res.status(404).json({ error: 'Could not remove stadium' });

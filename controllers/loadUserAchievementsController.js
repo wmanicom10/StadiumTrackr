@@ -1,16 +1,16 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
-
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+const db = require('../config/db.js');
+const { getUserId } = require('../utils/dbHelpers.js');
 
 const handleLoadUserAchievements = async (req, res) => {
     const { username, earned, sortBy } = req.body;
+
     try {
+        const userId = await getUserId(username);
+        
+        if (!userId) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
         let query = `
             SELECT DISTINCT 
                 achievements.achievement_id,
@@ -23,12 +23,10 @@ const handleLoadUserAchievements = async (req, res) => {
                 user_achievements.unlocked_on
             FROM achievements
             LEFT JOIN user_achievements ON user_achievements.achievement_id = achievements.achievement_id
-                AND user_achievements.user_id = (SELECT user_id FROM users WHERE username = ?)
+                AND user_achievements.user_id = ?
         `;
         
-        const params = [username];
-        
-        // Build WHERE clause for filtering
+        const params = [userId];
         let whereConditions = [];
         
         if (earned === 'earned') {

@@ -1,12 +1,5 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
-
-const db = mysql.createPool({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-});
+const db = require('../config/db.js');
+const { buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../utils/dbHelpers.js');
 
 const handleLoadStadiums = async (req, res) => {
     const { league, country, sortBy } = req.body;
@@ -29,26 +22,15 @@ const handleLoadStadiums = async (req, res) => {
         
         const params = [];
         
-        if (league && league !== 'all') {
-            query += ` AND leagues.league_name = ?`;
-            params.push(league.toUpperCase());
-        }
+        const leagueFilter = buildLeagueFilter(league);
+        query += leagueFilter.sql;
+        params.push(...leagueFilter.params);
         
-        if (country && country !== 'all') {
-            if (country === 'us') {
-                query += ` AND countries.country_name = ?`;
-                params.push('The United States of America');
-            } else if (country === 'canada') {
-                query += ` AND countries.country_name = ?`;
-                params.push('Canada');
-            }
-        }
+        const countryFilter = buildCountryFilter(country);
+        query += countryFilter.sql;
+        params.push(...countryFilter.params);
         
-        if (sortBy === 'name-desc') {
-            query += ` ORDER BY stadiums.stadium_name DESC`;
-        } else {
-            query += ` ORDER BY stadiums.stadium_name ASC`;
-        }
+        query += buildSortOrder(sortBy, 'stadiums');
         
         const [stadiums] = await db.query(query, params);
         

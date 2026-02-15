@@ -50,6 +50,10 @@ async function loadMapStadiums() {
 
 /*  Events  */
 window.addEventListener('load', async () => {
+    if (localStorage.getItem('username') !== '') {
+        window.location.replace('user-home.html')
+    }
+
     header.style.display = 'flex';
 
     Array.from(stadiums).forEach(stadium => {
