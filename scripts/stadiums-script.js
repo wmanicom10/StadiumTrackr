@@ -92,7 +92,7 @@ async function setView(league, country, sortBy) {
                         renderPage(currentPage);
                         renderPageNumbers();
                         requestAnimationFrame(() => {
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            window.scrollTo({ top: 460, behavior: 'smooth' });
                         });
                     }
                 });
@@ -109,7 +109,7 @@ async function setView(league, country, sortBy) {
                         renderPage(currentPage);
                         renderPageNumbers();
                         requestAnimationFrame(() => {
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            window.scrollTo({ top: 460, behavior: 'smooth' });
                         });
                     });
                     stadiumsPageSelector.appendChild(pageNumber);
@@ -161,7 +161,7 @@ async function setView(league, country, sortBy) {
                         renderPage(currentPage);
                         renderPageNumbers();
                         requestAnimationFrame(() => {
-                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            window.scrollTo({ top: 460, behavior: 'smooth' });
                         });
                     }
                 });

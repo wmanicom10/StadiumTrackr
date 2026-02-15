@@ -1361,12 +1361,15 @@ footer h5 {
     padding: 15px 20px 15px 20px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
+    width: 410px;
+    flex-grow: 1;
 }
 
 .stadiums-list-stadium-text h3, .stadiums-list-stadium-text h4 {
     font-weight: normal;
     margin: 10px;
-    border: 0px solid white;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .stadiums-list-stadium-text h3 {
@@ -1381,6 +1384,9 @@ footer h5 {
 .stadiums-list-stadium a {
     text-decoration: none;
     color: #e4e6eb;
+    display: flex;
+    flex-direction: column;
+    height: 100%;  
 }
 
 .stadiums-list-stadium:hover {

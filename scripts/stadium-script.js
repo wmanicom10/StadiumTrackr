@@ -387,9 +387,6 @@ async function loadStadiumMap(name) {
 }
 
 async function loadUpcomingEvents(name) {
-    if (name === 'PHX Arena') {
-        name = 'PHX Arena (Formerly Footprint Center)';
-    }
     const apiKey = 'WIKkbzK6ciettoJD7CfKieFrtP8BqcvJ';
     const venueSearchUrl = `https://app.ticketmaster.com/discovery/v2/venues.json?keyword=${name}&apikey=${apiKey}`;
 
