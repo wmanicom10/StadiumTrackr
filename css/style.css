@@ -713,6 +713,7 @@ label img:hover {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(79, 172, 254, 0.2);
     color: #e4e6eb;
+    font-size: 1.1rem;
 }
 
 #search-wrapper {
@@ -723,7 +724,6 @@ label img:hover {
 
 #home-search-field:focus {
     outline: none;
-    font-size: 15px;
 }
 
 #home-search-field::placeholder {
@@ -756,7 +756,7 @@ label img:hover {
 
 #autocomplete-list a .search-result h4 {
     margin: 0;
-    font-size: 15px;
+    font-size: 1.1rem;
     width: 97%;
     padding: 8px 10px;
     border-radius: 35px;
