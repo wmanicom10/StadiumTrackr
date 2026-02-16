@@ -1,10 +1,4 @@
-// utils.js
-
 import { API_BASE_URL, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS } from './constants.js';
-
-// ============================================
-// Menu/Modal Management
-// ============================================
 
 export function toggleMenu(menu, show, overlay, keepOverlay = false) {
     if (show) {
@@ -37,10 +31,6 @@ export function toggleMenu(menu, show, overlay, keepOverlay = false) {
     }
 }
 
-// ============================================
-// Validation Functions
-// ============================================
-
 export function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -53,7 +43,7 @@ export function validateUsername(username) {
         return `Username must be between ${MIN_LENGTH} and ${MAX_LENGTH} characters.`;
     }
     
-    return null; // No error
+    return null;
 }
 
 export function validatePassword(password) {
@@ -75,12 +65,8 @@ export function validatePassword(password) {
         return `Password must include a special character (${SPECIAL_CHARS}).`;
     }
     
-    return null; // No error
+    return null;
 }
-
-// ============================================
-// Stadium Search & Autocomplete
-// ============================================
 
 export async function searchStadiums(name, suggestionsContainer, searchValue) {
     try {
@@ -148,10 +134,6 @@ function createStadiumLinkElement(stadium, searchValue) {
     return stadiumLink;
 }
 
-// ============================================
-// Stadium Element Creation
-// ============================================
-
 export function createUserStadiumElement(stadium) {
     const userStadium = document.createElement('div');
     userStadium.classList.add('user-stadium');
@@ -182,10 +164,6 @@ export function createUserStadiumElement(stadium) {
     return userStadium;
 }
 
-// ============================================
-// DOM Utilities
-// ============================================
-
 export function createElement(tag, className = null, attributes = {}) {
     const element = document.createElement(tag);
     
@@ -208,10 +186,6 @@ export function createElement(tag, className = null, attributes = {}) {
     return element;
 }
 
-// ============================================
-// Debounce Utility
-// ============================================
-
 export function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -224,10 +198,6 @@ export function debounce(func, wait) {
     };
 }
 
-// ============================================
-// String Utilities
-// ============================================
-
 export function truncateUsername(username, maxLength = 10) {
     return username.length > maxLength 
         ? username.slice(0, maxLength) + '...' 
@@ -237,10 +207,6 @@ export function truncateUsername(username, maxLength = 10) {
 export function formatLocation(city, state) {
     return `${city}, ${state}`;
 }
-
-// ============================================
-// Date Utilities
-// ============================================
 
 export function formatDate(dateString, options = {}) {
     const defaultOptions = {
@@ -282,10 +248,6 @@ export function timeAgo(dateString) {
     if (months < 12) return `${months}mo ago`;
     return `${years}y ago`;
 }
-
-// ============================================
-// Local Storage Utilities
-// ============================================
 
 export function getUsername() {
     return localStorage.getItem('username') || '';

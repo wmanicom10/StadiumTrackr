@@ -1,5 +1,5 @@
 import { getAuthElements, getSearchElements, API_BASE_URL, ROUTES, DEBOUNCE_TIME } from "../constants.js";
-import { searchStadiums, debounce, isLoggedIn } from "../utils.js";
+import { searchStadiums, debounce } from "../utils.js";
 import { registerEventListeners, registerCommonEvents } from "../events.js";
 
 const header = document.querySelector('header');

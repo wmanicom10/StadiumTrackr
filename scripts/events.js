@@ -1,11 +1,5 @@
-// events.js
-
 import { toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
-import { authAPI } from "./auth.js";
-
-// ============================================
-// Form Validation
-// ============================================
+import { authAPI } from "./api/auth.js";
 
 function validateSignupForm(email, username, password, termsAccepted) {
     const errors = [];
@@ -44,10 +38,6 @@ function validateLoginForm(username, password) {
     return null;
 }
 
-// ============================================
-// Form Data Extraction
-// ============================================
-
 function getSignupFormData() {
     return {
         email: document.getElementById('new-email')?.value.trim() || '',
@@ -64,21 +54,17 @@ function getLoginFormData() {
     };
 }
 
-// ============================================
-// Event Handlers
-// ============================================
-
-async function handleSignup(overlay, createAccountMenu) {
+async function handleSignup() {
     const { email, username, password, termsAccepted } = getSignupFormData();
     
     const errors = validateSignupForm(email, username, password, termsAccepted);
     if (errors.length > 0) {
-        alert(errors[0]); // Show first error
+        alert(errors[0]);
         return;
     }
 
     try {
-        const result = await authAPI.signup(email, username, password);
+        await authAPI.signup(email, username, password);
         
         localStorage.setItem('username', username);
         window.location.replace('user-home.html');
@@ -101,7 +87,7 @@ async function handleLogin() {
         const result = await authAPI.login(username, password);
         
         localStorage.setItem('username', result.username);
-        window.location.reload();
+        window.location.replace('user-home.html');
     } catch (error) {
         alert(error.message || 'Login failed. Please try again.');
     }
@@ -113,10 +99,6 @@ function handleMenuSwitch(fromMenu, toMenu, overlay) {
         toggleMenu(toMenu, true, overlay, true);
     }, 200);
 }
-
-// ============================================
-// Main Registration Function
-// ============================================
 
 export function registerEventListeners({
     overlay,
@@ -132,13 +114,11 @@ export function registerEventListeners({
     sidebarSignUpButton,
     signUpLink,
     signInLink,
-    createAccountButtons  // ← Add this parameter
+    createAccountButtons
 }) {
-    // Prevent form submissions
     createAccountForm?.addEventListener('submit', (e) => e.preventDefault());
     logInForm?.addEventListener('submit', (e) => e.preventDefault());
 
-    // Create account buttons (multiple buttons that open signup)
     createAccountButtons?.forEach(button => {
         button?.addEventListener('click', () => {
             if (logInMenu.style.display === 'block') {
@@ -148,7 +128,6 @@ export function registerEventListeners({
         });
     });
 
-    // Login button (open login menu)
     logInButton?.addEventListener('click', () => {
         if (createAccountMenu.style.display === 'block') {
             toggleMenu(createAccountMenu, false, overlay, true);
@@ -156,7 +135,6 @@ export function registerEventListeners({
         toggleMenu(logInMenu, true, overlay)
     });
 
-    // Close buttons
     closeButtons['create-account-menu']?.addEventListener('click', () => 
         toggleMenu(createAccountMenu, false, overlay)
     );
@@ -164,15 +142,12 @@ export function registerEventListeners({
         toggleMenu(logInMenu, false, overlay)
     );
 
-    // Sign up button (submit form)
     signUp?.addEventListener('click', () => 
         handleSignup(overlay, createAccountMenu)
     );
 
-    // Log in button (submit form)
     logIn?.addEventListener('click', handleLogin);
 
-    // Sidebar buttons
     sidebarLogInButton?.addEventListener('click', () => {
         if (createAccountMenu.style.display === 'block') {
             toggleMenu(createAccountMenu, false, overlay, true);
@@ -187,7 +162,6 @@ export function registerEventListeners({
         toggleMenu(createAccountMenu, true, overlay)
     });
 
-    // Switch between login and signup
     signUpLink?.addEventListener('click', () => 
         handleMenuSwitch(logInMenu, createAccountMenu, overlay)
     );
@@ -197,12 +171,7 @@ export function registerEventListeners({
     );
 }
 
-// ============================================
-// Additional Helper: Register Common Events
-// ============================================
-
 export function registerCommonEvents() {
-    // Close sidebar on resize
     const sidebarToggles = [
         document.getElementById('sidebar-active'),
         document.getElementById('sidebar-active-logged-in')
@@ -216,7 +185,6 @@ export function registerCommonEvents() {
         });
     });
 
-    // Close modals on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             const activeModals = document.querySelectorAll('.menu[style*="display: block"]');

@@ -774,6 +774,7 @@ label img:hover {
     color: #e4e6eb;
     padding: 8px 10px;
     border: 1px solid transparent;
+    font-weight: normal;
 }
 
 #autocomplete-list a .search-result h4:hover {

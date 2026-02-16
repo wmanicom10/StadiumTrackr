@@ -1,4 +1,4 @@
-const db = require('../config/db.js');
+const db = require('./connection.js');
 
 const getUserId = async (username) => {
     const [[user]] = await db.execute(
