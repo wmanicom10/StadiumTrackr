@@ -1,7 +1,29 @@
-<div align="center">
+# StadiumTrackr
 
-  <h1>StadiumTrackr</h1>
+A web application for tracking stadium visits as you explore sports venues across the world.
 
-  <h2>A platform to log stadium visits across the NFL, NBA, MLB, NHL, MLS</h2>
-  
-</div>
+## Features
+
+- 🏟️ **Stadium Discovery** - Browse and search hundreds of stadiums from around the world
+- ✅ **Visit Tracking** - Mark stadiums as visited
+- 📝 **Visit Logs** - Add notes and dates to your stadium visits
+- ❤️ **Wishlist** - Save stadiums you want to visit in the future
+- 📊 **Statistics** - View your total stadiums visited, countries explored, and events attended
+- 🏆 **Achievements** - Unlock achievements as you reach milestones
+- 🗺️ **Interactive Maps** - Visualize stadium visits on satellite maps
+- 🎟️ **Upcoming Events** - See upcoming sports events at each stadium (powered by Ticketmaster API)
+
+## Tech Stack
+
+### Frontend
+- **HTML/CSS**
+- **Vanilla JavaScript**
+- **Leaflet.js**
+
+### Backend
+- **Node.js**
+- **Express.js**
+- **MySQL**
+- **Ticketmaster API**
+
+**Built with ❤️ for sports fans and stadium enthusiasts**

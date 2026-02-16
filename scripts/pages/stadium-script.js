@@ -1,0 +1,439 @@
+import { getAuthElements, getHeaderElements, MIN_LOADING_TIME, overlay, createAccountMenu } from "../constants.js";
+import { toggleMenu, getUsername, isLoggedIn, truncateUsername, formatLocation, formatDate, clearUsername } from "../utils.js";
+import { registerEventListeners, registerCommonEvents } from "../events.js";
+import { stadiumAPI } from "../api/stadium.js";
+import { activityAPI } from "../api/activity.js";
+
+const elements = {
+    addStadiumMenu: document.getElementById('add-stadium-menu'),
+    addStadiumDateVisited: document.getElementById('add-stadium-date-visited'),
+    addStadiumNote: document.getElementById('add-stadium-note'),
+    closeAddStadiumMenu: document.getElementById('close-add-stadium-menu'),
+    addStadiumName: document.getElementById('add-stadium-name'),
+    addStadiumImage: document.getElementById('add-stadium-image'),
+    addStadiumLogButton: document.getElementById('add-stadium-log-button'),
+    addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
+    stadiumName: document.getElementById('stadium-name'),
+    stadiumImage: document.getElementById('stadium-image'),
+    stadiumUserControls: document.getElementById('stadium-user-controls'),
+    stadiumVisits: document.getElementById('stadium-visits'),
+    stadiumLocation: document.getElementById('stadium-location'),
+    stadiumOpenedDate: document.getElementById('stadium-opened-date'),
+    stadiumTeams: document.getElementById('stadium-teams'),
+    stadiumCapacity: document.getElementById('stadium-capacity'),
+    stadiumConstructionCost: document.getElementById('stadium-construction-cost'),
+    stadiumUserControlVisited: document.getElementById('stadium-user-control-visited'),
+    stadiumUserControlWishlist: document.getElementById('stadium-user-control-wishlist'),
+    stadiumUserControlVisitedText: document.getElementById('stadium-user-control-visited-text'),
+    stadiumUserControlWishlistText: document.getElementById('stadium-user-control-wishlist-text'),
+    stadiumLogButton: document.getElementById('stadium-log-button'),
+    stadiumActivityButton: document.getElementById('stadium-activity-button'),
+    upcomingEventsContainer: document.getElementById('upcoming-events'),
+    noUpcomingEventsContainer: document.getElementById('no-upcoming-events-container'),
+    userVisitedImage: document.getElementById('user-visited-image'),
+    userWishlistImage: document.getElementById('user-wishlist-image')
+};
+
+function showLoggedInUI(username) {
+    const { loggedInHeader, loggedOutHeader, loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
+    
+    const displayName = truncateUsername(username);
+    loggedInHeaderUsername.textContent = displayName;
+    sidebarUsername.textContent = displayName;
+    loggedOutHeader.style.display = 'none';
+    loggedInHeader.style.display = 'flex';
+    elements.stadiumUserControls.style.display = 'flex';
+}
+
+function showLoggedOutUI() {
+    const { loggedInHeader, loggedOutHeader } = getHeaderElements();
+    loggedInHeader.style.display = 'none';
+    loggedOutHeader.style.display = 'flex';
+}
+
+function initializeStadiumMap(latitude, longitude, stadiumName) {
+    const map = L.map('stadium-map').setView([latitude, longitude], 6);
+
+    const customIcon = L.icon({
+        iconUrl: 'images/icons/pin-blue.png',
+        iconSize: [25, 35],
+        iconAnchor: [16, 40],
+        popupAnchor: [-3, -40]
+    });
+
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
+        attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'jpg'
+    }).addTo(map);
+
+    L.marker([latitude, longitude], { icon: customIcon })
+        .addTo(map)
+        .bindPopup(`<div class="popup-card"><h4>${stadiumName}</h4></div>`);
+}
+
+async function loadStadiumInfo(name, username) {
+    try {
+        const result = await stadiumAPI.loadStadiumInfo(name, username);
+        const { stadium, teams, userVisited, userWishlist } = result.stadiumInfo;
+
+        elements.stadiumName.textContent = stadium.name;
+        elements.stadiumImage.src = stadium.image;
+        
+        await new Promise(resolve => {
+            if (elements.stadiumImage.complete) resolve();
+            else {
+                elements.stadiumImage.onload = elements.stadiumImage.onerror = resolve;
+            }
+        });
+
+        elements.stadiumLocation.textContent = formatLocation(stadium.city, stadium.state);
+        elements.stadiumOpenedDate.textContent = formatDate(stadium.openedDate);
+        elements.stadiumTeams.textContent = teams.map(t => t.team_name).join(', ');
+        elements.stadiumCapacity.textContent = stadium.capacity;
+        elements.stadiumConstructionCost.textContent = stadium.constructionCost;
+        elements.stadiumVisits.textContent = stadium.visits;
+
+        setupUserControls(name, username, userVisited, userWishlist);
+        
+        setupAddStadiumModal(name, username, stadium.image);
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+function setupUserControls(stadiumName, username, userVisited, userWishlist) {
+    const hasLogged = userVisited.some(activity => activity.visited_on !== null);
+    let isWishlist = userWishlist.length > 0;
+    let isVisited = userVisited.length > 0;
+
+    updateWishlistUI(isWishlist);
+    
+    if (hasLogged) {
+        replaceVisitedWithLoggedLink(stadiumName);
+    } else {
+        updateVisitedUI(isVisited);
+        setupVisitedClickHandler(stadiumName, username, isVisited, isWishlist);
+    }
+
+    setupWishlistClickHandler(stadiumName, username, isWishlist);
+    setupStadiumButtons(stadiumName, username);
+}
+
+function updateWishlistUI(isWishlist) {
+    elements.stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
+    elements.userWishlistImage.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+}
+
+function updateVisitedUI(isVisited) {
+    elements.stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
+    elements.userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+}
+
+function replaceVisitedWithLoggedLink(stadiumName) {
+    const visitLink = document.createElement('a');
+    visitLink.href = `user-activity.html?stadium=${encodeURIComponent(stadiumName)}`;
+    visitLink.className = 'stadium-user-control';
+    visitLink.id = 'stadium-user-control-visited';
+    visitLink.innerHTML = `
+        <img src="images/icons/check.png" alt="Check icon" id="user-visited-image">
+        <h3 id="stadium-user-control-visited-text">Logged</h3>
+    `;
+    elements.stadiumUserControlVisited.parentNode.replaceChild(visitLink, elements.stadiumUserControlVisited);
+}
+
+function setupVisitedClickHandler(stadiumName, username, initialIsVisited, initialIsWishlist) {
+    let isVisited = initialIsVisited;
+    let isWishlist = initialIsWishlist;
+
+    elements.stadiumUserControlVisited.addEventListener('click', async () => {
+        if (!username) {
+            toggleMenu(createAccountMenu, true, overlay);
+            return;
+        }
+
+        elements.stadiumUserControlVisited.classList.add('animating');
+        const newIsVisited = !isVisited;
+
+        setTimeout(() => {
+            updateVisitedUI(newIsVisited);
+            
+            if (newIsVisited && isWishlist) {
+                animateWishlistRemoval();
+                activityAPI.updateUserWishlist(stadiumName, username, true)
+                    .catch(error => alert(error.message));
+                isWishlist = false;
+            }
+        }, 200);
+
+        setTimeout(() => {
+            elements.stadiumUserControlVisited.classList.remove('animating');
+        }, 400);
+
+        try {
+            await activityAPI.updateUserStadium(stadiumName, username, isVisited);
+            isVisited = newIsVisited;
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+}
+
+function animateWishlistRemoval() {
+    elements.stadiumUserControlWishlist.classList.add('animating');
+    
+    setTimeout(() => {
+        updateWishlistUI(false);
+    }, 200);
+    
+    setTimeout(() => {
+        elements.stadiumUserControlWishlist.classList.remove('animating');
+    }, 400);
+}
+
+function setupWishlistClickHandler(stadiumName, username, initialIsWishlist) {
+    let isWishlist = initialIsWishlist;
+
+    elements.stadiumUserControlWishlist.addEventListener('click', async () => {
+        if (!username) {
+            toggleMenu(createAccountMenu, true, overlay);
+            return;
+        }
+
+        elements.stadiumUserControlWishlist.classList.add('animating');
+        const newIsWishlist = !isWishlist;
+
+        setTimeout(() => {
+            updateWishlistUI(newIsWishlist);
+        }, 200);
+
+        setTimeout(() => {
+            elements.stadiumUserControlWishlist.classList.remove('animating');
+        }, 400);
+
+        try {
+            await activityAPI.updateUserWishlist(stadiumName, username, isWishlist);
+            isWishlist = newIsWishlist;
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+}
+
+function setupStadiumButtons(stadiumName, username) {
+    elements.stadiumLogButton.addEventListener('click', () => {
+        if (!username) {
+            toggleMenu(createAccountMenu, true, overlay);
+        } else {
+            toggleMenu(elements.addStadiumMenu, true, overlay);
+        }
+    });
+
+    elements.stadiumActivityButton.addEventListener('click', (e) => {
+        if (!username) {
+            e.preventDefault();
+            toggleMenu(createAccountMenu, true, overlay);
+        }
+    });
+
+    elements.stadiumActivityButton.href = `user-activity.html?stadium=${encodeURIComponent(stadiumName)}`;
+}
+
+function setupAddStadiumModal(stadiumName, username, stadiumImage) {
+    elements.addStadiumName.textContent = stadiumName;
+    elements.addStadiumImage.src = stadiumImage;
+
+    const today = new Date().toISOString().split('T')[0];
+    elements.addStadiumDateVisited.setAttribute('max', today);
+    elements.addStadiumDateVisited.value = today;
+
+    elements.addStadiumLogButton.addEventListener('click', async () => {
+        const dateVisited = elements.addStadiumDateVisited.value;
+        const note = elements.addStadiumNote.value.trim() || null;
+
+        try {
+            await activityAPI.addStadium(stadiumName, username, dateVisited, note);
+            window.location.reload();
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+
+    elements.addStadiumCancelButton.addEventListener('click', () => {
+        toggleMenu(elements.addStadiumMenu, false, overlay);
+    });
+
+    elements.closeAddStadiumMenu.addEventListener('click', () => {
+        toggleMenu(elements.addStadiumMenu, false, overlay);
+    });
+}
+
+async function loadStadiumMap(name) {
+    try {
+        const result = await stadiumAPI.loadStadiumMap(name);
+        const stadium = result.result;
+
+        window.stadiumMapData = {
+            latitude: stadium.latitude,
+            longitude: stadium.longitude,
+            name: stadium.stadium_name
+        };
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function loadUpcomingEvents(name) {
+    const apiKey = 'WIKkbzK6ciettoJD7CfKieFrtP8BqcvJ';
+    
+    try {
+        const venueResponse = await fetch(
+            `https://app.ticketmaster.com/discovery/v2/venues.json?keyword=${name}&apikey=${apiKey}`
+        );
+        const venueData = await venueResponse.json();
+        const venueId = venueData._embedded.venues[0].id;
+
+        const eventsResponse = await fetch(
+            `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${venueId}&apikey=${apiKey}`
+        );
+        const eventsData = await eventsResponse.json();
+        
+        renderUpcomingEvents(eventsData._embedded?.events);
+    } catch (error) {
+        console.error('Error fetching events:', error);
+    }
+}
+
+function renderUpcomingEvents(events) {
+    if (!events || events.length === 0) {
+        elements.noUpcomingEventsContainer.style.display = 'block';
+        return;
+    }
+
+    const maxEvents = Math.min(events.length, 3);
+    for (let i = 0; i < maxEvents; i++) {
+        const event = events[i];
+        const eventElement = createEventElement(event);
+        elements.upcomingEventsContainer.appendChild(eventElement);
+    }
+}
+
+function createEventElement(event) {
+    const container = document.createElement('div');
+    container.classList.add('upcoming-event');
+
+    const icon = document.createElement('img');
+    icon.src = getEventIcon(event.classifications[0].genre.name);
+
+    const info = document.createElement('div');
+    info.classList.add('event-info');
+
+    const name = document.createElement('h4');
+    name.textContent = event.name;
+    name.classList.add('event-stadium-name');
+
+    const infoContainer = document.createElement('div');
+    infoContainer.classList.add('event-info-container');
+
+    const date = document.createElement('h4');
+    date.textContent = formatEventDate(event.dates.start.localDate);
+
+    const time = document.createElement('h4');
+    time.textContent = formatEventTime(event.dates.start.localTime);
+
+    infoContainer.appendChild(date);
+    infoContainer.appendChild(time);
+    info.appendChild(name);
+    info.appendChild(infoContainer);
+    container.appendChild(icon);
+    container.appendChild(info);
+
+    return container;
+}
+
+function getEventIcon(genre) {
+    const icons = {
+        'Football': 'images/icons/football.png',
+        'Basketball': 'images/icons/basketball.png',
+        'Baseball': 'images/icons/baseball.png',
+        'Hockey': 'images/icons/hockey.png',
+        'Soccer': 'images/icons/soccer.png'
+    };
+    return icons[genre] || 'images/icons/ticket.png';
+}
+
+function formatEventDate(dateString) {
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}/${year}`;
+}
+
+function formatEventTime(timeString) {
+    if (!timeString) return 'Time TBD';
+    
+    const [hours, minutes] = timeString.split(':');
+    const date = new Date();
+    date.setHours(Number(hours), Number(minutes), 0);
+    return date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+}
+
+async function loadFullStadiumPage(name, username) {
+    try {
+        const [, , ,] = await Promise.all([
+            loadStadiumInfo(name, username),
+            loadStadiumMap(name),
+            loadUpcomingEvents(name),
+            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+        ]);
+
+        document.getElementById('stadium-skeleton').style.display = 'none';
+        document.getElementById('stadium-content').style.display = 'block';
+        document.getElementById('upcoming-events-skeleton-container').style.display = 'none';
+        document.getElementById('upcoming-events-content').style.display = 'block';
+        document.getElementById('stadium-map-skeleton-container').style.display = 'none';
+        document.getElementById('stadium-map-content').style.display = 'block';
+
+        if (window.stadiumMapData) {
+            const { latitude, longitude, name: stadiumName } = window.stadiumMapData;
+            initializeStadiumMap(latitude, longitude, stadiumName);
+        }
+    } catch (error) {
+        alert('Failed to load stadium content: ' + error.message);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    registerEventListeners(getAuthElements());
+    registerCommonEvents();
+});
+
+window.onload = async () => {
+    const username = getUsername();
+    
+    if (isLoggedIn()) {
+        showLoggedInUI(username);
+    } else {
+        showLoggedOutUI();
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = urlParams.get('stadium');
+    document.title = `${name} - StadiumTrackr`;
+    
+    loadFullStadiumPage(name, username);
+};
+
+const { logOutButton, sidebarLogOutButton } = getHeaderElements();
+
+logOutButton?.addEventListener('click', () => {
+    clearUsername();
+    window.location.reload();
+});
+
+sidebarLogOutButton?.addEventListener('click', () => {
+    clearUsername();
+    window.location.reload();
+});

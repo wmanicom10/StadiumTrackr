@@ -1,4 +1,4 @@
-const db = require('../config/db.js');
+const db = require('../database/connection.js');
 
 const handleLoadLeagues = async (req, res) => {
     try {

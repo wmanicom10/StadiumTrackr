@@ -1,4 +1,4 @@
-const db = require('../config/db.js');
+const db = require('../database/connection.js');
 const bcrypt = require('bcrypt');
 
 const handleSignup = async (req, res) => {

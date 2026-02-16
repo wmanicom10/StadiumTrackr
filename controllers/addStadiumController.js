@@ -1,4 +1,5 @@
-const db = require('../config/db.js');
+const db = require('../database/connection.js');
+const { getStadiumId, getUserId } = require('../database/dbHelpers.js');
 
 const handleAddStadium = async (req, res) => {
     const { username, name, dateVisited, note } = req.body;
@@ -8,9 +9,16 @@ const handleAddStadium = async (req, res) => {
     }
 
     try {
+        const stadiumId = await getStadiumId(name);
+        const userId = username ? await getUserId(username) : null;
+
+        if (!stadiumId || !userId) {
+            return res.status(404).json({ error: 'Stadium or user not found' });
+        }
+
         const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on, visited_on, user_note) SELECT s.stadium_id, u.user_id, NOW(), ?, ? FROM stadiums s, users u WHERE s.stadium_name = ? AND u.username = ?', [dateVisited, note, name, username]);
 
-        await db.execute('UPDATE stadiums SET visits = visits + 1 WHERE stadium_name = ?', [name]);
+        await db.execute('DELETE FROM user_wishlist_stadiums WHERE stadium_id = ? AND user_id = ?', [stadiumId, userId]);
 
         res.json({ rows });
     } catch (err) {

@@ -1,5 +1,5 @@
-const db = require('../config/db.js');
-const { getUserId, getStadiumId } = require('../utils/dbHelpers.js');
+const db = require('../database/connection.js');
+const { getUserId, getStadiumId } = require('../database/dbHelpers.js');
 
 async function updateAchievementProgress(name, username, isVisited) {
     if (!isVisited) {
@@ -179,15 +179,11 @@ const handleUpdateUserStadium = async (req, res) => {
         if (!isVisited) {
             const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on) VALUES (?, ?, NOW())', [stadiumId, userId]);
 
-            await db.execute('UPDATE stadiums SET visits = visits + 1 WHERE stadium_id = ?', [stadiumId]);
-
             //const newAchievements = await updateAchievementProgress(name, username, isVisited);
 
             res.json({ rows/*, newAchievements*/ });
         } else {
             const [rows] = await db.execute('DELETE FROM user_stadiums WHERE stadium_id = ? AND user_id = ?', [stadiumId, userId]);
-
-            await db.execute('UPDATE stadiums SET visits = visits - 1 WHERE stadium_id = ? AND visits > 0', [stadiumId]);
 
             // await updateAchievementProgress(name, username, isVisited);
 
@@ -267,8 +263,6 @@ const handleRemoveActivityVisited = async (req, res) => {
         }
 
         const [rows] = await db.execute(`DELETE FROM user_stadiums WHERE stadium_id = ? AND user_id = ? AND visited_on IS NULL ORDER BY added_on DESC LIMIT 1`, [stadiumId, userId]);
-
-        await db.execute('UPDATE stadiums SET visits = visits - 1 WHERE stadium_id = ? AND visits > 0', [stadiumId]);
 
         res.json({ rows });
     } catch (err) {

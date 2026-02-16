@@ -1,5 +1,5 @@
-const db = require('../config/db.js');
-const { getUserId, buildSortOrder } = require('../utils/dbHelpers.js');
+const db = require('../database/connection.js');
+const { getUserId, buildSortOrder } = require('../database/dbHelpers.js');
 
 const handleLoadUserActivity = async (req, res) => {
     const { username, activity, stadium, sortBy } = req.body;

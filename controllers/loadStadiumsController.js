@@ -1,5 +1,5 @@
-const db = require('../config/db.js');
-const { buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../utils/dbHelpers.js');
+const db = require('../database/connection.js');
+const { buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
 
 const handleLoadStadiums = async (req, res) => {
     const { league, country, sortBy } = req.body;

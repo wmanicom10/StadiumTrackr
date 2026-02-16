@@ -1,5 +1,5 @@
-const db = require('../config/db.js');
-const { getUserId } = require('../utils/dbHelpers.js');
+const db = require('../database/connection.js');
+const { getUserId } = require('../database/dbHelpers.js');
 
 const handleLoadUserStadiumInfo = async (req, res) => {
     const { username } = req.body;

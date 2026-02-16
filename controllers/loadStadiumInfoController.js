@@ -1,5 +1,5 @@
-const db = require('../config/db.js');
-const { getStadiumId, getUserId } = require('../utils/dbHelpers.js');
+const db = require('../database/connection.js');
+const { getStadiumId, getUserId } = require('../database/dbHelpers.js');
 
 const handleLoadStadiumInfo = async (req, res) => {
     const { name, username } = req.body;
@@ -16,7 +16,9 @@ const handleLoadStadiumInfo = async (req, res) => {
             return res.status(404).json({ error: 'Stadium not found' });
         }
 
-        const [stadium] = await db.execute('SELECT s.stadium_name, s.city, s.state, s.image, s.capacity, s.opened_date, s.construction_cost, s.visits, t.team_name, l.league_name FROM stadiums s JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id WHERE s.stadium_id = ?', [stadiumId]);
+        const [stadium] = await db.execute('SELECT s.stadium_name, s.city, s.state, s.image, s.capacity, s.opened_date, s.construction_cost, t.team_name, l.league_name FROM stadiums s JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id WHERE s.stadium_id = ?', [stadiumId]);
+
+        const [visits] = await db.execute('SELECT COUNT(DISTINCT user_id) as visits FROM user_stadiums WHERE stadium_id = ?', [stadiumId]);
 
         const [userVisited] = userId ? await db.execute('SELECT username, added_on, visited_on FROM user_stadiums JOIN users ON user_stadiums.user_id = users.user_id WHERE stadium_id = ? AND user_stadiums.user_id = ?', [stadiumId, userId]) : [[]];
 
@@ -35,7 +37,7 @@ const handleLoadStadiumInfo = async (req, res) => {
                 capacity: stadium[0].capacity,
                 openedDate: stadium[0].opened_date,
                 constructionCost: stadium[0].construction_cost,
-                visits: stadium[0].visits,
+                visits: visits[0].visits,
             },
             teams: stadium.map(({ team_name, league_name }) => ({
                 team_name,

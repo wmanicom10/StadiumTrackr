@@ -1,4 +1,4 @@
-const db = require('../config/db.js');
+const db = require('../database/connection.js');
 
 const handleSearchStadiums = async (req, res) => {
     const { name } = req.body;
