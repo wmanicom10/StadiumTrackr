@@ -705,15 +705,13 @@ label img:hover {
     border: none;
     height: 60px;
     border-radius: 35px;
-    padding-left: 21px;
+    padding-left: 20px;
     z-index: 10;
-    width: 550px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
+    background: #313440;
     border: 1px solid rgba(79, 172, 254, 0.2);
     color: #e4e6eb;
-    font-size: 1.1rem;
+    font-size: 0.95rem;
 }
 
 #search-wrapper {
@@ -724,6 +722,8 @@ label img:hover {
 
 #home-search-field:focus {
     outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
 }
 
 #home-search-field::placeholder {
@@ -732,54 +732,60 @@ label img:hover {
 }
 
 #autocomplete-list {
-    display: none;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.2);
-    border-radius: 35px;
-    backdrop-filter: blur(40px);
-    width: 550px;
-    margin: 1px auto 0;
+    width: 100%;
+    background: #2D3142;
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    margin: 8px auto 0;
     z-index: 1001;
+    padding: 0 !important;
     text-align: left;
-    padding: 0;
-    padding-top: 10px;
     position: absolute;
     top: 100%;
     max-height: 285px;
     overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(79, 172, 254, 0.3) transparent;
+}
+
+#autocomplete-list.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#autocomplete-list::-webkit-scrollbar {
+    width: 4px;
+}
+#autocomplete-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+#autocomplete-list::-webkit-scrollbar-thumb {
+    background: rgba(79, 172, 254, 0.3);
+    border-radius: 4px;
 }
 
 #autocomplete-list a {
-    color: black;
     text-decoration: none;
-}
-
-#autocomplete-list a .search-result h4 {
-    margin: 0;
-    font-size: 1.1rem;
-    width: 97%;
-    padding: 8px 10px;
-    border-radius: 35px;
-    color: #e4e6eb;
-    font-weight: normal;
-}
-
-.search-result {
-    margin-bottom: 10px;
 }
 
 #autocomplete-list .search-result h4 {
     margin: 0;
-    font-size: 15px;
+    font-size: 0.95rem;
     color: #e4e6eb;
-    padding: 8px 10px;
     border: 1px solid transparent;
     font-weight: normal;
+    transition: all 0.2s ease;
+    padding: 15px 20px;
 }
 
 #autocomplete-list a .search-result h4:hover {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: rgba(79, 172, 254, 0.15);
     color: #4facfe;
 }
 
@@ -1320,6 +1326,26 @@ footer h5 {
 #results-count {
     color: #8b92a8;
     font-size: 0.95rem;
+    margin-right: 40px;
+}
+
+.filter-actions #search-stadiums {
+    flex: 1;
+}
+
+.filter-actions #search-wrapper {
+    width: 100%;
+    margin: 0;
+}
+
+.filter-actions #home-search-field {
+    width: 100%;
+    height: 44px;
+    font-size: 1rem;
+}
+
+.filter-actions #home-search-field::placeholder {
+    font-size: 1rem;
 }
 
 /*  Stadiums List  */
@@ -1335,6 +1361,7 @@ footer h5 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    transition: opacity 0.2s ease;
 }
 
 .stadiums-list-stadium {
@@ -1778,8 +1805,9 @@ footer h5 {
     margin: 0;
     color: #e4e6eb;
     text-decoration: none;
-    font-size: 1.9rem;
+    font-size: 1.7rem;
     padding: 10px 0;
+    font-weight: normal;
 }
 
 #user-home-stadiums-container, #user-home-wishlist-container {
@@ -2716,7 +2744,7 @@ footer h5 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     position: relative;
     z-index: 1000;
-    height: 180px;
+    height: 183px;
 }
 
 #stadiums-container-skeleton {
@@ -3277,12 +3305,10 @@ footer h5 {
         width: 100%;
     }
     #home-search-field {
-        width: 100%;
-        max-width: 550px;
+        width: 100% !important;
     }
     #autocomplete-list {
-        width: 100%;
-        max-width: 450px;
+        width: 100% !important;
     }
     .activity-item {
         width: 95% !important;
@@ -3400,8 +3426,8 @@ footer h5 {
     .clear-filters {
         width: 100%;
     }
-    .results-count {
-        text-align: center;
+    #results-count {
+        margin: 10px 0 !important;
     }
 }
 
@@ -3465,11 +3491,9 @@ footer h5 {
     }
     #home-search-field {
         width: 100%;
-        max-width: 550px;
     }
     #autocomplete-list {
         width: 100%;
-        max-width: 450px;
     }
     #filter-bar, #filter-bar-skeleton {
         max-width: 93%;

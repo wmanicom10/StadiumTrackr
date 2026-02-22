@@ -93,9 +93,7 @@ export async function searchStadiums(name, suggestionsContainer, searchValue) {
 
 function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
     suggestionsContainer.innerHTML = '';
-    suggestionsContainer.style.display = 'block';
-    suggestionsContainer.style.paddingLeft = '11px';
-    suggestionsContainer.style.paddingBottom = '1px';
+    suggestionsContainer.classList.add('active');
 
     if (stadiums.length === 0) {
         const searchResult = createSearchResultElement('No stadiums found');
@@ -122,7 +120,7 @@ function createSearchResultElement(text, isLink = false) {
 
 function createStadiumLinkElement(stadium, searchValue) {
     const stadiumLink = document.createElement('a');
-    stadiumLink.href = `stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}`;
+    stadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
     
     const searchResult = createSearchResultElement(stadium.stadium_name);
     stadiumLink.appendChild(searchResult);
@@ -139,7 +137,7 @@ export function createUserStadiumElement(stadium) {
     userStadium.classList.add('user-stadium');
 
     const userStadiumLink = document.createElement('a');
-    userStadiumLink.href = `stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}`;
+    userStadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
     const userStadiumImage = document.createElement('img');
     userStadiumImage.src = stadium.image;

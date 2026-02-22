@@ -71,13 +71,15 @@ function initializeStadiumMap(latitude, longitude, stadiumName) {
         .bindPopup(`<div class="popup-card"><h4>${stadiumName}</h4></div>`);
 }
 
-async function loadStadiumInfo(name, username) {
+async function loadStadiumInfo(id, username) {
     try {
-        const result = await stadiumAPI.loadStadiumInfo(name, username);
+        const result = await stadiumAPI.loadStadiumInfo(id, username);
         const { stadium, teams, userVisited, userWishlist } = result.stadiumInfo;
 
         elements.stadiumName.textContent = stadium.name;
         elements.stadiumImage.src = stadium.image;
+
+        document.title = `${stadium.name} - StadiumTrackr`;
         
         await new Promise(resolve => {
             if (elements.stadiumImage.complete) resolve();
@@ -93,16 +95,17 @@ async function loadStadiumInfo(name, username) {
         elements.stadiumConstructionCost.textContent = stadium.constructionCost;
         elements.stadiumVisits.textContent = stadium.visits;
 
-        setupUserControls(name, username, userVisited, userWishlist);
-        
-        setupAddStadiumModal(name, username, stadium.image);
+        setupUserControls(id, stadium.name, username, userVisited, userWishlist);
+        setupAddStadiumModal(id, stadium.name, username, stadium.image);
+
+        return stadium.name;
 
     } catch (error) {
         alert(error.message);
     }
 }
 
-function setupUserControls(stadiumName, username, userVisited, userWishlist) {
+function setupUserControls(stadiumId, stadiumName, username, userVisited, userWishlist) {
     const hasLogged = userVisited.some(activity => activity.visited_on !== null);
     let isWishlist = userWishlist.length > 0;
     let isVisited = userVisited.length > 0;
@@ -110,14 +113,14 @@ function setupUserControls(stadiumName, username, userVisited, userWishlist) {
     updateWishlistUI(isWishlist);
     
     if (hasLogged) {
-        replaceVisitedWithLoggedLink(stadiumName);
+        replaceVisitedWithLoggedLink(stadiumId);
     } else {
         updateVisitedUI(isVisited);
-        setupVisitedClickHandler(stadiumName, username, isVisited, isWishlist);
+        setupVisitedClickHandler(stadiumId, username, isVisited, isWishlist);
     }
 
-    setupWishlistClickHandler(stadiumName, username, isWishlist);
-    setupStadiumButtons(stadiumName, username);
+    setupWishlistClickHandler(stadiumId, username, isWishlist);
+    setupStadiumButtons(stadiumId, stadiumName, username);
 }
 
 function updateWishlistUI(isWishlist) {
@@ -130,9 +133,9 @@ function updateVisitedUI(isVisited) {
     elements.userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
 }
 
-function replaceVisitedWithLoggedLink(stadiumName) {
+function replaceVisitedWithLoggedLink(stadiumId) {
     const visitLink = document.createElement('a');
-    visitLink.href = `user-activity.html?stadium=${encodeURIComponent(stadiumName)}`;
+    visitLink.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
     visitLink.className = 'stadium-user-control';
     visitLink.id = 'stadium-user-control-visited';
     visitLink.innerHTML = `
@@ -142,7 +145,7 @@ function replaceVisitedWithLoggedLink(stadiumName) {
     elements.stadiumUserControlVisited.parentNode.replaceChild(visitLink, elements.stadiumUserControlVisited);
 }
 
-function setupVisitedClickHandler(stadiumName, username, initialIsVisited, initialIsWishlist) {
+function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initialIsWishlist) {
     let isVisited = initialIsVisited;
     let isWishlist = initialIsWishlist;
 
@@ -160,7 +163,7 @@ function setupVisitedClickHandler(stadiumName, username, initialIsVisited, initi
             
             if (newIsVisited && isWishlist) {
                 animateWishlistRemoval();
-                activityAPI.updateUserWishlist(stadiumName, username, true)
+                activityAPI.updateUserWishlist(stadiumId, username, true)
                     .catch(error => alert(error.message));
                 isWishlist = false;
             }
@@ -171,7 +174,7 @@ function setupVisitedClickHandler(stadiumName, username, initialIsVisited, initi
         }, 400);
 
         try {
-            await activityAPI.updateUserStadium(stadiumName, username, isVisited);
+            await activityAPI.updateUserStadium(stadiumId, username, isVisited);
             isVisited = newIsVisited;
         } catch (error) {
             alert(error.message);
@@ -191,7 +194,7 @@ function animateWishlistRemoval() {
     }, 400);
 }
 
-function setupWishlistClickHandler(stadiumName, username, initialIsWishlist) {
+function setupWishlistClickHandler(stadiumId, username, initialIsWishlist) {
     let isWishlist = initialIsWishlist;
 
     elements.stadiumUserControlWishlist.addEventListener('click', async () => {
@@ -212,7 +215,7 @@ function setupWishlistClickHandler(stadiumName, username, initialIsWishlist) {
         }, 400);
 
         try {
-            await activityAPI.updateUserWishlist(stadiumName, username, isWishlist);
+            await activityAPI.updateUserWishlist(stadiumId, username, isWishlist);
             isWishlist = newIsWishlist;
         } catch (error) {
             alert(error.message);
@@ -220,7 +223,7 @@ function setupWishlistClickHandler(stadiumName, username, initialIsWishlist) {
     });
 }
 
-function setupStadiumButtons(stadiumName, username) {
+function setupStadiumButtons(stadiumId, username) {
     elements.stadiumLogButton.addEventListener('click', () => {
         if (!username) {
             toggleMenu(createAccountMenu, true, overlay);
@@ -236,10 +239,10 @@ function setupStadiumButtons(stadiumName, username) {
         }
     });
 
-    elements.stadiumActivityButton.href = `user-activity.html?stadium=${encodeURIComponent(stadiumName)}`;
+    elements.stadiumActivityButton.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
 }
 
-function setupAddStadiumModal(stadiumName, username, stadiumImage) {
+function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage) {
     elements.addStadiumName.textContent = stadiumName;
     elements.addStadiumImage.src = stadiumImage;
 
@@ -252,7 +255,7 @@ function setupAddStadiumModal(stadiumName, username, stadiumImage) {
         const note = elements.addStadiumNote.value.trim() || null;
 
         try {
-            await activityAPI.addStadium(stadiumName, username, dateVisited, note);
+            await activityAPI.addStadium(stadiumId, username, dateVisited, note);
             window.location.reload();
         } catch (error) {
             alert(error.message);
@@ -268,9 +271,9 @@ function setupAddStadiumModal(stadiumName, username, stadiumImage) {
     });
 }
 
-async function loadStadiumMap(name) {
+async function loadStadiumMap(id) {
     try {
-        const result = await stadiumAPI.loadStadiumMap(name);
+        const result = await stadiumAPI.loadStadiumMap(id);
         const stadium = result.result;
 
         window.stadiumMapData = {
@@ -285,10 +288,16 @@ async function loadStadiumMap(name) {
 
 async function loadUpcomingEvents(name) {
     const apiKey = 'WIKkbzK6ciettoJD7CfKieFrtP8BqcvJ';
+
+    let stadiumName = name;
+
+    if (name === "Allegacy Federal Credit Union Stadium") {
+        stadiumName = 'Allegacy Federal Credit Union Stadium at Wake Forest';
+    }
     
     try {
         const venueResponse = await fetch(
-            `https://app.ticketmaster.com/discovery/v2/venues.json?keyword=${name}&apikey=${apiKey}`
+            `https://app.ticketmaster.com/discovery/v2/venues.json?keyword=${stadiumName}&apikey=${apiKey}`
         );
         const venueData = await venueResponse.json();
         const venueId = venueData._embedded.venues[0].id;
@@ -297,6 +306,8 @@ async function loadUpcomingEvents(name) {
             `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${venueId}&apikey=${apiKey}`
         );
         const eventsData = await eventsResponse.json();
+
+        console.log(eventsData);
         
         renderUpcomingEvents(eventsData._embedded?.events);
     } catch (error) {
@@ -380,12 +391,13 @@ function formatEventTime(timeString) {
     });
 }
 
-async function loadFullStadiumPage(name, username) {
+async function loadFullStadiumPage(id, username) {
     try {
-        const [, , ,] = await Promise.all([
-            loadStadiumInfo(name, username),
-            loadStadiumMap(name),
-            loadUpcomingEvents(name),
+        const stadiumName = await loadStadiumInfo(id, username);
+        
+        await Promise.all([
+            loadStadiumMap(id),
+            loadUpcomingEvents(stadiumName),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
 
@@ -420,10 +432,9 @@ window.onload = async () => {
     }
 
     const urlParams = new URLSearchParams(window.location.search);
-    const name = urlParams.get('stadium');
-    document.title = `${name} - StadiumTrackr`;
+    const id = urlParams.get('id');
     
-    loadFullStadiumPage(name, username);
+    loadFullStadiumPage(id, username);
 };
 
 const { logOutButton, sidebarLogOutButton } = getHeaderElements();

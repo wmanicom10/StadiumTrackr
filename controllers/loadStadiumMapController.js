@@ -1,10 +1,10 @@
 const db = require('../database/connection.js');
 
 const handleLoadStadiumMap = async (req, res) => {
-    const { name } = req.body;
+    const { id } = req.body;
 
     try {
-        const [rows] = await db.execute('SELECT stadium_name, street_address, city, state, zip, image, latitude, longitude FROM stadiums WHERE stadium_name = ?', [name]);
+        const [rows] = await db.execute('SELECT stadium_name, street_address, city, state, zip, image, latitude, longitude FROM stadiums WHERE stadium_id = ?', [id]);
 
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Could not load stadium map' });

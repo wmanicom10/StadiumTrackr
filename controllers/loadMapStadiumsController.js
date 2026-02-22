@@ -2,13 +2,14 @@ const db = require('../database/connection.js');
 
 const handleLoadMapStadiums = async (req, res) => {
     try {
-        const [rows] = await db.execute('SELECT stadium_name, street_address, city, state, zip, latitude, longitude, image FROM stadiums order by stadium_id');
+        const [rows] = await db.execute('SELECT stadium_id, stadium_name, street_address, city, state, zip, latitude, longitude, image FROM stadiums order by stadium_id');
 
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Could not load stadiums' });
         }
 
         const formattedRows = rows.map(row => ({
+            stadium_id: row.stadium_id,
             stadium_name: row.stadium_name,
             address: `${row.street_address}, ${row.city}, ${row.state} ${row.zip}`,
             location: [row.latitude, row.longitude],

@@ -8,5 +8,8 @@
     "express-session": "^1.18.1",
     "firebase": "^11.4.0",
     "mysql2": "^3.13.0"
-  }
+  },
+  "scripts": {
+  "start": "node --no-deprecation server.js"
+}
 }

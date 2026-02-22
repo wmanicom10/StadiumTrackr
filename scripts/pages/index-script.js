@@ -43,11 +43,23 @@ function initializeMap(stadiums) {
     }).addTo(map);
 
     stadiums.forEach(stadium => {
-        const imageSlug = stadium.stadium_name
+        let imageSlug = stadium.stadium_name
             .toLowerCase()
             .replace(/\s+/g, '-')
             .replace(/'/g, '')
             .replace(/\./g, '');
+        
+        if (stadium.stadium_name === 'Memorial Stadium') {
+            if (stadium.address.includes("Bloomington")) {
+                imageSlug += '-indiana';
+            }
+            else if (stadium.address.includes("Clemson")) {
+                imageSlug += '-clemson';
+            }
+            else if (stadium.address.includes("Lincoln")) {
+                imageSlug += '-nebraska';
+            }
+        }
 
         L.marker(stadium.location, { icon: customIcon })
             .addTo(map)
@@ -55,7 +67,7 @@ function initializeMap(stadiums) {
                 <div class="popup-card">
                     <h4>${stadium.stadium_name}</h4>
                     <p>${stadium.address}</p>
-                    <a href="stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}">
+                    <a href="stadium.html?id=${encodeURIComponent(stadium.stadium_id)}">
                         <img src="images/stadiums/${imageSlug}.jpg" alt="${stadium.stadium_name}" />
                     </a>
                 </div>
@@ -65,9 +77,9 @@ function initializeMap(stadiums) {
 
 function initializePopularStadiums() {
     Array.from(popularStadiums).forEach(stadium => {
-        const stadiumName = stadium.querySelector('h3').textContent;
+        const stadiumId = stadium.dataset.stadiumId;
         const link = stadium.querySelector('a');
-        link.href = `stadium.html?stadium=${encodeURIComponent(stadiumName)}`;
+        link.href = `stadium.html?id=${encodeURIComponent(stadiumId)}`;
     });
 }
 

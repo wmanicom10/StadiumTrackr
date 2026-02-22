@@ -16,11 +16,11 @@ async function fetchAPI(endpoint, body) {
 }
 
 export const stadiumAPI = {
-    loadStadiumInfo: (name, username) =>
-        fetchAPI(ROUTES.STADIUM_INFO, { name, username }),
+    loadStadiumInfo: (id, username) =>
+        fetchAPI(ROUTES.STADIUM_INFO, { id, username }),
 
-    loadStadiumMap: (name) =>
-        fetchAPI(ROUTES.STADIUM_MAP, { name }),
+    loadStadiumMap: (id) =>
+        fetchAPI(ROUTES.STADIUM_MAP, { id }),
 
     searchStadiums: (name) =>
         fetchAPI(ROUTES.STADIUM_SEARCH, { name }),

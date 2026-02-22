@@ -146,7 +146,7 @@ function initializeUserHomeMap(stadiums) {
                 <div class="popup-card">
                     <h4>${stadium.stadium_name}</h4>
                     <p>${stadium.address}</p>
-                    <a href="stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}">
+                    <a href="stadium.html?id=${encodeURIComponent(stadium.stadium_id)}">
                         <img src="images/stadiums/${imageSlug}.jpg" alt="${stadium.stadium_name}" />
                     </a>
                 </div>

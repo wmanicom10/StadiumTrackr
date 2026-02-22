@@ -1,5 +1,5 @@
 const db = require('../database/connection.js');
-const { getUserId, getStadiumId } = require('../database/dbHelpers.js');
+const { getUserId } = require('../database/dbHelpers.js');
 
 async function updateAchievementProgress(name, username, isVisited) {
     if (!isVisited) {
@@ -162,15 +162,14 @@ async function updateAchievementProgress(name, username, isVisited) {
 }
 
 const handleUpdateUserStadium = async (req, res) => {
-    const { name, username, isVisited } = req.body;
+    const { stadiumId, username, isVisited } = req.body;
 
-    if (!name || !username) {
-        return res.status(400).json({ error: 'Stadium name and username are required' });
+    if (!stadiumId || !username) {
+        return res.status(400).json({ error: 'Stadium id and username are required' });
     }
 
     try {
         const userId = await getUserId(username);
-        const stadiumId = await getStadiumId(name);
 
         if (!userId || !stadiumId) {
             return res.status(404).json({ error: 'User or stadium not found' });
@@ -196,15 +195,14 @@ const handleUpdateUserStadium = async (req, res) => {
 };
 
 const handleUpdateUserWishlist = async (req, res) => {
-    const { name, username, isWishlist } = req.body;
+    const { stadiumId, username, isWishlist } = req.body;
 
-    if (!name || !username) {
-        return res.status(400).json({ error: 'Stadium name and username are required' });
+    if (!stadiumId || !username) {
+        return res.status(400).json({ error: 'Stadium id and username are required' });
     }
 
     try {
         const userId = await getUserId(username);
-        const stadiumId = await getStadiumId(name);
 
         if (!userId || !stadiumId) {
             return res.status(404).json({ error: 'User or stadium not found' });

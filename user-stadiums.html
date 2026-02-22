@@ -108,6 +108,7 @@
                                     <div class="custom-select-option" data-value="nhl">NHL</div>
                                     <div class="custom-select-option" data-value="mls">MLS</div>
                                     <div class="custom-select-option" data-value="wnba">WNBA</div>
+                                    <div class="custom-select-option" data-value="ncaaf">NCAAF</div>
                                 </div>
                                 <select class="filter-select" id="league-filter">
                                     <option value="all">All Leagues</option>
@@ -117,6 +118,7 @@
                                     <option value="nhl">NHL</option>
                                     <option value="mls">MLS</option>
                                     <option value="wnba">WNBA</option>
+                                    <option value="ncaaf">NCAAF</option>
                                 </select>
                             </div>
                         </div>
@@ -174,6 +176,11 @@
                     <div class="filter-actions">
                         <button class="clear-filters" id="clear-filters">Clear Filters</button>
                         <div id="results-count"></div>
+                        <form id="search-stadiums" autocomplete="off">
+                            <div id="search-wrapper">
+                                <input type="text" placeholder="Search my stadiums..." id="home-search-field">
+                            </div>
+                        </form>
                     </div>
                 </div>
 

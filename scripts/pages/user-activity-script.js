@@ -101,7 +101,7 @@ function createActivityHeader(activity) {
     const nameLink = document.createElement('a');
     nameLink.classList.add('activity-details-name');
     nameLink.textContent = activity.stadium_name;
-    nameLink.href = `stadium.html?stadium=${encodeURIComponent(activity.stadium_name)}`;
+    nameLink.href = `stadium.html?id=${encodeURIComponent(activity.stadium_id)}`;
 
     const time = document.createElement('span');
     time.classList.add('activity-details-time');

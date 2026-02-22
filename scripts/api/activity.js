@@ -16,14 +16,14 @@ async function fetchAPI(endpoint, body) {
 }
 
 export const activityAPI = {
-    updateUserStadium: (name, username, isVisited) =>
-        fetchAPI('/activity/updateUserStadium', { name, username, isVisited }),
+    updateUserStadium: (stadiumId, username, isVisited) =>
+        fetchAPI('/activity/updateUserStadium', { stadiumId, username, isVisited }),
 
-    updateUserWishlist: (name, username, isWishlist) =>
-        fetchAPI('/activity/updateUserWishlist', { name, username, isWishlist }),
+    updateUserWishlist: (stadiumId, username, isWishlist) =>
+        fetchAPI('/activity/updateUserWishlist', { stadiumId, username, isWishlist }),
 
-    addStadium: (name, username, dateVisited, note) =>
-        fetchAPI('/activity/addStadium', { name, username, dateVisited, note }),
+    addStadium: (stadiumId, username, dateVisited, note) =>
+        fetchAPI('/activity/addStadium', { stadiumId, username, dateVisited, note }),
 
     editLog: (visitId, editDateVisited, editNote) =>
         fetchAPI('/activity/editLog', { visitId, editDateVisited, editNote }),

@@ -50,7 +50,7 @@ function createStadiumCard(stadium) {
     card.classList.add('stadiums-list-stadium');
     
     const link = document.createElement('a');
-    link.href = `stadium.html?stadium=${encodeURIComponent(stadium.stadium_name)}`;
+    link.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
     
     const img = document.createElement('img');
     img.src = stadium.image;
@@ -308,10 +308,8 @@ function setupSearchAutocomplete() {
 }
 
 function hideSearchSuggestions(container, input) {
-    container.style.display = 'none';
+    container.classList.remove('active');
     input.value = '';
-    input.style.borderBottomLeftRadius = '35px';
-    input.style.borderBottomRightRadius = '35px';
 }
 
 function setupFilterHandlers() {
