@@ -1,5 +1,5 @@
 const db = require('../database/connection.js');
-const { getStadiumId, getUserId } = require('../database/dbHelpers.js');
+const { getUserId } = require('../database/dbHelpers.js');
 
 const handleAddStadium = async (req, res) => {
     const { stadiumId, username, dateVisited, note } = req.body;

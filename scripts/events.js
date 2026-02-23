@@ -1,5 +1,78 @@
-import { toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
+/*  Imports  */
+import { clearUsername, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
+import { getHeaderElements } from "./constants.js";
 import { authAPI } from "./api/auth.js";
+
+/*  Async Functions  */
+async function handleLogin() {
+    const { username, password } = getLoginFormData();
+    
+    const error = validateLoginForm(username, password);
+    if (error) {
+        alert(error);
+        return;
+    }
+
+    try {
+        const result = await authAPI.login(username, password);
+        
+        localStorage.setItem('username', result.username);
+        window.location.replace('user-home.html');
+    } catch (error) {
+        alert(error.message || 'Login failed. Please try again.');
+    }
+}
+
+async function handleSignup() {
+    const { email, username, password, termsAccepted } = getSignupFormData();
+    
+    const errors = validateSignupForm(email, username, password, termsAccepted);
+    if (errors.length > 0) {
+        alert(errors[0]);
+        return;
+    }
+
+    try {
+        await authAPI.signup(email, username, password);
+        
+        localStorage.setItem('username', username);
+        window.location.replace('user-home.html');
+    } catch (error) {
+        console.error('Signup error:', error);
+        alert(error.message || 'There was an error creating your account. Please try again later.');
+    }
+}
+
+/*  Functions  */
+function getLoginFormData() {
+    return {
+        username: document.getElementById('username')?.value.trim() || '',
+        password: document.getElementById('password')?.value.trim() || ''
+    };
+}
+
+function getSignupFormData() {
+    return {
+        email: document.getElementById('new-email')?.value.trim() || '',
+        username: document.getElementById('new-username')?.value.trim() || '',
+        password: document.getElementById('new-password')?.value.trim() || '',
+        termsAccepted: document.getElementById('terms-and-conditions')?.checked || false
+    };
+}
+
+function handleMenuSwitch(fromMenu, toMenu, overlay) {
+    toggleMenu(fromMenu, false, overlay, true);
+    setTimeout(() => {
+        toggleMenu(toMenu, true, overlay, true);
+    }, 200);
+}
+
+function validateLoginForm(username, password) {
+    if (!username || !password) {
+        return 'Please fill in all fields';
+    }
+    return null;
+}
 
 function validateSignupForm(email, username, password, termsAccepted) {
     const errors = [];
@@ -31,73 +104,30 @@ function validateSignupForm(email, username, password, termsAccepted) {
     return errors;
 }
 
-function validateLoginForm(username, password) {
-    if (!username || !password) {
-        return 'Please fill in all fields';
-    }
-    return null;
-}
+/*  Exported Functions  */
+export function registerCommonEvents() {
+    const sidebarToggles = [
+        document.getElementById('sidebar-active'),
+        document.getElementById('sidebar-active-logged-in')
+    ];
 
-function getSignupFormData() {
-    return {
-        email: document.getElementById('new-email')?.value.trim() || '',
-        username: document.getElementById('new-username')?.value.trim() || '',
-        password: document.getElementById('new-password')?.value.trim() || '',
-        termsAccepted: document.getElementById('terms-and-conditions')?.checked || false
-    };
-}
+    window.addEventListener('resize', () => {
+        sidebarToggles.forEach(toggle => {
+            if (toggle?.checked) {
+                toggle.checked = false;
+            }
+        });
+    });
 
-function getLoginFormData() {
-    return {
-        username: document.getElementById('username')?.value.trim() || '',
-        password: document.getElementById('password')?.value.trim() || ''
-    };
-}
-
-async function handleSignup() {
-    const { email, username, password, termsAccepted } = getSignupFormData();
-    
-    const errors = validateSignupForm(email, username, password, termsAccepted);
-    if (errors.length > 0) {
-        alert(errors[0]);
-        return;
-    }
-
-    try {
-        await authAPI.signup(email, username, password);
-        
-        localStorage.setItem('username', username);
-        window.location.replace('user-home.html');
-    } catch (error) {
-        console.error('Signup error:', error);
-        alert(error.message || 'There was an error creating your account. Please try again later.');
-    }
-}
-
-async function handleLogin() {
-    const { username, password } = getLoginFormData();
-    
-    const error = validateLoginForm(username, password);
-    if (error) {
-        alert(error);
-        return;
-    }
-
-    try {
-        const result = await authAPI.login(username, password);
-        
-        localStorage.setItem('username', result.username);
-        window.location.replace('user-home.html');
-    } catch (error) {
-        alert(error.message || 'Login failed. Please try again.');
-    }
-}
-
-function handleMenuSwitch(fromMenu, toMenu, overlay) {
-    toggleMenu(fromMenu, false, overlay, true);
-    setTimeout(() => {
-        toggleMenu(toMenu, true, overlay, true);
-    }, 200);
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const activeModals = document.querySelectorAll('.menu[style*="display: block"]');
+            activeModals.forEach(modal => {
+                const overlay = document.getElementById('overlay');
+                toggleMenu(modal, false, overlay);
+            });
+        }
+    });
 }
 
 export function registerEventListeners({
@@ -171,27 +201,29 @@ export function registerEventListeners({
     );
 }
 
-export function registerCommonEvents() {
-    const sidebarToggles = [
-        document.getElementById('sidebar-active'),
-        document.getElementById('sidebar-active-logged-in')
-    ];
+export function registerLogOutEvents() {
+    const { logOutButton, sidebarLogOutButton } = getHeaderElements();
 
-    window.addEventListener('resize', () => {
-        sidebarToggles.forEach(toggle => {
-            if (toggle?.checked) {
-                toggle.checked = false;
-            }
-        });
+    logOutButton?.addEventListener('click', () => {
+        clearUsername();
+        window.location.reload();
     });
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            const activeModals = document.querySelectorAll('.menu[style*="display: block"]');
-            activeModals.forEach(modal => {
-                const overlay = document.getElementById('overlay');
-                toggleMenu(modal, false, overlay);
-            });
-        }
+    sidebarLogOutButton?.addEventListener('click', () => {
+        clearUsername();
+        window.location.reload();
+    });
+}
+
+export function registerUserLogOutEvents() {
+    const { logOutButton, sidebarLogOutButton } = getHeaderElements();
+
+    logOutButton?.addEventListener('click', () => {
+        clearUsername();
+        window.location.replace('index.html');
+    });
+    sidebarLogOutButton?.addEventListener('click', () => {
+        clearUsername();
+        window.location.replace('index.html');
     });
 }

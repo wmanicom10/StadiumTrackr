@@ -1,3 +1,27 @@
+@import url('keyframes.css');
+@import url('media-queries.css');
+
+:root {
+    --color-blue: #4facfe;
+    --color-text: #e4e6eb;
+    --color-text-muted: #8b92a8;
+    --color-danger: #ff4f4f;
+    --color-bg-dark: #1a1d29;
+    --color-bg-mid: #2d3142;
+
+    --color-primary-10: rgba(79, 172, 254, 0.1);
+    --color-primary-15: rgba(79, 172, 254, 0.15);
+    --color-primary-20: rgba(79, 172, 254, 0.2);
+    --color-primary-30: rgba(79, 172, 254, 0.3);
+    --color-secondary: rgba(255, 255, 255, 0.03);
+    --color-danger-20: rgba(255, 79, 79, 0.2);
+    --color-danger-40: rgba(255, 79, 79, 0.4);
+
+    --shadow-default: 0 4px 8px rgba(0, 0, 0, 0.4);
+    --gradient-bg: linear-gradient(135deg, var(--color-bg-dark) 0%, var(--color-bg-mid) 100%);
+    --gradient-text: linear-gradient(135deg, var(--color-text) 0%, var(--color-blue) 100%);
+}
+
 /*  General  */
 * {
     box-sizing: border-box;
@@ -5,10 +29,10 @@
 
 body {
     font-family: "Inter", sans-serif;
-    color: #e4e6eb;
+    color: var(--color-text);
     margin: 0;
     overflow-x: hidden;
-    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
+    background: var(--gradient-bg);
 }
 
 #overlay {
@@ -24,15 +48,15 @@ body {
 #create-account-menu, #log-in-menu {
     position: fixed;
     width: 428px;
-    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--gradient-bg);
+    border: 1px solid var(--color-primary-30);
     z-index: 10001;
     display: none;
     top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 25px;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 #log-in-menu {
@@ -48,7 +72,7 @@ body {
     font-size: 30px;
     font-weight: normal;
     margin-bottom: 0;
-    color: #4facfe;
+    color: var(--color-blue);
 }
 
 #close-create-account-menu, #close-log-in-menu {
@@ -57,13 +81,13 @@ body {
     left: 380px;
     top: 1px;
     font-weight: normal;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     cursor: pointer;
 }
 
 #close-create-account-menu:hover, #close-log-in-menu:hover {
     cursor: pointer;
-    color: #4facfe;
+    color: var(--color-blue);
 }
 
 #create-account-form, #log-in-form{
@@ -79,21 +103,21 @@ body {
     border-radius: 20px;
     border: none;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.2);
+    border: 1px solid var(--color-primary-20);
     font-size: 16px;
     padding: 0 10px 0 20px;
     margin-top: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 .input-field::placeholder {
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 .input-field:focus {
     outline: none;
-    caret-color: #e4e6eb;
+    caret-color: var(--color-text);
 }
 
 #log-in-form span, #create-account-menu span {
@@ -113,9 +137,9 @@ body {
 }
 
 #sign-up-button, #log-in-button {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
     font-size: 20px;
     width: 325px;
     height: 40px;
@@ -126,11 +150,11 @@ body {
 
 #log-in-menu span span, #create-account-menu span span {
     display: inline;
-    color: #4facfe;
+    color: var(--color-blue);
 }
 
 #create-account-menu label a {
-    color: #e4e6eb;
+    color: var(--color-text);
     display: inline;
     text-decoration: underline;
 }
@@ -198,8 +222,8 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--gradient-bg);
+    border: 1px solid var(--color-primary-30);
     border-radius: 25px;
     z-index: 10001;
 }
@@ -209,7 +233,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 30px 40px;
-    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
 #add-stadium-menu-header h2 {
@@ -219,13 +243,13 @@ body {
 }
 
 #add-stadium-menu-header h2:first-of-type {
-    color: #4facfe;
+    color: var(--color-blue);
     font-weight: bold;
 }
 
 #close-add-stadium-menu {
     font-size: 2.2rem;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s;
     background: none;
@@ -235,7 +259,7 @@ body {
 }
 
 #close-add-stadium-menu:hover {
-    color: #4facfe;
+    color: var(--color-blue);
 }
 
 #add-stadium-name {
@@ -268,14 +292,14 @@ body {
     font-weight: normal;
     font-size: 1.1rem;
     margin: 0;
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 #add-stadium-date-visited {
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.2);
-    color: #e4e6eb;
+    border: 1px solid var(--color-primary-20);
+    color: var(--color-text);
     padding: 10px 20px;
     font-size: 1rem;
     margin: 10px 0 20px 0;
@@ -293,12 +317,12 @@ body {
     margin: 10px 0 20px 0;
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.2);
+    border: 1px solid var(--color-primary-20);
     width: 100%;
     padding: 20px;
     height: 161px !important;
     resize: none;
-    color: #e4e6eb;
+    color: var(--color-text);
     font-size: 18px;
     font-family: "Inter", sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -309,7 +333,7 @@ body {
 }
 
 #add-stadium-note::placeholder {
-    color: #8b92a8;
+    color: var(--color-text-muted);
     font-family: "Inter", sans-serif;
 }
 
@@ -334,20 +358,20 @@ body {
 }
 
 #add-stadium-log-button {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
 }
 
 #add-stadium-log-button:hover {
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     transform: translateY(-3px) translateZ(0);
 }
 
 #add-stadium-cancel-button {
-    background: rgba(255, 79, 79, 0.2);
-    border: 1px solid rgba(255, 79, 79, 0.4);
-    color: #ff4f4f;
+    background: var(--color-danger-20);
+    border: 1px solid var(--color-danger-40);
+    color: var(--color-danger);
 }
 
 #add-stadium-cancel-button:hover {
@@ -364,7 +388,7 @@ header {
     margin: 0;
     background: rgba(26, 29, 41, 0.8);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(79, 172, 254, 0.1);
+    border-bottom: 1px solid var(--color-primary-10);
     position: sticky;
     top: 0;
     z-index: 10000;
@@ -374,7 +398,7 @@ header h1 {
     font-size: 2rem;
     margin-left: 60px;
     font-weight: bold;
-    color: #4facfe;
+    color: var(--color-blue);
 }
 
 header h1:hover {
@@ -394,13 +418,13 @@ header h1:hover {
 }
 
 .nav-item a {
-    color: #e4e6eb;
+    color: var(--color-text);
     text-decoration: none;
     font-size: 1.2rem;
 }
 
 .nav-item a:hover {
-    color: #4facfe;
+    color: var(--color-blue);
 }
 
 .nav-item:hover {
@@ -408,19 +432,19 @@ header h1:hover {
 }
 
 .nav-item.button {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
     padding: 7px 25px;
     border-radius: 20px;
     margin: 0 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
-    color: #4facfe;
+    color: var(--color-blue);
     font-size: 1.2rem;
 }
 
 .nav-item.nav-item.button:hover {
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     transform: translateY(-3px);
 }
 
@@ -464,8 +488,8 @@ label img:hover {
     z-index: 1001;
     width: 160px;
     background: rgba(26, 29, 41, 1);
-    border-left: 1px solid rgba(79, 172, 254, 0.2);
-    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-left: 1px solid var(--color-primary-20);
+    border-bottom: 1px solid var(--color-primary-20);
     border-bottom-left-radius: 25px;
     transition: 0.6s ease-out;
 }
@@ -476,18 +500,16 @@ label img:hover {
 
 .links-container a {
     font-size: 20px;
-    padding: 10px 15px;
+    padding: 10px 20px;
     width: 100%;
-    border-radius: 25px;
     transition: background-color 0.1s ease-in;
     margin: 5px 0;
     border: 1px solid transparent;
 }
 
 .links-container a:hover {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-10);
+    color: var(--color-blue);
 }
 
 #logged-in-header-username {
@@ -510,7 +532,7 @@ label img:hover {
 
 .account-buttons {
     width: 82%;
-    margin: 0 auto 30px;
+    margin: 0 auto 20px;
     text-align: center;
     display: flex;
     flex-wrap: wrap;
@@ -521,18 +543,22 @@ label img:hover {
     display: inline-block;
     font-size: 17px;
     width: 130px;
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
     border-radius: 25px;
     padding: 10px 15px;
-    margin-top: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    margin-top: 5px;
+    box-shadow: var(--shadow-default);
     transition: all 0.3s ease;
 }
 
+.account-buttons span:nth-of-type(2) {
+    margin-top: 12px;
+}
+
 .account-buttons span:hover {
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     transform: translateY(-3px);
     cursor: pointer;
 }
@@ -559,12 +585,11 @@ label img:hover {
     position: absolute;
     top: -10px;
     left: -20px;
-    min-width: calc(100% + 20px);
-    width: max(100%, 185px);
+    min-width: calc(100% + 40px);
     background: rgba(45, 49, 66, 0.98);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    padding: 40px 0 5px;
+    border: 1px solid var(--color-primary-30);
+    padding: 60px 0 0;
     border-radius: 16px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     z-index: 100;
@@ -583,13 +608,17 @@ label img:hover {
 
 #logged-in-header-user-container-hidden a {
     display: block;
-    margin: 5px 10px;
-    padding: 12px 15px;
-    color: #e4e6eb;
-    border-radius: 25px;
+    width: 100%;
+    color: var(--color-text);
     text-decoration: none;
     transition: all 0.2s ease;
     border: 1px solid transparent;
+    padding: 15px 20px;
+}
+
+#logged-in-header-user-container-hidden a:last-of-type {
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
 }
 
 .user-dropdown-arrow {
@@ -598,14 +627,9 @@ label img:hover {
     margin-left: 8px;
 }
 
-#logged-in-header-user-container-hidden a:first-of-type {
-    margin: 25px 10px 5px;
-}
-
 #logged-in-header-user-container-hidden a:hover {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-15);
+    color: var(--color-blue);
 }
 
 #user-dropdown-wrapper {
@@ -629,15 +653,10 @@ label img:hover {
 }
 
 #sidebar-user-links, .sidebar-links {
-    margin: 0 10px;
-    width: 85%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     background: rgba(26, 29, 41, 1);
-}
-
-.sidebar-links a:first-of-type {
-    margin: 15px 0 5px;
 }
 
 #logged-out-header .sidebar-links a:first-of-type {
@@ -649,8 +668,7 @@ label img:hover {
 }
 
 #logged-in-header .sidebar-links {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
-    margin-top: 10px;
+    border-top: 1px solid var(--color-primary-20);
 }
 
 /*  Welcome Text  */
@@ -664,7 +682,7 @@ label img:hover {
     font-size: 2.5rem;
     font-weight: 600;
     line-height: 1.4;
-    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -679,23 +697,116 @@ label img:hover {
 #button-container h4 {
     font-size: 1.4rem;
     font-weight: normal;
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
     border-radius: 35px;
     padding: 14px 25px;
     margin: 0 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     transition: all 0.3s ease;
 }
 
 #button-container h4:hover {
     cursor: pointer;
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     transform: translateY(-3px);
 }
 
 /*  Stadium Search  */
+#home-stadium-search-container {
+    width: 95%;
+    margin: 40px auto;
+}
+
+#search-field-home {
+    border: none;
+    height: 60px;
+    border-radius: 35px;
+    padding-left: 21px;
+    z-index: 10;
+    width: 550px;
+    box-shadow: var(--shadow-default);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-primary-20);
+    color: var(--color-text);
+    font-size: 1.1rem;
+}
+
+#home-search-wrapper {
+    position: relative;
+    width: fit-content;
+    margin: 0 auto;
+}
+
+#search-field-home:focus {
+    outline: none;
+}
+
+#search-field-home::placeholder {
+    font-size: 1.1rem;
+    color: var(--color-text-muted);
+}
+
+#home-autocomplete-list {
+    width: 100%;
+    background: var(--color-bg-mid);
+    border: 1px solid var(--color-primary-30);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    margin: 8px auto 0;
+    z-index: 1001;
+    padding: 0 !important;
+    text-align: left;
+    position: absolute;
+    top: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-30) transparent;
+}
+
+#home-autocomplete-list.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#home-autocomplete-list::-webkit-scrollbar {
+    width: 4px;
+}
+#home-autocomplete-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+#home-autocomplete-list::-webkit-scrollbar-thumb {
+    background: var(--color-primary-30);
+    border-radius: 4px;
+}
+
+#home-autocomplete-list a {
+    text-decoration: none;
+}
+
+#home-autocomplete-list .search-result h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--color-text);
+    border: 1px solid transparent;
+    font-weight: normal;
+    transition: all 0.2s ease;
+    padding: 15px 20px;
+}
+
+#home-autocomplete-list a .search-result h4:hover {
+    background: var(--color-primary-15);
+    color: var(--color-blue);
+}
+
 #stadium-search-container {
     width: 95%;
     margin: 40px auto;
@@ -707,10 +818,10 @@ label img:hover {
     border-radius: 35px;
     padding-left: 20px;
     z-index: 10;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     background: #313440;
-    border: 1px solid rgba(79, 172, 254, 0.2);
-    color: #e4e6eb;
+    border: 1px solid var(--color-primary-20);
+    color: var(--color-text);
     font-size: 0.95rem;
 }
 
@@ -723,18 +834,18 @@ label img:hover {
 #home-search-field:focus {
     outline: none;
     border-color: rgba(79, 172, 254, 0.6);
-    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
 #home-search-field::placeholder {
     font-size: 1.1rem;
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 #autocomplete-list {
     width: 100%;
-    background: #2D3142;
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--color-bg-mid);
+    border: 1px solid var(--color-primary-30);
     border-radius: 16px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     margin: 8px auto 0;
@@ -750,7 +861,7 @@ label img:hover {
     transform: translateY(-10px);
     transition: all 0.3s ease;
     scrollbar-width: thin;
-    scrollbar-color: rgba(79, 172, 254, 0.3) transparent;
+    scrollbar-color: var(--color-primary-30) transparent;
 }
 
 #autocomplete-list.active {
@@ -766,7 +877,7 @@ label img:hover {
     background: transparent;
 }
 #autocomplete-list::-webkit-scrollbar-thumb {
-    background: rgba(79, 172, 254, 0.3);
+    background: var(--color-primary-30);
     border-radius: 4px;
 }
 
@@ -777,7 +888,7 @@ label img:hover {
 #autocomplete-list .search-result h4 {
     margin: 0;
     font-size: 0.95rem;
-    color: #e4e6eb;
+    color: var(--color-text);
     border: 1px solid transparent;
     font-weight: normal;
     transition: all 0.2s ease;
@@ -785,13 +896,13 @@ label img:hover {
 }
 
 #autocomplete-list a .search-result h4:hover {
-    background: rgba(79, 172, 254, 0.15);
-    color: #4facfe;
+    background: var(--color-primary-15);
+    color: var(--color-blue);
 }
 
 /*  Popular Stadiums  */
 #popular-stadiums-container {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 45px auto;
 }
@@ -800,7 +911,7 @@ label img:hover {
     margin: 30px auto 20px;
     text-align: center;
     font-size: 2rem;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 #popular-stadiums {
@@ -813,7 +924,7 @@ label img:hover {
     border-radius: 15px;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
     padding: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     margin: 10px 20px 25px;
     will-change: transform;
 }
@@ -828,9 +939,9 @@ label img:hover {
 }
 
 .popular-stadium-text {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     padding: 15px 0 15px 20px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -844,16 +955,16 @@ label img:hover {
 
 .popular-stadium-text h3 {
     font-size: 1.5rem;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 .popular-stadium-text h4 {
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 .popular-stadium a {
     text-decoration: none;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 .popular-stadium:hover {
@@ -863,7 +974,7 @@ label img:hover {
 
 /*  StadiumTrackr Info  */
 #stadium-trackr-container {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 0 auto;
 }
@@ -881,10 +992,10 @@ label img:hover {
 }
 
 .stadium-trackr-info {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.03);
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     width: 297.5px;
     text-align: center;
     border-radius: 25px;
@@ -916,13 +1027,13 @@ label img:hover {
 
 .stadium-trackr-info h4 {
     margin: 10px 22px 30px;
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 /*  Home Stadium Map  */
 #home-stadium-map-container {
     width: 95%;
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     margin: 20px auto;
 }
 
@@ -937,15 +1048,15 @@ label img:hover {
     margin: 0 auto;
     height: 500px;
     border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.03);
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
 }
 
 .leaflet-popup-content-wrapper {
-    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%) !important; 
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: var(--gradient-bg) !important; 
+    border: 1px solid var(--color-primary-15);
     width: 350px;
     border-radius: 10px;
     padding: 10px;
@@ -957,13 +1068,13 @@ label img:hover {
 }
 
 .leaflet-popup-tip {
-    background: rgba(255, 255, 255, 0.03) !important;
+    background: var(--color-secondary) !important;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
 }
 
 .leaflet-container a.leaflet-popup-close-button {
-    color: #e4e6eb !important;
+    color: var(--color-text) !important;
 }
 
 .leaflet-bottom {
@@ -989,32 +1100,32 @@ label img:hover {
     width: 35px !important;
     background: rgba(45, 49, 66, 0.95) !important;
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.3) !important;
+    border: 1px solid var(--color-primary-30) !important;
     transition: all 0.3s ease;
 }
 
 .leaflet-control-zoom-in:hover, .leaflet-control-zoom-out:hover {
-    background: rgba(79, 172, 254, 0.2) !important;
+    background: var(--color-primary-20) !important;
 }
 
 .leaflet-control-zoom-in span, .leaflet-control-zoom-out span {
     font-family: "Inter", sans-serif;
     font-weight: normal;
-    color: #e4e6eb;
+    color: var(--color-text);
     position: relative;
     display: block;
     padding-top: 5px !important;
 }
 
 .popup-card h4 {
-    color: #e4e6eb;
+    color: var(--color-text);
     margin: 0;
     font-size: 16px;
 }
 
 .popup-card p {
     margin: 10px 0 !important;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 .popup-card img {
@@ -1047,16 +1158,16 @@ footer {
     display: flex;
     justify-content: space-between;
     padding-bottom: 20px;
-    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
 .footer-item h4 {
-    color: #4facfe;
+    color: var(--color-blue);
     font-size: 1.2rem;
 }
 
 .footer-item h5 {
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 .footer-links h4 {
@@ -1070,7 +1181,7 @@ footer {
 
 .footer-links h5:hover {
     cursor: pointer;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 .footer-item {
@@ -1100,12 +1211,12 @@ footer h5 {
     margin: 0;
     padding: 12px 18px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.2);
-    color: #e4e6eb;
+    border: 1px solid var(--color-primary-20);
+    color: var(--color-text);
 }
 
 #email-field::placeholder {
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 #email-field:focus {
@@ -1115,19 +1226,19 @@ footer h5 {
 
 #subscribe-button {
     padding: 12px 25px;
-    background: rgba(79, 172, 254, 0.1);
-    border: 0.5px solid rgba(79, 172, 254, 0.3);
+    background: var(--color-primary-10);
+    border: 0.5px solid var(--color-primary-30);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     margin: 0;
     padding: 0 15px 0 12px;
-    color: #4facfe;
+    color: var(--color-blue);
     transition: background-color 0.1s ease-in-out;
 }
 
 #subscribe-button:hover {
     cursor: pointer;
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
 }
 
 #copyright {
@@ -1146,7 +1257,7 @@ footer h5 {
     font-size: 2.5rem;
     font-weight: 600;
     line-height: 1.4;
-    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1157,11 +1268,11 @@ footer h5 {
 #filter-bar {
     max-width: 960px;
     margin: 30px auto 50px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
 }
@@ -1175,7 +1286,7 @@ footer h5 {
 }
 
 .filter-label {
-    color: #8b92a8;
+    color: var(--color-text-muted);
     font-size: 0.95rem;
     font-weight: 500;
     margin-right: 5px;
@@ -1197,9 +1308,9 @@ footer h5 {
 .custom-select-trigger {
     padding: 12px 20px 12px 18px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.2);
+    border: 1px solid var(--color-primary-20);
     border-radius: 25px;
-    color: #e4e6eb;
+    color: var(--color-text);
     font-size: 1rem;
     font-family: "Inter", sans-serif;
     cursor: pointer;
@@ -1216,7 +1327,7 @@ footer h5 {
 
 .custom-select-trigger.active {
     border-color: rgba(79, 172, 254, 0.6);
-    box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
 .custom-select-arrow {
@@ -1236,7 +1347,7 @@ footer h5 {
     right: 0;
     background: rgba(45, 49, 66, 1);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    border: 1px solid var(--color-primary-30);
     border-radius: 16px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     z-index: 10001;
@@ -1261,7 +1372,7 @@ footer h5 {
     padding: 12px 18px;
     cursor: pointer;
     transition: all 0.2s ease;
-    color: #e4e6eb;
+    color: var(--color-text);
     font-size: 1rem;
 }
 
@@ -1276,13 +1387,13 @@ footer h5 {
 }
 
 .custom-select-option:hover {
-    background: rgba(79, 172, 254, 0.15);
-    color: #4facfe;
+    background: var(--color-primary-15);
+    color: var(--color-blue);
 }
 
 .custom-select-option.selected {
-    background: rgba(79, 172, 254, 0.2);
-    color: #4facfe;
+    background: var(--color-primary-20);
+    color: var(--color-blue);
     font-weight: 500;
 }
 
@@ -1293,16 +1404,16 @@ footer h5 {
 .filter-divider {
     width: 1px;
     height: 30px;
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     margin: 0 10px;
 }
 
 .clear-filters {
     padding: 10px 20px;
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
     border-radius: 20px;
-    color: #4facfe;
+    color: var(--color-blue);
     font-size: 0.95rem;
     font-family: "Inter", sans-serif;
     cursor: pointer;
@@ -1310,7 +1421,7 @@ footer h5 {
 }
 
 .clear-filters:hover {
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     transform: translateY(-2px);
 }
 
@@ -1319,14 +1430,15 @@ footer h5 {
     align-items: center;
     gap: 15px;
     padding: 0 30px 20px;
-    border-top: 1px solid rgba(79, 172, 254, 0.1);
+    border-top: 1px solid var(--color-primary-10);
     padding-top: 20px;
 }
 
 #results-count {
-    color: #8b92a8;
+    color: var(--color-text-muted);
     font-size: 0.95rem;
     margin-right: 40px;
+    width: 170px;
 }
 
 .filter-actions #search-stadiums {
@@ -1350,7 +1462,7 @@ footer h5 {
 
 /*  Stadiums List  */
 #stadiums-list-container {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 45px auto;
     padding-top: 45px;
@@ -1368,7 +1480,7 @@ footer h5 {
     border-radius: 15px;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
     padding: 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     margin: 10px 20px 25px;
     will-change: transform;
 }
@@ -1383,9 +1495,9 @@ footer h5 {
 }
 
 .stadiums-list-stadium-text {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     padding: 15px 20px 15px 20px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -1402,16 +1514,16 @@ footer h5 {
 
 .stadiums-list-stadium-text h3 {
     font-size: 1.5rem;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 .stadiums-list-stadium-text h4 {
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 .stadiums-list-stadium a {
     text-decoration: none;
-    color: #e4e6eb;
+    color: var(--color-text);
     display: flex;
     flex-direction: column;
     height: 100%;  
@@ -1435,11 +1547,11 @@ footer h5 {
     min-width: 40px;
     height: 40px;
     padding: 0 12px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 12px;
-    color: #e4e6eb;
+    color: var(--color-text);
     font-family: "Inter", sans-serif;
     font-size: 0.95rem;
     cursor: pointer;
@@ -1450,15 +1562,15 @@ footer h5 {
 }
 
 .page-btn:hover:not(.active):not(:disabled) {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
     transform: translateY(-2px);
 }
 
 .page-btn.active {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
     font-weight: 600;
 }
 
@@ -1473,7 +1585,7 @@ footer h5 {
 }
 
 .page-ellipsis {
-    color: #8b92a8;
+    color: var(--color-text-muted);
     padding: 0 8px;
     font-size: 1.2rem;
     cursor: default;
@@ -1491,12 +1603,12 @@ footer h5 {
     font-size: 1.8rem;
     font-weight: 600;
     margin: 0 0 15px;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 #no-stadiums-container p {
     font-size: 1.1rem;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     margin: 0 0 30px;
     line-height: 1.6;
 }
@@ -1528,7 +1640,7 @@ footer h5 {
     font-size: 2.5rem;
     font-weight: 600;
     line-height: 1.4;
-    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1545,7 +1657,7 @@ footer h5 {
     aspect-ratio: 16/7.5;
     object-fit: cover;
     border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     flex-shrink: 0;
 }
 
@@ -1556,11 +1668,11 @@ footer h5 {
 }
 
 .stadium-user-control {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
     border-radius: 20px;
     transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-    color: #4facfe;
+    color: var(--color-blue);
     cursor: pointer;
     text-align: center;
     display: flex;
@@ -1568,12 +1680,12 @@ footer h5 {
     justify-content: center;
     width: 24%;
     padding: 25px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     text-decoration: none;
 }
 
 .stadium-user-control:hover {
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     transform: translateY(-3px);
     cursor: pointer;
 }
@@ -1621,10 +1733,10 @@ footer h5 {
 }
 
 .stadium-info {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.03);
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 25px;
     width: 300px;
     padding: 30px;
@@ -1634,7 +1746,7 @@ footer h5 {
 .stadium-info h4 {
     font-weight: normal;
     margin: 0;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     font-size: 1.3rem;
 }
 
@@ -1669,7 +1781,7 @@ footer h5 {
 }
 
 #upcoming-events-header {
-    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
 #upcoming-events-header h2 {
@@ -1697,10 +1809,10 @@ footer h5 {
 
 .upcoming-event {
     display: flex;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.03);
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 25px;
     padding: 25px;
     margin-bottom: 15px;
@@ -1734,7 +1846,7 @@ footer h5 {
 
 .event-info-container h4 {
     margin-right: 15px;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     font-weight: normal;
 }
 
@@ -1749,7 +1861,7 @@ footer h5 {
 }
 
 #stadium-map-header {
-    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
 #stadium-map-header h2 {
@@ -1763,10 +1875,10 @@ footer h5 {
     margin: 25px auto;
     height: 500px;
     border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.03);
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
 }
 
 /*  User Home  */
@@ -1776,7 +1888,7 @@ footer h5 {
     font-size: 2.5rem;
     font-weight: 600;
     line-height: 1.4;
-    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -1792,10 +1904,10 @@ footer h5 {
 }
 
 .user-home-item {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.03);
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 25px;
     margin-bottom: 30px;
     padding: 15px 30px 25px;
@@ -1803,7 +1915,7 @@ footer h5 {
 
 .user-home-item h2 {
     margin: 0;
-    color: #e4e6eb;
+    color: var(--color-text);
     text-decoration: none;
     font-size: 1.7rem;
     padding: 10px 0;
@@ -1822,7 +1934,7 @@ footer h5 {
 }
 
 #user-home-stadiums-header-container a, #user-home-wishlist-header-container a {
-    color: #4facfe;
+    color: var(--color-blue);
     text-decoration: none;
 }
 
@@ -1835,7 +1947,7 @@ footer h5 {
 }
 
 #user-stadiums, #user-wishlist-stadiums {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     padding-top: 20px;
     display: flex;
     justify-content: space-between;
@@ -1845,7 +1957,7 @@ footer h5 {
 .user-stadium {
     border-radius: 15px;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     will-change: transform;
     margin-bottom: 5px;
 }
@@ -1869,12 +1981,12 @@ footer h5 {
 }
 
 #user-home-stadiums-explore-button, #user-home-wishlist-explore-button, #user-home-achievements-explore-button {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
-    color: #4facfe;
+    color: var(--color-blue);
     text-decoration: none;
     padding: 10px;
     font-size: 1.3rem;
@@ -1885,7 +1997,7 @@ footer h5 {
 }
 
 #user-home-stadiums-explore-button:hover, #user-home-wishlist-explore-button:hover, #user-home-achievements-explore-button:hover {
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     transform: translateY(-3px);
 }
 
@@ -1899,8 +2011,8 @@ footer h5 {
 }
 
 .user-stadium-text {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: var(--color-secondary);
+    border: 1px solid var(--color-primary-15);
     padding: 15px 0 15px 20px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
@@ -1914,16 +2026,16 @@ footer h5 {
 
 .user-stadium-text h3 {
     font-size: 1.5rem;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 .user-stadium-text h4 {
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 .user-stadium a {
     text-decoration: none;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 .user-stadium:hover {
@@ -1937,7 +2049,7 @@ footer h5 {
 }
 
 #user-stats {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     padding-top: 20px;
     display: flex;
     flex-wrap: wrap;
@@ -1946,23 +2058,23 @@ footer h5 {
 }
 
 .user-stat {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: var(--color-secondary);
+    border: 1px solid var(--color-primary-15);
     border-radius: 25px;
     width: 100%;
     text-align: center;
     padding: 20px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
 }
 
 .user-stat h3 {
-    color: #4facfe;
+    color: var(--color-blue);
     margin: 0;
     font-size: 1.5rem;
 }
 
 .user-stat h4 {
-    color: #8b92a8;
+    color: var(--color-text-muted);
     font-weight: normal;
     margin: 10px 0 0;
     font-size: 1.1rem;
@@ -1974,7 +2086,7 @@ footer h5 {
 }
 
 #user-achievements {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     padding-top: 20px;
     display: flex;
     flex-wrap: wrap;
@@ -1982,12 +2094,12 @@ footer h5 {
 }
 
 .user-achievement {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: var(--color-secondary);
+    border: 1px solid var(--color-primary-15);
     border-radius: 25px;
     width: 100%;
     text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     display: flex;
     align-items: center;
     text-align: left;
@@ -2010,13 +2122,13 @@ footer h5 {
 
 .user-achievement h3 {
     margin: 0;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 .user-achievement h4 {
     margin: 0;
     font-weight: normal;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     margin-top: 5px;
     display: -webkit-box;
     line-clamp: 2;
@@ -2032,7 +2144,7 @@ footer h5 {
 }
 
 #user-home-stadium-map-container h2 {
-    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
 #user-home-stadium-map {
@@ -2040,10 +2152,10 @@ footer h5 {
     margin: 25px auto;
     height: 500px;
     border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    background: rgba(255, 255, 255, 0.03);
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
 }
 
 /*  User Stadiums, Wishlist  */
@@ -2057,7 +2169,7 @@ footer h5 {
     font-size: 2.5rem;
     font-weight: 600;
     line-height: 1.4;
-    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -2075,7 +2187,7 @@ footer h5 {
     font-size: 2.5rem;
     font-weight: 600;
     line-height: 1.4;
-    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -2085,11 +2197,11 @@ footer h5 {
 #achievements-filter-bar {
     max-width: 630px;
     margin: 30px auto 50px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
 }
@@ -2104,7 +2216,7 @@ footer h5 {
 }
 
 #achievements-list-container {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 45px auto;
     padding-top: 45px;
@@ -2121,11 +2233,11 @@ footer h5 {
     border-radius: 15px;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
     padding: 20px 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     margin: 10px 20px 25px;
     will-change: transform;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: var(--color-secondary);
+    border: 1px solid var(--color-primary-15);
     width: 410px;
 }
 
@@ -2140,7 +2252,7 @@ footer h5 {
 }
 
 .user-achievement-achievement-percent {
-    color: #4facfe;
+    color: var(--color-blue);
 }
 
 .user-achievement-achievement-info {
@@ -2158,7 +2270,7 @@ footer h5 {
 
 .user-achievement-achievement-description {
     font-weight: normal;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     margin: 0;
 }
 
@@ -2175,7 +2287,7 @@ footer h5 {
 
 .user-achievement-progress-bar-blue {
     height: 25px;
-    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    background: linear-gradient(90deg, var(--color-blue) 0%, #00f2fe 100%);
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
 }
@@ -2183,14 +2295,14 @@ footer h5 {
 .user-achievement-progress-bar-gray {
     height: 25px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.2);
+    border: 1px solid var(--color-primary-20);
     border-top-right-radius: 25px;
     border-bottom-right-radius: 25px;
 }
 
 .user-achievement-progress {
     margin: 0;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     font-weight: normal;
     text-align: center;
     width: 63px;
@@ -2199,7 +2311,7 @@ footer h5 {
 .user-achievement-unlocked-text {
     margin: 25px 0 0;
     font-weight: normal;
-    color: #4facfe;
+    color: var(--color-blue);
     font-style: italic;
     font-size: 1.1rem;
 }
@@ -2216,12 +2328,12 @@ footer h5 {
     font-size: 1.8rem;
     font-weight: 600;
     margin: 0 0 15px;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 #no-achievements-container p {
     font-size: 1.1rem;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     margin: 0 0 30px;
     line-height: 1.6;
 }
@@ -2232,7 +2344,7 @@ footer h5 {
     font-size: 2.5rem;
     font-weight: 600;
     line-height: 1.4;
-    background: linear-gradient(135deg, #e4e6eb 0%, #4facfe 100%);
+    background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -2242,11 +2354,11 @@ footer h5 {
 #activity-filter-bar {
     max-width: 665px;
     margin: 30px auto 50px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
 }
@@ -2269,7 +2381,7 @@ footer h5 {
 }
 
 #activity-list-container {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 0 auto;
     padding-top: 50px;
@@ -2277,11 +2389,11 @@ footer h5 {
 }
 
 .activity-item {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--color-secondary);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     width: 1075px;
     margin: 0 auto;
     display: flex;
@@ -2317,7 +2429,7 @@ footer h5 {
 }
 
 .activity-details-name {
-    color: #4facfe;
+    color: var(--color-blue);
     font-weight: 600;
     font-size: 1.5rem;
     margin: 0;
@@ -2331,11 +2443,11 @@ footer h5 {
 }
 
 .activity-details-time {
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 .activity-details-location {
-    color: #8b92a8;
+    color: var(--color-text-muted);
     margin: 0;
     margin-top: 8px;
     font-weight: normal;
@@ -2346,14 +2458,14 @@ footer h5 {
     margin-top: 20px;
     background: rgba(79, 172, 254, 0.05);
     border: 1px solid transparent;
-    border-left: 3px solid #4facfe;
+    border-left: 3px solid var(--color-blue);
     border-radius: 8px;
     padding: 18px 20px;
 }
 
 .activity-log-details h4 {
     margin: 0;
-    color: #4facfe;
+    color: var(--color-blue);
     font-weight: normal;
     font-size: 0.85rem;
     letter-spacing: 0.5px;
@@ -2369,13 +2481,13 @@ footer h5 {
 }
 
 .no-note {
-    color: #8b92a8;
+    color: var(--color-text-muted);
     font-style: italic;
 }
 
 .activity-details h4 {
     margin: 0;
-    color: #4facfe;
+    color: var(--color-blue);
     font-weight: normal;
     letter-spacing: 0.5px;
 }
@@ -2401,20 +2513,20 @@ footer h5 {
 }
 
 .edit-log-button {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
     margin-right: 10px;
 }
 
 .edit-log-button:hover {
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
 }
 
 .delete-log-button, .remove-button {
-    background: rgba(255, 79, 79, 0.2);
-    border: 1px solid rgba(255, 79, 79, 0.4);
-    color: #ff4f4f;
+    background: var(--color-danger-20);
+    border: 1px solid var(--color-danger-40);
+    color: var(--color-danger);
 }
 
 .delete-log-button:hover, .remove-button:hover {
@@ -2433,12 +2545,12 @@ footer h5 {
     font-size: 1.8rem;
     font-weight: 600;
     margin: 0 0 15px;
-    color: #e4e6eb;
+    color: var(--color-text);
 }
 
 #no-activity-container p {
     font-size: 1.1rem;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     margin: 0 0 30px;
     line-height: 1.6;
 }
@@ -2451,8 +2563,8 @@ footer h5 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--gradient-bg);
+    border: 1px solid var(--color-primary-30);
     border-radius: 25px;
     z-index: 10001;
 }
@@ -2462,7 +2574,7 @@ footer h5 {
     justify-content: space-between;
     align-items: center;
     padding: 30px 40px;
-    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
 #edit-log-menu-header h2 {
@@ -2472,13 +2584,13 @@ footer h5 {
 }
 
 #edit-log-menu-header h2:first-of-type {
-    color: #4facfe;
+    color: var(--color-blue);
     font-weight: bold;
 }
 
 #close-edit-log-menu {
     font-size: 2.2rem;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s;
     background: none;
@@ -2488,7 +2600,7 @@ footer h5 {
 }
 
 #close-edit-log-menu:hover {
-    color: #4facfe;
+    color: var(--color-blue);
 }
 
 #edit-log-name {
@@ -2521,14 +2633,14 @@ footer h5 {
     font-weight: normal;
     font-size: 1.1rem;
     margin: 0;
-    color: #8b92a8;
+    color: var(--color-text-muted);
 }
 
 #edit-log-date-visited {
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.2);
-    color: #e4e6eb;
+    border: 1px solid var(--color-primary-20);
+    color: var(--color-text);
     padding: 10px 20px;
     font-size: 1rem;
     margin: 10px 0 20px 0;
@@ -2546,12 +2658,12 @@ footer h5 {
     margin: 10px 0 20px 0;
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(79, 172, 254, 0.2);
+    border: 1px solid var(--color-primary-20);
     width: 100%;
     padding: 20px;
     height: 161px !important;
     resize: none;
-    color: #e4e6eb;
+    color: var(--color-text);
     font-size: 18px;
     font-family: "Inter", sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -2562,7 +2674,7 @@ footer h5 {
 }
 
 #edit-log-note::placeholder {
-    color: #8b92a8;
+    color: var(--color-text-muted);
     font-family: "Inter", sans-serif;
 }
 
@@ -2587,20 +2699,20 @@ footer h5 {
 }
 
 #edit-log-save-button {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
 }
 
 #edit-log-save-button:hover {
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     transform: translateY(-3px) translateZ(0);
 }
 
 #edit-log-cancel-button {
-    background: rgba(255, 79, 79, 0.2);
-    border: 1px solid rgba(255, 79, 79, 0.4);
-    color: #ff4f4f;
+    background: var(--color-danger-20);
+    border: 1px solid var(--color-danger-40);
+    color: var(--color-danger);
 }
 
 #edit-log-cancel-button:hover {
@@ -2616,8 +2728,8 @@ footer h5 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: linear-gradient(135deg, #1a1d29 0%, #2d3142 100%);
-    border: 1px solid rgba(79, 172, 254, 0.3);
+    background: var(--gradient-bg);
+    border: 1px solid var(--color-primary-30);
     border-radius: 25px;
     z-index: 10001;
     text-align: center;
@@ -2627,7 +2739,7 @@ footer h5 {
     position: relative;
     text-align: center;
     padding: 30px 40px;
-    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
 #delete-log-menu h2 {
@@ -2637,7 +2749,7 @@ footer h5 {
 }
 
 #delete-log-menu-header h2:first-of-type {
-    color: #4facfe;
+    color: var(--color-blue);
     font-weight: bold;
 }
 
@@ -2647,7 +2759,7 @@ footer h5 {
     top: 50%;
     transform: translateY(-50%);
     font-size: 2.2rem;
-    color: #8b92a8;
+    color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s;
     background: none;
@@ -2657,11 +2769,11 @@ footer h5 {
 }
 
 #close-delete-log-menu:hover {
-    color: #4facfe;
+    color: var(--color-blue);
 }
 
 #delete-log-menu p {
-    color: #8b92a8;
+    color: var(--color-text-muted);
     margin: 20px 40px 20px;
     font-size: 1.1rem;
     line-height: 1.7;
@@ -2669,7 +2781,7 @@ footer h5 {
 
 #delete-log-warning {
     font-weight: normal;
-    color: #ff4f4f;
+    color: var(--color-danger);
 }
 
 #delete-log-buttons {
@@ -2693,20 +2805,20 @@ footer h5 {
 }
 
 #delete-log-cancel-button {
-    background: rgba(79, 172, 254, 0.1);
-    border: 1px solid rgba(79, 172, 254, 0.3);
-    color: #4facfe;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
 }
 
 #delete-log-cancel-button:hover {
-    background: rgba(79, 172, 254, 0.2);
+    background: var(--color-primary-20);
     transform: translateY(-3px) translateZ(0);
 }
 
 #delete-log-delete-button {
-    background: rgba(255, 79, 79, 0.2);
-    border: 1px solid rgba(255, 79, 79, 0.4);
-    color: #ff4f4f;
+    background: var(--color-danger-20);
+    border: 1px solid var(--color-danger-40);
+    color: var(--color-danger);
 }
 
 #delete-log-delete-button:hover {
@@ -2718,13 +2830,13 @@ footer h5 {
 .skeleton-card {
     width: 410px;
     height: 331px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     border-radius: 15px;
     margin: 10px 20px 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    box-shadow: var(--shadow-default);
+    border: 1px solid var(--color-primary-15);
 }
 
 #popular-stadiums-skeleton {
@@ -2736,12 +2848,12 @@ footer h5 {
 #filter-bar-skeleton {
     max-width: 960px;
     margin: 30px auto 50px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
     height: 183px;
@@ -2751,7 +2863,7 @@ footer h5 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 0 auto;
     padding-top: 45px;
@@ -2762,11 +2874,11 @@ footer h5 {
     height: 56px;
     border-radius: 30px;
     margin: 40px auto;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
 }
 
 #stadium-info-container-skeleton {
@@ -2777,11 +2889,11 @@ footer h5 {
 #stadium-image-skeleton {
     width: 100%;
     aspect-ratio: 16/7.5;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
 }
 
@@ -2792,11 +2904,11 @@ footer h5 {
 }
 
 .stadium-user-control-skeleton {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 20px;
     width: 24%;
     height: 75px;
@@ -2811,11 +2923,11 @@ footer h5 {
 }
 
 .stadium-info-skeleton {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     width: 300px;
     height: 150px;
@@ -2823,11 +2935,11 @@ footer h5 {
 }
 
 #upcoming-events-header-skeleton {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     width: 60%;
     height: 39px;
@@ -2835,16 +2947,16 @@ footer h5 {
 }
 
 #upcoming-events-skeleton {
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     padding-top: 25px;
 }
 
 .upcoming-event-skeleton {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     margin-bottom: 15px;
     width: 100%;
@@ -2852,15 +2964,15 @@ footer h5 {
 }
 
 #stadium-map-skeleton-header-container {
-    border-bottom: 1px solid rgba(79, 172, 254, 0.2);
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
 #stadium-map-skeleton-header {
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     width: 60%;
     height: 39px;
@@ -2872,33 +2984,33 @@ footer h5 {
     margin: 25px auto;
     height: 500px;
     border-radius: 25px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
 }
 
 #user-home-welcome-text-skeleton {
     margin: 40px auto;
     width: 325px;
     height: 56px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
 }
 
 #user-home-stadiums-container-skeleton, #user-home-wishlist-container-skeleton {
     width: 69%;
     height: 450px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     margin-bottom: 30px;
 }
@@ -2906,11 +3018,11 @@ footer h5 {
 #user-home-stats-container-skeleton, #user-home-achievements-container-skeleton {
     width: 29%;
     height: 450px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     margin-bottom: 30px;
 }
@@ -2918,11 +3030,11 @@ footer h5 {
 #user-home-stadium-map-container-skeleton {
     width: 100%;
     height: 649px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     margin-bottom: 30px;
 }
@@ -2945,7 +3057,7 @@ footer h5 {
     background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     animation: loading 1.2s ease-in-out infinite;
 }
@@ -2957,7 +3069,7 @@ footer h5 {
     background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     animation: loading 1.2s ease-in-out infinite;
 }
@@ -2986,7 +3098,7 @@ footer h5 {
     background: linear-gradient(90deg, #262626 25%, #2d2d2d 50%, #262626 75%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     border-radius: 25px;
     animation: loading 1.2s ease-in-out infinite;
 }
@@ -2994,12 +3106,12 @@ footer h5 {
 #achievements-filter-bar-skeleton {
     max-width: 630px;
     margin: 30px auto 50px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
     height: 98px;
@@ -3009,7 +3121,7 @@ footer h5 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 0 auto;
     padding-top: 45px;
@@ -3018,24 +3130,24 @@ footer h5 {
 .achievements-skeleton-card {
     width: 410px;
     height: 253px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     border-radius: 15px;
     margin: 10px 20px 25px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    box-shadow: var(--shadow-default);
+    border: 1px solid var(--color-primary-15);
 }
 
 #activity-filter-bar-skeleton {
     max-width: 665px;
     margin: 30px auto 50px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    border: 1px solid rgba(79, 172, 254, 0.15);
+    border: 1px solid var(--color-primary-15);
     border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
     height: 98px;
@@ -3045,7 +3157,7 @@ footer h5 {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 0 auto;
     padding-top: 50px;
@@ -3054,632 +3166,12 @@ footer h5 {
 .activity-skeleton-card {
     width: 1075px;
     height: 248px;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%);
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     border-radius: 25px;
     margin: 0 auto;
     margin-bottom: 30px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(79, 172, 254, 0.15);
-}
-
-/*  Media Queries  */ 
-@media screen and (max-width: 450px) {
-    header h1 {
-        margin-left: 30px;
-        font-size: 1.7rem !important;
-    }
-    .leaflet-popup-content-wrapper {
-        width: 300px;
-    }
-    .popup-card img {
-        width: 250px;
-        height: 150px;
-    }
-    .user-achievement-text {
-        margin-right: 25px;
-    }
-    #user-stadiums-no-stadiums-text, #user-wishlist-stadiums-no-stadiums-text {
-        max-width: 350px;
-        width: 100%;
-    }
-    .activity-details-name {
-        font-size: 1.3rem;
-    }
-    .activity-details-time {
-        font-size: 0.9rem;
-    }
-    .activity-details-location {
-        font-size: 1rem;
-    }
-    .activity-details h4 {
-        font-size: 0.9rem;
-    }
-    .remove-button {
-        font-size: 0.9rem !important;
-    }
-    .activity-buttons button {
-        font-size: 0.9rem !important;
-    }
-}
-
-@media screen and (max-width: 500px) {
-    #create-account-menu, #log-in-menu {
-        width: 300px;
-    }
-    #close-create-account-menu, #close-log-in-menu {
-        left: 260px;
-        top: -6px;
-    }
-    #create-account-menu h2, #log-in-menu h2 {
-        font-size: 25px;
-    }
-    .input-field, #sign-up-button, #log-in-button {
-        width: 250px;
-    }
-    .forgot-password {
-        margin-right: 35px;
-    }
-    #log-in-form span, #create-account-form span, #create-account-form a, #create-account-form label {
-        font-size: 14px;
-    }
-    #log-in-menu {
-        height: 350px;
-    }
-    #terms-and-conditions-container {
-        margin-left: 15px;
-    }
-    #terms-and-conditions-container label {
-        margin-left: 5px;
-    }
-    #create-account-menu {
-        height: 425px;
-    }
-    #sign-up-button, #log-in-button {
-        font-size: 18px;
-    }
-    .popular-stadium img {
-        max-width: 100%;
-    }
-    .stadiums-list-stadium img {
-        max-width: 100%;
-    }
-    .user-stadium {
-        width: 100%;
-        max-width: 368px;
-    }
-    .user-stadium img {
-        width: 100% ;
-        height: auto;
-        aspect-ratio: 16 / 9;
-    }
-    .user-stadium-text {
-        width: 100%;
-    }
-    #user-home-welcome-text {
-        font-size: 2.2rem;
-    }
-    .user-home-item h2 {
-        font-size: 1.6rem;
-    }
-    #user-home-stadiums-container-skeleton,
-    #user-home-wishlist-container-skeleton {
-        height: auto !important;
-        min-height: 650px !important;
-    }
-    #user-home-stats-container-skeleton,
-    #user-home-achievements-container-skeleton {
-        height: auto !important;
-        min-height: 445px;
-    }
-    #user-home-stadium-map-container-skeleton {
-        height: auto;
-        padding: 20px;
-        min-height: 400px;
-    }
-    #user-home-welcome-text-skeleton {
-        height: 50px;
-    }
-    .user-achievements-achievement {
-        width: 100%;
-        max-width: 100%;
-        margin: 10px 15px 25px;
-        padding: 15px 20px;
-    }
-    
-    .user-achievement-achievement-info {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .user-achievement-achievement-image {
-        width: 55px;
-        height: 55px;
-        margin-right: 0;
-        margin-bottom: 15px;
-    }
-
-    .user-achievement-achievement-description {
-        margin-top: 10px;
-    }
-    
-    .user-achievement-progress-container {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-    }
-    
-    .progress-bar-container {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 10px;
-    }
-    
-    .user-achievement-progress {
-        width: 100%;
-        text-align: left;
-        margin-top: 10px;
-    }
-    
-    .achievements-skeleton-card {
-        width: 100%;
-        max-width: 100%;
-        margin: 10px 15px;
-        height: 280px;
-    }
-    
-    #achievements-text {
-        width: 90%;
-    }
-    
-    #achievements-text h2 {
-        font-size: 2rem;
-    }
-    .achievements-skeleton-card {
-        height: 323px !important;
-    }
-}
-
-@media screen and (max-width: 575px) {
-    #user-stadiums-header-container, #user-stadiums-header-container-skeleton {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    #user-stadiums-header-sort-container, #user-stadiums-header-sort-container-skeleton {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-        margin-top: 10px;
-    }
-    #user-stadiums-league-dropdown-wrapper,
-    #user-stadiums-sort-by-dropdown-wrapper {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    #user-stadiums-header-league-selector,
-    #user-stadiums-header-sort-by {
-        justify-content: space-between;
-        width: 100%;
-        padding: 10px 15px;
-        background-color: #2d2d2d;
-        border-radius: 25px;
-    }
-    #user-stadiums-header-league-selector img,
-    #user-stadiums-header-sort-by img {
-        margin-left: auto;
-    }
-    #user-stadiums-header-league-selector-hidden,
-    #user-stadiums-sort-by-hidden {
-        left: 0;
-        top: 0;
-        width: 100%;
-        border-radius: 25px;
-    }
-    #user-stadiums-header-league-selector-hidden p, #user-stadiums-sort-by-hidden p {
-        margin-left: 3px;
-    }
-    #user-stadiums-header-sort-container-skeleton {
-        height: 100px;
-    }
-}
-
-@media screen and (max-width: 550px) {
-    #add-stadium-image {
-        max-width: 640px;
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        height: auto;
-    }
-    #add-stadium-form {
-        flex-direction: column;
-        margin: 30px 0 0 !important;
-    }
-}
-
-@media screen and (max-width: 600px) {
-    #nav-items .button {
-        display: none;
-    }
-    #search-wrapper {
-        width: 100%;
-    }
-    #home-search-field {
-        width: 100% !important;
-    }
-    #autocomplete-list {
-        width: 100% !important;
-    }
-    .activity-item {
-        width: 95% !important;
-    }
-    .activity-skeleton-card {
-        width: 95% !important;
-        max-height: 450px;
-    }
-    .activity-log-image, .activity-image {
-        height: auto !important;
-        aspect-ratio: 16/9;
-    }
-}
-
-@media screen and (max-width: 630px) {
-    #user-achievements-header-container, #user-achievements-header-container-skeleton {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    #user-achievements-header-sort-container, #user-achievements-header-sort-container-skeleton {
-        flex-direction: column;
-        align-items: flex-start;
-        width: 100%;
-        margin-top: 10px;
-    }
-    #user-achievements-earned-dropdown-wrapper, #user-achievements-sort-by-dropdown-wrapper {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    #user-achievements-header-earned-selector,
-    #user-achievements-header-sort-by {
-        justify-content: space-between;
-        width: 100%;
-        padding: 10px 15px;
-        background-color: #2d2d2d;
-        border-radius: 25px;
-    }
-    #user-achievements-header-earned-selector img,
-    #user-achievements-header-sort-by img {
-        margin-left: auto;
-    }
-    #user-achievements-header-earned-selector-hidden,
-    #user-achievements-sort-by-hidden {
-        left: 0;
-        top: 0;
-        width: 100%;
-        border-radius: 25px;
-    }
-    #user-achievements-header-earned-selector-hidden p, #user-achievements-sort-by-hidden p {
-        margin-left: 3px;
-    }
-    #user-achievements-header-sort-container-skeleton {
-        height: 100px;
-    }
-}
-
-@media screen and (max-width: 650px) {
-    #add-stadium-user-controls {
-        flex-direction: column;
-    }
-    #add-stadium-like-container {
-        margin-top: 20px;
-    }
-}
-
-@media screen and (max-width: 715px) {
-    #stadiums-search-container {
-        width: 80%;
-    }
-    #filter-bar, #filter-bar-skeleton, #achievements-filter-bar, #achievements-filter-bar-skeleton, #activity-filter-bar, #activity-filter-bar-skeleton {
-        width: 90%;
-        margin: 20px auto 40px;
-    }
-    #filter-bar-skeleton {
-        height: 409px !important;
-        margin-bottom: 45px;
-    }
-    #achievements-filter-bar-skeleton {
-        height: 213px !important;
-        margin-bottom: 45px;
-    }
-    #activity-filter-bar-skeleton {
-        height: 210px !important;
-    }
-    #filter-controls {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 20px;
-        gap: 20px;
-    }
-    .filter-group {
-        width: 100%;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-    .custom-select-wrapper {
-        width: 100%;
-    }
-    .custom-select-trigger {
-        width: 100%;
-    }
-    .filter-label {
-        margin-bottom: 0;
-    }
-    .filter-divider {
-        display: none;
-    }
-    .filter-actions {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 15px 20px 20px;
-        gap: 12px;
-    }
-    .clear-filters {
-        width: 100%;
-    }
-    #results-count {
-        margin: 10px 0 !important;
-    }
-}
-
-@media screen and (max-width: 830px) {
-    footer {
-        height: 760px;
-    }
-    #footer-items {
-        width: 95%;
-        margin: 0 auto;
-        padding: 20px 10px 30px 10px;
-        flex-direction: column;
-        flex-wrap: wrap;
-    }
-    .footer-item {
-        margin: 0;
-    }
-    #copyright {
-        padding-bottom: 27px;
-    }
-    .footer-item {
-        margin-top: 10px;
-    }
-}
-
-@media screen and (max-width: 876px) {
-    #user-home-stats-container, #user-home-stats-container-skeleton {
-        width: 100% !important;
-        margin-right: 0 !important;
-        margin-bottom: 30px;
-    }
-    #user-home-achievements-container, #user-home-achievements-container-skeleton {
-        width: 100% !important;
-    }
-    #user-stadiums, #user-wishlist-stadiums {
-        flex-direction: column;
-        align-items: center !important;
-        gap: 15px !important;
-    }
-    .user-stadium {
-        width: 100%;
-        max-width: 368px;
-    }
-    #user-home-stadiums-container-skeleton, #user-home-wishlist-container-skeleton {
-        height: 806px;
-    }
-}
-
-@media screen and (max-width: 922px) {
-    #user-stadiums-stadiums, #user-stadiums-stadiums-skeleton, #user-achievements-achievements, #user-achievements-achievements-skeleton {
-        padding: 25px 40px 0 !important;
-    }
-    #user-stadiums-stadiums .user-stadium, #user-stadiums-stadiums-skeleton .user-stadium-skeleton, #user-achievements-achievements .user-achievements-achievement, #user-achievements-achievements-skeleton .user-achievements-achievement-skeleton {
-        margin: 0 0 30px 0 !important;
-    }
-}
-
-@media screen and (max-width: 1000px) {
-    #search-wrapper {
-        width: 100%;
-    }
-    #home-search-field {
-        width: 100%;
-    }
-    #autocomplete-list {
-        width: 100%;
-    }
-    #filter-bar, #filter-bar-skeleton {
-        max-width: 93%;
-    }
-    #filter-bar-skeleton {
-        height: 241px;
-    }
-}
-
-@media screen and (max-width: 1025px) {
-    #nav-items {
-        margin-right: 10px;
-    }
-    #nav-items li {
-        display: none;
-    }
-    #nav-items .toggle {
-        display: list-item;
-    }
-    #stadium-container, #upcoming-events-container, #stadium-map-container {
-        width: 93%;
-    }
-    #stadium-user-controls, #stadium-user-controls-skeleton {
-        flex-wrap: wrap;
-    }
-    .stadium-user-control, .stadium-user-control-skeleton {
-        width: 100%;
-        margin-bottom: 15px;
-    }
-    #stadium-info, #stadium-info-skeleton {
-        flex-wrap: wrap;
-    }
-    .stadium-info, .stadium-info-skeleton {
-        width: 100%;
-    }
-}
-
-@media screen and (max-width: 1100px) {
-    #add-stadium-menu {
-        width: 92%;
-    }
-    #add-stadium-container {
-        flex-direction: column;
-    }
-    #add-stadium-image {
-        margin: 0 auto;
-    }
-    #add-stadium-form {
-        display: flex;
-        margin: 30px auto 0;
-    }
-    #add-stadium-date-visited-container {
-        margin-right: 20px;
-    }
-    #add-stadium-note {
-        width: 300px;
-        height: 120px !important;
-    }
-}
-
-@media screen and (max-width: 1150px) {
-    .activity-item {
-        display: block;
-        width: 536px;
-        margin: 0 auto 30px;
-    }
-    .activity-skeleton-card {
-        height: 605px;
-        width: 536px;
-        margin: 0 auto 30px;
-    }
-    .activity-log-image, .activity-image {
-        width: 100%;
-        height: 356px;
-    }
-}
-
-@media screen and (max-width: 1250px) {
-    #user-home-content {
-        width: 99%;
-        padding: 0 20px;
-    }
-    #user-home-stadiums-container, #user-home-stadiums-container-skeleton {
-        order: 1;
-        width: 100%;
-    }
-    #user-home-wishlist-container, #user-home-wishlist-container-skeleton {
-        order: 2;
-        width: 100%;
-    }
-    #user-home-stats-container, #user-home-stats-container-skeleton {
-        order: 3;
-        margin-right: 30px;
-        width: calc(50% - 15px);
-        min-width: 280px;
-    }
-    #user-home-achievements-container, #user-home-achievements-container-skeleton {
-        order: 4;
-        width: calc(50% - 15px);
-        min-width: 280px;
-    }
-    #user-home-stadium-map-container, #user-home-stadium-map-container-skeleton {
-        order: 5;
-    }
-    #user-stadiums, #user-wishlist-stadiums {
-        justify-content: center;
-        gap: 30px;
-    }
-    #user-home-stats-container-skeleton, #user-home-achievements-container-skeleton {
-        height: 450px;
-    }
-}
-
-/*  Keyframes  */
-@keyframes fadeInSlide {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-}
-
-@keyframes fadeOutSlide {
-    from {
-        opacity: 1;
-        transform: translate(-50%, -50%);
-    }
-    to {
-        opacity: 0;
-        transform: translate(-50%, -60%);
-    }
-}
-
-@keyframes overlayFadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 0.7;
-    }
-}
-
-@keyframes overlayFadeOut {
-    from {
-        opacity: 0.7;
-    }
-    to {
-        opacity: 0;
-    }
-}
-
-@keyframes loading {
-    0% {
-        background-position: 100% 0;
-    }
-    100% {
-        background-position: -100% 0;
-    }
-}
-
-@keyframes iconSwap {
-    0% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-    }
-    50% {
-        transform: scale(0.5) rotate(90deg);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1) rotate(0deg);
-        opacity: 1;
-    }
-}
-
-@keyframes textFade {
-    0% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
+    box-shadow: var(--shadow-default);
+    border: 1px solid var(--color-primary-15);
 }

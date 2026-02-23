@@ -23,7 +23,6 @@ A web application for tracking stadium visits as you explore sports venues acros
 ### Backend
 - **Node.js**
 - **Express.js**
+- **Vite**
 - **MySQL**
 - **Ticketmaster API**
-
-**Built with ❤️ for sports fans and stadium enthusiasts**

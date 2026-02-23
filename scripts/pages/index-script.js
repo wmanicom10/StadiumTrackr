@@ -1,9 +1,21 @@
-import { getAuthElements, getSearchElements, API_BASE_URL, ROUTES, DEBOUNCE_TIME } from "../constants.js";
-import { searchStadiums, debounce } from "../utils.js";
-import { registerEventListeners, registerCommonEvents } from "../events.js";
+/*  Imports  */
+import { API_BASE_URL, DEBOUNCE_TIME, getAuthElements, ROUTES  } from "../constants.js";
+import { debounce, searchStadiums } from "../utils.js";
+import { registerCommonEvents, registerEventListeners } from "../events.js";
 
+/*  Variables  */
 const header = document.querySelector('header');
 const popularStadiums = document.getElementsByClassName('popular-stadium');
+
+/*  Async Functions  */
+async function handlePageLoad() {
+    header.style.display = 'flex';
+
+    initializePopularStadiums();
+    await waitForImages();
+    loadMapStadiums();
+    showPopularStadiums();
+}
 
 async function loadMapStadiums() {
     try {
@@ -25,6 +37,31 @@ async function loadMapStadiums() {
     } catch (error) {
         alert(error.message);
     }
+}
+
+async function waitForImages() {
+    const images = document.querySelectorAll('#popular-stadiums img');
+    
+    const imagePromises = Array.from(images).map(img => {
+        return new Promise(resolve => {
+            if (img.complete) {
+                resolve();
+            } else {
+                img.onload = img.onerror = resolve;
+            }
+        });
+    });
+
+    await Promise.all(imagePromises);
+    await new Promise(resolve => setTimeout(resolve, 750));
+}
+
+/*  Functions  */
+function hideSearchSuggestions(container, input) {
+    container.classList.remove('active');
+    input.value = '';
+    input.style.borderBottomLeftRadius = '35px';
+    input.style.borderBottomRightRadius = '35px';
 }
 
 function initializeMap(stadiums) {
@@ -83,30 +120,10 @@ function initializePopularStadiums() {
     });
 }
 
-async function waitForImages() {
-    const images = document.querySelectorAll('#popular-stadiums img');
-    
-    const imagePromises = Array.from(images).map(img => {
-        return new Promise(resolve => {
-            if (img.complete) {
-                resolve();
-            } else {
-                img.onload = img.onerror = resolve;
-            }
-        });
-    });
-
-    await Promise.all(imagePromises);
-    await new Promise(resolve => setTimeout(resolve, 750));
-}
-
-function showPopularStadiums() {
-    document.getElementById('popular-stadiums-skeleton').style.display = 'none';
-    document.getElementById('popular-stadiums').style.display = 'flex';
-}
-
 function setupSearchAutocomplete() {
-    const { searchValue, suggestionsContainer, searchStadiumsForm } = getSearchElements();
+    const searchStadiumsForm = document.getElementById('home-search-stadiums');
+    const searchValue = document.getElementById('search-field-home');
+    const suggestionsContainer = document.getElementById('home-autocomplete-list');
 
     const debouncedSearch = debounce((name) => {
         if (name) {
@@ -131,30 +148,15 @@ function setupSearchAutocomplete() {
     searchStadiumsForm?.addEventListener('submit', (e) => e.preventDefault());
 }
 
-function hideSearchSuggestions(container, input) {
-    container.style.display = 'none';
-    input.value = '';
-    input.style.borderBottomLeftRadius = '35px';
-    input.style.borderBottomRightRadius = '35px';
+function showPopularStadiums() {
+    document.getElementById('popular-stadiums-skeleton').style.display = 'none';
+    document.getElementById('popular-stadiums').style.display = 'flex';
 }
 
-async function handlePageLoad() {
-    header.style.display = 'flex';
-
-    initializePopularStadiums();
-
-    await waitForImages();
-
-    loadMapStadiums();
-
-    showPopularStadiums();
-}
-
+/*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerEventListeners(getAuthElements());
-    
     registerCommonEvents();
-    
     setupSearchAutocomplete();
 });
 

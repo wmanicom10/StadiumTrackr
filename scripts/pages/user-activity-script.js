@@ -1,9 +1,11 @@
-import { getHeaderElements, MIN_LOADING_TIME, overlay } from "../constants.js";
-import { toggleMenu, getUsername, truncateUsername, formatDate, formatLocation, timeAgo, clearUsername } from "../utils.js";
-import { registerCommonEvents } from "../events.js";
+/*  Imports  */
+import { MIN_LOADING_TIME, overlay } from "../constants.js";
+import { formatDate, formatLocation, getUsername, initializeCustomSelects, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
+import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { activityAPI } from "../api/activity.js";
 
+/*  Variables  */
 const elements = {
     editLogMenu: document.getElementById('edit-log-menu'),
     closeEditLogMenu: document.getElementById('close-edit-log-menu'),
@@ -29,35 +31,59 @@ const elements = {
 
 let currentData = null;
 
-function showLoggedInUI(username) {
-    const { loggedInHeader, loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
-    
-    const displayName = truncateUsername(username);
-    loggedInHeaderUsername.textContent = displayName;
-    sidebarUsername.textContent = displayName;
-    loggedInHeader.style.display = 'flex';
+/*  Async Functions  */
+async function setView(username, activity, stadium, sortBy) {
+    try {
+        showLoading();
+        await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
+        const result = await userAPI.loadUserActivity(username, activity, stadium, sortBy);
+        const activities = result.userActivity;
+
+        if (activities.length === 0) {
+            showNoResults();
+        } else {
+            showResults();
+            renderActivities(activities, username);
+        }
+
+        hideLoading();
+    } catch (err) {
+        alert(err.message);
+        hideLoading();
+    }
 }
 
-function showLoading() {
-    elements.activitySkeleton.style.display = 'block';
-    elements.activityListContainer.style.display = 'none';
-    elements.activityFilterBar.style.display = 'none';
+/*  Functions  */
+function createActivityButtons(activity, username) {
+    const buttons = document.createElement('div');
+    buttons.classList.add('activity-buttons');
+
+    if (activity.visited_on) {
+        buttons.appendChild(createEditButton(activity, username));
+        buttons.appendChild(createDeleteButton(activity, username));
+    } else {
+        buttons.appendChild(createRemoveButton(activity, username));
+    }
+
+    return buttons;
 }
 
-function hideLoading() {
-    elements.activitySkeleton.style.display = 'none';
-    elements.activityListContainer.style.display = 'block';
-    elements.activityFilterBar.style.display = 'block';
-}
+function createActivityHeader(activity) {
+    const header = document.createElement('div');
+    header.classList.add('activity-details-header');
 
-function showNoResults() {
-    elements.noActivityContainer.style.display = 'block';
-    elements.activityList.style.display = 'none';
-}
+    const nameLink = document.createElement('a');
+    nameLink.classList.add('activity-details-name');
+    nameLink.textContent = activity.stadium_name;
+    nameLink.href = `stadium.html?id=${encodeURIComponent(activity.stadium_id)}`;
 
-function showResults() {
-    elements.noActivityContainer.style.display = 'none';
-    elements.activityList.style.display = 'block';
+    const time = document.createElement('span');
+    time.classList.add('activity-details-time');
+    time.textContent = timeAgo(activity.added_on);
+
+    header.appendChild(nameLink);
+    header.appendChild(time);
+    return header;
 }
 
 function createActivityItem(activity, username) {
@@ -87,29 +113,40 @@ function createActivityItem(activity, username) {
         detailsContainer.appendChild(createSimpleActivityDetails(activity));
     }
 
-    const buttons = createActivityButtons(activity, username);
-    detailsContainer.appendChild(buttons);
-
+    detailsContainer.appendChild(createActivityButtons(activity, username));
     item.appendChild(detailsContainer);
     return item;
 }
 
-function createActivityHeader(activity) {
-    const header = document.createElement('div');
-    header.classList.add('activity-details-header');
+function createDeleteButton(activity, username) {
+    const btn = document.createElement('button');
+    btn.classList.add('delete-log-button');
+    btn.textContent = 'Delete Log';
 
-    const nameLink = document.createElement('a');
-    nameLink.classList.add('activity-details-name');
-    nameLink.textContent = activity.stadium_name;
-    nameLink.href = `stadium.html?id=${encodeURIComponent(activity.stadium_id)}`;
+    btn.addEventListener('click', () => {
+        currentData = { visit_id: activity.visit_id, username };
+        toggleMenu(elements.deleteLogMenu, true, overlay);
+    });
 
-    const time = document.createElement('span');
-    time.classList.add('activity-details-time');
-    time.textContent = timeAgo(activity.added_on);
+    return btn;
+}
 
-    header.appendChild(nameLink);
-    header.appendChild(time);
-    return header;
+function createEditButton(activity, username) {
+    const btn = document.createElement('button');
+    btn.classList.add('edit-log-button');
+    btn.textContent = 'Edit Log';
+
+    btn.addEventListener('click', () => {
+        currentData = { visit_id: activity.visit_id, username };
+        elements.editLogName.textContent = activity.stadium_name;
+        elements.editLogImage.src = activity.image;
+        elements.editLogDateVisited.value = activity.visited_on.split('T')[0];
+        elements.editLogDateVisited.setAttribute('max', new Date().toISOString().split('T')[0]);
+        elements.editLogNote.value = activity.user_note || '';
+        toggleMenu(elements.editLogMenu, true, overlay);
+    });
+
+    return btn;
 }
 
 function createLogDetails(activity) {
@@ -130,77 +167,10 @@ function createLogDetails(activity) {
 
     const noteValue = document.createElement('span');
     noteValue.textContent = activity.user_note || 'No note';
-    if (!activity.user_note) {
-        noteValue.classList.add('no-note');
-    }
+    if (!activity.user_note) noteValue.classList.add('no-note');
     details.appendChild(noteValue);
 
     return details;
-}
-
-function createSimpleActivityDetails(activity) {
-    const details = document.createElement('div');
-    details.classList.add('activity-details');
-
-    const text = document.createElement('h4');
-    text.textContent = activity.activity_type === 'wishlist' ? 'ADDED TO WISHLIST' : 'MARKED AS VISITED';
-    details.appendChild(text);
-
-    return details;
-}
-
-function createActivityButtons(activity, username) {
-    const buttons = document.createElement('div');
-    buttons.classList.add('activity-buttons');
-
-    if (activity.visited_on) {
-        buttons.appendChild(createEditButton(activity, username));
-        buttons.appendChild(createDeleteButton(activity, username));
-    } else {
-        buttons.appendChild(createRemoveButton(activity, username));
-    }
-
-    return buttons;
-}
-
-function createEditButton(activity, username) {
-    const btn = document.createElement('button');
-    btn.classList.add('edit-log-button');
-    btn.textContent = 'Edit Log';
-
-    btn.addEventListener('click', () => {
-        currentData = {
-            visit_id: activity.visit_id,
-            username: username
-        };
-
-        elements.editLogName.textContent = activity.stadium_name;
-        elements.editLogImage.src = activity.image;
-        elements.editLogDateVisited.value = activity.visited_on.split('T')[0];
-        elements.editLogDateVisited.setAttribute('max', new Date().toISOString().split('T')[0]);
-        elements.editLogNote.value = activity.user_note || '';
-
-        toggleMenu(elements.editLogMenu, true, overlay);
-    });
-
-    return btn;
-}
-
-function createDeleteButton(activity, username) {
-    const btn = document.createElement('button');
-    btn.classList.add('delete-log-button');
-    btn.textContent = 'Delete Log';
-
-    btn.addEventListener('click', () => {
-        currentData = {
-            visit_id: activity.visit_id,
-            username: username
-        };
-
-        toggleMenu(elements.deleteLogMenu, true, overlay);
-    });
-
-    return btn;
 }
 
 function createRemoveButton(activity, username) {
@@ -215,12 +185,8 @@ function createRemoveButton(activity, username) {
             } else {
                 await activityAPI.removeActivityVisited(activity.stadium_id, username);
             }
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const stadium = urlParams.get('stadium');
-            const activityFilter = elements.activityFilter.value;
-            const sort = elements.sortFilter.value;
-            setView(username, activityFilter, stadium, sort);
+            const { activity: actFilter, sort, stadium } = getFiltersFromURL();
+            setView(username, actFilter, stadium, sort);
         } catch (error) {
             alert(error.message);
         }
@@ -229,94 +195,47 @@ function createRemoveButton(activity, username) {
     return btn;
 }
 
-async function setView(username, activity, stadium, sortBy) {
-    try {
-        showLoading();
+function createSimpleActivityDetails(activity) {
+    const details = document.createElement('div');
+    details.classList.add('activity-details');
 
-        await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
+    const text = document.createElement('h4');
+    text.textContent = activity.activity_type === 'wishlist' ? 'ADDED TO WISHLIST' : 'MARKED AS VISITED';
+    details.appendChild(text);
 
-        const result = await userAPI.loadUserActivity(username, activity, stadium, sortBy);
-        const activities = result.userActivity;
+    return details;
+}
 
-        if (activities.length === 0) {
-            showNoResults();
-        } else {
-            showResults();
-            renderActivities(activities, username);
-        }
+function getFiltersFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        activity: params.get('activity') || 'all',
+        sort: params.get('sort') || 'date-desc',
+        stadium: params.get('stadium') || null
+    };
+}
 
-        hideLoading();
-    } catch (err) {
-        alert(err.message);
-        hideLoading();
-    }
+function hideLoading() {
+    elements.activitySkeleton.style.display = 'none';
+    elements.activityListContainer.style.display = 'block';
+    elements.activityFilterBar.style.display = 'block';
 }
 
 function renderActivities(activities, username) {
     elements.activityList.innerHTML = '';
-
     activities.forEach(activity => {
-        const item = createActivityItem(activity, username);
-        elements.activityList.appendChild(item);
-    });
-}
-
-function setupEditLogHandlers() {
-    elements.editLogSaveButton.addEventListener('click', async () => {
-        if (!currentData) {
-            console.error('No edit data available');
-            return;
-        }
-
-        try {
-            const editDateVisited = elements.editLogDateVisited.value;
-            const editNote = elements.editLogNote.value;
-
-            await activityAPI.editLog(currentData.visit_id, editDateVisited, editNote);
-
-            toggleMenu(elements.editLogMenu, false, overlay);
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const stadium = urlParams.get('stadium');
-            const activityFilter = elements.activityFilter.value;
-            const sort = elements.sortFilter.value;
-            await setView(currentData.username, activityFilter, stadium, sort);
-
-            currentData = null;
-        } catch (err) {
-            alert(err.message);
-        }
-    });
-
-    elements.editLogCancelButton.addEventListener('click', () => {
-        toggleMenu(elements.editLogMenu, false, overlay);
-        currentData = null;
-    });
-
-    elements.closeEditLogMenu.addEventListener('click', () => {
-        toggleMenu(elements.editLogMenu, false, overlay);
-        currentData = null;
+        elements.activityList.appendChild(createActivityItem(activity, username));
     });
 }
 
 function setupDeleteLogHandlers() {
     elements.deleteLogDeleteButton.addEventListener('click', async () => {
-        if (!currentData) {
-            console.error('No delete data available');
-            return;
-        }
-
+        if (!currentData) return;
         try {
             await activityAPI.deleteLog(currentData.visit_id);
-
             toggleMenu(elements.deleteLogMenu, false, overlay);
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const stadium = urlParams.get('stadium');
-            const activityFilter = elements.activityFilter.value;
-            const sort = elements.sortFilter.value;
-            await setView(currentData.username, activityFilter, stadium, sort);
-
+            const { activity, sort, stadium } = getFiltersFromURL();
+            await setView(currentData.username, activity, stadium, sort);
             currentData = null;
         } catch (err) {
             alert(err.message);
@@ -332,71 +251,28 @@ function setupDeleteLogHandlers() {
     });
 }
 
-function initializeCustomSelects() {
-    const triggers = document.querySelectorAll('.custom-select-trigger');
-
-    triggers.forEach(trigger => {
-        const wrapper = trigger.parentElement;
-        const dropdown = wrapper.querySelector('.custom-select-dropdown');
-        const options = dropdown.querySelectorAll('.custom-select-option');
-        const valueDisplay = wrapper.querySelector('.custom-select-value');
-        const hiddenSelect = wrapper.querySelector('.filter-select');
-
-        trigger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            closeAllDropdowns(dropdown);
-            dropdown.classList.toggle('active');
-            trigger.classList.toggle('active');
-        });
-
-        options.forEach(option => {
-            option.addEventListener('click', (e) => {
-                e.stopPropagation();
-                selectOption(option, options, valueDisplay, hiddenSelect, dropdown, trigger);
-            });
-        });
-    });
-
-    document.addEventListener('click', () => closeAllDropdowns());
-}
-
-function closeAllDropdowns(except = null) {
-    document.querySelectorAll('.custom-select-dropdown.active').forEach(d => {
-        if (d !== except) {
-            d.classList.remove('active');
-            d.parentElement.querySelector('.custom-select-trigger').classList.remove('active');
+function setupEditLogHandlers() {
+    elements.editLogSaveButton.addEventListener('click', async () => {
+        if (!currentData) return;
+        try {
+            await activityAPI.editLog(currentData.visit_id, elements.editLogDateVisited.value, elements.editLogNote.value);
+            toggleMenu(elements.editLogMenu, false, overlay);
+            const { activity, sort, stadium } = getFiltersFromURL();
+            await setView(currentData.username, activity, stadium, sort);
+            currentData = null;
+        } catch (err) {
+            alert(err.message);
         }
     });
-}
 
-function selectOption(option, allOptions, valueDisplay, hiddenSelect, dropdown, trigger) {
-    allOptions.forEach(opt => opt.classList.remove('selected'));
-    option.classList.add('selected');
-    valueDisplay.textContent = option.textContent;
-    hiddenSelect.value = option.dataset.value;
-    hiddenSelect.dispatchEvent(new Event('change'));
-    dropdown.classList.remove('active');
-    trigger.classList.remove('active');
-}
-
-function setupFilterHandlers() {
-    const username = getUsername();
-    const urlParams = new URLSearchParams(window.location.search);
-    const stadium = urlParams.get('stadium');
-
-    const getFilters = () => ({
-        activity: elements.activityFilter.value,
-        sort: elements.sortFilter.value
+    elements.editLogCancelButton.addEventListener('click', () => {
+        toggleMenu(elements.editLogMenu, false, overlay);
+        currentData = null;
     });
 
-    elements.activityFilter.addEventListener('change', () => {
-        const { activity, sort } = getFilters();
-        setView(username, activity, stadium, sort);
-    });
-
-    elements.sortFilter.addEventListener('change', () => {
-        const { activity, sort } = getFilters();
-        setView(username, activity, stadium, sort);
+    elements.closeEditLogMenu.addEventListener('click', () => {
+        toggleMenu(elements.editLogMenu, false, overlay);
+        currentData = null;
     });
 }
 
@@ -415,8 +291,43 @@ function setupEscapeKeyHandler() {
     });
 }
 
+function setupFilterHandlers() {
+    const { stadium } = getFiltersFromURL();
+
+    function applyFilter() {
+        const activity = elements.activityFilter.value;
+        const sort = elements.sortFilter.value;
+        const params = new URLSearchParams();
+        if (stadium) params.set('stadium', stadium);
+        if (activity !== 'all') params.set('activity', activity);
+        if (sort !== 'date-desc') params.set('sort', sort);
+        window.location.search = params.toString();
+    }
+
+    elements.activityFilter.addEventListener('change', applyFilter);
+    elements.sortFilter.addEventListener('change', applyFilter);
+}
+
+function showLoading() {
+    elements.activitySkeleton.style.display = 'block';
+    elements.activityListContainer.style.display = 'none';
+    elements.activityFilterBar.style.display = 'none';
+}
+
+function showNoResults() {
+    elements.noActivityContainer.style.display = 'block';
+    elements.activityList.style.display = 'none';
+}
+
+function showResults() {
+    elements.noActivityContainer.style.display = 'none';
+    elements.activityList.style.display = 'block';
+}
+
+/*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
+    registerUserLogOutEvents();
     initializeCustomSelects();
     setupFilterHandlers();
     setupEditLogHandlers();
@@ -428,8 +339,7 @@ window.onload = async () => {
     const username = getUsername();
     showLoggedInUI(username);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const stadium = urlParams.get('stadium');
+    const { activity, sort, stadium } = getFiltersFromURL();
 
     if (stadium) {
         document.title = `${stadium} Activity - StadiumTrackr`;
@@ -438,17 +348,8 @@ window.onload = async () => {
         document.title = 'Activity - StadiumTrackr';
     }
 
-    setView(username, 'all', stadium, 'date-desc');
+    syncSelectFromURL('activity-filter', activity);
+    syncSelectFromURL('sort-filter', sort);
+
+    setView(username, activity, stadium, sort);
 };
-
-const { logOutButton, sidebarLogOutButton } = getHeaderElements();
-
-logOutButton?.addEventListener('click', () => {
-    clearUsername();
-    window.location.replace('index.html');
-});
-
-sidebarLogOutButton?.addEventListener('click', () => {
-    clearUsername();
-    window.location.replace('index.html');
-});

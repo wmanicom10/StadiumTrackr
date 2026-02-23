@@ -1,9 +1,11 @@
-import { getAuthElements, getHeaderElements, MIN_LOADING_TIME, overlay, createAccountMenu } from "../constants.js";
-import { toggleMenu, getUsername, isLoggedIn, truncateUsername, formatLocation, formatDate, clearUsername } from "../utils.js";
-import { registerEventListeners, registerCommonEvents } from "../events.js";
+/*  Imports  */
+import { createAccountMenu, getAuthElements, getHeaderElements, MIN_LOADING_TIME, overlay } from "../constants.js";
+import { formatDate, formatLocation, getUsername, isLoggedIn, showLoggedOutUI, toggleMenu, truncateUsername } from "../utils.js";
+import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { stadiumAPI } from "../api/stadium.js";
 import { activityAPI } from "../api/activity.js";
 
+/*  Variables  */
 const elements = {
     addStadiumMenu: document.getElementById('add-stadium-menu'),
     addStadiumDateVisited: document.getElementById('add-stadium-date-visited'),
@@ -34,41 +36,31 @@ const elements = {
     userWishlistImage: document.getElementById('user-wishlist-image')
 };
 
-function showLoggedInUI(username) {
-    const { loggedInHeader, loggedOutHeader, loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
-    
-    const displayName = truncateUsername(username);
-    loggedInHeaderUsername.textContent = displayName;
-    sidebarUsername.textContent = displayName;
-    loggedOutHeader.style.display = 'none';
-    loggedInHeader.style.display = 'flex';
-    elements.stadiumUserControls.style.display = 'flex';
-}
+/*  Async Functions  */
+async function loadFullStadiumPage(id, username) {
+    try {
+        const stadiumName = await loadStadiumInfo(id, username);
+        
+        await Promise.all([
+            loadStadiumMap(id),
+            loadUpcomingEvents(stadiumName),
+            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+        ]);
 
-function showLoggedOutUI() {
-    const { loggedInHeader, loggedOutHeader } = getHeaderElements();
-    loggedInHeader.style.display = 'none';
-    loggedOutHeader.style.display = 'flex';
-}
+        document.getElementById('stadium-skeleton').style.display = 'none';
+        document.getElementById('stadium-content').style.display = 'block';
+        document.getElementById('upcoming-events-skeleton-container').style.display = 'none';
+        document.getElementById('upcoming-events-content').style.display = 'block';
+        document.getElementById('stadium-map-skeleton-container').style.display = 'none';
+        document.getElementById('stadium-map-content').style.display = 'block';
 
-function initializeStadiumMap(latitude, longitude, stadiumName) {
-    const map = L.map('stadium-map').setView([latitude, longitude], 6);
-
-    const customIcon = L.icon({
-        iconUrl: 'images/icons/pin-blue.png',
-        iconSize: [25, 35],
-        iconAnchor: [16, 40],
-        popupAnchor: [-3, -40]
-    });
-
-    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
-        attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        ext: 'jpg'
-    }).addTo(map);
-
-    L.marker([latitude, longitude], { icon: customIcon })
-        .addTo(map)
-        .bindPopup(`<div class="popup-card"><h4>${stadiumName}</h4></div>`);
+        if (window.stadiumMapData) {
+            const { latitude, longitude, name: stadiumName } = window.stadiumMapData;
+            initializeStadiumMap(latitude, longitude, stadiumName);
+        }
+    } catch (error) {
+        alert('Failed to load stadium content: ' + error.message);
+    }
 }
 
 async function loadStadiumInfo(id, username) {
@@ -103,172 +95,6 @@ async function loadStadiumInfo(id, username) {
     } catch (error) {
         alert(error.message);
     }
-}
-
-function setupUserControls(stadiumId, stadiumName, username, userVisited, userWishlist) {
-    const hasLogged = userVisited.some(activity => activity.visited_on !== null);
-    let isWishlist = userWishlist.length > 0;
-    let isVisited = userVisited.length > 0;
-
-    updateWishlistUI(isWishlist);
-    
-    if (hasLogged) {
-        replaceVisitedWithLoggedLink(stadiumId);
-    } else {
-        updateVisitedUI(isVisited);
-        setupVisitedClickHandler(stadiumId, username, isVisited, isWishlist);
-    }
-
-    setupWishlistClickHandler(stadiumId, username, isWishlist);
-    setupStadiumButtons(stadiumId, stadiumName, username);
-}
-
-function updateWishlistUI(isWishlist) {
-    elements.stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
-    elements.userWishlistImage.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
-}
-
-function updateVisitedUI(isVisited) {
-    elements.stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
-    elements.userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
-}
-
-function replaceVisitedWithLoggedLink(stadiumId) {
-    const visitLink = document.createElement('a');
-    visitLink.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
-    visitLink.className = 'stadium-user-control';
-    visitLink.id = 'stadium-user-control-visited';
-    visitLink.innerHTML = `
-        <img src="images/icons/check.png" alt="Check icon" id="user-visited-image">
-        <h3 id="stadium-user-control-visited-text">Logged</h3>
-    `;
-    elements.stadiumUserControlVisited.parentNode.replaceChild(visitLink, elements.stadiumUserControlVisited);
-}
-
-function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initialIsWishlist) {
-    let isVisited = initialIsVisited;
-    let isWishlist = initialIsWishlist;
-
-    elements.stadiumUserControlVisited.addEventListener('click', async () => {
-        if (!username) {
-            toggleMenu(createAccountMenu, true, overlay);
-            return;
-        }
-
-        elements.stadiumUserControlVisited.classList.add('animating');
-        const newIsVisited = !isVisited;
-
-        setTimeout(() => {
-            updateVisitedUI(newIsVisited);
-            
-            if (newIsVisited && isWishlist) {
-                animateWishlistRemoval();
-                activityAPI.updateUserWishlist(stadiumId, username, true)
-                    .catch(error => alert(error.message));
-                isWishlist = false;
-            }
-        }, 200);
-
-        setTimeout(() => {
-            elements.stadiumUserControlVisited.classList.remove('animating');
-        }, 400);
-
-        try {
-            await activityAPI.updateUserStadium(stadiumId, username, isVisited);
-            isVisited = newIsVisited;
-        } catch (error) {
-            alert(error.message);
-        }
-    });
-}
-
-function animateWishlistRemoval() {
-    elements.stadiumUserControlWishlist.classList.add('animating');
-    
-    setTimeout(() => {
-        updateWishlistUI(false);
-    }, 200);
-    
-    setTimeout(() => {
-        elements.stadiumUserControlWishlist.classList.remove('animating');
-    }, 400);
-}
-
-function setupWishlistClickHandler(stadiumId, username, initialIsWishlist) {
-    let isWishlist = initialIsWishlist;
-
-    elements.stadiumUserControlWishlist.addEventListener('click', async () => {
-        if (!username) {
-            toggleMenu(createAccountMenu, true, overlay);
-            return;
-        }
-
-        elements.stadiumUserControlWishlist.classList.add('animating');
-        const newIsWishlist = !isWishlist;
-
-        setTimeout(() => {
-            updateWishlistUI(newIsWishlist);
-        }, 200);
-
-        setTimeout(() => {
-            elements.stadiumUserControlWishlist.classList.remove('animating');
-        }, 400);
-
-        try {
-            await activityAPI.updateUserWishlist(stadiumId, username, isWishlist);
-            isWishlist = newIsWishlist;
-        } catch (error) {
-            alert(error.message);
-        }
-    });
-}
-
-function setupStadiumButtons(stadiumId, username) {
-    elements.stadiumLogButton.addEventListener('click', () => {
-        if (!username) {
-            toggleMenu(createAccountMenu, true, overlay);
-        } else {
-            toggleMenu(elements.addStadiumMenu, true, overlay);
-        }
-    });
-
-    elements.stadiumActivityButton.addEventListener('click', (e) => {
-        if (!username) {
-            e.preventDefault();
-            toggleMenu(createAccountMenu, true, overlay);
-        }
-    });
-
-    elements.stadiumActivityButton.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
-}
-
-function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage) {
-    elements.addStadiumName.textContent = stadiumName;
-    elements.addStadiumImage.src = stadiumImage;
-
-    const today = new Date().toISOString().split('T')[0];
-    elements.addStadiumDateVisited.setAttribute('max', today);
-    elements.addStadiumDateVisited.value = today;
-
-    elements.addStadiumLogButton.addEventListener('click', async () => {
-        const dateVisited = elements.addStadiumDateVisited.value;
-        const note = elements.addStadiumNote.value.trim() || null;
-
-        try {
-            await activityAPI.addStadium(stadiumId, username, dateVisited, note);
-            window.location.reload();
-        } catch (error) {
-            alert(error.message);
-        }
-    });
-
-    elements.addStadiumCancelButton.addEventListener('click', () => {
-        toggleMenu(elements.addStadiumMenu, false, overlay);
-    });
-
-    elements.closeAddStadiumMenu.addEventListener('click', () => {
-        toggleMenu(elements.addStadiumMenu, false, overlay);
-    });
 }
 
 async function loadStadiumMap(id) {
@@ -315,18 +141,17 @@ async function loadUpcomingEvents(name) {
     }
 }
 
-function renderUpcomingEvents(events) {
-    if (!events || events.length === 0) {
-        elements.noUpcomingEventsContainer.style.display = 'block';
-        return;
-    }
-
-    const maxEvents = Math.min(events.length, 3);
-    for (let i = 0; i < maxEvents; i++) {
-        const event = events[i];
-        const eventElement = createEventElement(event);
-        elements.upcomingEventsContainer.appendChild(eventElement);
-    }
+/*  Functions  */
+function animateWishlistRemoval() {
+    elements.stadiumUserControlWishlist.classList.add('animating');
+    
+    setTimeout(() => {
+        updateWishlistUI(false);
+    }, 200);
+    
+    setTimeout(() => {
+        elements.stadiumUserControlWishlist.classList.remove('animating');
+    }, 400);
 }
 
 function createEventElement(event) {
@@ -362,17 +187,6 @@ function createEventElement(event) {
     return container;
 }
 
-function getEventIcon(genre) {
-    const icons = {
-        'Football': 'images/icons/football.png',
-        'Basketball': 'images/icons/basketball.png',
-        'Baseball': 'images/icons/baseball.png',
-        'Hockey': 'images/icons/hockey.png',
-        'Soccer': 'images/icons/soccer.png'
-    };
-    return icons[genre] || 'images/icons/ticket.png';
-}
-
 function formatEventDate(dateString) {
     const [year, month, day] = dateString.split('-');
     return `${month}/${day}/${year}`;
@@ -391,35 +205,221 @@ function formatEventTime(timeString) {
     });
 }
 
-async function loadFullStadiumPage(id, username) {
-    try {
-        const stadiumName = await loadStadiumInfo(id, username);
-        
-        await Promise.all([
-            loadStadiumMap(id),
-            loadUpcomingEvents(stadiumName),
-            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
-        ]);
+function getEventIcon(genre) {
+    const icons = {
+        'Football': 'images/icons/football.png',
+        'Basketball': 'images/icons/basketball.png',
+        'Baseball': 'images/icons/baseball.png',
+        'Hockey': 'images/icons/hockey.png',
+        'Soccer': 'images/icons/soccer.png'
+    };
+    return icons[genre] || 'images/icons/ticket.png';
+}
 
-        document.getElementById('stadium-skeleton').style.display = 'none';
-        document.getElementById('stadium-content').style.display = 'block';
-        document.getElementById('upcoming-events-skeleton-container').style.display = 'none';
-        document.getElementById('upcoming-events-content').style.display = 'block';
-        document.getElementById('stadium-map-skeleton-container').style.display = 'none';
-        document.getElementById('stadium-map-content').style.display = 'block';
+function initializeStadiumMap(latitude, longitude, stadiumName) {
+    const map = L.map('stadium-map').setView([latitude, longitude], 6);
 
-        if (window.stadiumMapData) {
-            const { latitude, longitude, name: stadiumName } = window.stadiumMapData;
-            initializeStadiumMap(latitude, longitude, stadiumName);
-        }
-    } catch (error) {
-        alert('Failed to load stadium content: ' + error.message);
+    const customIcon = L.icon({
+        iconUrl: 'images/icons/pin-blue.png',
+        iconSize: [25, 35],
+        iconAnchor: [16, 40],
+        popupAnchor: [-3, -40]
+    });
+
+    L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_satellite/{z}/{x}/{y}{r}.{ext}', {
+        attribution: '&copy; CNES, Distribution Airbus DS, © Airbus DS, © PlanetObserver (Contains Copernicus Data) | &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        ext: 'jpg'
+    }).addTo(map);
+
+    L.marker([latitude, longitude], { icon: customIcon })
+        .addTo(map)
+        .bindPopup(`<div class="popup-card"><h4>${stadiumName}</h4></div>`);
+}
+
+function renderUpcomingEvents(events) {
+    if (!events || events.length === 0) {
+        elements.noUpcomingEventsContainer.style.display = 'block';
+        return;
+    }
+
+    const maxEvents = Math.min(events.length, 3);
+    for (let i = 0; i < maxEvents; i++) {
+        const event = events[i];
+        const eventElement = createEventElement(event);
+        elements.upcomingEventsContainer.appendChild(eventElement);
     }
 }
 
+function replaceVisitedWithLoggedLink(stadiumId) {
+    const visitLink = document.createElement('a');
+    visitLink.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
+    visitLink.className = 'stadium-user-control';
+    visitLink.id = 'stadium-user-control-visited';
+    visitLink.innerHTML = `
+        <img src="images/icons/check.png" alt="Check icon" id="user-visited-image">
+        <h3 id="stadium-user-control-visited-text">Logged</h3>
+    `;
+    elements.stadiumUserControlVisited.parentNode.replaceChild(visitLink, elements.stadiumUserControlVisited);
+}
+
+function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage) {
+    elements.addStadiumName.textContent = stadiumName;
+    elements.addStadiumImage.src = stadiumImage;
+
+    const today = new Date().toISOString().split('T')[0];
+    elements.addStadiumDateVisited.setAttribute('max', today);
+    elements.addStadiumDateVisited.value = today;
+
+    elements.addStadiumLogButton.addEventListener('click', async () => {
+        const dateVisited = elements.addStadiumDateVisited.value;
+        const note = elements.addStadiumNote.value.trim() || null;
+
+        try {
+            await activityAPI.addStadium(stadiumId, username, dateVisited, note);
+            window.location.reload();
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+
+    elements.addStadiumCancelButton.addEventListener('click', () => {
+        toggleMenu(elements.addStadiumMenu, false, overlay);
+    });
+
+    elements.closeAddStadiumMenu.addEventListener('click', () => {
+        toggleMenu(elements.addStadiumMenu, false, overlay);
+    });
+}
+
+function setupStadiumButtons(stadiumId, username) {
+    elements.stadiumLogButton.addEventListener('click', () => {
+        if (!username) {
+            toggleMenu(createAccountMenu, true, overlay);
+        } else {
+            toggleMenu(elements.addStadiumMenu, true, overlay);
+        }
+    });
+
+    elements.stadiumActivityButton.addEventListener('click', (e) => {
+        if (!username) {
+            e.preventDefault();
+            toggleMenu(createAccountMenu, true, overlay);
+        }
+    });
+
+    elements.stadiumActivityButton.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
+}
+
+function setupUserControls(stadiumId, stadiumName, username, userVisited, userWishlist) {
+    const hasLogged = userVisited.some(activity => activity.visited_on !== null);
+    let isWishlist = userWishlist.length > 0;
+    let isVisited = userVisited.length > 0;
+
+    updateWishlistUI(isWishlist);
+    
+    if (hasLogged) {
+        replaceVisitedWithLoggedLink(stadiumId);
+    } else {
+        updateVisitedUI(isVisited);
+        setupVisitedClickHandler(stadiumId, username, isVisited, isWishlist);
+    }
+
+    setupWishlistClickHandler(stadiumId, username, isWishlist);
+    setupStadiumButtons(stadiumId, stadiumName, username);
+}
+
+function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initialIsWishlist) {
+    let isVisited = initialIsVisited;
+    let isWishlist = initialIsWishlist;
+
+    elements.stadiumUserControlVisited.addEventListener('click', async () => {
+        if (!username) {
+            toggleMenu(createAccountMenu, true, overlay);
+            return;
+        }
+
+        elements.stadiumUserControlVisited.classList.add('animating');
+        const newIsVisited = !isVisited;
+
+        setTimeout(() => {
+            updateVisitedUI(newIsVisited);
+            
+            if (newIsVisited && isWishlist) {
+                animateWishlistRemoval();
+                activityAPI.updateUserWishlist(stadiumId, username, true)
+                    .catch(error => alert(error.message));
+                isWishlist = false;
+            }
+        }, 200);
+
+        setTimeout(() => {
+            elements.stadiumUserControlVisited.classList.remove('animating');
+        }, 400);
+
+        try {
+            await activityAPI.updateUserStadium(stadiumId, username, isVisited);
+            isVisited = newIsVisited;
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+}
+
+function setupWishlistClickHandler(stadiumId, username, initialIsWishlist) {
+    let isWishlist = initialIsWishlist;
+
+    elements.stadiumUserControlWishlist.addEventListener('click', async () => {
+        if (!username) {
+            toggleMenu(createAccountMenu, true, overlay);
+            return;
+        }
+
+        elements.stadiumUserControlWishlist.classList.add('animating');
+        const newIsWishlist = !isWishlist;
+
+        setTimeout(() => {
+            updateWishlistUI(newIsWishlist);
+        }, 200);
+
+        setTimeout(() => {
+            elements.stadiumUserControlWishlist.classList.remove('animating');
+        }, 400);
+
+        try {
+            await activityAPI.updateUserWishlist(stadiumId, username, isWishlist);
+            isWishlist = newIsWishlist;
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+}
+
+function showLoggedInUI(username) {
+    const { loggedInHeader, loggedOutHeader, loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
+    
+    const displayName = truncateUsername(username);
+    loggedInHeaderUsername.textContent = displayName;
+    sidebarUsername.textContent = displayName;
+    loggedOutHeader.style.display = 'none';
+    loggedInHeader.style.display = 'flex';
+    elements.stadiumUserControls.style.display = 'flex';
+}
+
+function updateVisitedUI(isVisited) {
+    elements.stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
+    elements.userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+}
+
+function updateWishlistUI(isWishlist) {
+    elements.stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
+    elements.userWishlistImage.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+}
+
+/*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerEventListeners(getAuthElements());
     registerCommonEvents();
+    registerLogOutEvents();
 });
 
 window.onload = async () => {
@@ -436,15 +436,3 @@ window.onload = async () => {
     
     loadFullStadiumPage(id, username);
 };
-
-const { logOutButton, sidebarLogOutButton } = getHeaderElements();
-
-logOutButton?.addEventListener('click', () => {
-    clearUsername();
-    window.location.reload();
-});
-
-sidebarLogOutButton?.addEventListener('click', () => {
-    clearUsername();
-    window.location.reload();
-});

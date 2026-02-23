@@ -1,9 +1,11 @@
+/*  Imports  */
 import { getHeaderElements, MIN_LOADING_TIME } from "../constants.js";
-import { getUsername, truncateUsername, createUserStadiumElement, clearUsername } from "../utils.js";
-import { registerCommonEvents } from "../events.js";
+import { createUserStadiumElement, getUsername, truncateUsername } from "../utils.js";
+import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { stadiumAPI } from "../api/stadium.js";
 
+/*  Variables  */
 const elements = {
     userHomeWelcomeText: document.getElementById('user-home-welcome-text'),
     userStadiumsElement: document.getElementById('user-stadiums'),
@@ -19,66 +21,70 @@ const elements = {
     userAchievementsElement: document.getElementById('user-achievements')
 };
 
-function showLoggedInUI(username) {
-    const { loggedInHeader, loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
-    
-    elements.userHomeWelcomeText.textContent = `Welcome, ${username}!`;
-    
-    const displayName = truncateUsername(username);
-    loggedInHeaderUsername.textContent = displayName;
-    sidebarUsername.textContent = displayName;
-    loggedInHeader.style.display = 'flex';
-}
+/*  Async Functions  */
+async function loadFullUserHomePage(username) {
+    try {
+        await Promise.all([
+            loadUserInfo(username),
+            loadStadiumMap(username),
+            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+        ]);
 
-function hideSkeletons() {
-    const skeletons = [
-        'user-home-welcome-text-skeleton',
-        'user-home-stadiums-container-skeleton',
-        'user-home-stats-container-skeleton',
-        'user-home-wishlist-container-skeleton',
-        'user-home-achievements-container-skeleton',
-        'user-home-stadium-map-container-skeleton'
-    ];
+        hideSkeletons();
+        showContent();
 
-    skeletons.forEach(id => {
-        document.getElementById(id).style.display = 'none';
-    });
-}
-
-function showContent() {
-    const containers = [
-        'user-home-welcome-text',
-        'user-home-stadiums-container',
-        'user-home-stats-container',
-        'user-home-wishlist-container',
-        'user-home-achievements-container',
-        'user-home-stadium-map-container'
-    ];
-
-    containers.forEach(id => {
-        document.getElementById(id).style.display = 'block';
-    });
-}
-
-function renderStadiumSection(stadiums, container, noStadiumsText, seeAllButton) {
-    if (stadiums.length === 0) {
-        noStadiumsText.style.display = 'block';
-        seeAllButton.style.display = 'none';
-        return;
-    }
-
-    const stadiumsToShow = stadiums.length === 1 ? stadiums : stadiums.slice(0, 2);
-
-    stadiumsToShow.forEach(stadium => {
-        const element = createUserStadiumElement(stadium);
-        container.appendChild(element);
-    });
-
-    if (stadiums.length === 1) {
-        container.style.justifyContent = 'center';
+        if (window.userHomeMapData) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            initializeUserHomeMap(window.userHomeMapData.stadiums);
+        }
+    } catch (error) {
+        alert('Failed to load user home content: ' + error.message);
     }
 }
 
+async function loadStadiumMap(username) {
+    try {
+        const result = await stadiumAPI.loadUserHomeMap(username);
+        
+        window.userHomeMapData = {
+            stadiums: result.formattedRows
+        };
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function loadUserInfo(username) {
+    try {
+        const result = await userAPI.loadUserInfo(username);
+
+        renderStadiumSection(
+            result.userStadiums,
+            elements.userStadiumsElement,
+            elements.userStadiumsNoStadiumsText,
+            elements.userHomeStadiumsSeeAllButton
+        );
+
+        elements.numStadiums.textContent = result.numStadiumsVisited;
+        elements.numCountries.textContent = result.numCountriesVisited;
+        elements.numEvents.textContent = result.numEventsAttended;
+
+        renderStadiumSection(
+            result.wishlistItems,
+            elements.userWishlistStadiumsElement,
+            elements.userWishlistStadiumsNoStadiumsText,
+            elements.userHomeWishlistSeeAllButton
+        );
+
+        renderAchievements(result.userAchievements);
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+/*  Functions  */
 function createAchievementElement(achievement) {
     const container = document.createElement('div');
     container.classList.add('user-achievement');
@@ -105,16 +111,18 @@ function createAchievementElement(achievement) {
     return container;
 }
 
-function renderAchievements(achievements) {
-    if (achievements.length === 0) {
-        elements.userAchievementsNoAchievementsText.style.display = 'block';
-        return;
-    }
+function hideSkeletons() {
+    const skeletons = [
+        'user-home-welcome-text-skeleton',
+        'user-home-stadiums-container-skeleton',
+        'user-home-stats-container-skeleton',
+        'user-home-wishlist-container-skeleton',
+        'user-home-achievements-container-skeleton',
+        'user-home-stadium-map-container-skeleton'
+    ];
 
-    elements.userAchievementsElement.innerHTML = '';
-    achievements.forEach(achievement => {
-        const element = createAchievementElement(achievement);
-        elements.userAchievementsElement.appendChild(element);
+    skeletons.forEach(id => {
+        document.getElementById(id).style.display = 'none';
     });
 }
 
@@ -158,70 +166,68 @@ function initializeUserHomeMap(stadiums) {
     }, 100);
 }
 
-async function loadUserInfo(username) {
-    try {
-        const result = await userAPI.loadUserInfo(username);
+function renderAchievements(achievements) {
+    if (achievements.length === 0) {
+        elements.userAchievementsNoAchievementsText.style.display = 'block';
+        return;
+    }
 
-        renderStadiumSection(
-            result.userStadiums,
-            elements.userStadiumsElement,
-            elements.userStadiumsNoStadiumsText,
-            elements.userHomeStadiumsSeeAllButton
-        );
+    elements.userAchievementsElement.innerHTML = '';
+    achievements.forEach(achievement => {
+        const element = createAchievementElement(achievement);
+        elements.userAchievementsElement.appendChild(element);
+    });
+}
 
-        elements.numStadiums.textContent = result.numStadiumsVisited;
-        elements.numCountries.textContent = result.numCountriesVisited;
-        elements.numEvents.textContent = result.numEventsAttended;
+function renderStadiumSection(stadiums, container, noStadiumsText, seeAllButton) {
+    if (stadiums.length === 0) {
+        noStadiumsText.style.display = 'block';
+        seeAllButton.style.display = 'none';
+        return;
+    }
 
-        renderStadiumSection(
-            result.wishlistItems,
-            elements.userWishlistStadiumsElement,
-            elements.userWishlistStadiumsNoStadiumsText,
-            elements.userHomeWishlistSeeAllButton
-        );
+    const stadiumsToShow = stadiums.length === 1 ? stadiums : stadiums.slice(0, 2);
 
-        renderAchievements(result.userAchievements);
+    stadiumsToShow.forEach(stadium => {
+        const element = createUserStadiumElement(stadium);
+        container.appendChild(element);
+    });
 
-    } catch (error) {
-        alert(error.message);
+    if (stadiums.length === 1) {
+        container.style.justifyContent = 'center';
     }
 }
 
-async function loadStadiumMap(username) {
-    try {
-        const result = await stadiumAPI.loadUserHomeMap(username);
-        
-        window.userHomeMapData = {
-            stadiums: result.formattedRows
-        };
+function showContent() {
+    const containers = [
+        'user-home-welcome-text',
+        'user-home-stadiums-container',
+        'user-home-stats-container',
+        'user-home-wishlist-container',
+        'user-home-achievements-container',
+        'user-home-stadium-map-container'
+    ];
 
-    } catch (error) {
-        alert(error.message);
-    }
+    containers.forEach(id => {
+        document.getElementById(id).style.display = 'block';
+    });
 }
 
-async function loadFullUserHomePage(username) {
-    try {
-        await Promise.all([
-            loadUserInfo(username),
-            loadStadiumMap(username),
-            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
-        ]);
-
-        hideSkeletons();
-        showContent();
-
-        if (window.userHomeMapData) {
-            await new Promise(resolve => setTimeout(resolve, 100));
-            initializeUserHomeMap(window.userHomeMapData.stadiums);
-        }
-    } catch (error) {
-        alert('Failed to load user home content: ' + error.message);
-    }
+function showLoggedInUI(username) {
+    const { loggedInHeader, loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
+    
+    elements.userHomeWelcomeText.textContent = `Welcome, ${username}!`;
+    
+    const displayName = truncateUsername(username);
+    loggedInHeaderUsername.textContent = displayName;
+    sidebarUsername.textContent = displayName;
+    loggedInHeader.style.display = 'flex';
 }
 
+/*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
+    registerUserLogOutEvents();
 });
 
 window.onload = async () => {
@@ -229,15 +235,3 @@ window.onload = async () => {
     showLoggedInUI(username);
     loadFullUserHomePage(username);
 };
-
-const { logOutButton, sidebarLogOutButton } = getHeaderElements();
-
-logOutButton?.addEventListener('click', () => {
-    clearUsername();
-    window.location.replace('index.html');
-});
-
-sidebarLogOutButton?.addEventListener('click', () => {
-    clearUsername();
-    window.location.replace('index.html');
-});
