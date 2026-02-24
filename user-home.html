@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="logged-in">
 
     <head>
         <meta charset="utf-8">
@@ -22,15 +22,23 @@
         <!-- Main Content -->
         <div id="content-wrapper">
 
-            <!-- Logged In Header -->
-            <header id="logged-in-header">
+            <!-- Header -->
+            <header id="site-header">
                 <h1>StadiumTrackr</h1>
-                <ul id="nav-items">
+
+                <!-- Logged In Nav -->
+                <ul id="logged-in-nav">
                     <li class="nav-item">
                         <div id="user-dropdown-wrapper">
                             <div id="logged-in-header-user-container">
                                 <img src="images/icons/person-circle.png" alt="" id="logged-in-header-user-profile-pic">
-                                <span id="logged-in-header-username"></span>
+                                <span id="logged-in-header-username"></span><script>
+                                    (function() {
+                                        const u = localStorage.getItem('username') || '';
+                                        const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
+                                        document.getElementById('logged-in-header-username').textContent = d;
+                                    })();
+                                </script>
                                 <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
                                     <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
                                 </svg>
@@ -61,7 +69,13 @@
                             </label>
                             <div id="sidebar-user-info">
                                 <img src="images/icons/person-circle.png" alt="" id="sidebar-user-profile-pic">
-                                <span id="sidebar-username"></span>
+                                <span id="sidebar-username"></span><script>
+                                    (function() {
+                                        const u = localStorage.getItem('username') || '';
+                                        const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
+                                        document.getElementById('sidebar-username').textContent = d;
+                                    })();
+                                </script>
                             </div>
                             <div id="sidebar-user-links">
                                 <a href="user-home.html">Home</a>

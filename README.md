@@ -17,7 +17,7 @@ A web application for tracking stadium visits as you explore sports venues acros
 
 ### Frontend
 - **HTML/CSS**
-- **Vanilla JavaScript**
+- **JavaScript**
 - **Leaflet.js**
 
 ### Backend

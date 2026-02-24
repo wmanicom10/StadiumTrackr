@@ -306,14 +306,20 @@ export function initializeCustomSelects() {
             dropdown.classList.toggle('active');
             trigger.classList.toggle('active');
         });
-        
+
         options.forEach(option => {
             option.addEventListener('click', (e) => {
                 e.stopPropagation();
-                selectOption(option, options, valueDisplay, hiddenSelect, dropdown, trigger);
+                // Update the hidden select value so the change event
+                // reads the correct value, then let the change event navigate.
+                // Do NOT call selectOption here — that updates the visible
+                // label which causes the flicker before navigation.
+                hiddenSelect.value = option.dataset.value;
+                hiddenSelect.dispatchEvent(new Event('change'));
             });
         });
     });
+
     document.addEventListener('click', () => closeAllDropdowns());
 }
 
@@ -409,7 +415,13 @@ export function setupFilterHandlers(elements) {
     elements.leagueFilter.addEventListener('change', applyFilter);
     elements.countryFilter.addEventListener('change', applyFilter);
     elements.sortFilter.addEventListener('change', applyFilter);
-    elements.clearFiltersButton.addEventListener('click', () => { resetFilters(); applyFilter(); });
+    
+    elements.clearFiltersButton.addEventListener('click', () => {
+        elements.leagueFilter.value = 'all';
+        elements.countryFilter.value = 'all';
+        elements.sortFilter.value = 'name-asc';
+        applyFilter();
+    });
 }
 
 export function setupSearch(getAllStadiums, elements) {
@@ -437,19 +449,17 @@ export function showLoading(elements) {
 }
 
 export function showLoggedInUI(username) {
-    const { loggedInHeader, loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
-    
+    const { loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
     const displayName = truncateUsername(username);
     loggedInHeaderUsername.textContent = displayName;
     sidebarUsername.textContent = displayName;
-    loggedInHeader.style.display = 'flex';
+    document.documentElement.classList.remove('logged-out');
+    document.documentElement.classList.add('logged-in');
 }
 
 export function showLoggedOutUI() {
-    const { loggedInHeader, loggedOutHeader } = getHeaderElements();
-    
-    loggedInHeader.style.display = 'none';
-    loggedOutHeader.style.display = 'flex';
+    document.documentElement.classList.remove('logged-in');
+    document.documentElement.classList.add('logged-out');
 }
 
 export function showNoResults(elements) {
