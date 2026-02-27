@@ -177,15 +177,18 @@ const handleUpdateUserStadium = async (req, res) => {
 
         if (!isVisited) {
             const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on) VALUES (?, ?, NOW())', [stadiumId, userId]);
-
-            //const newAchievements = await updateAchievementProgress(name, username, isVisited);
-
-            res.json({ rows/*, newAchievements*/ });
+            res.json({ rows });
         } else {
+            const [logged] = await db.execute(
+                'SELECT visit_id FROM user_stadiums WHERE stadium_id = ? AND user_id = ? AND visited_on IS NOT NULL LIMIT 1',
+                [stadiumId, userId]
+            );
+
+            if (logged.length > 0) {
+                return res.json({ locked: true });
+            }
+
             const [rows] = await db.execute('DELETE FROM user_stadiums WHERE stadium_id = ? AND user_id = ?', [stadiumId, userId]);
-
-            // await updateAchievementProgress(name, username, isVisited);
-
             res.json({ rows });
         }
     } catch (err) {

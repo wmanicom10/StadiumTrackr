@@ -1,5 +1,5 @@
 /*  Imports  */
-import { API_BASE_URL, DEBOUNCE_TIME, getAuthElements, ROUTES  } from "../constants.js";
+import { API_BASE_URL, DEBOUNCE_TIME, getAuthElements, ROUTES, MIN_LOADING_TIME } from "../constants.js";
 import { debounce, searchStadiums } from "../utils.js";
 import { registerCommonEvents, registerEventListeners } from "../events.js";
 
@@ -53,7 +53,7 @@ async function waitForImages() {
     });
 
     await Promise.all(imagePromises);
-    await new Promise(resolve => setTimeout(resolve, 750));
+    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
 }
 
 /*  Functions  */
@@ -151,6 +151,8 @@ function setupSearchAutocomplete() {
 function showPopularStadiums() {
     document.getElementById('popular-stadiums-skeleton').style.display = 'none';
     document.getElementById('popular-stadiums').style.display = 'flex';
+    document.getElementById('home-stadium-map-skeleton').style.display = 'none';
+    document.getElementById('home-stadium-map').style.display = 'block'
 }
 
 /*  Events  */

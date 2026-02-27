@@ -3,6 +3,7 @@ import { MIN_LOADING_TIME, overlay } from "../constants.js";
 import { formatDate, formatLocation, getUsername, initializeCustomSelects, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
+import { stadiumAPI } from "../api/stadium.js";
 import { activityAPI } from "../api/activity.js";
 
 /*  Variables  */
@@ -32,11 +33,23 @@ const elements = {
 let currentData = null;
 
 /*  Async Functions  */
-async function setView(username, activity, stadium, sortBy) {
+async function loadStadiumInfo(id, username) {
+    try {
+        const result = await stadiumAPI.loadStadiumInfo(id, username);
+        const { stadium } = result.stadiumInfo;
+
+        return stadium.name;
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function setView(username, activity, id, sortBy) {
     try {
         showLoading();
         await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const result = await userAPI.loadUserActivity(username, activity, stadium, sortBy);
+        const result = await userAPI.loadUserActivity(username, activity, id, sortBy);
         const activities = result.userActivity;
 
         if (activities.length === 0) {
@@ -211,7 +224,7 @@ function getFiltersFromURL() {
     return {
         activity: params.get('activity') || 'all',
         sort: params.get('sort') || 'date-desc',
-        stadium: params.get('stadium') || null
+        id: params.get('id') || null
     };
 }
 
@@ -310,6 +323,7 @@ function setupFilterHandlers() {
 
 function showLoading() {
     elements.activitySkeleton.style.display = 'block';
+    void elements.activitySkeleton.offsetWidth;
     elements.activityListContainer.style.display = 'none';
     elements.activityFilterBar.style.display = 'none';
 }
@@ -339,17 +353,19 @@ window.onload = async () => {
     const username = getUsername();
     showLoggedInUI(username);
 
-    const { activity, sort, stadium } = getFiltersFromURL();
+    const { activity, sort, id } = getFiltersFromURL();
 
-    if (stadium) {
-        document.title = `${stadium} Activity - StadiumTrackr`;
-        elements.activityWelcomeText.textContent = `${stadium} Activity`;
+    if (id) {
+        const stadiumName = await loadStadiumInfo(id, username);
+        document.title = `${stadiumName} Activity - StadiumTrackr`;
+        elements.activityWelcomeText.textContent = `${stadiumName} Activity`;
     } else {
         document.title = 'Activity - StadiumTrackr';
+        elements.activityWelcomeText.textContent = 'Activity';
     }
 
     syncSelectFromURL('activity-filter', activity);
     syncSelectFromURL('sort-filter', sort);
 
-    setView(username, activity, stadium, sort);
+    setView(username, activity, id, sort);
 };

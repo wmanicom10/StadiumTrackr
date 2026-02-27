@@ -7,6 +7,14 @@ import { stadiumAPI } from "../api/stadium.js";
 
 /*  Variables  */
 const elements = {
+    addStadiumMenu: document.getElementById('add-stadium-menu'),
+    addStadiumDateVisited: document.getElementById('add-stadium-date-visited'),
+    addStadiumNote: document.getElementById('add-stadium-note'),
+    closeAddStadiumMenu: document.getElementById('close-add-stadium-menu'),
+    addStadiumName: document.getElementById('add-stadium-name'),
+    addStadiumImage: document.getElementById('add-stadium-image'),
+    addStadiumLogButton: document.getElementById('add-stadium-log-button'),
+    addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
     userHomeWelcomeText: document.getElementById('user-home-welcome-text'),
     userStadiumsElement: document.getElementById('user-stadiums'),
     userStadiumsNoStadiumsText: document.getElementById('user-stadiums-no-stadiums-text'),
@@ -58,6 +66,9 @@ async function loadStadiumMap(username) {
 async function loadUserInfo(username) {
     try {
         const result = await userAPI.loadUserInfo(username);
+
+        console.log(result.userStadiums);
+        console.log(result.wishlistItems);
 
         renderStadiumSection(
             result.userStadiums,
@@ -186,10 +197,8 @@ function renderStadiumSection(stadiums, container, noStadiumsText, seeAllButton)
         return;
     }
 
-    const stadiumsToShow = stadiums.length === 1 ? stadiums : stadiums.slice(0, 2);
-
-    stadiumsToShow.forEach(stadium => {
-        const element = createUserStadiumElement(stadium);
+    stadiums.forEach(stadium => {
+        const element = createUserStadiumElement(stadium, elements);
         container.appendChild(element);
     });
 

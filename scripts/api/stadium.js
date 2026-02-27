@@ -25,8 +25,8 @@ export const stadiumAPI = {
     searchStadiums: (name) =>
         fetchAPI(ROUTES.STADIUM_SEARCH, { name }),
 
-    loadStadiums: (league, country, sortBy) =>
-        fetchAPI(ROUTES.STADIUM_LOAD, { league, country, sortBy }),
+    loadStadiums: (league, country, sortBy, username) =>
+        fetchAPI(ROUTES.STADIUM_LOAD, { league, country, sortBy, username }),
 
     loadUserHomeMap: (username) =>
         fetchAPI(ROUTES.USER_HOME_MAP, { username })

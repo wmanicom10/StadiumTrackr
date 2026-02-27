@@ -159,6 +159,7 @@ function setupFilterHandlers() {
 
 function showLoading() {
     elements.achievementsSkeleton.style.display = 'block';
+    void elements.achievementsSkeleton.offsetWidth;
     elements.achievementsListContainer.style.display = 'none';
     elements.achievementsFilterBar.style.display = 'none';
 }

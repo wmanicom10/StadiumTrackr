@@ -6,6 +6,14 @@ import { userAPI } from "../api/user.js";
 
 /*  Variables  */
 const elements = {
+    addStadiumMenu: document.getElementById('add-stadium-menu'),
+    addStadiumDateVisited: document.getElementById('add-stadium-date-visited'),
+    addStadiumNote: document.getElementById('add-stadium-note'),
+    closeAddStadiumMenu: document.getElementById('close-add-stadium-menu'),
+    addStadiumName: document.getElementById('add-stadium-name'),
+    addStadiumImage: document.getElementById('add-stadium-image'),
+    addStadiumLogButton: document.getElementById('add-stadium-log-button'),
+    addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
     stadiumsList: document.getElementById('stadiums-list'),
     stadiumsPageSelector: document.getElementById('stadiums-page-selector'),
     noStadiumsContainer: document.getElementById('no-stadiums-container'),

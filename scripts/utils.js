@@ -1,5 +1,6 @@
 /*  Imports  */
 import { API_BASE_URL, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS, getHeaderElements } from './constants.js';
+import { activityAPI } from "./api/activity.js";
 
 /*  Functions  */
 function createSearchResultElement(text, isLink = false) {
@@ -40,6 +41,35 @@ function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
     stadiums.forEach(stadium => {
         const stadiumLink = createStadiumLinkElement(stadium, searchValue);
         suggestionsContainer.appendChild(stadiumLink);
+    });
+}
+
+function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage, elements) {
+    elements.addStadiumName.textContent = stadiumName;
+    elements.addStadiumImage.src = stadiumImage;
+
+    const today = new Date().toISOString().split('T')[0];
+    elements.addStadiumDateVisited.setAttribute('max', today);
+    elements.addStadiumDateVisited.value = today;
+
+    elements.addStadiumLogButton.addEventListener('click', async () => {
+        const dateVisited = elements.addStadiumDateVisited.value;
+        const note = elements.addStadiumNote.value.trim() || null;
+
+        try {
+            await activityAPI.addStadium(stadiumId, username, dateVisited, note);
+            window.location.reload();
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+
+    elements.addStadiumCancelButton.addEventListener('click', () => {
+        toggleMenu(elements.addStadiumMenu, false, overlay);
+    });
+
+    elements.closeAddStadiumMenu.addEventListener('click', () => {
+        toggleMenu(elements.addStadiumMenu, false, overlay);
     });
 }
 
@@ -90,7 +120,7 @@ export function createPagination(elements, stadiums, perPage = 18, scrollTop = 0
         const start = (page - 1) * perPage;
         const end = start + perPage;
         stadiums.slice(start, end).forEach(stadium => {
-            elements.stadiumsList.appendChild(createStadiumCard(stadium));
+            elements.stadiumsList.appendChild(createStadiumCard(stadium, elements));
         });
     }
 
@@ -149,25 +179,149 @@ export function createPagination(elements, stadiums, perPage = 18, scrollTop = 0
     });
 }
 
-export function createStadiumCard(stadium) {
+export function createStadiumCard(stadium, elements) {
     const card = document.createElement('div');
     card.classList.add('stadiums-list-stadium');
+
     const link = document.createElement('a');
     link.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
+
     const img = document.createElement('img');
     img.src = stadium.image;
     img.alt = stadium.stadium_name;
+
     const textDiv = document.createElement('div');
     textDiv.classList.add('stadiums-list-stadium-text');
+
     const name = document.createElement('h3');
     name.textContent = stadium.stadium_name;
+
     const location = document.createElement('h4');
     location.textContent = formatLocation(stadium.city, stadium.state);
+
     textDiv.appendChild(name);
     textDiv.appendChild(location);
     link.appendChild(img);
     link.appendChild(textDiv);
     card.appendChild(link);
+
+    if (getUsername() === '') {
+        return card;
+    }
+
+    const controls = document.createElement('div');
+    controls.classList.add('user-stadium-corner-controls');
+
+    let isVisited = stadium.visited;
+    const visitedBtn = document.createElement('button');
+    visitedBtn.classList.add('user-stadium-icon-btn', 'btn-visited');
+
+    const visitedImg = document.createElement('img');
+    visitedImg.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+    visitedImg.alt = 'Mark as Visited';
+    visitedBtn.appendChild(visitedImg);
+
+    const visitedTooltip = document.createElement('span');
+    visitedTooltip.classList.add('icon-btn-tooltip');
+    visitedTooltip.textContent = isVisited ? 'Visited' : 'Mark as Visited';
+    visitedBtn.appendChild(visitedTooltip);
+
+    let isWishlist = stadium.wishlist;
+    const wishlistBtn = document.createElement('button');
+    wishlistBtn.classList.add('user-stadium-icon-btn', 'btn-wishlist');
+
+    const wishlistImg = document.createElement('img');
+    wishlistImg.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+    wishlistImg.alt = 'Add to Wishlist';
+    wishlistBtn.appendChild(wishlistImg);
+
+    const wishlistTooltip = document.createElement('span');
+    wishlistTooltip.classList.add('icon-btn-tooltip');
+    wishlistTooltip.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
+    wishlistBtn.appendChild(wishlistTooltip);
+
+    visitedBtn.addEventListener('click', async () => {
+        const username = getUsername();
+        if (!username) return;
+
+        const newIsVisited = !isVisited;
+
+        try {
+            const result = await activityAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
+
+            if (result.locked) {
+                alert('Cannot remove a stadium with logged visits. Delete your logs first.')
+                return;
+            }
+
+            isVisited = newIsVisited;
+
+            visitedBtn.classList.add('animating');
+            setTimeout(() => {
+                visitedImg.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+                visitedTooltip.textContent = isVisited ? 'Visited' : 'Mark as Visited';
+
+                if (isVisited && isWishlist) {
+                    const currentWishlist = isWishlist;
+                    isWishlist = false;
+                    wishlistBtn.classList.add('animating');
+                    setTimeout(() => {
+                        wishlistImg.src = 'images/icons/heart-plus.png';
+                        wishlistTooltip.textContent = 'Add to Wishlist';
+                    }, 200);
+                    setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
+                    activityAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
+                        .catch(err => alert(err.message));
+                }
+            }, 200);
+            setTimeout(() => visitedBtn.classList.remove('animating'), 400);
+
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+
+    wishlistBtn.addEventListener('click', async () => {
+        const username = getUsername();
+        if (!username) return;
+
+        const newIsWishlist = !isWishlist;
+        wishlistBtn.classList.add('animating');
+
+        setTimeout(() => {
+            wishlistImg.src = newIsWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+            wishlistTooltip.textContent = newIsWishlist ? 'In Wishlist' : 'Add to Wishlist';
+        }, 200);
+
+        setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
+
+        try {
+            await activityAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist)
+            isWishlist = newIsWishlist;
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+
+    controls.appendChild(visitedBtn);
+    controls.appendChild(wishlistBtn);
+
+    controls.appendChild(createCornerButton('Log Visit', 'images/icons/log.png', 'btn-log', (btn, e) => {
+        e.preventDefault();
+        setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, getUsername(), stadium.image, elements);
+        toggleMenu(elements.addStadiumMenu, true, overlay);
+    }));
+
+    controls.appendChild(createCornerButton(
+        'Show Activity',
+        'images/icons/clock.png',
+        'btn-activity',
+        (btn, e) => {},
+        `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
+    ));
+
+    card.appendChild(controls);
+
     return card;
 }
 
@@ -193,7 +347,7 @@ export function createElement(tag, className = null, attributes = {}) {
     return element;
 }
 
-export function createUserStadiumElement(stadium) {
+export function createUserStadiumElement(stadium, elements) {
     const userStadium = document.createElement('div');
     userStadium.classList.add('user-stadium');
 
@@ -215,12 +369,148 @@ export function createUserStadiumElement(stadium) {
 
     userStadiumText.appendChild(userStadiumName);
     userStadiumText.appendChild(userStadiumLocation);
-
     userStadiumLink.appendChild(userStadiumImage);
     userStadiumLink.appendChild(userStadiumText);
     userStadium.appendChild(userStadiumLink);
 
+    const controls = document.createElement('div');
+    controls.classList.add('user-stadium-corner-controls');
+
+    let isVisited = stadium.visited;
+    const visitedBtn = document.createElement('button');
+    visitedBtn.classList.add('user-stadium-icon-btn', 'btn-visited');
+
+    const visitedImg = document.createElement('img');
+    visitedImg.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+    visitedImg.alt = 'Mark as Visited';
+    visitedBtn.appendChild(visitedImg);
+
+    const visitedTooltip = document.createElement('span');
+    visitedTooltip.classList.add('icon-btn-tooltip');
+    visitedTooltip.textContent = isVisited ? 'Visited' : 'Mark as Visited';
+    visitedBtn.appendChild(visitedTooltip);
+
+    let isWishlist = stadium.wishlist;
+    const wishlistBtn = document.createElement('button');
+    wishlistBtn.classList.add('user-stadium-icon-btn', 'btn-wishlist');
+
+    const wishlistImg = document.createElement('img');
+    wishlistImg.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+    wishlistImg.alt = 'Add to Wishlist';
+    wishlistBtn.appendChild(wishlistImg);
+
+    const wishlistTooltip = document.createElement('span');
+    wishlistTooltip.classList.add('icon-btn-tooltip');
+    wishlistTooltip.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
+    wishlistBtn.appendChild(wishlistTooltip);
+
+    visitedBtn.addEventListener('click', async () => {
+        const username = getUsername();
+        if (!username) return;
+
+        const newIsVisited = !isVisited;
+
+        try {
+            const result = await activityAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
+
+            if (result.locked) {
+                alert('Cannot remove a stadium with logged visits. Delete your logs first.');
+                return;
+            }
+
+            isVisited = newIsVisited;
+
+            visitedBtn.classList.add('animating');
+            setTimeout(() => {
+                visitedImg.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+                visitedTooltip.textContent = isVisited ? 'Visited' : 'Mark as Visited';
+
+                if (isVisited && isWishlist) {
+                    const currentWishlist = isWishlist;
+                    isWishlist = false;
+                    wishlistBtn.classList.add('animating');
+                    setTimeout(() => {
+                        wishlistImg.src = 'images/icons/heart-plus.png';
+                        wishlistTooltip.textContent = 'Add to Wishlist';
+                    }, 200);
+                    setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
+                    activityAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
+                        .catch(err => alert(err.message));
+                }
+            }, 200);
+            setTimeout(() => visitedBtn.classList.remove('animating'), 400);
+
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+
+    wishlistBtn.addEventListener('click', async () => {
+        const username = getUsername();
+        if (!username) return;
+
+        const newIsWishlist = !isWishlist;
+        wishlistBtn.classList.add('animating');
+
+        setTimeout(() => {
+            wishlistImg.src = newIsWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+            wishlistTooltip.textContent = newIsWishlist ? 'In Wishlist' : 'Add to Wishlist';
+        }, 200);
+
+        setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
+
+        try {
+            await activityAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist);
+            isWishlist = newIsWishlist;
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+
+    controls.appendChild(visitedBtn);
+    controls.appendChild(wishlistBtn);
+
+    controls.appendChild(createCornerButton('Log Visit', 'images/icons/log.png', 'btn-log', (btn, e) => {
+        e.preventDefault();
+        if (elements) {
+            setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, getUsername(), stadium.image, elements);
+            toggleMenu(elements.addStadiumMenu, true, document.getElementById('overlay'));
+        }
+    }));
+
+    controls.appendChild(createCornerButton(
+        'Show Activity',
+        'images/icons/clock.png',
+        'btn-activity',
+        (btn, e) => {},
+        `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
+    ));
+
+    userStadium.appendChild(controls);
+
     return userStadium;
+}
+
+function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
+    const btn = document.createElement(href ? 'a' : 'button');
+    btn.classList.add('user-stadium-icon-btn');
+    if (extraClass) btn.classList.add(extraClass);
+    btn.dataset.tip = tip;
+
+    if (href) btn.href = href;
+
+    const img = document.createElement('img');
+    img.src = iconSrc;
+    img.alt = tip;
+    btn.appendChild(img);
+
+    const tooltip = document.createElement('span');
+    tooltip.classList.add('icon-btn-tooltip');
+    tooltip.textContent = tip;
+    btn.appendChild(tooltip);
+
+    btn.addEventListener('click', (e) => onClick(btn, e));
+    return btn;
 }
 
 export function debounce(func, wait) {
@@ -310,10 +600,6 @@ export function initializeCustomSelects() {
         options.forEach(option => {
             option.addEventListener('click', (e) => {
                 e.stopPropagation();
-                // Update the hidden select value so the change event
-                // reads the correct value, then let the change event navigate.
-                // Do NOT call selectOption here — that updates the visible
-                // label which causes the flicker before navigation.
                 hiddenSelect.value = option.dataset.value;
                 hiddenSelect.dispatchEvent(new Event('change'));
             });
@@ -444,6 +730,7 @@ export function setupSearch(getAllStadiums, elements) {
 
 export function showLoading(elements) {
     elements.stadiumsSkeleton.style.display = 'block';
+    void elements.stadiumsSkeleton.offsetWidth;
     elements.stadiumsListContainer.style.display = 'none';
     elements.filterBar.style.display = 'none';
 }

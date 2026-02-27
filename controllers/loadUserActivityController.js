@@ -2,13 +2,15 @@ const db = require('../database/connection.js');
 const { getUserId, buildSortOrder } = require('../database/dbHelpers.js');
 
 const handleLoadUserActivity = async (req, res) => {
-    const { username, activity, stadium, sortBy } = req.body;
+    const { username, activity, id, sortBy } = req.body;
+
+    console.log(id)
     
     try {
         const userId = await getUserId(username);
         
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
+        if (!userId || !id) {
+            return res.status(404).json({ error: 'User or stadium not found' });
         }
 
         let query = '';
@@ -34,9 +36,9 @@ const handleLoadUserActivity = async (req, res) => {
             `;
             params.push(userId);
             
-            if (stadium && stadium !== '') {
-                query += ` AND stadiums.stadium_name = ?`;
-                params.push(stadium);
+            if (id && id !== '') {
+                query += ` AND stadiums.stadium_id = ?`;
+                params.push(id);
             }
 
             if (activity === 'logged') {
@@ -66,9 +68,9 @@ const handleLoadUserActivity = async (req, res) => {
             `;
             params.push(userId);
             
-            if (stadium && stadium !== '') {
-                wishlistQuery += ` AND stadiums.stadium_name = ?`;
-                params.push(stadium);
+            if (id && id !== '') {
+                wishlistQuery += ` AND stadiums.stadium_id = ?`;
+                params.push(id);
             }
 
             if (activity === 'all') {

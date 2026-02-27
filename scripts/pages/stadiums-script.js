@@ -6,6 +6,14 @@ import { stadiumAPI } from "../api/stadium.js";
 
 /*  Variables  */
 const elements = {
+    addStadiumMenu: document.getElementById('add-stadium-menu'),
+    addStadiumDateVisited: document.getElementById('add-stadium-date-visited'),
+    addStadiumNote: document.getElementById('add-stadium-note'),
+    closeAddStadiumMenu: document.getElementById('close-add-stadium-menu'),
+    addStadiumName: document.getElementById('add-stadium-name'),
+    addStadiumImage: document.getElementById('add-stadium-image'),
+    addStadiumLogButton: document.getElementById('add-stadium-log-button'),
+    addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
     stadiumsList: document.getElementById('stadiums-list'),
     stadiumsPageSelector: document.getElementById('stadiums-page-selector'),
     noStadiumsContainer: document.getElementById('no-stadiums-container'),
@@ -22,11 +30,11 @@ const elements = {
 let allStadiums = [];
 
 /*  Async Functions  */
-async function setView(league, country, sortBy) {
+async function setView(league, country, sortBy, username) {
     try {
         showLoading(elements);
         await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const result = await stadiumAPI.loadStadiums(league, country, sortBy);
+        const result = await stadiumAPI.loadStadiums(league, country, sortBy, username);
         const stadiums = result.stadiums;
 
         allStadiums = stadiums;
@@ -83,5 +91,5 @@ window.onload = async () => {
     syncSelectFromURL('country-filter', country);
     syncSelectFromURL('sort-filter', sort);
 
-    setView(league, country, sort);
+    setView(league, country, sort, username);
 };

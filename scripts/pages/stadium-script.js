@@ -132,8 +132,6 @@ async function loadUpcomingEvents(name) {
             `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${venueId}&apikey=${apiKey}`
         );
         const eventsData = await eventsResponse.json();
-
-        console.log(eventsData);
         
         renderUpcomingEvents(eventsData._embedded?.events);
     } catch (error) {
