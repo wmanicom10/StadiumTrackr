@@ -29,5 +29,9 @@ export const stadiumAPI = {
         fetchAPI(ROUTES.STADIUM_LOAD, { league, country, sortBy, username }),
 
     loadUserHomeMap: (username) =>
-        fetchAPI(ROUTES.USER_HOME_MAP, { username })
+        fetchAPI(ROUTES.USER_HOME_MAP, { username }),
+
+    loadPopularStadiums: () => {
+        fetchAPI(ROUTES.POPULAR_STADIUMS)
+    }
 };

@@ -5,16 +5,68 @@ import { registerCommonEvents, registerEventListeners } from "../events.js";
 
 /*  Variables  */
 const header = document.querySelector('header');
-const popularStadiums = document.getElementsByClassName('popular-stadium');
+const popularStadiums = document.getElementById('popular-stadiums');
 
 /*  Async Functions  */
 async function handlePageLoad() {
     header.style.display = 'flex';
 
-    initializePopularStadiums();
+    loadPopularStadiums();
     await waitForImages();
     loadMapStadiums();
     showPopularStadiums();
+}
+
+async function loadPopularStadiums() {
+    try {
+        const response = await fetch(`${API_BASE_URL}${ROUTES.POPULAR_STADIUMS}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({})
+        })
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Unknown error');
+        }
+
+        const result = await response.json();
+
+        result.popularStadiums.forEach(stadium => {
+            const popularStadium = document.createElement('div');
+            popularStadium.classList.add('popular-stadium');
+
+            const popularStadiumLink = document.createElement('a');
+            popularStadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
+
+            const popularStadiumImage = document.createElement('img');
+            popularStadiumImage.src = stadium.image;
+            popularStadiumImage.alt = stadium.stadium_name;
+
+            const popularStadiumText = document.createElement('div');
+            popularStadiumText.classList.add('popular-stadium-text');
+
+            const popularStadiumName = document.createElement('h3');
+            popularStadiumName.textContent = stadium.stadium_name;
+
+            const popularStadiumLocation = document.createElement('h4');
+            popularStadiumLocation.textContent = stadium.city + ', ' + stadium.state;
+
+            popularStadiumText.appendChild(popularStadiumName);
+            popularStadiumText.appendChild(popularStadiumLocation);
+
+            popularStadiumLink.appendChild(popularStadiumImage);
+            popularStadiumLink.appendChild(popularStadiumText);
+
+            popularStadium.appendChild(popularStadiumLink);
+
+            popularStadiums.appendChild(popularStadium);
+
+        });
+
+    } catch (error) {
+        alert(error.message);
+    }
 }
 
 async function loadMapStadiums() {
@@ -109,14 +161,6 @@ function initializeMap(stadiums) {
                     </a>
                 </div>
             `);
-    });
-}
-
-function initializePopularStadiums() {
-    Array.from(popularStadiums).forEach(stadium => {
-        const stadiumId = stadium.dataset.stadiumId;
-        const link = stadium.querySelector('a');
-        link.href = `stadium.html?id=${encodeURIComponent(stadiumId)}`;
     });
 }
 

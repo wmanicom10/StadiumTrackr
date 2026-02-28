@@ -32,6 +32,7 @@ export const PASSWORD_CONSTRAINTS = {
 export const ROUTES = {
     AUTH_SIGNUP: '/auth/signup',
     AUTH_LOGIN: '/auth/login',
+    POPULAR_STADIUMS: '/stadium/loadPopularStadiums',
     STADIUM_SEARCH: '/stadium/searchStadiums',
     STADIUM_MAP_HOME: '/stadium/loadMapStadiums',
     STADIUM_LOAD: '/stadium/loadStadiums',
