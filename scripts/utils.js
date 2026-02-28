@@ -2,6 +2,9 @@
 import { API_BASE_URL, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS, getHeaderElements } from './constants.js';
 import { activityAPI } from "./api/activity.js";
 
+const currentYear = new Date().getFullYear();
+document.getElementById('copyright').innerHTML = `&copy;${currentYear} StadiumTrackr. All rights reserved.`;
+
 /*  Functions  */
 function createSearchResultElement(text, isLink = false) {
     const searchResult = document.createElement('div');

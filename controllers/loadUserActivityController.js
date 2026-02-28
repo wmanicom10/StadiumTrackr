@@ -3,14 +3,12 @@ const { getUserId, buildSortOrder } = require('../database/dbHelpers.js');
 
 const handleLoadUserActivity = async (req, res) => {
     const { username, activity, id, sortBy } = req.body;
-
-    console.log(id)
     
     try {
         const userId = await getUserId(username);
         
-        if (!userId || !id) {
-            return res.status(404).json({ error: 'User or stadium not found' });
+        if (!userId) {
+            return res.status(404).json({ error: 'User not found' });
         }
 
         let query = '';

@@ -87,7 +87,7 @@ async function loadStadiumInfo(id, username) {
         elements.stadiumConstructionCost.textContent = stadium.constructionCost;
         elements.stadiumVisits.textContent = stadium.visits;
 
-        setupUserControls(id, stadium.name, username, userVisited, userWishlist);
+        setupUserControls(id, username, userVisited, userWishlist);
         setupAddStadiumModal(id, stadium.name, username, stadium.image);
 
         return stadium.name;
@@ -291,7 +291,9 @@ function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage) {
 
 function setupStadiumButtons(stadiumId, username) {
     elements.stadiumLogButton.addEventListener('click', () => {
-        if (!username) {
+        console.log(username)
+
+        if (username === "") {
             toggleMenu(createAccountMenu, true, overlay);
         } else {
             toggleMenu(elements.addStadiumMenu, true, overlay);
@@ -299,7 +301,7 @@ function setupStadiumButtons(stadiumId, username) {
     });
 
     elements.stadiumActivityButton.addEventListener('click', (e) => {
-        if (!username) {
+        if (username === "") {
             e.preventDefault();
             toggleMenu(createAccountMenu, true, overlay);
         }
@@ -308,7 +310,7 @@ function setupStadiumButtons(stadiumId, username) {
     elements.stadiumActivityButton.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
 }
 
-function setupUserControls(stadiumId, stadiumName, username, userVisited, userWishlist) {
+function setupUserControls(stadiumId, username, userVisited, userWishlist) {
     const hasLogged = userVisited.some(activity => activity.visited_on !== null);
     let isWishlist = userWishlist.length > 0;
     let isVisited = userVisited.length > 0;
@@ -323,7 +325,7 @@ function setupUserControls(stadiumId, stadiumName, username, userVisited, userWi
     }
 
     setupWishlistClickHandler(stadiumId, username, isWishlist);
-    setupStadiumButtons(stadiumId, stadiumName, username);
+    setupStadiumButtons(stadiumId, username);
 }
 
 function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initialIsWishlist) {

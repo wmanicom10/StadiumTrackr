@@ -34,7 +34,7 @@ body {
 
 #overlay {
     position: fixed;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 1);
     width: 100%;
     height: 100%;
     z-index: 10001;
@@ -80,6 +80,7 @@ body {
     font-weight: normal;
     color: var(--color-text-muted);
     cursor: pointer;
+    transition: color 0.1s ease;
 }
 
 #close-create-account-menu:hover, #close-log-in-menu:hover {
@@ -114,7 +115,8 @@ body {
 
 .input-field:focus {
     outline: none;
-    caret-color: var(--color-text);
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
 #log-in-form span, #create-account-menu span {
@@ -122,10 +124,11 @@ body {
 }
 
 .forgot-password {
-    text-align: right;
-    margin-right: 60px;
-    margin-top: 15px;
-    text-decoration: underline;
+    width: 140px;
+    margin-left: 55px;
+    text-align: left;
+    margin-top: 22px;
+    transition: color 0.1s ease;
 }
 
 .forgot-password:hover {
@@ -141,8 +144,14 @@ body {
     width: 325px;
     height: 40px;
     border-radius: 20px;
-    margin-top: 20px;
-    transition: background-color 0.1s ease-in-out;
+    margin-top: 22px;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+#log-in-button:hover, #sign-up-button:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px);
 }
 
 #log-in-menu span span, #create-account-menu span span {
@@ -161,37 +170,41 @@ body {
 }
 
 .sign-up-link, .sign-in-link {
-    margin-top: 20px;
+    margin-top: 22px;
 }
 
+.sign-up-link span, .sign-in-link span {
+    transition: color 0.1s ease;
+} 
+
 .sign-up-link span:hover, .sign-in-link span:hover {
-    text-decoration: underline;
+    color: #4088c7 !important;
 }
 
 #terms-and-conditions {
-    width: 25px;
-    height: 25px;
+    width: 20px;
+    height: 20px;
 }
 
 #terms-and-conditions-container {
+    width: 305px;
     display: flex;
-    margin-top: 15px;
+    margin-top: 22px;
     text-align: left;
-    margin-left: 60px;
+    margin-left: 55px;
     align-items: center;
 }
 
 #terms-and-conditions-container label {
-    margin-left: 5px;
+    margin-left: 8px;
+}
+
+#terms-and-conditions-container label a {
+    text-decoration: none;
 }
 
 #terms-and-conditions-container label a:hover {
     color: rgb(199, 199, 199);
-}
-
-#log-in-button:hover, #sign-up-button:hover {
-    background-color: dodgerblue;
-    cursor: pointer;
 }
 
 .menu-fade-in {
@@ -305,6 +318,12 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
+#add-stadium-date-visited:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
+}
+
 #add-stadium-date-visited::-webkit-calendar-picker-indicator {
     display: none;
     -webkit-appearance: none;
@@ -327,6 +346,8 @@ body {
 
 #add-stadium-note:focus {
     outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
 #add-stadium-note::placeholder {
@@ -392,7 +413,7 @@ header {
 }
 
 header h1 {
-    font-size: 2rem;
+    font-size: 2.1rem;
     margin-left: 60px;
     font-weight: bold;
     color: var(--color-blue);
@@ -683,19 +704,20 @@ label img:hover {
 
 /*  Welcome Text  */
 #welcome-text {
-    width: 60%;
+    width: 55%;
     margin: 50px auto 0;
     text-align: center;
 }
 
 #welcome-text h2 {
-    font-size: 2.5rem;
+    font-size: 2.6rem;
     font-weight: 600;
     line-height: 1.4;
     background: var(--gradient-text);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    font-weight: normal;
 }
 
 #button-container {
@@ -704,34 +726,39 @@ label img:hover {
     justify-content: center;
 }
 
-#button-container h4 {
+#button-container button {
     font-size: 1.4rem;
     font-weight: normal;
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
     border-radius: 35px;
-    padding: 14px 25px;
+    padding: 10px 25px;
     margin: 0 15px;
     box-shadow: var(--shadow-default);
     transition: all 0.3s ease;
 }
 
-#button-container h4:hover {
+#button-container button:hover {
     cursor: pointer;
     background: var(--color-primary-20);
     transform: translateY(-3px);
 }
 
+#button-container a {
+    color: var(--color-blue);
+    text-decoration: none;
+}
+
 /*  Stadium Search  */
 #home-stadium-search-container {
     width: 95%;
-    margin: 40px auto;
+    margin: 40px auto 0;
 }
 
 #search-field-home {
     border: none;
-    height: 60px;
+    height: 50px;
     border-radius: 35px;
     padding-left: 21px;
     z-index: 10;
@@ -742,6 +769,12 @@ label img:hover {
     border: 1px solid var(--color-primary-20);
     color: var(--color-text);
     font-size: 1.1rem;
+}
+
+#search-field-home:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
 #home-search-wrapper {
@@ -913,20 +946,25 @@ label img:hover {
 /*  Popular Stadiums  */
 #popular-stadiums-container {
     width: 95%;
-    margin: 55px auto;
+    margin: 25px auto;
 }
 
 #popular-stadiums-container h2 {
-    margin: 30px auto 20px;
+    margin: 0 auto;
+    padding: 30px 0 20px;
     text-align: center;
     font-size: 2rem;
     color: var(--color-text);
+    font-weight: normal;
+    border-bottom: 1px solid var(--color-primary-20);
+    width: 95%;
 }
 
 #popular-stadiums {
     display: none;
     flex-wrap: wrap;
     justify-content: center;
+    margin-top: 20px;
 }
 
 .popular-stadium {
@@ -951,7 +989,7 @@ label img:hover {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    padding: 15px 0 15px 20px;
+    padding: 15px 20px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
@@ -984,19 +1022,24 @@ label img:hover {
 /*  StadiumTrackr Info  */
 #stadium-trackr-container {
     width: 95%;
-    margin: 0 auto;
+    margin: 30px auto 0;
 }
 
 #stadium-trackr-container h2 {
-    margin: 30px auto 20px;
+    margin: 0 auto;
+    padding: 30px 0 20px;
     text-align: center;
     font-size: 2rem;
+    font-weight: normal;
+    border-bottom: 1px solid var(--color-primary-20);
+    width: 95%;
 }
 
 #stadium-trackr-infos {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-top: 20px;
 }
 
 .stadium-trackr-info {
@@ -1041,19 +1084,23 @@ label img:hover {
 /*  Home Stadium Map  */
 #home-stadium-map-container {
     width: 95%;
-    margin: 20px auto;
+    margin: 30px auto 0;
 }
 
 #home-stadium-map-container h2 {
+    margin: 0 auto;
+    padding: 30px 0 20px;
     text-align: center;
-    margin: 30px auto 30px;
     font-size: 2rem;
+    font-weight: normal;
+    border-bottom: 1px solid var(--color-primary-20);
+    width: 95%;
 }
 
 #home-stadium-map {
     display: none;
     width: 91%;
-    margin: 0 auto;
+    margin: 20px auto 0;
     height: 500px;
     border-radius: 25px;
     box-shadow: var(--shadow-default);
@@ -1164,9 +1211,13 @@ footer {
     list-style-type: none;
     padding: 0;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--color-primary-20);
+}
+
+.footer-item:last-of-type {
+    padding-left: 38px;
 }
 
 .footer-item h4 {
@@ -1176,6 +1227,10 @@ footer {
 
 .footer-item h5 {
     color: var(--color-text-muted);
+}
+
+.footer-links {
+    padding-left: 70px;
 }
 
 .footer-links h4 {
@@ -1262,8 +1317,8 @@ footer h5 {
 }
 
 #explore-text h2 {
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-size: 2.6rem;
+    font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
     -webkit-background-clip: text;
@@ -1614,7 +1669,7 @@ footer h5 {
 
 .page-btn.arrow {
     font-size: 1.2rem;
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .page-ellipsis {
@@ -2275,8 +2330,8 @@ footer h5 {
 }
 
 #my-stadiums-text h2, #wishlist-text h2 {
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-size: 2.6rem;
+    font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
     -webkit-background-clip: text;
@@ -2293,8 +2348,8 @@ footer h5 {
 }
 
 #achievements-text h2 {
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-size: 2.6rem;
+    font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
     -webkit-background-clip: text;
@@ -2450,8 +2505,8 @@ footer h5 {
 /*  User Activity  */
 #user-activity-welcome-text {
     text-align: center;
-    font-size: 2.5rem;
-    font-weight: 600;
+    font-size: 2.6rem;
+    font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
     -webkit-background-clip: text;
@@ -2953,7 +3008,7 @@ footer h5 {
 
 #home-stadium-map-skeleton {
     width: 91%;
-    margin: 0 auto;
+    margin: 20px auto 0;
     height: 500px;
     border-radius: 25px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
@@ -2967,6 +3022,7 @@ footer h5 {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    margin-top: 20px;
 }
 
 #filter-bar-skeleton {
@@ -3303,6 +3359,10 @@ footer h5 {
         margin-left: 30px;
         font-size: 1.7rem !important;
     }
+    #button-container button {
+        margin: 0 5px;
+        font-size: 1.2rem;
+    }
     .leaflet-popup-content-wrapper {
         width: 300px;
     }
@@ -3378,7 +3438,7 @@ footer h5 {
     .stadiums-list-stadium img {
         max-width: 100%;
     }
-    .user-stadium {
+    .user-stadium, .stadiums-list-stadium {
         width: 100%;
         max-width: 368px;
     }
@@ -3387,7 +3447,7 @@ footer h5 {
         height: auto;
         aspect-ratio: 16 / 9;
     }
-    .user-stadium-text {
+    .user-stadium-text, .stadiums-list-stadium-text {
         width: 100%;
     }
     #user-home-welcome-text {
@@ -3474,6 +3534,12 @@ footer h5 {
     }
 }
 
+@media screen and (max-width: 525px) {
+    #welcome-text {
+        width: 90% !important;
+    }
+}
+
 @media screen and (max-width: 575px) {
     #user-stadiums-header-container, #user-stadiums-header-container-skeleton {
         flex-direction: column;
@@ -3535,7 +3601,7 @@ footer h5 {
         display: none;
     }
     #welcome-text {
-        width: 80% !important;
+        width: 80%;
     }
     #button-container h4 {
         padding: 14px 22px;
@@ -3614,6 +3680,9 @@ footer h5 {
 }
 
 @media screen and (max-width: 715px) {
+    #welcome-text {
+        width: 75%;
+    }
     #welcome-text h2 {
         font-size: 2.2rem !important;
     }
@@ -3634,7 +3703,7 @@ footer h5 {
         margin: 20px auto 40px;
     }
     #filter-bar-skeleton {
-        height: 485px !important;
+        height: 478px !important;
         margin-bottom: 45px;
     }
     #achievements-filter-bar-skeleton {
@@ -3693,8 +3762,15 @@ footer h5 {
         flex-direction: column;
         flex-wrap: wrap;
     }
+    .footer-links {
+        text-align: left;
+        padding: 0;
+    }
     .footer-item {
         margin: 0;
+    }
+    .footer-item:last-of-type {
+        padding: 0;
     }
     #copyright {
         padding-bottom: 27px;
