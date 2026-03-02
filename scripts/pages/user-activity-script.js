@@ -30,16 +30,18 @@ const elements = {
     sortFilter: document.getElementById('sort-filter')
 };
 
+const PAGE_SIZE = 18;
 let currentData = null;
+let currentOffset = 0;
+let currentUsername = null;
+let currentFilters = {};
 
 /*  Async Functions  */
 async function loadStadiumInfo(id, username) {
     try {
         const result = await stadiumAPI.loadStadiumInfo(id, username);
         const { stadium } = result.stadiumInfo;
-
         return stadium.name;
-
     } catch (error) {
         alert(error.message);
     }
@@ -47,22 +49,46 @@ async function loadStadiumInfo(id, username) {
 
 async function setView(username, activity, id, sortBy) {
     try {
+        currentOffset = 0;
+        currentUsername = username;
+        currentFilters = { activity, id, sortBy };
+
         showLoading();
         await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const result = await userAPI.loadUserActivity(username, activity, id, sortBy);
+        const result = await userAPI.loadUserActivity(username, activity, id, sortBy, PAGE_SIZE, 0);
         const activities = result.userActivity;
 
         if (activities.length === 0) {
             showNoResults();
         } else {
             showResults();
-            renderActivities(activities, username);
+            elements.activityList.innerHTML = '';
+            activities.forEach(a => elements.activityList.appendChild(createActivityItem(a, username)));
+            currentOffset = activities.length;
+            updateShowMoreButton(activities.length);
         }
 
         hideLoading();
     } catch (err) {
         alert(err.message);
         hideLoading();
+    }
+}
+
+async function loadMore() {
+    try {
+        const btn = document.getElementById('show-more-button');
+        if (btn) btn.textContent = 'Loading...';
+
+        const { activity, id, sortBy } = currentFilters;
+        const result = await userAPI.loadUserActivity(currentUsername, activity, id, sortBy, PAGE_SIZE, currentOffset);
+        const activities = result.userActivity;
+
+        activities.forEach(a => elements.activityList.appendChild(createActivityItem(a, currentUsername)));
+        currentOffset += activities.length;
+        updateShowMoreButton(activities.length);
+    } catch (err) {
+        alert(err.message);
     }
 }
 
@@ -154,7 +180,9 @@ function createEditButton(activity, username) {
         elements.editLogName.textContent = activity.stadium_name;
         elements.editLogImage.src = activity.image;
         elements.editLogDateVisited.value = activity.visited_on.split('T')[0];
-        elements.editLogDateVisited.setAttribute('max', new Date().toISOString().split('T')[0]);
+        const now = new Date();
+        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+        elements.editLogDateVisited.setAttribute('max', today);
         elements.editLogNote.value = activity.user_note || '';
         toggleMenu(elements.editLogMenu, true, overlay);
     });
@@ -232,13 +260,6 @@ function hideLoading() {
     elements.activitySkeleton.style.display = 'none';
     elements.activityListContainer.style.display = 'block';
     elements.activityFilterBar.style.display = 'block';
-}
-
-function renderActivities(activities, username) {
-    elements.activityList.innerHTML = '';
-    activities.forEach(activity => {
-        elements.activityList.appendChild(createActivityItem(activity, username));
-    });
 }
 
 function setupDeleteLogHandlers() {
@@ -336,6 +357,19 @@ function showNoResults() {
 function showResults() {
     elements.noActivityContainer.style.display = 'none';
     elements.activityList.style.display = 'block';
+}
+
+function updateShowMoreButton(returnedCount) {
+    const existing = document.getElementById('show-more-button');
+    if (existing) existing.remove();
+
+    if (returnedCount === PAGE_SIZE) {
+        const btn = document.createElement('button');
+        btn.id = 'show-more-button';
+        btn.textContent = 'Show More';
+        btn.addEventListener('click', loadMore);
+        elements.activityListContainer.appendChild(btn);
+    }
 }
 
 /*  Events  */

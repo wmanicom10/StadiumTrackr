@@ -20,6 +20,8 @@ const handleLoadUserStadiums = async (req, res) => {
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id,
+                user_stadiums.added_on,
+                user_stadiums.visited_on,
                 1 AS visited,
                 CASE WHEN MAX(w.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist
             FROM user_stadiums
@@ -31,7 +33,7 @@ const handleLoadUserStadiums = async (req, res) => {
             WHERE user_stadiums.user_id = ?
             ${leagueFilter.sql}
             ${countryFilter.sql}
-            GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, stadiums.city, stadiums.state, stadiums.country_id
+            GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, stadiums.city, stadiums.state, stadiums.country_id, user_stadiums.added_on, user_stadiums.visited_on
         `;
 
         query += buildSortOrder(sortBy, 'stadiums');

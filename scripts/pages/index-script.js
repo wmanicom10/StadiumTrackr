@@ -150,6 +150,10 @@ function initializeMap(stadiums) {
             }
         }
 
+        if (stadium.stadium_name === 'Johnny "Red" Floyd Stadium') {
+            imageSlug = 'johnny-red-floyd-stadium';
+        }
+
         L.marker(stadium.location, { icon: customIcon })
             .addTo(map)
             .bindPopup(`

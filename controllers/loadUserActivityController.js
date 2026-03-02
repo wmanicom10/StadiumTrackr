@@ -2,7 +2,7 @@ const db = require('../database/connection.js');
 const { getUserId, buildSortOrder } = require('../database/dbHelpers.js');
 
 const handleLoadUserActivity = async (req, res) => {
-    const { username, activity, id, sortBy } = req.body;
+    const { username, activity, id, sortBy, limit = 18, offset = 0 } = req.body;
     
     try {
         const userId = await getUserId(username);
@@ -79,6 +79,9 @@ const handleLoadUserActivity = async (req, res) => {
         }
         
         query += buildSortOrder(sortBy);
+
+        query += ` LIMIT ? OFFSET ?`;
+        params.push(limit, offset);
         
         const [userActivity] = await db.query(query, params);
 

@@ -22,8 +22,8 @@ export const userAPI = {
     loadUserAchievements: (username, earned, sortBy) =>
         fetchAPI(ROUTES.USER_ACHIEVEMENTS, { username, earned, sortBy }),
 
-    loadUserActivity: (username, activity, id, sortBy) =>
-        fetchAPI(ROUTES.USER_ACTIVITY, { username, activity, id, sortBy }),
+    loadUserActivity: (username, activity, id, sortBy, limit = 18, offset = 0) =>
+        fetchAPI(ROUTES.USER_ACTIVITY, { username, activity, id, sortBy, limit, offset }),
 
     loadUserStadiums: (username, league, country, sortBy) =>
         fetchAPI(ROUTES.USER_STADIUMS, { username, league, country, sortBy }),

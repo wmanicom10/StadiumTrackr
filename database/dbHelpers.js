@@ -44,7 +44,6 @@ const buildLeagueFilter = (league) => {
 
 const buildSortOrder = (sortBy, tablePrefix = '') => {
     const prefix = tablePrefix ? `${tablePrefix}.` : '';
-    
     switch (sortBy) {
         case 'name-desc':
             return ` ORDER BY ${prefix}stadium_name DESC`;
