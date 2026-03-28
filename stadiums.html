@@ -124,12 +124,14 @@
                     <li class="nav-item">
                         <div id="user-dropdown-wrapper">
                             <div id="logged-in-header-user-container">
-                                <img src="images/icons/person-circle.png" alt="" id="logged-in-header-user-profile-pic">
-                                <span id="logged-in-header-username"></span><script>
+                                <img id="logged-in-header-user-profile-pic">
+                                <span id="logged-in-header-username"></span>
+                                <script>
                                     (function() {
                                         const u = localStorage.getItem('username') || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
+                                        document.getElementById('logged-in-header-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
                                     })();
                                 </script>
                                 <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -142,7 +144,7 @@
                                 <a href="user-wishlist.html">Wishlist</a>
                                 <a href="user-activity.html">Activity</a>
                                 <a href="user-achievements.html">Achievements</a>
-                                <a href="">Settings</a>
+                                <a href="settings.html">Settings</a>
                             </div>
                         </div>
                     </li>
@@ -161,12 +163,14 @@
                                 <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
                             </label>
                             <div id="sidebar-user-info">
-                                <img src="images/icons/person-circle.png" alt="" id="sidebar-user-profile-pic">
-                                <span id="sidebar-username"></span><script>
+                                <img id="sidebar-user-profile-pic">
+                                <span id="sidebar-username"></span>
+                                <script>
                                     (function() {
                                         const u = localStorage.getItem('username') || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
+                                        document.getElementById('sidebar-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
                                     })();
                                 </script>
                             </div>
@@ -176,7 +180,7 @@
                                 <a href="user-wishlist.html">Wishlist</a>
                                 <a href="user-activity.html">Activity</a>
                                 <a href="user-achievements.html">Achievements</a>
-                                <a href="">Settings</a>
+                                <a href="settings.html">Settings</a>
                             </div>
                             <div class="sidebar-links">
                                 <a href="./stadiums.html">Stadiums</a>

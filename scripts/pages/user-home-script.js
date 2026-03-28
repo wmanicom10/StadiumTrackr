@@ -67,9 +67,6 @@ async function loadUserInfo(username) {
     try {
         const result = await userAPI.loadUserInfo(username);
 
-        console.log(result.userStadiums);
-        console.log(result.wishlistItems);
-
         renderStadiumSection(
             result.userStadiums,
             elements.userStadiumsElement,

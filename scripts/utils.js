@@ -3,7 +3,7 @@ import { API_BASE_URL, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS, getHe
 import { activityAPI } from "./api/activity.js";
 
 const currentYear = new Date().getFullYear();
-document.getElementById('copyright').innerHTML = `&copy;${currentYear} StadiumTrackr. All rights reserved.`;
+document.getElementById('copyright').innerHTML = `&copy;2025-${currentYear} StadiumTrackr. All rights reserved.`;
 
 /*  Functions  */
 function createSearchResultElement(text, isLink = false) {
@@ -103,6 +103,8 @@ export async function searchStadiums(name, suggestionsContainer, searchValue) {
 /*  Exported Functions  */
 export function clearUsername() {
     localStorage.setItem('username', '');
+    localStorage.removeItem('email');
+    localStorage.removeItem('profilePic');
 }
 
 export function closeAllDropdowns(except = null) {
@@ -872,7 +874,7 @@ export function validatePassword(password) {
     }
     
     if (!new RegExp(`[${SPECIAL_CHARS.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}]`).test(password)) {
-        return `Password must include a special character (${SPECIAL_CHARS}).`;
+        return `Password must include a special character.`;
     }
     
     return null;

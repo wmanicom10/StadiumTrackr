@@ -1,5 +1,5 @@
 const db = require('../database/connection.js');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const handleLogin = async (req, res) => {
     const { username, password } = req.body;
@@ -10,7 +10,7 @@ const handleLogin = async (req, res) => {
 
     try {
         const [[user]] = await db.execute(
-            'SELECT user_id, username, password FROM users WHERE username = ?',
+            'SELECT user_id, username, password, email, profile_pic FROM users WHERE username = ?',
             [username]
         );
 
@@ -24,7 +24,13 @@ const handleLogin = async (req, res) => {
             return res.status(401).json({ error: 'Incorrect username or password' });
         }
 
-        res.json({ message: 'Login successful', username: user.username });
+        res.json({ 
+            message: 'Login successful', 
+            user_id: user.user_id, 
+            username: user.username, 
+            email: user.email,
+            profile_pic: user.profile_pic 
+        });
     } catch (err) {
         console.error('Login error:', err);
         res.status(500).json({ error: 'Internal server error' });

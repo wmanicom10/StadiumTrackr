@@ -43,7 +43,12 @@ export const ROUTES = {
     USER_ACHIEVEMENTS: '/user/loadUserAchievements',
     USER_HOME_MAP: '/user/loadUserHomeMap',
     USER_STADIUMS: '/user/loadUserStadiums',
-    USER_WISHLIST: '/user/loadUserWishlist'
+    USER_WISHLIST: '/user/loadUserWishlist',
+    USER_USERNAME: '/user/updateUsername',
+    USER_PROFILE_PIC: '/user/updateProfilePic',
+    USER_EMAIL: '/user/updateEmail',
+    USER_PASSWORD: '/user/updatePassword',
+    USER_DELETE: '/user/deleteAccount'
 };
 export const searchStadiumsForm = getElement('search-stadiums');
 export const searchValue = getElement('home-search-field');

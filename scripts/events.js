@@ -17,6 +17,8 @@ async function handleLogin() {
         const result = await authAPI.login(username, password);
         
         localStorage.setItem('username', result.username);
+        localStorage.setItem('email', result.email)
+        localStorage.setItem('profilePic', result.profile_pic || 'images/profile-pics/default.png');
         window.location.replace('user-home.html');
     } catch (error) {
         alert(error.message || 'Login failed. Please try again.');
@@ -36,6 +38,8 @@ async function handleSignup() {
         await authAPI.signup(email, username, password);
         
         localStorage.setItem('username', username);
+        localStorage.setItem('email', email);
+        localStorage.setItem('profilePic', 'images/profile-pics/default.png');
         window.location.replace('user-home.html');
     } catch (error) {
         console.error('Signup error:', error);

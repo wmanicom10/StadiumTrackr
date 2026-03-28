@@ -8,6 +8,11 @@ const loadUserWishlistController = require('../controllers/loadUserWishlistContr
 const loadUserAchievementsController = require('../controllers/loadUserAchievementsController');
 const loadUserActivityController = require('../controllers/loadUserActivityController');
 const loadUserHomeMapController = require('../controllers/loadUserHomeMapController');
+const updateUsernameController = require('../controllers/updateUsernameController');
+const updateProfilePicController = require('../controllers/updateProfilePicController');
+const updateEmailController = require('../controllers/updateEmailController');
+const updatePasswordController = require('../controllers/updatePasswordController');
+const deleteAccountController = require('../controllers/deleteAccountController');
 
 router.post('/loadUserInfo', loadUserInfoController.handleLoadUserInfo);
 router.post('/loadUserStadiumInfo', loadUserStadiumInfoController.handleLoadUserStadiumInfo);
@@ -16,5 +21,10 @@ router.post('/loadUserWishlist', loadUserWishlistController.handleLoadUserWishli
 router.post('/loadUserAchievements', loadUserAchievementsController.handleLoadUserAchievements);
 router.post('/loadUserActivity', loadUserActivityController.handleLoadUserActivity);
 router.post('/loadUserHomeMap', loadUserHomeMapController.handleLoadUserHomeMap);
+router.post('/updateUsername', updateUsernameController.handleUpdateUsername);
+router.post('/updateProfilePic', updateProfilePicController.upload.single('profilePic'), updateProfilePicController.handleUpdateProfilePic);
+router.post('/updateEmail', updateEmailController.handleUpdateEmail);
+router.post('/updatePassword', updatePasswordController.handleUpdatePassword);
+router.post('/deleteAccount', deleteAccountController.handleDeleteAccount);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 const db = require('../database/connection.js');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const handleSignup = async (req, res) => {
     const { email, username, password } = req.body;
@@ -32,7 +32,7 @@ const handleSignup = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 12);
 
         await db.execute(
-            'INSERT INTO users (username, password, email, created_on) VALUES (?, ?, ?, now())',
+            'INSERT INTO users (username, password, email, created_on, profile_pic) VALUES (?, ?, ?, now(), "images/profile-pics/default.png")',
             [username, hashedPassword, email]
         );
 
