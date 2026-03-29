@@ -249,7 +249,7 @@ body {
 }
 
 #add-stadium-menu-header h2 {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     font-weight: normal;
     margin: 0;
 }
@@ -259,7 +259,6 @@ body {
 }
 
 #close-add-stadium-menu {
-    font-size: 2.2rem;
     color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s;
@@ -277,19 +276,19 @@ body {
     margin: 30px 0 0;
     text-align: center;
     font-weight: normal;
-    font-size: 2rem;
+    font-size: 1.8rem;
 }
 
 #add-stadium-container {
     justify-content: space-between;
     display: flex;
     width: 92%;
-    margin: 30px auto 10px;
+    margin: 30px auto;
 }
 
 #add-stadium-image {
     width: 48%;
-    height: 290px;
+    height: 270px;
     object-fit: cover;
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -301,7 +300,7 @@ body {
 
 #add-stadium-date-visited-text, #add-stadium-note-text {
     font-weight: normal;
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin: 0;
     color: var(--color-text-muted);
 }
@@ -312,7 +311,7 @@ body {
     border: 1px solid var(--color-primary-20);
     color: var(--color-text);
     padding: 10px 20px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin: 10px 0 20px 0;
     font-family: "Inter", sans-serif;
     text-align: center;
@@ -331,16 +330,16 @@ body {
 }
 
 #add-stadium-note {
-    margin: 10px 0 20px 0;
+    margin-top: 10px;
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     width: 100%;
     padding: 20px;
-    height: 161px !important;
+    height: 147px !important;
     resize: none;
     color: var(--color-text);
-    font-size: 18px;
+    font-size: 1rem;
     font-family: "Inter", sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     scrollbar-width: none;
@@ -366,11 +365,11 @@ body {
 
 #add-stadium-log-button, #add-stadium-cancel-button {
     font-weight: normal;
-    font-size: 1.2rem;
+    font-size: 1rem;
     border-radius: 25px;
     margin: 0 auto 30px;
-    width: 170px;
-    padding: 10px 0;
+    width: 160px;
+    padding: 8px 0;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -402,7 +401,7 @@ body {
 /*  Header  */
 header {
     display: flex;
-    height: 90px;
+    height: 85px;
     justify-content: space-between;
     align-items: center;
     margin: 0;
@@ -415,7 +414,7 @@ header {
 }
 
 header h1 {
-    font-size: 2.1rem;
+    font-size: 1.8rem;
     margin-left: 60px;
     font-weight: bold;
     color: var(--color-blue);
@@ -449,7 +448,7 @@ header h1:hover {
 .nav-item a {
     color: var(--color-text);
     text-decoration: none;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .nav-item a:hover {
@@ -463,13 +462,13 @@ header h1:hover {
 .nav-item.button {
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
-    padding: 7px 25px;
+    padding: 7px 22px;
     border-radius: 20px;
     margin: 0 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
     color: var(--color-blue);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .nav-item.nav-item.button:hover {
@@ -542,7 +541,7 @@ label img:hover {
 }
 
 #logged-in-header-username {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-right: 3px;
 }
 
@@ -570,13 +569,13 @@ label img:hover {
 .account-buttons span {
     justify-content: left;
     display: inline-block;
-    font-size: 17px;
-    width: 130px;
+    font-size: 1rem;
+    width: 110px;
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
     border-radius: 25px;
-    padding: 10px 15px;
+    padding: 8px 15px;
     margin-top: 5px;
     box-shadow: var(--shadow-default);
     transition: all 0.3s ease;
@@ -644,6 +643,7 @@ label img:hover {
     transition: all 0.2s ease;
     border: 1px solid transparent;
     padding: 15px 20px;
+    font-size: 1.1rem;
 }
 
 #logged-in-header-user-container-hidden a:last-of-type {
@@ -684,7 +684,7 @@ label img:hover {
 }
 
 #sidebar-username {
-    font-size: 20px;
+    font-size: 1.1rem;
 }
 
 #sidebar-user-links, .sidebar-links {
@@ -692,6 +692,10 @@ label img:hover {
     display: flex;
     flex-direction: column;
     background: rgba(26, 29, 41, 1);
+}
+
+#sidebar-user-links a, .sidebar-links a {
+    font-size: 1.1rem;
 }
 
 #logged-out-nav .sidebar-links a:first-of-type {
@@ -708,13 +712,13 @@ label img:hover {
 
 /*  Welcome Text  */
 #welcome-text {
-    width: 55%;
+    width: 50%;
     margin: 50px auto 0;
     text-align: center;
 }
 
 #welcome-text h2 {
-    font-size: 2.6rem;
+    font-size: 2.3rem;
     font-weight: 600;
     line-height: 1.4;
     background: var(--gradient-text);
@@ -731,13 +735,13 @@ label img:hover {
 }
 
 #button-container button {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: normal;
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
     border-radius: 35px;
-    padding: 10px 25px;
+    padding: 8px 25px;
     margin: 0 15px;
     box-shadow: var(--shadow-default);
     transition: all 0.3s ease;
@@ -762,7 +766,7 @@ label img:hover {
 
 #search-field-home {
     border: none;
-    height: 50px;
+    height: 45px;
     border-radius: 35px;
     padding-left: 21px;
     z-index: 10;
@@ -792,7 +796,7 @@ label img:hover {
 }
 
 #search-field-home::placeholder {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
 }
 
@@ -841,7 +845,7 @@ label img:hover {
 
 #home-autocomplete-list .search-result h4 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--color-text);
     border: 1px solid transparent;
     font-weight: normal;
@@ -950,14 +954,14 @@ label img:hover {
 /*  Popular Stadiums  */
 #popular-stadiums-container {
     width: 95%;
-    margin: 25px auto;
+    margin: 45px auto;
 }
 
 #popular-stadiums-container h2 {
     margin: 0 auto;
     padding: 30px 0 20px;
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.8rem;
     color: var(--color-text);
     font-weight: normal;
     border-bottom: 1px solid var(--color-primary-20);
@@ -981,8 +985,8 @@ label img:hover {
 }
 
 .popular-stadium img {
-    width: 410px;
-    height: 220px;
+    width: 400px;
+    height: 210px;
     object-fit: cover;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -1005,7 +1009,7 @@ label img:hover {
 }
 
 .popular-stadium-text h3 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: var(--color-text);
 }
 
@@ -1033,7 +1037,7 @@ label img:hover {
     margin: 0 auto;
     padding: 30px 0 20px;
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: normal;
     border-bottom: 1px solid var(--color-primary-20);
     width: 95%;
@@ -1076,7 +1080,7 @@ label img:hover {
 }
 
 .stadium-trackr-info h3 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin: 10px;
 }
 
@@ -1095,7 +1099,7 @@ label img:hover {
     margin: 0 auto;
     padding: 30px 0 20px;
     text-align: center;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: normal;
     border-bottom: 1px solid var(--color-primary-20);
     width: 95%;
@@ -1321,7 +1325,7 @@ footer h5 {
 }
 
 #explore-text h2 {
-    font-size: 2.6rem;
+    font-size: 2.3rem;
     font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
@@ -1349,7 +1353,7 @@ footer h5 {
     gap: 15px;
     align-items: center;
     flex-wrap: wrap;
-    padding: 25px 30px;
+    padding: 20px 30px;
 }
 
 .filter-label {
@@ -1378,7 +1382,7 @@ footer h5 {
     border: 1px solid var(--color-primary-20);
     border-radius: 25px;
     color: var(--color-text);
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-family: "Inter", sans-serif;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -1440,7 +1444,7 @@ footer h5 {
     cursor: pointer;
     transition: all 0.2s ease;
     color: var(--color-text);
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .custom-select-option:first-child {
@@ -1476,12 +1480,12 @@ footer h5 {
 }
 
 .clear-filters {
-    padding: 10px 20px;
+    padding: 8px 20px;
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
     border-radius: 20px;
     color: var(--color-blue);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-family: "Inter", sans-serif;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -1519,12 +1523,12 @@ footer h5 {
 
 .filter-actions #home-search-field {
     width: 100%;
-    height: 44px;
+    height: 40px;
     font-size: 1rem;
 }
 
 .filter-actions #home-search-field::placeholder {
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 /*  Stadiums List  */
@@ -1552,8 +1556,8 @@ footer h5 {
 }
 
 .stadiums-list-stadium img {
-    width: 410px;
-    height: 220px;
+    width: 400px;
+    height: 210px;
     object-fit: cover;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -1564,10 +1568,10 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    padding: 15px 20px 15px 20px;
+    padding: 15px 20px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-    width: 410px;
+    width: 400px;
     flex-grow: 1;
 }
 
@@ -1579,7 +1583,7 @@ footer h5 {
 }
 
 .stadiums-list-stadium-text h3 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: var(--color-text);
 }
 
@@ -1692,14 +1696,14 @@ footer h5 {
 }
 
 #no-stadiums-container h3 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 600;
     margin: 0 0 15px;
     color: var(--color-text);
 }
 
 #no-stadiums-container p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0 0 30px;
     line-height: 1.6;
@@ -1729,7 +1733,7 @@ footer h5 {
 
 #stadium-name {
     text-align: center;
-    font-size: 2.6rem;
+    font-size: 2.3rem;
     font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
@@ -1771,7 +1775,7 @@ footer h5 {
     align-items: center;
     justify-content: center;
     width: 24%;
-    padding: 25px 0;
+    padding: 20px 0;
     box-shadow: var(--shadow-default);
     text-decoration: none;
 }
@@ -1798,6 +1802,7 @@ footer h5 {
 .stadium-user-control h3 {
     font-weight: normal;
     margin: 0;
+    font-size: 1.1rem;
 }
 
 #user-visited-image, #user-wishlist-image {
@@ -1831,7 +1836,7 @@ footer h5 {
     border: 1px solid var(--color-primary-15);
     border-radius: 25px;
     width: 300px;
-    padding: 30px;
+    padding: 25px 30px;
     margin-bottom: 25px;
 }
 
@@ -1839,18 +1844,18 @@ footer h5 {
     font-weight: normal;
     margin: 0;
     color: var(--color-text-muted);
-    font-size: 1.3rem;
+    font-size: 1.2rem;
 }
 
 .stadium-info h3 {
     font-weight: normal;
     margin: 20px 0 0;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     line-height: 1.6;
 }
 
 .stadium-info img {
-    height: 30px;
+    height: 25px;
 }
 
 .stadium-info div {
@@ -1879,7 +1884,7 @@ footer h5 {
 #upcoming-events-header h2 {
     margin: 0;
     margin-bottom: 10px;
-    font-size: 2rem;
+    font-size: 1.7rem;
     font-weight: normal;
 }
 
@@ -1897,7 +1902,7 @@ footer h5 {
 #no-upcoming-events-message {
     margin: 0;
     font-weight: normal;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
 
 .upcoming-event {
@@ -1913,7 +1918,7 @@ footer h5 {
 }
 
 .upcoming-event img {
-    width: 40px;
+    width: 35px;
 }
 
 .event-info {
@@ -1960,7 +1965,7 @@ footer h5 {
 #stadium-map-header h2 {
     margin: 0;
     margin-bottom: 10px;
-    font-size: 2rem;
+    font-size: 1.7rem;
     font-weight: normal;
 }
 
@@ -1978,8 +1983,7 @@ footer h5 {
 /*  User Home  */
 #user-home-welcome-text {
     text-align: center;
-    display: none;
-    font-size: 2.2rem;
+    font-size: 2.3rem;
     font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
@@ -1987,6 +1991,7 @@ footer h5 {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin: 40px 0;
+    min-height: 49px;
 }
 
 #user-home-content {
@@ -2011,7 +2016,7 @@ footer h5 {
     margin: 0;
     color: var(--color-text);
     text-decoration: none;
-    font-size: 1.7rem;
+    font-size: 1.4rem;
     padding: 10px 0;
     font-weight: normal;
 }
@@ -2070,7 +2075,7 @@ footer h5 {
 
 #user-stadiums-no-stadiums-text h3, #user-wishlist-stadiums-no-stadiums-text h3, #user-home-no-achievements-text h3 {
     font-weight: normal;
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     margin: 0;
     margin-bottom: 20px;
 }
@@ -2083,11 +2088,11 @@ footer h5 {
     transition: all 0.3s ease;
     color: var(--color-blue);
     text-decoration: none;
-    padding: 10px;
-    font-size: 1.3rem;
+    padding: 8px;
+    font-size: 1rem;
     margin-top: 20px;
     display: block;
-    width: 250px;
+    width: 200px;
     margin: 0 auto;
 }
 
@@ -2098,7 +2103,7 @@ footer h5 {
 
 .user-stadium img {
     width: 368px;
-    height: 220px;
+    height: 198px;
     object-fit: cover;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -2108,7 +2113,7 @@ footer h5 {
 .user-stadium-text {
     background: var(--color-secondary);
     border: 1px solid var(--color-primary-15);
-    padding: 15px 0 15px 20px;
+    padding: 15px 0 15px 15px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
 }
@@ -2120,7 +2125,7 @@ footer h5 {
 }
 
 .user-stadium-text h3 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--color-text);
 }
 
@@ -2230,7 +2235,7 @@ footer h5 {
     display: flex;
     flex-wrap: wrap;
     align-content: space-between;
-    height: 352px;
+    height: 326px;
     border-top: 1px solid var(--color-primary-20);
 }
 
@@ -2240,7 +2245,7 @@ footer h5 {
     border-radius: 25px;
     width: 100%;
     text-align: center;
-    padding: 20px 0;
+    padding: 16px 0;
     box-shadow: var(--shadow-default);
 }
 
@@ -2248,14 +2253,14 @@ footer h5 {
     color: var(--color-blue);
     font-weight: normal;
     margin: 0;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
 }
 
 .user-stat h4 {
     color: var(--color-text-muted);
     font-weight: normal;
-    margin: 10px 0 0;
-    font-size: 1.1rem;
+    margin: 8px 0 0;
+    font-size: 1rem;
 }
 
 #user-home-achievements-container {
@@ -2267,7 +2272,7 @@ footer h5 {
     padding-top: 20px;
     display: flex;
     flex-wrap: wrap;
-    height: 352px;
+    height: 326px;
     border-top: 1px solid var(--color-primary-20);
 }
 
@@ -2319,11 +2324,16 @@ footer h5 {
 #user-home-stadium-map-container {
     width: 100%;
     display: none;
+    padding-bottom: 30px;
+}
+
+#user-home-stadium-map-container h2 {
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
 #user-home-stadium-map {
     width: 100%;
-    margin: 25px auto;
+    margin: 25px auto 0;
     height: 500px;
     border-radius: 25px;
     box-shadow: var(--shadow-default);
@@ -2340,7 +2350,7 @@ footer h5 {
 }
 
 #my-stadiums-text h2, #wishlist-text h2 {
-    font-size: 2.6rem;
+    font-size: 2.3rem;
     font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
@@ -2358,7 +2368,7 @@ footer h5 {
 }
 
 #achievements-text h2 {
-    font-size: 2.6rem;
+    font-size: 2.3rem;
     font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
@@ -2370,7 +2380,7 @@ footer h5 {
 
 #achievements-filter-bar {
     max-width: 630px;
-    margin: 30px auto 50px;
+    margin: 30px auto 40px;
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
@@ -2386,14 +2396,12 @@ footer h5 {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    padding: 25px 30px;
+    padding: 20px 30px;
 }
 
 #achievements-list-container {
-    border-top: 1px solid var(--color-primary-20);
     width: 95%;
-    margin: 45px auto;
-    padding-top: 45px;
+    margin: 0 auto;
     z-index: 100;
 }
 
@@ -2422,7 +2430,7 @@ footer h5 {
 
 .user-achievements-achievement-header h3 {
     margin: 0;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
 }
 
 .user-achievement-achievement-name {
@@ -2440,8 +2448,8 @@ footer h5 {
 }
 
 .user-achievement-achievement-image {
-    width: 65px;
-    height: 65px;
+    width: 50px;
+    height: 50px;
     object-fit: contain;
     margin-right: 25px;
 }
@@ -2450,6 +2458,7 @@ footer h5 {
     font-weight: normal;
     color: var(--color-text-muted);
     margin: 0;
+    font-size: 1.1rem;
 }
 
 .user-achievement-progress-container {
@@ -2484,6 +2493,7 @@ footer h5 {
     font-weight: normal;
     text-align: center;
     width: 63px;
+    font-size: 1rem;
 }
 
 .user-achievement-unlocked-text {
@@ -2491,7 +2501,7 @@ footer h5 {
     font-weight: normal;
     color: var(--color-blue);
     font-style: italic;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 #no-achievements-container {
@@ -2519,7 +2529,7 @@ footer h5 {
 /*  User Activity  */
 #user-activity-welcome-text {
     text-align: center;
-    font-size: 2.6rem;
+    font-size: 2.3rem;
     font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
@@ -2527,12 +2537,12 @@ footer h5 {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin: 40px 0;
-    min-height: 56px;
+    min-height: 49px;
 }
 
 #activity-filter-bar {
     display: none;
-    max-width: 665px;
+    max-width: 650px;
     margin: 30px auto 50px;
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
@@ -2549,7 +2559,7 @@ footer h5 {
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
-    padding: 25px 30px;
+    padding: 20px 20px;
 }
 
 #activity-filter-controls .filter-group:first-child .custom-select-wrapper {
@@ -2573,87 +2583,83 @@ footer h5 {
     border: 1px solid var(--color-primary-15);
     border-radius: 25px;
     box-shadow: var(--shadow-default);
-    width: 1075px;
+    width: 800px;
     margin: 0 auto;
-    display: flex;
     margin-bottom: 30px;
 }
 
-.activity-log-image {
-    border-radius: 25px;
-    object-fit: cover;
-    width: 50%;
-    height: 336px;
-    flex-shrink: 0;
-}
-
-.activity-image {
-    border-radius: 25px;
-    object-fit: cover;
-    width: 40%;
-    height: 246px;
-    flex-shrink: 0;
-}
-
-.activity-details-container {
-    width: 100%;
-    padding: 25px 30px 20px;
-}
-
-.activity-details-header {
+.activity-item-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    width: 94%;
+    padding: 25px 0 15px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--color-primary-20);
 }
 
-.activity-details-name {
-    color: var(--color-blue);
+.activity-item-name {
+    color: var(--color-text);
     font-weight: normal;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin: 0;
     margin-right: 20px;
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
-.activity-details-name:hover {
-    color: #3f8acc;
+.activity-item-name:hover {
+    color: var(--color-blue);
 }
 
-.activity-details-time {
+.activity-item-time {
     color: var(--color-text-muted);
+    font-size: 0.9rem;
+    min-width: 70px;
+    text-align: right;
 }
 
-.activity-details-location {
-    color: var(--color-text-muted);
-    margin: 0;
-    margin-top: 8px;
-    font-weight: normal;
-    font-size: 1.1rem;
+.activity-log-details-container {
+    width: 94%;
+    margin: 0 auto;
+    display: flex;
+    padding: 20px 0;
 }
 
-.activity-details, .activity-log-details {
-    margin-top: 20px;
+.activity-log-details-container div:first-of-type {
+    width: 100%;
+}
+
+.activity-item-image {
+    border-radius: 15px;
+    object-fit: cover;
+    width: 45%;
+    height: 208px;
+    flex-shrink: 0;
+    margin-right: 30px;
+}
+
+.activity-item-details {
+    width: 100%;
     background: rgba(79, 172, 254, 0.05);
     border: 1px solid transparent;
     border-radius: 8px;
     padding: 18px 20px;
 }
 
-.activity-log-details h4 {
+.activity-item-details h4 {
     margin: 0;
     color: var(--color-blue);
     font-weight: normal;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     letter-spacing: 0.5px;
 }
 
-.activity-log-details h4:nth-of-type(2) {
+.activity-item-details h4:nth-of-type(2) {
     margin-top: 15px;
 }
 
-.activity-log-details span {
+.activity-item-details span {
     display: block;
     margin-top: 10px;
 }
@@ -2663,20 +2669,13 @@ footer h5 {
     font-style: italic;
 }
 
-.activity-details h4 {
-    margin: 0;
-    color: var(--color-blue);
-    font-weight: normal;
-    letter-spacing: 0.5px;
-}
-
 .activity-buttons {
     margin-top: 20px;
 }
 
 .activity-buttons button {
     border-radius: 25px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     padding: 10px 20px;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -2688,6 +2687,38 @@ footer h5 {
 
 .activity-buttons button:hover {
     transform: translateY(-3px) translateZ(0);
+}
+
+.activity-details-container {
+    display: flex;
+    width: 94%;
+    margin: 0 auto;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.activity-type-text {
+    font-weight: normal;
+    font-size: 0.9rem;
+    color: var(--color-blue);
+    background: rgba(79, 172, 254, 0.05);
+    border: 1px solid transparent;
+    border-radius: 15px;
+    margin: 20px 0;
+    padding: 15px 20px;
+    width: 84%;
+}
+
+.remove-button {
+    border-radius: 25px;
+    font-size: 1rem;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 .edit-log-button {
@@ -2709,6 +2740,7 @@ footer h5 {
 
 .delete-log-button:hover, .remove-button:hover {
     background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
 }
 
 #no-activity-container {
@@ -2720,14 +2752,14 @@ footer h5 {
 }
 
 #no-activity-container h3 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 600;
     margin: 0 0 15px;
     color: var(--color-text);
 }
 
 #no-activity-container p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0 0 30px;
     line-height: 1.6;
@@ -2758,7 +2790,7 @@ footer h5 {
 }
 
 #edit-log-menu-header h2 {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     font-weight: normal;
     margin: 0;
 }
@@ -2768,7 +2800,6 @@ footer h5 {
 }
 
 #close-edit-log-menu {
-    font-size: 2.2rem;
     color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s;
@@ -2786,19 +2817,19 @@ footer h5 {
     margin: 30px 0 0;
     text-align: center;
     font-weight: normal;
-    font-size: 2rem;
+    font-size: 1.8rem;
 }
 
 #edit-log-container {
     justify-content: space-between;
     display: flex;
     width: 92%;
-    margin: 30px auto 10px;
+    margin: 30px auto;
 }
 
 #edit-log-image {
     width: 48%;
-    height: 290px;
+    height: 270px;
     object-fit: cover;
     border-radius: 25px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -2810,7 +2841,7 @@ footer h5 {
 
 #edit-log-date-visited-text, #edit-log-note-text {
     font-weight: normal;
-    font-size: 1.1rem;
+    font-size: 1rem;
     margin: 0;
     color: var(--color-text-muted);
 }
@@ -2821,11 +2852,17 @@ footer h5 {
     border: 1px solid var(--color-primary-20);
     color: var(--color-text);
     padding: 10px 20px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     margin: 10px 0 20px 0;
     font-family: "Inter", sans-serif;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#edit-log-date-visited:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
 #edit-log-date-visited::-webkit-calendar-picker-indicator {
@@ -2834,22 +2871,24 @@ footer h5 {
 }
 
 #edit-log-note {
-    margin: 10px 0 20px 0;
+    margin-top: 10px;
     border-radius: 25px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     width: 100%;
     padding: 20px;
-    height: 161px !important;
+    height: 147px !important;
     resize: none;
     color: var(--color-text);
-    font-size: 18px;
+    font-size: 1rem;
     font-family: "Inter", sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 #edit-log-note:focus {
     outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
 #edit-log-note::placeholder {
@@ -2866,11 +2905,11 @@ footer h5 {
 
 #edit-log-save-button, #edit-log-cancel-button {
     font-weight: normal;
-    font-size: 1.2rem;
+    font-size: 1rem;
     border-radius: 25px;
     margin: 0 auto 30px;
-    width: 170px;
-    padding: 10px 0;
+    width: 160px;
+    padding: 8px 0;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -2917,12 +2956,12 @@ footer h5 {
 #delete-log-menu-header {
     position: relative;
     text-align: center;
-    padding: 30px 40px;
+    padding: 25px 40px;
     border-bottom: 1px solid var(--color-primary-20);
 }
 
 #delete-log-menu h2 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: normal;
     margin: 0;
 }
@@ -2937,7 +2976,6 @@ footer h5 {
     right: 30px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 2.2rem;
     color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s;
@@ -2967,16 +3005,16 @@ footer h5 {
     display: flex;
     justify-content: space-between;
     width: 80%;
-    margin: 35px auto 0;
+    margin: 30px auto 0;
 }
 
 #delete-log-cancel-button, #delete-log-delete-button {
     font-weight: normal;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     border-radius: 25px;
     margin: 0 auto 30px;
     padding: 10px 0;
-    width: 170px;
+    width: 160px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -3009,14 +3047,14 @@ footer h5 {
     display: block;
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
-    padding: 7px 25px;
+    padding: 8px 25px;
     border-radius: 20px;
-    width: 148px;
+    width: 135px;
     margin: 50px auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
     color: var(--color-blue);
-    font-size: 1.2rem;
+    font-size: 1rem;
     text-align: center;
     cursor: pointer;
 }
@@ -3033,7 +3071,7 @@ footer h5 {
 }
 
 #settings-header {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: normal;
     margin: 40px 0 20px;
     padding-bottom: 15px;
@@ -3135,6 +3173,7 @@ footer h5 {
     font-weight: normal;
     margin: 0;
     color: var(--color-text);
+    font-size: 1.1rem;
 }
 
 .settings-content h4 {
@@ -3142,6 +3181,7 @@ footer h5 {
     margin: 0;
     color: var(--color-text-muted);
     margin-top: 10px;
+    font-size: 1rem;
 }
 
 #new-username-container, #new-email-container {
@@ -3171,7 +3211,7 @@ footer h5 {
     height: 40px !important;
     resize: none;
     color: var(--color-text);
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-family: "Inter", sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     scrollbar-width: none;
@@ -3215,9 +3255,9 @@ footer h5 {
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
     font-weight: normal;
-    font-size: 1.1rem;
+    font-size: 1rem;
     border-radius: 25px;
-    width: 170px;
+    width: 160px;
     padding: 8px 0;
     text-align: center;
     cursor: pointer;
@@ -3257,10 +3297,10 @@ footer h5 {
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
     font-weight: normal;
-    font-size: 1.1rem;
+    font-size: 1rem;
     border-radius: 25px;
     padding: 8px 0;
-    width: 190px;
+    width: 180px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -3273,7 +3313,7 @@ footer h5 {
 }
 
 #upload-profile-pic-button img {
-    width: 20px;
+    height: 18px;
     margin-right: 10px;
 }
 
@@ -3292,6 +3332,7 @@ footer h5 {
     margin-right: 40px;
     padding-top: 10px;
     flex-shrink: 0;
+    font-size: 1rem;
 }
 
 .password-input-wrapper {
@@ -3309,7 +3350,7 @@ footer h5 {
     height: 40px !important;
     resize: none;
     color: var(--color-text);
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-family: "Inter", sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     scrollbar-width: none;
@@ -3341,7 +3382,7 @@ footer h5 {
     cursor: pointer;
     padding: 0;
     color: var(--color-blue);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-family: "Inter", sans-serif;
     transition: color 0.2s ease;
 }
@@ -3377,9 +3418,9 @@ footer h5 {
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
     font-weight: normal;
-    font-size: 1.1rem;
+    font-size: 1rem;
     border-radius: 25px;
-    width: 200px;
+    width: 190px;
     padding: 8px 0;
     text-align: center;
     cursor: pointer;
@@ -3395,9 +3436,9 @@ footer h5 {
 #delete-account-button {
     margin-top: 20px;
     font-weight: normal;
-    font-size: 1.1rem;
+    font-size: 1rem;
     border-radius: 25px;
-    width: 200px;
+    width: 180px;
     padding: 8px 0;
     text-align: center;
     cursor: pointer;
@@ -3415,7 +3456,7 @@ footer h5 {
 
 #delete-account-menu {
     position: fixed;
-    
+    display: none;
     width: 490px;
     height: auto;
     top: 50%;
@@ -3431,12 +3472,12 @@ footer h5 {
 #delete-account-menu-header {
     position: relative;
     text-align: center;
-    padding: 30px 40px 25px;
+    padding: 25px 40px;
     border-bottom: 1px solid var(--color-primary-20);
 }
 
 #delete-account-menu h2 {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
     font-weight: normal;
     margin: 0;
 }
@@ -3451,7 +3492,6 @@ footer h5 {
     right: 30px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 2.2rem;
     color: var(--color-text-muted);
     cursor: pointer;
     transition: color 0.2s;
@@ -3468,7 +3508,7 @@ footer h5 {
 #delete-account-menu p {
     color: var(--color-text);
     margin: 20px 40px 20px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.7;
 }
 
@@ -3476,16 +3516,16 @@ footer h5 {
     display: flex;
     justify-content: space-between;
     width: 87%;
-    margin: 30px auto 0;
+    margin: 25px auto 0;
 }
 
 #delete-account-cancel-button, #delete-account-delete-button {
     font-weight: normal;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     border-radius: 25px;
     margin: 0 auto 30px;
-    padding: 10px 0;
-    width: 195px;
+    padding: 8px 0;
+    width: 180px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -3527,7 +3567,7 @@ footer h5 {
     width: 80%;
     height: 40px !important;
     color: var(--color-text);
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-family: "Inter", sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
@@ -3545,8 +3585,8 @@ footer h5 {
 
 /*  Skeleton Loading  */
 .skeleton-card {
-    width: 410px;
-    height: 331px;
+    width: 400px;
+    height: 317px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
@@ -3586,7 +3626,7 @@ footer h5 {
     box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
-    height: 183px;
+    height: 166px;
 }
 
 #stadiums-container-skeleton {
@@ -3599,7 +3639,7 @@ footer h5 {
 
 #stadium-name-skeleton {
     width: 50%;
-    height: 56px;
+    height: 49px;
     border-radius: 30px;
     margin: 41px auto;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
@@ -3639,7 +3679,7 @@ footer h5 {
     box-shadow: var(--shadow-default);
     border-radius: 20px;
     width: 24%;
-    height: 75px;
+    height: 63px;
 }
 
 #stadium-info-skeleton {
@@ -3658,7 +3698,7 @@ footer h5 {
     box-shadow: var(--shadow-default);
     border-radius: 25px;
     width: 300px;
-    height: 150px;
+    height: 130px;
     margin-bottom: 25px;
 }
 
@@ -3719,21 +3759,9 @@ footer h5 {
     box-shadow: var(--shadow-default);
 }
 
-#user-home-welcome-text-skeleton {
-    margin: 41px auto;
-    width: 325px;
-    height: 56px;
-    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
-    border: 1px solid var(--color-primary-15);
-    background-size: 400% 100%;
-    animation: loading 1.2s ease-in-out infinite;
-    box-shadow: var(--shadow-default);
-    border-radius: 25px;
-}
-
 #user-home-stadiums-container-skeleton, #user-home-wishlist-container-skeleton {
     width: 69%;
-    height: 452px;
+    height: 419px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
@@ -3745,7 +3773,7 @@ footer h5 {
 
 #user-home-stats-container-skeleton, #user-home-achievements-container-skeleton {
     width: 29%;
-    height: 452px;
+    height: 419px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
@@ -3757,7 +3785,7 @@ footer h5 {
 
 #user-home-stadium-map-container-skeleton {
     width: 100%;
-    height: 645px;
+    height: 642px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
@@ -3833,7 +3861,7 @@ footer h5 {
 
 #achievements-filter-bar-skeleton {
     max-width: 630px;
-    margin: 30px auto 50px;
+    margin: 30px auto 40px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
@@ -3842,22 +3870,20 @@ footer h5 {
     box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
-    height: 98px;
+    height: 85px;
 }
 
 #achievements-container-skeleton {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 0 auto;
-    padding-top: 45px;
 }
 
 .achievements-skeleton-card {
     width: 410px;
-    height: 253px;
+    height: 236px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
@@ -3868,7 +3894,7 @@ footer h5 {
 }
 
 #activity-filter-bar-skeleton {
-    max-width: 665px;
+    max-width: 650px;
     margin: 30px auto 50px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
@@ -3878,22 +3904,20 @@ footer h5 {
     box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
-    height: 98px;
+    height: 85px;
 }
 
 #activity-container-skeleton {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    border-top: 1px solid var(--color-primary-20);
     width: 95%;
     margin: 0 auto;
-    padding-top: 50px;
 }
 
 .activity-skeleton-card {
-    width: 1075px;
-    height: 248px;
+    width: 800px;
+    height: 157px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
@@ -3942,6 +3966,26 @@ footer h5 {
     .password-input-wrapper input::placeholder {
         color: transparent;
     }
+    .activity-item-header {
+        width: 88%;
+    }
+    .activity-details-container, .activity-log-details-container {
+        display: block;
+        width: 88%;
+    }
+    .activity-type-text {
+        margin: 15px 0;
+        width: 100%;
+    }
+    .remove-button {
+        margin-bottom: 20px;
+    }
+    .activity-item-image {
+        width: 100% !important;
+    }
+    .activity-skeleton-card {
+        height: 208px;
+    }
 }
 
 @media screen and (max-width: 411px) {
@@ -3984,12 +4028,6 @@ footer h5 {
     }
     .activity-details h4 {
         font-size: 0.9rem;
-    }
-    .remove-button {
-        font-size: 0.9rem !important;
-    }
-    .activity-buttons button {
-        font-size: 0.9rem !important;
     }
     #new-profile-pic {
         width: 50px;
@@ -4312,15 +4350,12 @@ footer h5 {
         margin: 20px auto 40px;
     }
     #filter-bar-skeleton {
-        height: 478px !important;
+        height: 464px !important;
         margin-bottom: 45px;
     }
     #achievements-filter-bar-skeleton {
         height: 213px !important;
         margin-bottom: 45px;
-    }
-    #activity-filter-bar-skeleton {
-        height: 210px !important;
     }
     #filter-controls {
         flex-direction: column;
@@ -4358,6 +4393,24 @@ footer h5 {
     #results-count {
         margin: 10px 0 !important;
     }
+    #activity-list-container, #activity-container-skeleton {
+        width: 90% !important;
+    }
+    .activity-item, .activity-skeleton-card {
+        width: 100% !important;
+    }
+    .activity-log-details-container {
+        flex-direction: column;
+    }
+    .activity-item-details {
+        margin-top: 20px;
+    }
+    .activity-item-image {
+        width: 338px;
+    }
+    #activity-filter-bar-skeleton {
+        height: 196px;
+    }
 }
 
 @media screen and (max-width: 800px) {
@@ -4371,7 +4424,6 @@ footer h5 {
     #profile-pic-settings-skeleton {
         height: 252px;
     }
-
     @supports (-webkit-hyphens:none) {
         #username-settings-skeleton {
             height: 312px;
@@ -4449,6 +4501,15 @@ footer h5 {
     }
 }
 
+@media screen and (max-width: 850px) {
+    .activity-item, .activity-skeleton-card {
+        width: 97%;
+    }
+    .activity-type-text {
+        margin-right: 20px;
+    }
+}
+
 @media screen and (max-width: 876px) {
     #user-home-stats-container, #user-home-stats-container-skeleton {
         width: 100% !important;
@@ -4515,7 +4576,7 @@ footer h5 {
         max-width: 93%;
     }
     #filter-bar-skeleton {
-        height: 244px;
+        height: 225px;  
     }
 }
 
@@ -4596,23 +4657,6 @@ footer h5 {
     }
     #add-stadium-buttons, #edit-log-buttons {
         width: 374px;
-    }
-}
-
-@media screen and (max-width: 1150px) {
-    .activity-item {
-        display: block;
-        width: 536px;
-        margin: 0 auto 30px;
-    }
-    .activity-skeleton-card {
-        height: 605px;
-        width: 536px;
-        margin: 0 auto 30px;
-    }
-    .activity-log-image, .activity-image {
-        width: 100%;
-        height: 356px;
     }
 }
 

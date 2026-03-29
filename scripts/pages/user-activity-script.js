@@ -78,46 +78,73 @@ async function setView(username, activity, id, sortBy) {
 async function loadMore() {
     try {
         const btn = document.getElementById('show-more-button');
-        if (btn) btn.textContent = 'Loading...';
+        if (!btn) return;
+        
+        // Start animated ellipsis
+        let dotCount = 0;
+        const ellipsisInterval = setInterval(() => {
+            dotCount = (dotCount + 1) % 4;
+            btn.textContent = 'Loading' + '.'.repeat(dotCount);
+        }, 250); // Update every 300ms
 
+        const startTime = Date.now();
+        
         const { activity, id, sortBy } = currentFilters;
         const result = await userAPI.loadUserActivity(currentUsername, activity, id, sortBy, PAGE_SIZE, currentOffset);
+        
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = MIN_LOADING_TIME - elapsedTime;
+        
+        if (remainingTime > 0) {
+            await new Promise(resolve => setTimeout(resolve, remainingTime));
+        }
+        
+        // Stop animated ellipsis
+        clearInterval(ellipsisInterval);
+        
         const activities = result.userActivity;
 
         activities.forEach(a => elements.activityList.appendChild(createActivityItem(a, currentUsername)));
         currentOffset += activities.length;
         updateShowMoreButton(activities.length);
     } catch (err) {
+        // Make sure to clear interval on error
+        const btn = document.getElementById('show-more-button');
+        if (btn) btn.textContent = 'Show More';
         alert(err.message);
     }
 }
 
 /*  Functions  */
-function createActivityButtons(activity, username) {
-    const buttons = document.createElement('div');
-    buttons.classList.add('activity-buttons');
+function createActivityItem(activity, username) {
+    const item = document.createElement('div');
+    item.classList.add('activity-item');
+
+    const header = createActivityHeader(activity);
+    item.appendChild(header);
 
     if (activity.visited_on) {
-        buttons.appendChild(createEditButton(activity, username));
-        buttons.appendChild(createDeleteButton(activity, username));
+        const logDetailsContainer = createLogDetailsContainer(activity, username);
+        item.appendChild(logDetailsContainer);
     } else {
-        buttons.appendChild(createRemoveButton(activity, username));
+        const detailsContainer = createSimpleDetailsContainer(activity, username);
+        item.appendChild(detailsContainer);
     }
 
-    return buttons;
+    return item;
 }
 
 function createActivityHeader(activity) {
     const header = document.createElement('div');
-    header.classList.add('activity-details-header');
+    header.classList.add('activity-item-header');
 
     const nameLink = document.createElement('a');
-    nameLink.classList.add('activity-details-name');
+    nameLink.classList.add('activity-item-name');
     nameLink.textContent = activity.stadium_name;
     nameLink.href = `stadium.html?id=${encodeURIComponent(activity.stadium_id)}`;
 
     const time = document.createElement('span');
-    time.classList.add('activity-details-time');
+    time.classList.add('activity-item-time');
     time.textContent = timeAgo(activity.added_on);
 
     header.appendChild(nameLink);
@@ -125,49 +152,75 @@ function createActivityHeader(activity) {
     return header;
 }
 
-function createActivityItem(activity, username) {
-    const item = document.createElement('div');
-    item.classList.add('activity-item');
+function createLogDetailsContainer(activity, username) {
+    const container = document.createElement('div');
+    container.classList.add('activity-log-details-container');
 
     const img = document.createElement('img');
     img.src = activity.image;
     img.alt = activity.stadium_name;
-    img.classList.add(activity.visited_on ? 'activity-log-image' : 'activity-image');
-    item.appendChild(img);
+    img.classList.add('activity-item-image');
+    container.appendChild(img);
 
-    const detailsContainer = document.createElement('div');
-    detailsContainer.classList.add('activity-details-container');
+    const wrapper = document.createElement('div');
 
-    const header = createActivityHeader(activity);
-    detailsContainer.appendChild(header);
+    const details = createLogDetails(activity);
+    wrapper.appendChild(details);
 
-    const location = document.createElement('h4');
-    location.classList.add('activity-details-location');
-    location.textContent = formatLocation(activity.city, activity.state);
-    detailsContainer.appendChild(location);
+    const buttons = createLogButtons(activity, username);
+    wrapper.appendChild(buttons);
 
-    if (activity.visited_on) {
-        detailsContainer.appendChild(createLogDetails(activity));
-    } else {
-        detailsContainer.appendChild(createSimpleActivityDetails(activity));
-    }
-
-    detailsContainer.appendChild(createActivityButtons(activity, username));
-    item.appendChild(detailsContainer);
-    return item;
+    container.appendChild(wrapper);
+    return container;
 }
 
-function createDeleteButton(activity, username) {
-    const btn = document.createElement('button');
-    btn.classList.add('delete-log-button');
-    btn.textContent = 'Delete Log';
+function createSimpleDetailsContainer(activity, username) {
+    const container = document.createElement('div');
+    container.classList.add('activity-details-container');
 
-    btn.addEventListener('click', () => {
-        currentData = { visit_id: activity.visit_id, username };
-        toggleMenu(elements.deleteLogMenu, true, overlay);
-    });
+    const text = document.createElement('h3');
+    text.classList.add('activity-type-text');
+    text.textContent = activity.activity_type === 'wishlist' ? 'ADDED TO WISHLIST' : 'MARKED AS VISITED';
+    container.appendChild(text);
 
-    return btn;
+    const btn = createRemoveButton(activity, username);
+    container.appendChild(btn);
+
+    return container;
+}
+
+function createLogDetails(activity) {
+    const details = document.createElement('div');
+    details.classList.add('activity-item-details');
+
+    const dateLabel = document.createElement('h4');
+    dateLabel.textContent = 'DATE VISITED';
+    details.appendChild(dateLabel);
+
+    const dateValue = document.createElement('span');
+    dateValue.textContent = formatDate(activity.visited_on);
+    details.appendChild(dateValue);
+
+    const noteLabel = document.createElement('h4');
+    noteLabel.textContent = 'NOTE';
+    details.appendChild(noteLabel);
+
+    const noteValue = document.createElement('span');
+    noteValue.textContent = activity.user_note || 'No note';
+    if (!activity.user_note) noteValue.classList.add('no-note');
+    details.appendChild(noteValue);
+
+    return details;
+}
+
+function createLogButtons(activity, username) {
+    const buttons = document.createElement('div');
+    buttons.classList.add('activity-buttons');
+
+    buttons.appendChild(createEditButton(activity, username));
+    buttons.appendChild(createDeleteButton(activity, username));
+
+    return buttons;
 }
 
 function createEditButton(activity, username) {
@@ -190,28 +243,17 @@ function createEditButton(activity, username) {
     return btn;
 }
 
-function createLogDetails(activity) {
-    const details = document.createElement('div');
-    details.classList.add('activity-log-details');
+function createDeleteButton(activity, username) {
+    const btn = document.createElement('button');
+    btn.classList.add('delete-log-button');
+    btn.textContent = 'Delete Log';
 
-    const dateLabel = document.createElement('h4');
-    dateLabel.textContent = 'DATE VISITED';
-    details.appendChild(dateLabel);
+    btn.addEventListener('click', () => {
+        currentData = { visit_id: activity.visit_id, username };
+        toggleMenu(elements.deleteLogMenu, true, overlay);
+    });
 
-    const dateValue = document.createElement('span');
-    dateValue.textContent = formatDate(activity.visited_on);
-    details.appendChild(dateValue);
-
-    const noteLabel = document.createElement('h4');
-    noteLabel.textContent = 'NOTE';
-    details.appendChild(noteLabel);
-
-    const noteValue = document.createElement('span');
-    noteValue.textContent = activity.user_note || 'No note';
-    if (!activity.user_note) noteValue.classList.add('no-note');
-    details.appendChild(noteValue);
-
-    return details;
+    return btn;
 }
 
 function createRemoveButton(activity, username) {
@@ -236,23 +278,12 @@ function createRemoveButton(activity, username) {
     return btn;
 }
 
-function createSimpleActivityDetails(activity) {
-    const details = document.createElement('div');
-    details.classList.add('activity-details');
-
-    const text = document.createElement('h4');
-    text.textContent = activity.activity_type === 'wishlist' ? 'ADDED TO WISHLIST' : 'MARKED AS VISITED';
-    details.appendChild(text);
-
-    return details;
-}
-
 function getFiltersFromURL() {
     const params = new URLSearchParams(window.location.search);
     return {
         activity: params.get('activity') || 'all',
         sort: params.get('sort') || 'date-desc',
-        id: params.get('id') || null
+        stadium: params.get('id') || null
     };
 }
 
@@ -387,10 +418,10 @@ window.onload = async () => {
     const username = getUsername();
     showLoggedInUI(username);
 
-    const { activity, sort, id } = getFiltersFromURL();
+    const { activity, sort, stadium } = getFiltersFromURL();
 
-    if (id) {
-        const stadiumName = await loadStadiumInfo(id, username);
+    if (stadium) {
+        const stadiumName = await loadStadiumInfo(stadium, username);
         document.title = `${stadiumName} Activity - StadiumTrackr`;
         elements.activityWelcomeText.textContent = `${stadiumName} Activity`;
     } else {
@@ -401,5 +432,5 @@ window.onload = async () => {
     syncSelectFromURL('activity-filter', activity);
     syncSelectFromURL('sort-filter', sort);
 
-    setView(username, activity, id, sort);
+    setView(username, activity, stadium, sort);
 };

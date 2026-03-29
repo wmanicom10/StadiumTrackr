@@ -129,8 +129,13 @@
             </header>
 
             <main>
-                <div id="user-home-welcome-text-skeleton"></div>
                 <h2 id="user-home-welcome-text"></h2>
+                <script>
+                    (function() {
+                        const u = localStorage.getItem('username') || '';
+                        document.getElementById('user-home-welcome-text').textContent = 'Welcome, ' + u + '!';
+                    })();
+                </script>
 
                 <div id="user-home-content">
                     <div id="user-home-stadiums-container-skeleton"></div>
@@ -189,7 +194,7 @@
                         </div>
                     </div>
                     <div class="user-home-item" id="user-home-stadium-map-container">
-                        <h2>Stadium Map</h2>
+                        <h2>My Stadiums Map</h2>
                         <div id="user-home-stadium-map"></div>
                     </div>
                 </div>

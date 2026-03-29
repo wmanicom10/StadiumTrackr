@@ -37,6 +37,8 @@ async function setView(username, league, country, sortBy) {
         const result = await userAPI.loadUserStadiums(username, league, country, sortBy);
         const stadiums = result.userStadiums;
 
+        console.log(stadiums);
+
         allStadiums = stadiums;
 
         const query = document.getElementById('home-search-field').value.toLowerCase().trim();

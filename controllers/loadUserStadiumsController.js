@@ -20,8 +20,8 @@ const handleLoadUserStadiums = async (req, res) => {
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id,
-                user_stadiums.added_on,
-                user_stadiums.visited_on,
+                MAX(user_stadiums.added_on) AS added_on,
+                MAX(user_stadiums.visited_on) AS visited_on,
                 1 AS visited,
                 CASE WHEN MAX(w.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist
             FROM user_stadiums
@@ -33,14 +33,21 @@ const handleLoadUserStadiums = async (req, res) => {
             WHERE user_stadiums.user_id = ?
             ${leagueFilter.sql}
             ${countryFilter.sql}
-            GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, stadiums.city, stadiums.state, stadiums.country_id, user_stadiums.added_on, user_stadiums.visited_on
+            GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, 
+                    stadiums.city, stadiums.state, stadiums.country_id
         `;
 
         query += buildSortOrder(sortBy, 'stadiums');
 
-        const params = [userId, userId, ...leagueFilter.params, ...countryFilter.params];
+        const params = [
+            userId, 
+            userId, 
+            ...(leagueFilter.sql ? leagueFilter.params : []),
+            ...countryFilter.params
+        ];
 
         const [userStadiums] = await db.query(query, params);
+
         res.json({ userStadiums });
     } catch (err) {
         console.error(err);

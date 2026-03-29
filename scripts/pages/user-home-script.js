@@ -121,7 +121,6 @@ function createAchievementElement(achievement) {
 
 function hideSkeletons() {
     const skeletons = [
-        'user-home-welcome-text-skeleton',
         'user-home-stadiums-container-skeleton',
         'user-home-stats-container-skeleton',
         'user-home-wishlist-container-skeleton',
@@ -219,14 +218,8 @@ function showContent() {
     });
 }
 
-function showLoggedInUI(username) {
-    const { loggedInHeader, loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
-    
-    elements.userHomeWelcomeText.textContent = `Welcome, ${username}!`;
-    
-    const displayName = truncateUsername(username);
-    loggedInHeaderUsername.textContent = displayName;
-    sidebarUsername.textContent = displayName;
+function showLoggedInUI() {
+    const { loggedInHeader } = getHeaderElements();
     loggedInHeader.style.display = 'flex';
 }
 
@@ -238,6 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async () => {
     const username = getUsername();
-    showLoggedInUI(username);
+    showLoggedInUI();
     loadFullUserHomePage(username);
 };
