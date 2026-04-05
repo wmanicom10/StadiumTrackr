@@ -13,6 +13,8 @@ const updateProfilePicController = require('../controllers/updateProfilePicContr
 const updateEmailController = require('../controllers/updateEmailController');
 const updatePasswordController = require('../controllers/updatePasswordController');
 const deleteAccountController = require('../controllers/deleteAccountController');
+const saveFavoriteStadiumsController = require('../controllers/saveFavoriteStadiumsController');
+const loadFavoriteStadiumsController = require('../controllers/loadFavoriteStadiumsController');
 
 router.post('/loadUserInfo', loadUserInfoController.handleLoadUserInfo);
 router.post('/loadUserStadiumInfo', loadUserStadiumInfoController.handleLoadUserStadiumInfo);
@@ -26,5 +28,7 @@ router.post('/updateProfilePic', updateProfilePicController.upload.single('profi
 router.post('/updateEmail', updateEmailController.handleUpdateEmail);
 router.post('/updatePassword', updatePasswordController.handleUpdatePassword);
 router.post('/deleteAccount', deleteAccountController.handleDeleteAccount);
+router.post('/saveFavoriteStadiums', saveFavoriteStadiumsController.handleSaveFavoriteStadiums);
+router.post('/loadFavoriteStadiums', loadFavoriteStadiumsController.handleLoadFavoriteStadiums);
 
 module.exports = router;

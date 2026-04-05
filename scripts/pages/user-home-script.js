@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getHeaderElements, MIN_LOADING_TIME } from "../constants.js";
-import { createUserStadiumElement, getUsername, truncateUsername } from "../utils.js";
+import { createUserStadiumElement, getUsername } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { stadiumAPI } from "../api/stadium.js";
@@ -16,6 +16,8 @@ const elements = {
     addStadiumLogButton: document.getElementById('add-stadium-log-button'),
     addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
     userHomeWelcomeText: document.getElementById('user-home-welcome-text'),
+    userFavoriteStadiumsElement: document.getElementById('user-favorite-stadiums'),
+    userFavoriteStadiumsNoFavoritesText: document.getElementById('user-favorite-stadiums-no-favorites-text'),
     userStadiumsElement: document.getElementById('user-stadiums'),
     userStadiumsNoStadiumsText: document.getElementById('user-stadiums-no-stadiums-text'),
     userHomeStadiumsSeeAllButton: document.getElementById('user-home-stadiums-see-all-button'),
@@ -66,6 +68,12 @@ async function loadStadiumMap(username) {
 async function loadUserInfo(username) {
     try {
         const result = await userAPI.loadUserInfo(username);
+
+        renderFavoritesSection(
+            result.userFavoriteStadiums,
+            elements.userFavoriteStadiumsElement,
+            elements.userFavoriteStadiumsNoFavoritesText
+        )
 
         renderStadiumSection(
             result.userStadiums,
@@ -121,6 +129,7 @@ function createAchievementElement(achievement) {
 
 function hideSkeletons() {
     const skeletons = [
+        'user-home-favorite-stadiums-container-skeleton',
         'user-home-stadiums-container-skeleton',
         'user-home-stats-container-skeleton',
         'user-home-wishlist-container-skeleton',
@@ -186,6 +195,49 @@ function renderAchievements(achievements) {
     });
 }
 
+function renderFavoritesSection(stadiums, container, noFavoritesText) {
+    if (stadiums.length === 0) {
+        noFavoritesText.style.display = 'block';
+        return;
+    }
+
+    stadiums.forEach(stadium => {
+        const userFavoriteStadium = document.createElement('div');
+        userFavoriteStadium.classList.add('user-favorite-stadium');
+
+        const userFavoriteStadiumLink = document.createElement('a');
+        userFavoriteStadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
+
+        const userFavoriteStadiumImage = document.createElement('img');
+        userFavoriteStadiumImage.src = stadium.image;
+        userFavoriteStadiumImage.alt = stadium.stadium_name;
+        userFavoriteStadiumLink.appendChild(userFavoriteStadiumImage);
+
+        const userFavoriteStadiumText = document.createElement('div');
+        userFavoriteStadiumText.classList.add('user-favorite-stadium-text');
+
+        const userFavoriteStadiumName = document.createElement('h3');
+        userFavoriteStadiumName.textContent = stadium.stadium_name;
+        userFavoriteStadiumText.appendChild(userFavoriteStadiumName);
+
+        const userFavoriteStadiumLocation = document.createElement('h4');
+        userFavoriteStadiumLocation.textContent = `${stadium.city}, ${stadium.state}`;
+        userFavoriteStadiumText.appendChild(userFavoriteStadiumLocation);
+
+        userFavoriteStadiumLink.appendChild(userFavoriteStadiumText);
+
+        userFavoriteStadium.appendChild(userFavoriteStadiumLink);
+
+        container.appendChild(userFavoriteStadium);
+    })
+
+    for (let i = 0; i < 4 - stadiums.length; i++) {
+        const userFavoriteStadiumEmpty = document.createElement('div');
+        userFavoriteStadiumEmpty.classList.add('user-favorite-stadium-empty');
+        container.appendChild(userFavoriteStadiumEmpty);
+    }   
+}
+
 function renderStadiumSection(stadiums, container, noStadiumsText, seeAllButton) {
     if (stadiums.length === 0) {
         noStadiumsText.style.display = 'block';
@@ -206,6 +258,7 @@ function renderStadiumSection(stadiums, container, noStadiumsText, seeAllButton)
 function showContent() {
     const containers = [
         'user-home-welcome-text',
+        'user-home-favorite-stadiums-container',
         'user-home-stadiums-container',
         'user-home-stats-container',
         'user-home-wishlist-container',

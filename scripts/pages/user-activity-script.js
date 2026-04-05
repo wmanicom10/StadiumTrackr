@@ -1,6 +1,6 @@
 /*  Imports  */
 import { MIN_LOADING_TIME, overlay } from "../constants.js";
-import { formatDate, formatLocation, getUsername, initializeCustomSelects, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
+import { formatDate, getUsername, initializeCustomSelects, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { stadiumAPI } from "../api/stadium.js";
@@ -80,12 +80,11 @@ async function loadMore() {
         const btn = document.getElementById('show-more-button');
         if (!btn) return;
         
-        // Start animated ellipsis
         let dotCount = 0;
         const ellipsisInterval = setInterval(() => {
             dotCount = (dotCount + 1) % 4;
             btn.textContent = 'Loading' + '.'.repeat(dotCount);
-        }, 250); // Update every 300ms
+        }, 250);
 
         const startTime = Date.now();
         
@@ -99,7 +98,6 @@ async function loadMore() {
             await new Promise(resolve => setTimeout(resolve, remainingTime));
         }
         
-        // Stop animated ellipsis
         clearInterval(ellipsisInterval);
         
         const activities = result.userActivity;
@@ -108,7 +106,6 @@ async function loadMore() {
         currentOffset += activities.length;
         updateShowMoreButton(activities.length);
     } catch (err) {
-        // Make sure to clear interval on error
         const btn = document.getElementById('show-more-button');
         if (btn) btn.textContent = 'Show More';
         alert(err.message);

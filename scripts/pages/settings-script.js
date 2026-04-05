@@ -1,6 +1,6 @@
 /*  Imports  */
-import { MIN_LOADING_TIME, overlay } from "../constants.js";
-import { getUsername, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
+import { API_BASE_URL, ROUTES, DEBOUNCE_TIME, MIN_LOADING_TIME, overlay } from "../constants.js";
+import { debounce, getUsername, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 
@@ -58,13 +58,80 @@ const closeDeleteAccountMenu = document.getElementById('close-delete-account-men
 const deleteAccountCancelButton = document.getElementById('delete-account-cancel-button');
 const deleteAccountDeleteButton = document.getElementById('delete-account-delete-button');
 
+const addFavoriteStadiumMenu = document.getElementById('add-favorite-stadium-menu');
+const closeAddFavoriteStadiumMenu = document.getElementById('close-add-favorite-stadium-menu');
+const favoriteStadiumsSettingContainer = document.getElementById('favorite-stadiums-settings-container')
+
 const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
 const MAX_SIZE_MB = 2;
 
 /*  Async Functions  */
+async function loadFavoriteStadiums(username) {
+    try {
+        const response = await fetch(`${API_BASE_URL}${ROUTES.USER_FAVORITES}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+        });
 
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Unknown error');
+        }
+
+        const result = await response.json();
+        const favoriteStadiums = result.favoriteStadiums;
+
+        favoriteStadiums.forEach(stadium => {
+            console.log(stadium)
+
+            favoriteStadiumsSettingContainer.appendChild(createActiveSlot(stadium));
+        });
+
+        for (let i = 0; i < 4 - favoriteStadiums.length; i++) {
+            favoriteStadiumsSettingContainer.appendChild(createEmptySlot());
+        }
+        
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function searchStadiums(name, suggestionsContainer, searchValue) {
+    try {
+        const response = await fetch(`${API_BASE_URL}${ROUTES.STADIUM_SEARCH}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Unknown error');
+        }
+
+        const result = await response.json();
+        const stadiums = result.stadiums;
+
+        renderSearchSuggestions(stadiums, suggestionsContainer, searchValue);
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
 
 /*  Functions  */
+function attachRemoveListener(button) {
+    button.addEventListener('click', async () => {
+        const container = document.getElementById('favorite-stadiums-settings-container');
+        
+        button.closest('.favorite-stadiums-setting-active').remove();
+
+        const empty = createEmptySlot();
+        container.appendChild(empty);
+    });
+}
+
 function checkPasswordMatch() {
     const newPassword = newPasswordInput.value;
     const confirmPassword = confirmPasswordInput.value;
@@ -105,6 +172,100 @@ function checkPasswordStrength() {
     }
 }
 
+function createActiveSlot(stadium) {
+    const favoriteStadiumsSettingActive = document.createElement('div');
+    favoriteStadiumsSettingActive.classList.add('favorite-stadiums-setting-active');
+
+    const favoriteStadiumImage = document.createElement('img');
+    favoriteStadiumImage.src = stadium.image;
+    favoriteStadiumsSettingActive.appendChild(favoriteStadiumImage);
+
+    const favoriteStadiumsSettingText = document.createElement('div');
+    favoriteStadiumsSettingText.classList.add('favorite-stadiums-setting-text');
+
+    const favoriteStadiumName = document.createElement('h3');
+    favoriteStadiumName.textContent = stadium.stadium_name;
+    favoriteStadiumsSettingText.appendChild(favoriteStadiumName);
+
+    const favoriteStadiumLocation = document.createElement('h4');
+    favoriteStadiumLocation.textContent = stadium.city + ', ' + stadium.state;
+    favoriteStadiumsSettingText.appendChild(favoriteStadiumLocation);
+
+    favoriteStadiumsSettingActive.appendChild(favoriteStadiumsSettingText);
+
+    const cornerControls = document.createElement('div');
+    cornerControls.classList.add('user-stadium-corner-controls');
+
+    const button = document.createElement('button');
+    button.classList.add('user-stadium-icon-btn');
+    attachRemoveListener(button);
+
+    const img = document.createElement('img');
+    img.src = 'images/icons/x.png';
+    img.alt = 'Remove Favorite Stadium';
+
+    button.appendChild(img);
+    cornerControls.appendChild(button);
+    favoriteStadiumsSettingActive.appendChild(cornerControls);
+
+    return favoriteStadiumsSettingActive;
+}
+
+function createEmptySlot() {
+    const slot = document.createElement('div');
+    slot.classList.add('favorite-stadiums-setting');
+
+    const img = document.createElement('img');
+    img.src = 'images/icons/plus.png';
+    img.alt = 'Add Favorite Stadium';
+    slot.appendChild(img);
+
+    slot.addEventListener('click', () => toggleMenu(addFavoriteStadiumMenu, true, overlay));
+    return slot;
+}
+
+function hideSearchSuggestions(container, input) {
+    container.classList.remove('active');
+    input.value = '';
+    input.style.borderBottomLeftRadius = '35px';
+    input.style.borderBottomRightRadius = '35px';
+}
+
+function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
+    suggestionsContainer.innerHTML = '';
+    suggestionsContainer.classList.add('active');
+
+    if (stadiums.length === 0) {
+        const searchResult = document.createElement('div');
+        searchResult.classList.add('search-result');
+        
+        const stadiumName = document.createElement('h4');
+        stadiumName.classList.add('no-search-result')
+        stadiumName.textContent = 'No stadiums found';
+        
+        searchResult.appendChild(stadiumName);
+        suggestionsContainer.appendChild(searchResult);
+        return;
+    }
+
+    stadiums.forEach(stadium => {
+        const searchResult = document.createElement('div');
+        searchResult.classList.add('search-result');
+        
+        const stadiumName = document.createElement('h4');
+        stadiumName.textContent = stadium.stadium_name;
+        
+        searchResult.appendChild(stadiumName);
+        
+        searchResult.addEventListener('click', () => {
+            toggleMenu(addFavoriteStadiumMenu, false, overlay);
+            document.querySelector('.favorite-stadiums-setting').replaceWith(createActiveSlot(stadium));
+        });
+
+        suggestionsContainer.appendChild(searchResult);
+    });
+}
+
 function setActiveControl(activeId) {
     controls.forEach(({ id, control, image, settings, activeSrc, inactiveSrc, activeClass }) => {
         const isActive = id === activeId;
@@ -125,10 +286,39 @@ function setActiveControl(activeId) {
     });
 }
 
+function setupSearchAutocomplete() {
+    const searchStadiumsForm = document.getElementById('search-favorite-stadiums');
+    const searchValue = document.getElementById('favorite-search-field');
+    const suggestionsContainer = document.getElementById('favorite-autocomplete-list');
+
+    const debouncedSearch = debounce((name) => {
+        if (name) {
+            searchStadiums(name, suggestionsContainer, searchValue);
+        } else {
+            hideSearchSuggestions(suggestionsContainer, searchValue);
+        }
+    }, DEBOUNCE_TIME);
+
+    searchValue.addEventListener('input', (event) => {
+        debouncedSearch(event.target.value);
+    });
+
+    document.addEventListener('click', (event) => {
+        const isClickInside = searchValue.contains(event.target) || suggestionsContainer.contains(event.target);
+
+        if (!isClickInside) {
+            hideSearchSuggestions(suggestionsContainer, searchValue);
+        }
+    });
+
+    searchStadiumsForm?.addEventListener('submit', (e) => e.preventDefault());
+}
+
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
     registerUserLogOutEvents();
+    setupSearchAutocomplete();
 
     controls.filter(c => c.id !== 'delete').forEach(({ control, image, activeSrc, inactiveSrc }) => {
         control.addEventListener('mouseenter', () => {
@@ -328,24 +518,68 @@ deleteAccountDeleteButton.addEventListener('click', async () => {
     } catch (error) {
         alert(error.message);
     }
-})
+});
 
-window.onload = () => {
+closeAddFavoriteStadiumMenu.addEventListener('click', () => {
+    toggleMenu(addFavoriteStadiumMenu, false, overlay)
+});
+
+document.getElementById('favorite-stadiums-save-button').addEventListener('click', async () => {
+    const username = getUsername();
+    const activeSlots = Array.from(document.querySelectorAll('.favorite-stadiums-setting-active'));
+    const stadiumNames = activeSlots.map(slot => slot.querySelector('h3').textContent);
+
+    try {
+        const response = await fetch(`${API_BASE_URL}${ROUTES.USER_SAVE_FAVORITES}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, stadiumNames })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Unknown error');
+        }
+
+        const result = await response.json();
+        if (result.success) {
+            alert('Favorites saved successfully.');
+            window.location.reload();
+        }
+    } catch (error) {
+        alert(error.message);
+    }
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        if (addFavoriteStadiumMenu.style.display !== 'none') {
+            toggleMenu(addFavoriteStadiumMenu, false, overlay);
+        }
+    }
+});
+
+window.onload = async () => {
     setActiveControl('profile');
     
     controls.forEach(({ control }) => {
         control.style.pointerEvents = 'none';
     });
 
-    setTimeout(() => {
-        document.getElementById('username-settings-skeleton').style.display = 'none';
-        document.getElementById('profile-pic-settings-skeleton').style.display = 'none';
-        document.getElementById('username-settings').style.display = 'block';
-        document.getElementById('profile-pic-settings').style.display = 'block';
+    await Promise.all([
+        loadFavoriteStadiums(getUsername()),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
 
-        controls.forEach(({ control }) => {
-            control.style.pointerEvents = '';
-            control.style.opacity = '';
-        });
-    }, MIN_LOADING_TIME);
-}
+    document.getElementById('username-settings-skeleton').style.display = 'none';
+    document.getElementById('profile-pic-settings-skeleton').style.display = 'none';
+    document.getElementById('favorite-stadiums-settings-skeleton').style.display = 'none';
+    document.getElementById('username-settings').style.display = 'block';
+    document.getElementById('profile-pic-settings').style.display = 'block';
+    document.getElementById('favorite-stadiums-settings').style.display = 'block';
+
+    controls.forEach(({ control }) => {
+        control.style.pointerEvents = '';
+        control.style.opacity = '';
+    });
+};

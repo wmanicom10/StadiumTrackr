@@ -1,6 +1,6 @@
 /*  Imports  */
 import { createAccountMenu, getAuthElements, getHeaderElements, MIN_LOADING_TIME, overlay } from "../constants.js";
-import { formatDate, formatLocation, getUsername, isLoggedIn, showLoggedOutUI, toggleMenu, truncateUsername } from "../utils.js";
+import { formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, getUsername, isLoggedIn, showLoggedOutUI, toggleMenu, truncateUsername } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { stadiumAPI } from "../api/stadium.js";
 import { activityAPI } from "../api/activity.js";
@@ -31,6 +31,7 @@ const elements = {
     stadiumLogButton: document.getElementById('stadium-log-button'),
     stadiumActivityButton: document.getElementById('stadium-activity-button'),
     upcomingEventsContainer: document.getElementById('upcoming-events'),
+    upcomingEventsStadiumLink: document.getElementById('upcoming-events-stadium-link'),
     noUpcomingEventsContainer: document.getElementById('no-upcoming-events-container'),
     userVisitedImage: document.getElementById('user-visited-image'),
     userWishlistImage: document.getElementById('user-wishlist-image')
@@ -39,20 +40,20 @@ const elements = {
 /*  Async Functions  */
 async function loadFullStadiumPage(id, username) {
     try {
-        const stadiumName = await loadStadiumInfo(id, username);
+        await loadStadiumInfo(id, username);
         
         await Promise.all([
             loadStadiumMap(id),
-            loadUpcomingEvents(stadiumName),
+            loadUpcomingEvents(id),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
 
         document.getElementById('stadium-skeleton').style.display = 'none';
         document.getElementById('stadium-content').style.display = 'block';
-        document.getElementById('upcoming-events-skeleton-container').style.display = 'none';
-        document.getElementById('upcoming-events-content').style.display = 'block';
-        document.getElementById('stadium-map-skeleton-container').style.display = 'none';
-        document.getElementById('stadium-map-content').style.display = 'block';
+        document.getElementById('upcoming-events-skeleton').style.display = 'none';
+        document.getElementById('upcoming-events').style.display = 'block';
+        document.getElementById('stadium-map-skeleton').style.display = 'none';
+        document.getElementById('stadium-map').style.display = 'block';
 
         if (window.stadiumMapData) {
             const { latitude, longitude, name: stadiumName } = window.stadiumMapData;
@@ -86,11 +87,10 @@ async function loadStadiumInfo(id, username) {
         elements.stadiumCapacity.textContent = stadium.capacity;
         elements.stadiumConstructionCost.textContent = stadium.constructionCost;
         elements.stadiumVisits.textContent = stadium.visits;
+        elements.upcomingEventsStadiumLink.href = `events.html?id=${stadium.id}`
 
         setupUserControls(id, username, userVisited, userWishlist);
         setupAddStadiumModal(id, stadium.name, username, stadium.image);
-
-        return stadium.name;
 
     } catch (error) {
         alert(error.message);
@@ -112,28 +112,12 @@ async function loadStadiumMap(id) {
     }
 }
 
-async function loadUpcomingEvents(name) {
-    const apiKey = 'WIKkbzK6ciettoJD7CfKieFrtP8BqcvJ';
-
-    let stadiumName = name;
-
-    if (name === "Allegacy Federal Credit Union Stadium") {
-        stadiumName = 'Allegacy Federal Credit Union Stadium at Wake Forest';
-    }
-    
+async function loadUpcomingEvents(id) {
     try {
-        const venueResponse = await fetch(
-            `https://app.ticketmaster.com/discovery/v2/venues.json?keyword=${stadiumName}&apikey=${apiKey}`
-        );
-        const venueData = await venueResponse.json();
-        const venueId = venueData._embedded.venues[0].id;
+        const result = await stadiumAPI.loadUpcomingEvents(id);
 
-        const eventsResponse = await fetch(
-            `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${venueId}&apikey=${apiKey}`
-        );
-        const eventsData = await eventsResponse.json();
-        
-        renderUpcomingEvents(eventsData._embedded?.events);
+        console.log(result.events)
+        renderUpcomingEvents(result.events);
     } catch (error) {
         console.error('Error fetching events:', error);
     }
@@ -173,7 +157,12 @@ function createEventElement(event) {
     date.textContent = formatEventDate(event.dates.start.localDate);
 
     const time = document.createElement('h4');
-    time.textContent = formatEventTime(event.dates.start.localTime);
+    time.textContent = formatEventTime(event.dates.start.dateTime, event.dates.timezone);
+
+    const link = document.createElement('a');
+    link.classList.add('upcoming-event-link')
+    link.href = event.url;
+    link.textContent = 'Buy Tickets →'
 
     infoContainer.appendChild(date);
     infoContainer.appendChild(time);
@@ -181,37 +170,9 @@ function createEventElement(event) {
     info.appendChild(infoContainer);
     container.appendChild(icon);
     container.appendChild(info);
+    container.appendChild(link);
 
     return container;
-}
-
-function formatEventDate(dateString) {
-    const [year, month, day] = dateString.split('-');
-    return `${month}/${day}/${year}`;
-}
-
-function formatEventTime(timeString) {
-    if (!timeString) return 'Time TBD';
-    
-    const [hours, minutes] = timeString.split(':');
-    const date = new Date();
-    date.setHours(Number(hours), Number(minutes), 0);
-    return date.toLocaleTimeString('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-    });
-}
-
-function getEventIcon(genre) {
-    const icons = {
-        'Football': 'images/icons/football.png',
-        'Basketball': 'images/icons/basketball.png',
-        'Baseball': 'images/icons/baseball.png',
-        'Hockey': 'images/icons/hockey.png',
-        'Soccer': 'images/icons/soccer.png'
-    };
-    return icons[genre] || 'images/icons/ticket.png';
 }
 
 function initializeStadiumMap(latitude, longitude, stadiumName) {

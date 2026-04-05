@@ -47,7 +47,7 @@ function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
     });
 }
 
-function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage, elements) {
+export function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage, elements) {
     elements.addStadiumName.textContent = stadiumName;
     elements.addStadiumImage.src = stadiumImage;
 
@@ -496,7 +496,7 @@ export function createUserStadiumElement(stadium, elements) {
     return userStadium;
 }
 
-function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
+export function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
     const btn = document.createElement(href ? 'a' : 'button');
     btn.classList.add('user-stadium-icon-btn');
     if (extraClass) btn.classList.add(extraClass);
@@ -565,8 +565,35 @@ export function formatDate(dateString, options = {}) {
     return date.toLocaleDateString('en-US', { ...defaultOptions, ...options });
 }
 
+export function formatEventDate(dateString) {
+    const [year, month, day] = dateString.split('-');
+    return `${month}/${day}/${year}`;
+}
+
+export function formatEventTime(dateTime, timezone) {
+    if (!dateTime) return 'TBD';
+    
+    return new Date(dateTime).toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: timezone
+    });
+}
+
 export function formatLocation(city, state) {
     return `${city}, ${state}`;
+}
+
+export function getEventIcon(genre) {
+    const icons = {
+        'Football': 'images/icons/football.png',
+        'Basketball': 'images/icons/basketball.png',
+        'Baseball': 'images/icons/baseball.png',
+        'Hockey': 'images/icons/hockey.png',
+        'Soccer': 'images/icons/soccer.png'
+    };
+    return icons[genre] || 'images/icons/ticket.png';
 }
 
 export function getPageFromURL() {
@@ -592,7 +619,6 @@ export function initializeCustomSelects() {
         const wrapper = trigger.parentElement;
         const dropdown = wrapper.querySelector('.custom-select-dropdown');
         const options = dropdown.querySelectorAll('.custom-select-option');
-        const valueDisplay = wrapper.querySelector('.custom-select-value');
         const hiddenSelect = wrapper.querySelector('.filter-select');
 
         trigger.addEventListener('click', (e) => {

@@ -34,6 +34,20 @@
             </div>
         </div>
 
+        <!-- Add Favorite Stadium Menu -->
+         <div id="add-favorite-stadium-menu">
+            <div id="add-favorite-stadium-menu-header">
+                <h2>Pick a Favorite Stadium</h2>
+                <h2 id="close-add-favorite-stadium-menu">×</h2>
+            </div>
+            <form id="search-favorite-stadiums" autocomplete="off">
+                <div id="favorite-search-wrapper">
+                    <input type="text" placeholder="Search stadiums..." id="favorite-search-field" spellcheck="false">
+                    <div id="favorite-autocomplete-list"></div>
+                </div>
+            </form>
+         </div>
+
         <!-- Main Content -->
          <div id="content-wrapper">
 
@@ -71,7 +85,7 @@
                         </div>
                     </li>
                     <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="./index.html">Events</a></li>
+                    <li class="nav-item"><a href="events.html">Events</a></li>
                     <li class="nav-item"><a href="./index.html">About</a></li>
                     <li class="nav-item button" id="log-out">Log Out</li>
                     <li class="nav-item toggle">
@@ -106,7 +120,7 @@
                             </div>
                             <div class="sidebar-links">
                                 <a href="./stadiums.html">Stadiums</a>
-                                <a href="">Events</a>
+                                <a href="events.html">Events</a>
                                 <a href="">About</a>
                             </div>
                             <div class="account-buttons">
@@ -169,8 +183,15 @@
                                 </div>
                                 <button class="settings-save-button" id="profile-pic-save-button">Save</button>
                             </div>
+                            <div id="favorite-stadiums-settings" class="setting">
+                                <h3>Favorite Stadiums</h3>
+                                <h4>Choose up to four favorite stadiums.</h4>
+                                <div id="favorite-stadiums-settings-container"></div>
+                                <button class="settings-save-button" id="favorite-stadiums-save-button">Save</button>
+                            </div>
                             <div id="username-settings-skeleton" class="setting-skeleton"></div>
                             <div id="profile-pic-settings-skeleton" class="setting-skeleton"></div>
+                            <div id="favorite-stadiums-settings-skeleton" class="setting-skeleton"></div>
                         </div>
 
                         <div class="settings-content" id="account-settings">

@@ -52,7 +52,7 @@ body {
     top: 48%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border-radius: 25px;
+    border-radius: 15px;
     color: var(--color-text);
 }
 
@@ -128,12 +128,12 @@ body {
     margin-left: 55px;
     text-align: left;
     margin-top: 22px;
-    transition: color 0.1s ease;
+    transition: color 0.3s ease;
 }
 
 .forgot-password:hover {
     cursor: pointer;
-    color: rgb(199, 199, 199);
+    color: var(--color-blue);
 }
 
 #sign-up-button, #log-in-button {
@@ -145,7 +145,7 @@ body {
     height: 40px;
     border-radius: 20px;
     margin-top: 22px;
-    transition: all 0.2s ease-in-out;
+    transition: all 0.3s ease-in-out;
     cursor: pointer;
 }
 
@@ -174,7 +174,7 @@ body {
 }
 
 .sign-up-link span, .sign-in-link span {
-    transition: color 0.1s ease;
+    transition: color 0.3s ease;
 } 
 
 .sign-up-link span:hover, .sign-in-link span:hover {
@@ -201,10 +201,11 @@ body {
 
 #terms-and-conditions-container label a {
     text-decoration: none;
+    transition: color 0.3s ease;
 }
 
 #terms-and-conditions-container label a:hover {
-    color: rgb(199, 199, 199);
+    color: var(--color-blue);
 }
 
 .menu-fade-in {
@@ -980,13 +981,13 @@ label img:hover {
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
     padding: 0;
     box-shadow: var(--shadow-default);
-    margin: 10px 20px 25px;
+    margin: 10px 15px 15px;
     will-change: transform;
 }
 
 .popular-stadium img {
-    width: 400px;
-    height: 210px;
+    width: 390px;
+    height: 200px;
     object-fit: cover;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -1057,8 +1058,8 @@ label img:hover {
     border: 1px solid var(--color-primary-15);
     width: 297.5px;
     text-align: center;
-    border-radius: 25px;
-    margin: 10px 20px 25px;
+    border-radius: 15px;
+    margin: 10px 15px 15px;
 }
 
 .stadium-trackr-info div {
@@ -1110,7 +1111,7 @@ label img:hover {
     width: 91%;
     margin: 20px auto 0;
     height: 500px;
-    border-radius: 25px;
+    border-radius: 20px;
     box-shadow: var(--shadow-default);
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
@@ -1127,7 +1128,7 @@ label img:hover {
 }
 
 .leaflet-popup-close-button {
-    margin: 10px 10px 0 0;
+    margin: 13px 12px 0 0;
 }
 
 .leaflet-popup-tip {
@@ -1184,6 +1185,7 @@ label img:hover {
     color: var(--color-text);
     margin: 0;
     font-size: 16px;
+    font-weight: normal;
 }
 
 .popup-card p {
@@ -1550,14 +1552,14 @@ footer h5 {
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
     padding: 0;
     box-shadow: var(--shadow-default);
-    margin: 10px 20px 25px;
+    margin: 10px 15px 15px;
     will-change: transform;
     position: relative;
 }
 
 .stadiums-list-stadium img {
-    width: 400px;
-    height: 210px;
+    width: 390px;
+    height: 200px;
     object-fit: cover;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -1568,10 +1570,10 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    padding: 15px 20px;
+    padding: 15px 18px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-    width: 400px;
+    width: 390px;
     flex-grow: 1;
 }
 
@@ -1583,12 +1585,13 @@ footer h5 {
 }
 
 .stadiums-list-stadium-text h3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: var(--color-text);
 }
 
 .stadiums-list-stadium-text h4 {
     color: var(--color-text-muted);
+    font-size: 1rem;
 }
 
 .stadiums-list-stadium a {
@@ -1727,7 +1730,7 @@ footer h5 {
 }
 
 #stadium-container {
-    width: 950px;
+    width: 925px;
     margin: 0 auto;
 }
 
@@ -1752,7 +1755,7 @@ footer h5 {
     width: 100%;
     aspect-ratio: 16/7.5;
     object-fit: cover;
-    border-radius: 25px;
+    border-radius: 20px;
     box-shadow: var(--shadow-default);
     flex-shrink: 0;
 }
@@ -1766,7 +1769,7 @@ footer h5 {
 .stadium-user-control {
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
-    border-radius: 20px;
+    border-radius: 15px;
     transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     color: var(--color-blue);
     cursor: pointer;
@@ -1802,7 +1805,7 @@ footer h5 {
 .stadium-user-control h3 {
     font-weight: normal;
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 #user-visited-image, #user-wishlist-image {
@@ -1834,23 +1837,23 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    border-radius: 25px;
+    border-radius: 15px;
     width: 300px;
-    padding: 25px 30px;
-    margin-bottom: 25px;
+    padding: 25px 25px;
+    margin-bottom: 15px;
 }
 
 .stadium-info h4 {
     font-weight: normal;
     margin: 0;
     color: var(--color-text-muted);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .stadium-info h3 {
     font-weight: normal;
     margin: 20px 0 0;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     line-height: 1.6;
 }
 
@@ -1869,7 +1872,7 @@ footer h5 {
 
 /*  Upcoming Events  */
 #upcoming-events-container {
-    width: 950px;
+    width: 925px;
     margin: 35px auto 0;
 }
 
@@ -1879,17 +1882,33 @@ footer h5 {
 
 #upcoming-events-header {
     border-bottom: 1px solid var(--color-primary-20);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 #upcoming-events-header h2 {
     margin: 0;
     margin-bottom: 10px;
-    font-size: 1.7rem;
+    font-size: 1.4rem;
     font-weight: normal;
 }
 
+#upcoming-events-stadium-link {
+    color: var(--color-blue);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 1rem;
+}
+
+#upcoming-events-stadium-link:hover {
+    color: #3f8acc;
+}
+
 #upcoming-events {
-    margin: 25px 0;
+    display: none;
+    margin: 20px 0;
 }
 
 #no-upcoming-events-container {
@@ -1911,7 +1930,7 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    border-radius: 25px;
+    border-radius: 15px;
     padding: 25px;
     margin-bottom: 15px;
     align-items: center;
@@ -1922,8 +1941,7 @@ footer h5 {
 }
 
 .event-info {
-    width: 75%;
-    max-width: 75%;
+    width: 82%;
     margin-left: 20px;
 }
 
@@ -1934,7 +1952,7 @@ footer h5 {
 
 .event-stadium-name {
     font-weight: normal;
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .event-info-container {
@@ -1946,11 +1964,20 @@ footer h5 {
     margin-right: 15px;
     color: var(--color-text-muted);
     font-weight: normal;
+    font-size: 0.9rem;
+}
+
+.upcoming-event-link {
+    color: var(--color-blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    text-align: right !important;
+    width: 25%;
 }
 
 /*  Stadium Map  */
 #stadium-map-container {
-    width: 950px;
+    width: 925px;
     margin: 60px auto 0;
 }
 
@@ -1965,15 +1992,16 @@ footer h5 {
 #stadium-map-header h2 {
     margin: 0;
     margin-bottom: 10px;
-    font-size: 1.7rem;
+    font-size: 1.4rem;
     font-weight: normal;
 }
 
 #stadium-map {
+    display: none;
     width: 100%;
-    margin: 25px auto;
+    margin: 20px auto;
     height: 500px;
-    border-radius: 25px;
+    border-radius: 20px;
     box-shadow: var(--shadow-default);
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
@@ -2007,7 +2035,7 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    border-radius: 25px;
+    border-radius: 15px;
     margin-bottom: 30px;
     padding: 15px 30px 25px;
 }
@@ -2019,6 +2047,125 @@ footer h5 {
     font-size: 1.4rem;
     padding: 10px 0;
     font-weight: normal;
+}
+
+#user-home-favorite-stadiums-container {
+    display: none;
+    width: 100%;
+}
+
+#user-home-favorite-stadiums-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
+#user-favorite-stadiums {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-top: 20px;
+    align-items: stretch;
+}
+
+.user-favorite-stadium {
+    width: 272px;
+    border-radius: 15px;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    box-shadow: var(--shadow-default);
+    will-change: transform;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-favorite-stadium a {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.user-favorite-stadium-empty {
+    width: 272px;
+    border-radius: 15px;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    box-shadow: var(--shadow-default);
+    border: 1px solid var(--color-primary-15);
+    will-change: transform;
+    position: relative;
+}
+
+.user-favorite-stadium img {
+    width: 100%;
+    height: 152px;
+    object-fit: cover;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    display: block;
+}
+
+.user-favorite-stadium-text {
+    background: var(--color-secondary);
+    border: 1px solid var(--color-primary-15);
+    padding: 8px 0 8px 12px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    flex: 1;
+}
+
+.user-favorite-stadium-text h3, .user-favorite-stadium-text h4 {
+    font-weight: normal;
+    margin: 8px;
+    border: 0px solid white;
+}
+
+.user-favorite-stadium-text h3 {
+    font-size: 1.1rem;
+    color: var(--color-text);
+}
+
+.user-favorite-stadium-text h4 {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.user-favorite-stadium a {
+    text-decoration: none;
+    color: var(--color-text);
+}
+
+.user-favorite-stadium:hover {
+    cursor: pointer;
+    transform: scale(0.97);
+}
+
+.user-favorite-stadium > a > img {
+    transition: filter 0.3s ease;
+}
+
+#user-favorite-stadiums-no-favorites-text {
+    display: none;
+    width: 88%;
+    text-align: center;
+    margin: 30px auto 10px;
+}
+
+#user-favorite-stadiums-no-favorites-text h3 {
+    font-weight: normal;
+    font-size: 1.2rem;
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
+#user-favorite-stadiums-no-favorites-text a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#user-favorite-stadiums-no-favorites-text a:hover {
+    color: var(--color-blue);
 }
 
 #user-home-stadiums-container, #user-home-wishlist-container {
@@ -2242,7 +2389,7 @@ footer h5 {
 .user-stat {
     background: var(--color-secondary);
     border: 1px solid var(--color-primary-15);
-    border-radius: 25px;
+    border-radius: 15px;
     width: 100%;
     text-align: center;
     padding: 16px 0;
@@ -2335,7 +2482,7 @@ footer h5 {
     width: 100%;
     margin: 25px auto 0;
     height: 500px;
-    border-radius: 25px;
+    border-radius: 15px;
     box-shadow: var(--shadow-default);
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
@@ -2384,7 +2531,7 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    border-radius: 20px;
+    border-radius: 15px;
     box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
@@ -2412,15 +2559,15 @@ footer h5 {
 }
 
 .user-achievements-achievement {
-    border-radius: 15px;
+    border-radius: 10px;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
     padding: 20px 25px;
     box-shadow: var(--shadow-default);
-    margin: 10px 20px 25px;
+    margin: 10px 15px 15px;
     will-change: transform;
     background: var(--color-secondary);
     border: 1px solid var(--color-primary-15);
-    width: 410px;
+    width: 390px;
 }
 
 .user-achievements-achievement-header {
@@ -2513,14 +2660,14 @@ footer h5 {
 }
 
 #no-achievements-container h3 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 600;
     margin: 0 0 15px;
     color: var(--color-text);
 }
 
 #no-achievements-container p {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0 0 30px;
     line-height: 1.6;
@@ -2547,7 +2694,7 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    border-radius: 20px;
+    border-radius: 15px;
     box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
@@ -2581,7 +2728,7 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    border-radius: 25px;
+    border-radius: 15px;
     box-shadow: var(--shadow-default);
     width: 800px;
     margin: 0 auto;
@@ -2703,7 +2850,7 @@ footer h5 {
     color: var(--color-blue);
     background: rgba(79, 172, 254, 0.05);
     border: 1px solid transparent;
-    border-radius: 15px;
+    border-radius: 10px;
     margin: 20px 0;
     padding: 15px 20px;
     width: 84%;
@@ -3159,7 +3306,7 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 20px 25px;
     margin-bottom: 20px;
     box-shadow: var(--shadow-default);
@@ -3315,6 +3462,252 @@ footer h5 {
 #upload-profile-pic-button img {
     height: 18px;
     margin-right: 10px;
+}
+
+#favorite-stadiums-settings {
+    display: none;
+}
+
+#favorite-stadiums-settings-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 30px;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+.favorite-stadiums-setting {
+    background: var(--color-secondary);
+    border: 1px solid var(--color-primary-15);
+    border-radius: 15px;
+    width: 49%;
+    min-height: 258px;  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    will-change: transform;
+    box-shadow: var(--shadow-default);
+}
+
+.favorite-stadiums-setting:hover {
+    transform: scale(0.97);
+}
+
+.favorite-stadiums-setting img {
+    width: 35px;
+}
+
+.favorite-stadiums-setting-active {
+    border-radius: 15px;
+    transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
+    padding: 0;
+    box-shadow: var(--shadow-default);
+    will-change: transform;
+    position: relative;
+    width: 49%;
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.favorite-stadiums-setting-active img {
+    width: 100%;
+    height: 181px;
+    object-fit: cover;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    display: block;
+    will-change: transform;
+}
+
+.favorite-stadiums-setting-text {
+    background: var(--color-secondary);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-primary-15);
+    padding: 15px 20px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    will-change: transform;
+    flex: 1;
+}
+
+.favorite-stadiums-setting-text h3 {
+    font-size: 1rem;
+}
+
+.favorite-stadiums-setting-text h4 {
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
+
+.favorite-stadiums-setting-active .user-stadium-corner-controls {
+    transition: opacity 0.2s ease;
+}
+
+.favorite-stadiums-setting-active:hover .user-stadium-corner-controls {
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+.favorite-stadiums-setting-active .user-stadium-icon-btn {
+    height: 32px;
+    width: 32px;
+    flex-direction: row;
+}
+
+.favorite-stadiums-setting-active .user-stadium-icon-btn img {
+    width: 14px;
+    height: 32px;
+    object-fit: contain;
+}
+
+#favorite-stadiums-save-button {
+    margin-top: 15px;
+}
+
+#add-favorite-stadium-menu {
+    position: fixed;
+    display: none;
+    width: 490px;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--gradient-bg);
+    border: 1px solid var(--color-primary-30);
+    border-radius: 25px;
+    z-index: 10001;
+    text-align: center;
+    padding: 30px 0;
+}
+
+#add-favorite-stadium-menu-header {
+    width: 86%;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--color-primary-20);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 10px;
+}
+
+#add-favorite-stadium-menu-header h2 {
+    font-size: 1.4rem;
+    font-weight: normal;
+    margin: 0;
+}
+
+#close-add-favorite-stadium-menu {
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    font-size: 1.8rem !important;
+}
+
+#close-add-favorite-stadium-menu:hover {
+    color: var(--color-blue);
+}
+
+#favorite-search-wrapper {
+    width: 86%;
+    margin: 15px auto 0;
+}
+
+#favorite-search-field {
+    border: none;
+    width: 100%;
+    height: 45px;
+    border-radius: 35px;
+    padding-left: 20px;
+    z-index: 10;
+    box-shadow: var(--shadow-default);
+    background: #313440;
+    border: 1px solid var(--color-primary-20);
+    color: var(--color-text);
+    font-size: 0.95rem;
+}
+
+#favorite-search-field:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
+}
+
+#favorite-search-field::placeholder {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+}
+
+#favorite-autocomplete-list {
+    width: 86%;
+    background: var(--color-bg-mid);
+    border: 1px solid var(--color-primary-30);
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    margin: 8px auto 0;
+    z-index: 1001;
+    padding: 0 !important;
+    text-align: left;
+    position: absolute;
+    top: 80%;
+    max-height: 300px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-30) transparent;
+}
+
+#favorite-autocomplete-list.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#favorite-autocomplete-list::-webkit-scrollbar {
+    width: 4px;
+}
+#favorite-autocomplete-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+#favorite-autocomplete-list::-webkit-scrollbar-thumb {
+    background: var(--color-primary-30);
+    border-radius: 4px;
+}
+
+#favorite-autocomplete-list a {
+    text-decoration: none;
+}
+
+#favorite-autocomplete-list .search-result h4 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--color-text);
+    border: 1px solid transparent;
+    font-weight: normal;
+    transition: all 0.2s ease;
+    padding: 15px 20px;
+    cursor: pointer;
+}
+
+#favorite-autocomplete-list .search-result h4:hover {
+    background: var(--color-primary-15);
+    color: var(--color-blue);
+}
+
+.no-search-result:hover {
+    cursor: default !important;
+    background: var(--color-bg-mid) !important;
+    color: var(--color-text) !important;
 }
 
 #password-inputs {
@@ -3583,15 +3976,342 @@ footer h5 {
     font-family: "Inter", sans-serif;
 }
 
+/*  Events  */
+.events-text {
+    width: 60%;
+    margin: 40px auto;
+    text-align: center;
+}
+
+.events-text h2 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+#events-logged-out, #events-logged-in, #events-stadium {
+    width: 915px;
+    margin: 0 auto;
+    text-align: center;
+    display: none;
+}
+
+.logged-out #events-logged-out {
+    display: block;
+}
+
+.logged-in-events #events-logged-in {
+    display: block;
+}
+
+.logged-in:not(.logged-in-events) #events-stadium {
+    display: block;
+}
+
+#events-logged-out h3 {
+    font-weight: normal;
+    color: var(--color-text);
+    font-size: 1.5rem;
+}
+
+#logged-out-hero-p {
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    width: 91%;
+    margin: 0 auto;
+}
+
+#events-info {
+    margin: 50px auto;
+    display: flex;
+    justify-content: center;
+}
+
+.event-info-card {
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-primary-15);
+    border-radius: 15px;
+    width: 275px;
+    margin: 10px 15px 15px;
+}
+
+.event-info-card img {
+    height: 40px;
+    object-fit: cover;
+    margin: 30px 0 20px;
+}
+
+.event-info-card h4 {
+    margin: 10px;
+    font-weight: normal;
+    color: var(--color-text);
+    font-size: 1.3rem;
+}
+
+.event-info-card p {
+    margin: 10px 22px 30px;
+    color: var(--color-text-muted);
+    font-size: 1rem !important;
+    line-height: 1.6;
+}
+
+#featured-events-container, #user-events-container, #stadium-events-container {
+    width: 100%;
+    margin: 55px auto 0;
+    text-align: left;
+}
+
+#user-events-container, #stadium-events-container {
+    margin: 0 auto;
+}
+
+#featured-events-header {
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
+#featured-events-header h2  {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    font-weight: normal;
+}
+
+#featured-events, #user-events {
+    margin: 20px 0;
+    display: none;
+}
+
+.featured-event-container, .user-event-container {
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-primary-15);
+    border-radius: 15px;
+    padding: 25px 0 10px;
+    margin-bottom: 25px;
+}
+
+.featured-event-header, .user-event-header {
+    width: 94%;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--color-primary-20);
+    padding-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.user-event-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-event-header div:first-of-type {
+    display: flex;
+    align-items: center;
+}
+
+.user-event-stadium-name {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.featured-event-stadium-name, .user-event-stadium-name {
+    font-weight: normal;
+    margin: 0;
+    font-size: 1.3rem !important;
+    color: var(--color-text);
+    transition: color 0.3s ease;
+}
+
+.featured-event-stadium-name:hover, .user-event-stadium-name:hover {
+    color: var(--color-blue);
+}
+
+.featured-event-stadium-location, .user-event-stadium-location {
+    font-weight: normal;
+    margin: 0;
+    font-size: 1rem !important;
+    color: var(--color-text-muted);
+    margin-left: 15px;
+}
+
+.user-event-header-controls {
+    display: flex;
+    align-items: center;
+}
+
+.user-event-header-control {
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    background: var(--color-secondary);
+    border: 1px solid var(--color-primary-15);
+    box-shadow: var(--shadow-default);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.user-event-header-control:hover {
+    transform: scale(1.12);
+}
+
+.user-event-header-control img {
+    height: 18px;
+}
+
+.user-event-stadium-link {
+    color: var(--color-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.9rem;
+    margin-left: 10px;
+}
+
+.user-event-stadium-link:hover {
+    color: #3f8acc !important;
+}
+
+.featured-event, .user-event, .stadium-event {
+    display: flex;
+    background: var(--color-secondary);
+    border: 1px solid var(--color-primary-15);
+    box-shadow: var(--shadow-default);
+    border-radius: 15px;
+    padding: 20px 25px;
+    align-items: center;
+    width: 94%;
+    margin: 15px auto;
+}
+
+.featured-event {
+    display: flex;
+    justify-content: space-between;
+}
+
+.stadium-event {
+    width: 100%;
+}
+
+.stadium-event .event-info {
+    width: 81%;
+}
+
+.featured-event img, .user-event img, .stadium-event img {
+    width: 35px;
+}
+
+.featured-event .event-stadium-name, .user-event .event-stadium-name {
+    font-size: 1rem;
+}
+
+.featured-event .event-info-container h4, .user-event .event-info-container h4 {
+    font-size: 0.9rem;
+}
+
+.featured-event-link, .user-event-link, .stadium-event-link {
+    color: var(--color-blue);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    font-size: 0.9rem;
+    width: 25%;
+    text-align: right;
+}
+
+.featured-event-link:hover, .user-event-link:hover, .stadium-event-link:hover {
+    color: #3f8acc;
+}
+
+.featured-event .event-info, .user-event .event-info {
+    width: 80%;
+}
+
+#events-filter-bar {
+    display: none;
+    max-width: 650px;
+    margin: 30px auto 50px;
+    background: var(--color-secondary);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-primary-15);
+    border-radius: 15px;
+    box-shadow: var(--shadow-default);
+    position: relative;
+    z-index: 1000;
+}
+
+#events-filter-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px 20px;
+}
+
+#events-filter-controls .filter-group:first-child .custom-select-wrapper {
+    min-width: 200px;
+}
+
+#events-filter-controls .filter-group:last-child .custom-select-wrapper {
+    min-width: 215px;
+}
+
+.events-page-selector {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+}
+
+#events-stadium-name {
+    height: 51px;
+}
+
+#no-events-container, #no-stadium-events-container {
+    text-align: center;
+    padding: 80px 40px;
+    max-width: 610px;
+    margin: 0 auto;
+    display: none;
+}
+
+#no-events-container h3, #no-stadium-events-container h3 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0 0 15px;
+    color: var(--color-text);
+}
+
+#no-events-container p, #no-stadium-events-container p {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    margin: 0 0 30px;
+    line-height: 1.6;
+}
+
 /*  Skeleton Loading  */
 .skeleton-card {
-    width: 400px;
-    height: 317px;
+    width: 390px;
+    height: 306px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     border-radius: 15px;
-    margin: 10px 20px 25px;
+    margin: 10px 15px 15px;
     box-shadow: var(--shadow-default);
     border: 1px solid var(--color-primary-15);
 }
@@ -3662,7 +4382,7 @@ footer h5 {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
-    border-radius: 25px;
+    border-radius: 20px;
 }
 
 #stadium-user-controls-skeleton {
@@ -3677,9 +4397,9 @@ footer h5 {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
-    border-radius: 20px;
+    border-radius: 15px;
     width: 24%;
-    height: 63px;
+    height: 62px;
 }
 
 #stadium-info-skeleton {
@@ -3696,27 +4416,14 @@ footer h5 {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
-    border-radius: 25px;
+    border-radius: 15px;
     width: 300px;
-    height: 130px;
-    margin-bottom: 25px;
-}
-
-#upcoming-events-header-skeleton {
-    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
-    border: 1px solid var(--color-primary-15);
-    background-size: 400% 100%;
-    animation: loading 1.2s ease-in-out infinite;
-    box-shadow: var(--shadow-default);
-    border-radius: 25px;
-    width: 60%;
-    height: 39px;
-    margin-bottom: 10px;
+    height: 127px;
+    margin-bottom: 15px;
 }
 
 #upcoming-events-skeleton {
-    border-top: 1px solid var(--color-primary-20);
-    padding-top: 25px;
+    padding-top: 20px;
 }
 
 .upcoming-event-skeleton {
@@ -3725,31 +4432,15 @@ footer h5 {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
-    border-radius: 25px;
+    border-radius: 15px;
     margin-bottom: 15px;
     width: 100%;
     height: 103px;
 }
 
-#stadium-map-skeleton-header-container {
-    border-bottom: 1px solid var(--color-primary-20);
-}
-
-#stadium-map-skeleton-header {
-    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
-    border: 1px solid var(--color-primary-15);
-    background-size: 400% 100%;
-    animation: loading 1.2s ease-in-out infinite;
-    box-shadow: var(--shadow-default);
-    border-radius: 25px;
-    width: 60%;
-    height: 39px;
-    margin-bottom: 10px;
-}
-
 #stadium-map-skeleton {
     width: 100%;
-    margin: 25px auto;
+    margin: 20px auto;
     height: 500px;
     border-radius: 25px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
@@ -3757,6 +4448,18 @@ footer h5 {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
+}
+
+#user-home-favorite-stadiums-container-skeleton {
+    width: 100%;
+    height: 342px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+    border-radius: 15px;
+    margin-bottom: 30px;
 }
 
 #user-home-stadiums-container-skeleton, #user-home-wishlist-container-skeleton {
@@ -3767,7 +4470,7 @@ footer h5 {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
-    border-radius: 25px;
+    border-radius: 15px;
     margin-bottom: 30px;
 }
 
@@ -3779,19 +4482,19 @@ footer h5 {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
-    border-radius: 25px;
+    border-radius: 15px;
     margin-bottom: 30px;
 }
 
 #user-home-stadium-map-container-skeleton {
     width: 100%;
-    height: 642px;
+    height: 620px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
-    border-radius: 25px;
+    border-radius: 15px;
     margin-bottom: 30px;
 }
 
@@ -3866,7 +4569,7 @@ footer h5 {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     border: 1px solid var(--color-primary-15);
-    border-radius: 20px;
+    border-radius: 15px;
     box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
@@ -3882,13 +4585,13 @@ footer h5 {
 }
 
 .achievements-skeleton-card {
-    width: 410px;
+    width: 390px;
     height: 236px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    border-radius: 15px;
-    margin: 10px 20px 25px;
+    border-radius: 10px;
+    margin: 10px 15px 15px;
     box-shadow: var(--shadow-default);
     border: 1px solid var(--color-primary-15);
 }
@@ -3900,7 +4603,7 @@ footer h5 {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     border: 1px solid var(--color-primary-15);
-    border-radius: 20px;
+    border-radius: 15px;
     box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
@@ -3921,7 +4624,7 @@ footer h5 {
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
-    border-radius: 25px;
+    border-radius: 15px;
     margin: 0 auto;
     margin-bottom: 30px;
     box-shadow: var(--shadow-default);
@@ -3934,31 +4637,104 @@ footer h5 {
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
     border: 1px solid var(--color-primary-15);
-    border-radius: 15px;
+    border-radius: 10px;
     margin-bottom: 20px;
     box-sizing: border-box;
 }
 
 #username-settings-skeleton {
-    height: 247px;
+    height: 244px;
 }
 
 #profile-pic-settings-skeleton {
-    height: 252px;
+    height: 249px;
+}
+
+#favorite-stadiums-settings-skeleton {
+    height: 720px;
 }
 
 @supports (-webkit-hyphens:none) {
     #username-settings-skeleton {
-        height: 249px;
+        height: 244px;
     }
     #profile-pic-settings-skeleton {
-        height: 254px;
+        height: 249px;
+    }
+    #favorite-stadiums-settings-skeleton {
+        height: 720px;
     }
 }
 
+#featured-events-skeleton {
+    margin-top: 20px;
+}
+
+.featured-event-skeleton, .user-event-skeleton {
+    width: 100%;
+    height: 192px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+#events-filter-bar-skeleton {
+    width: 650px;
+    height: 85px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+    border-radius: 15px;
+    margin: 30px auto 50px;
+}
+
+.stadium-event-skeleton {
+    width: 100%;
+    height: 89px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+    border-radius: 15px;
+    margin-bottom: 15px;
+}
+
+/*  Media Queries  */
 @media screen and (max-width: 355px) {
     #upload-profile-pic-button img {
         width: 18px;
+    }
+}
+
+@media screen and (max-width: 384px) {
+    .event-info {
+        margin-top: 20px !important;
+        width: 100% !important;
+    }
+    .featured-event-skeleton {
+        height: 309px !important;
+    }
+    .user-event-skeleton {
+        height: 366px !important;
+    }
+    .event-stadium-name {
+        margin-top: 0 !important;
+    }
+}
+
+@media screen and (max-width: 390px) {
+    .event-info {
+        margin-top: 20px !important;
+    }
+    .stadium-event-skeleton {
+        height: 206px !important;
     }
 }
 
@@ -3985,6 +4761,11 @@ footer h5 {
     }
     .activity-skeleton-card {
         height: 208px;
+    }
+    .user-favorite-stadium img {
+        width: 100% ;
+        height: auto;
+        aspect-ratio: 16 / 9;
     }
 }
 
@@ -4036,6 +4817,17 @@ footer h5 {
     #upload-profile-pic-button {
         font-size: 1rem;
         width: 180px;
+    }
+    .favorite-stadiums-setting-active {
+        width: 100% !important;
+    }
+    .favorite-stadiums-setting-active img {
+        width: 100% ;
+        height: auto;
+        aspect-ratio: 16 / 9;
+    }
+    .favorite-stadiums-setting-text {
+        width: 100%;
     }
 }
 
@@ -4096,7 +4888,7 @@ footer h5 {
         font-size: 2.2rem;
     }
     .user-home-item h2 {
-        font-size: 1.6rem;
+        font-size: 1.3rem;
     }
     #user-home-stadiums-container-skeleton,
     #user-home-wishlist-container-skeleton {
@@ -4273,6 +5065,64 @@ footer h5 {
         height: auto !important;
         aspect-ratio: 16/9;
     }
+    .featured-event, .upcoming-event, .user-event, .stadium-event {
+        flex-wrap: wrap;
+        justify-content: start;
+        width: 91%;
+    }
+    .featured-event-container {
+        text-align: left;
+    }
+    .featured-event-header, .user-event-header {
+        width: 91%;
+        flex-direction: column;
+        align-items: start;
+    }
+    .user-event-header div:first-of-type {
+        flex-direction: column;
+        align-items: start;
+    }
+    .user-event-stadium-location {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    .user-event-stadium-link {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    .featured-event-stadium-location {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+    .featured-event img, .upcoming-event img, .user-event img, .stadium-event img {
+        margin-right: 20px;
+    }
+    .upcoming-event {
+        width: 100%;
+    }
+    .upcoming-event .event-info {
+        margin-top: 20px;
+    }
+    .event-info {
+        margin: 0;
+        width: 100%;
+    }
+    .featured-event-link, .upcoming-event-link, .user-event-link {
+        text-align: left !important;
+        margin-top: 25px;
+        width: auto;
+    }
+    .featured-event-skeleton {
+        height: 264px;
+    }
+    .user-event-skeleton {
+        height: 292px;
+    }
+    .stadium-event-skeleton {
+        margin: 0 auto 15px;
+        width: 91%;
+        height: 132px;
+    }
 }
 
 @media screen and (max-width: 630px) {
@@ -4323,6 +5173,12 @@ footer h5 {
     }
     #add-stadium-like-container {
         margin-top: 20px;
+    }
+}
+
+@media screen and (max-width: 684px) {
+    #user-home-favorite-stadiums-container-skeleton {
+        height: 1108px !important;
     }
 }
 
@@ -4411,6 +5267,19 @@ footer h5 {
     #activity-filter-bar-skeleton {
         height: 196px;
     }
+    #favorite-stadiums-settings-container {
+        flex-direction: column;
+    }
+    .favorite-stadiums-setting-active {
+        width: 322px;
+    }
+    #favorite-stadiums-settings-skeleton {
+        height: 1266px;
+    }
+    #events-filter-bar-skeleton {
+        width: 100%;
+        height: 196px;
+    }
 }
 
 @media screen and (max-width: 800px) {
@@ -4418,11 +5287,11 @@ footer h5 {
         width: 85% !important;
     }
     #username-settings-skeleton {
-        height: 309px;
+        height: 305px;
     }
 
     #profile-pic-settings-skeleton {
-        height: 252px;
+        height: 248px;
     }
     @supports (-webkit-hyphens:none) {
         #username-settings-skeleton {
@@ -4540,6 +5409,12 @@ footer h5 {
     #user-stadiums-stadiums .user-stadium, #user-stadiums-stadiums-skeleton .user-stadium-skeleton, #user-achievements-achievements .user-achievements-achievement, #user-achievements-achievements-skeleton .user-achievements-achievement-skeleton {
         margin: 0 0 30px 0 !important;
     }
+    #events-logged-out {
+        width: 94%;
+    }
+    #events-info {
+        flex-wrap: wrap;
+    }
 }
 
 @media screen and (max-width: 950px) {
@@ -4560,6 +5435,10 @@ footer h5 {
     #change-password-button {
         margin-top: 20px;
     }
+    #events-logged-in, #events-stadium {
+        width: 96%;
+    }
+
 }
 
 @media screen and (max-width: 1000px) {
@@ -4693,6 +5572,19 @@ footer h5 {
     }
     #user-home-stats-container-skeleton, #user-home-achievements-container-skeleton {
         height: 450px;
+    }
+    #user-home-favorite-stadiums-container {
+        padding-bottom: 15px;
+    }
+    #user-favorite-stadiums {
+        justify-content: start;
+    }
+    .user-favorite-stadium {
+        margin-right: 16px;
+        margin-bottom: 20px;
+    }
+    #user-home-favorite-stadiums-container-skeleton {
+        height: 604px;
     }
 }
 

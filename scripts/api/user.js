@@ -56,5 +56,11 @@ export const userAPI = {
         fetchAPI(ROUTES.USER_PASSWORD, { username, currentPassword, newPassword }),
 
     deleteAccount: (username, password) =>
-        fetchAPI(ROUTES.USER_DELETE, { username, password })
+        fetchAPI(ROUTES.USER_DELETE, { username, password }),
+
+    saveFavoriteStadiums: (username, stadiumNames) =>
+        fetchAPI(ROUTES.USER_SAVE_FAVORITES, { username, stadiumNames }),
+
+    loadFavoriteStadiums: (username) =>
+        fetchAPI(ROUTES.USER_FAVORITES, { username })
 };

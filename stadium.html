@@ -28,7 +28,7 @@
 
         <!-- Login Menu -->
         <div id="log-in-menu" class="menu">
-            <h2>Sign In</h2>
+            <h2>Log In</h2>
             <h3 id="close-log-in-menu">x</h3>
             <form id="log-in-form">
                 <input type="text" id="username" class="input-field" placeholder="Username"><br>
@@ -52,7 +52,7 @@
                     <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a></label>
                 </div>
                 <input type="submit" id="sign-up-button" value="Sign Up"><br>
-                <span class="sign-in-link">Already have an account? <span>Sign in here</span></span>
+                <span class="sign-in-link">Already have an account? <span>Log in here</span></span>
             </form>
         </div>
 
@@ -93,7 +93,7 @@
                 <ul id="logged-out-nav">
                     <li class="nav-item"><a href="./index.html">Home</a></li>
                     <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="">Events</a></li>
+                    <li class="nav-item"><a href="events.html">Events</a></li>
                     <li class="nav-item"><a href="">About</a></li>
                     <li class="nav-item button" id="log-in">Log In</li>
                     <li class="nav-item button" id="create-account">Sign Up</li>
@@ -110,7 +110,7 @@
                             <div class="sidebar-links">
                                 <a class="home-link" href="./index.html">Home</a>
                                 <a href="./stadiums.html">Stadiums</a>
-                                <a href="">Events</a>
+                                <a href="events.html">Events</a>
                                 <a href="">About</a>
                             </div>
                             <div class="account-buttons">
@@ -151,7 +151,7 @@
                         </div>
                     </li>
                     <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="./index.html">Events</a></li>
+                    <li class="nav-item"><a href="events.html">Events</a></li>
                     <li class="nav-item"><a href="./index.html">About</a></li>
                     <li class="nav-item button" id="log-out">Log Out</li>
                     <li class="nav-item toggle">
@@ -186,7 +186,7 @@
                             </div>
                             <div class="sidebar-links">
                                 <a href="./stadiums.html">Stadiums</a>
-                                <a href="">Events</a>
+                                <a href="events.html">Events</a>
                                 <a href="">About</a>
                             </div>
                             <div class="account-buttons">
@@ -259,6 +259,13 @@
                                 </div>
                                 <div class="stadium-info">
                                     <div>
+                                        <img src="images/icons/jersey.png" alt="Jersey icon">
+                                        <h4>Teams</h4>
+                                    </div>
+                                    <h3 id="stadium-teams"></h3>
+                                </div>
+                                <div class="stadium-info">
+                                    <div>
                                         <img src="images/icons/calendar.png" alt="Calendar icon">
                                         <h4>Opened</h4>
                                     </div>
@@ -278,13 +285,6 @@
                                     </div>
                                     <h3 id="stadium-construction-cost"></h3>
                                 </div>
-                                <div class="stadium-info">
-                                    <div>
-                                        <img src="images/icons/jersey.png" alt="Jersey icon">
-                                        <h4>Teams</h4>
-                                    </div>
-                                    <h3 id="stadium-teams"></h3>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -292,39 +292,28 @@
 
                 <!-- Upcoming Events -->
                  <div id="upcoming-events-container">
-                    <div id="upcoming-events-skeleton-container">
-                        <div id="upcoming-events-header-skeleton"></div>
-                        <div id="upcoming-events-skeleton">
-                            <div class="upcoming-event-skeleton"></div>
-                            <div class="upcoming-event-skeleton"></div>
-                            <div class="upcoming-event-skeleton"></div>
-                        </div>
+                    <div id="upcoming-events-header">
+                        <h2>Upcoming Events</h2>
+                        <a id="upcoming-events-stadium-link">See All →</a>
                     </div>
-                    <div id="upcoming-events-content">
-                        <div id="upcoming-events-header">
-                            <h2>Upcoming Events</h2>
-                        </div>
-                        <div id="no-upcoming-events-container">
-                            <h4 id="no-upcoming-events-message">No upcoming events...</h4>
-                        </div>
-                        <div id="upcoming-events"></div>
+                    <div id="no-upcoming-events-container">
+                        <h4 id="no-upcoming-events-message">No upcoming events...</h4>
+                    </div>
+                    <div id="upcoming-events"></div>
+                    <div id="upcoming-events-skeleton">
+                        <div class="upcoming-event-skeleton"></div>
+                        <div class="upcoming-event-skeleton"></div>
+                        <div class="upcoming-event-skeleton"></div>
                     </div>
                 </div>
 
                 <!-- Stadium Map -->
                 <div id="stadium-map-container">
-                    <div id="stadium-map-skeleton-container">
-                        <div id="stadium-map-skeleton-header-container">
-                            <div id="stadium-map-skeleton-header"></div>
-                        </div>
-                        <div id="stadium-map-skeleton"></div>
+                    <div id="stadium-map-header">
+                        <h2>Stadium Map</h2>
                     </div>
-                    <div id="stadium-map-content">
-                        <div id="stadium-map-header">
-                            <h2>Stadium Map</h2>
-                        </div>
-                        <div id="stadium-map"></div>
-                    </div>
+                    <div id="stadium-map"></div>
+                    <div id="stadium-map-skeleton"></div>
                 </div>
                 
             </main>

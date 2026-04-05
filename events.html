@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
+    
     <head>
         <meta charset="utf-8">
-        <title>Stadiums - StadiumTrackr</title>
+        <title>Events - StadiumTrackr</title>
         <link rel="stylesheet" href="css/style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,8 +12,13 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
         <script>
-            if (localStorage.getItem('username')) {
+            const params = new URLSearchParams(window.location.search);
+            const stadiumId = params.get('id') || null;
+            if (stadiumId && localStorage.getItem('username')) {
                 document.documentElement.classList.add('logged-in');
+            } else if (localStorage.getItem('username')) {
+                document.documentElement.classList.add('logged-in');
+                document.documentElement.classList.add('logged-in-events');
             } else {
                 document.documentElement.classList.add('logged-out');
             }
@@ -52,32 +57,6 @@
                 <input type="submit" id="sign-up-button" value="Sign Up"><br>
                 <span class="sign-in-link">Already have an account? <span>Log in here</span></span>
             </form>
-        </div>
-
-        <!-- Add Stadium Menu -->
-        <div id="add-stadium-menu">
-            <div id="add-stadium-menu-header">
-                <h2>Log Your Visit</h2>
-                <h2 id="close-add-stadium-menu">×</h2>
-            </div>
-            <h2 id="add-stadium-name"></h2>
-            <div id="add-stadium-container">
-                <img src="" id="add-stadium-image">
-                <form id="add-stadium-form">
-                    <div id="add-stadium-date-visited-container">
-                        <h3 id="add-stadium-date-visited-text">Date Visited</h3>
-                        <input type="date" id="add-stadium-date-visited">
-                    </div>
-                    <div id="add-stadium-note-container">
-                        <h3 id="add-stadium-note-text">Note</h3>
-                        <textarea id="add-stadium-note" placeholder="Add a note..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div id="add-stadium-buttons">
-                <h3 id="add-stadium-log-button">Log Visit</h3>
-                <h3 id="add-stadium-cancel-button">Cancel</h3>
-            </div>
         </div>
 
         <!-- Main Content -->
@@ -195,123 +174,149 @@
                 </ul>
             </header>
 
-            <main>
-                <!-- Explore Text -->
-                <div id="explore-text">
-                    <h2>Stadiums</h2>
-                </div>
-
-                <!-- Filter Bar -->
-                <div id="filter-bar">
-                    <div id="filter-controls">
-                        <div class="filter-group">
-                            <label class="filter-label">League:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="league">
-                                    <span class="custom-select-value">All Leagues</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="all">All Leagues</div>
-                                    <div class="custom-select-option" data-value="nfl">NFL</div>
-                                    <div class="custom-select-option" data-value="nba">NBA</div>
-                                    <div class="custom-select-option" data-value="mlb">MLB</div>
-                                    <div class="custom-select-option" data-value="nhl">NHL</div>
-                                    <div class="custom-select-option" data-value="mls">MLS</div>
-                                    <div class="custom-select-option" data-value="wnba">WNBA</div>
-                                    <div class="custom-select-option" data-value="ncaaf">NCAAF</div>
-                                </div>
-                                <select class="filter-select" id="league-filter">
-                                    <option value="all">All Leagues</option>
-                                    <option value="nfl">NFL</option>
-                                    <option value="nba">NBA</option>
-                                    <option value="mlb">MLB</option>
-                                    <option value="nhl">NHL</option>
-                                    <option value="mls">MLS</option>
-                                    <option value="wnba">WNBA</option>
-                                    <option value="ncaaf">NCAAF</option>
-                                </select>
-                            </div>
+            <main id="events-page">
+                <!-- Logged Out UI -->
+                <div id="events-logged-out">
+                    <div class="events-text">
+                        <h2>Events</h2>
+                    </div>
+                    <h3>Never miss an event at your favorite stadiums and stadiums you want to visit.</h3>
+                    <p id="logged-out-hero-p">Set your favorite stadiums and add stadiums to your wishlist and we'll show you upcoming events, all in one place.</p>
+                    <div id="events-info">
+                        <div class="event-info-card">
+                            <img src="images/icons/heart.png" alt="Heart">
+                            <h4>Personalized For You</h4>
+                            <p>See upcoming events at your favorite stadiums and stadiums in your wishlist.</p>
                         </div>
-                        <div class="filter-divider"></div>
-                        <div class="filter-group">
-                            <label class="filter-label">Country:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="country">
-                                    <span class="custom-select-value">All Countries</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="all">All Countries</div>
-                                    <div class="custom-select-option" data-value="us">USA</div>
-                                    <div class="custom-select-option" data-value="canada">Canada</div>
-                                </div>
-                                <select class="filter-select" id="country-filter">
-                                    <option value="all">All Countries</option>
-                                    <option value="us">USA</option>
-                                    <option value="canada">Canada</option>
-                                </select>
-                            </div>
+                        <div class="event-info-card">
+                            <img src="images/icons/calendar.png" alt="Calendar">
+                            <h4>Always Up To Date</h4>
+                            <p>Events are pulled directly from Ticketmaster so you always see the latest schedule.</p>
                         </div>
-                        <div class="filter-divider"></div>
-                        <div class="filter-group">
-                            <label class="filter-label">Sort By:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="sort">
-                                    <span class="custom-select-value">Name (A-Z)</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="name-asc">Name (A-Z)</div>
-                                    <div class="custom-select-option" data-value="name-desc">Name (Z-A)</div>
-                                </div>
-                                <select class="filter-select" id="sort-filter">
-                                    <option value="name-asc">Name (A-Z)</option>
-                                    <option value="name-desc">Name (Z-A)</option>
-                                </select>
-                            </div>
+                        <div class="event-info-card">
+                            <img src="images/icons/ticket.png" alt="Ticket">
+                            <h4>Buy Tickets</h4>
+                            <p>Each event links directly to Ticketmaster so you can buy tickets easily.</p>
                         </div>
                     </div>
-                    <div class="filter-actions">
-                        <button class="clear-filters" id="clear-filters">Clear Filters</button>
-                        <div id="results-count"></div>
-                        <form id="search-stadiums" autocomplete="off">
-                            <div id="search-wrapper">
-                                <input type="text" placeholder="Search stadiums..." id="home-search-field">
-                                <div id="autocomplete-list"></div>
-                            </div>
-                        </form>
+                    <div id="featured-events-container">
+                        <div id="featured-events-header">
+                            <h2>Featured Events</h2>
+                        </div>
+                        <div id="featured-events"></div>
+                        <div id="featured-events-skeleton">
+                            <div class="featured-event-skeleton"></div>
+                            <div class="featured-event-skeleton"></div>
+                            <div class="featured-event-skeleton"></div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Stadium List -->
-                <div id="stadiums-list-container">
-                    <div id="stadiums-list"></div>
-                    <div id="no-stadiums-container">
-                        <h3>No Stadiums Found</h3>
-                        <p>We couldn't find any stadiums matching your current filters.</p>
+                <!-- Logged In UI -->
+                <div id="events-logged-in">
+                    <div class="events-text">
+                        <h2>My Events</h2>
                     </div>
-                    <div id="stadiums-page-selector"></div>
+                    <div id="user-events-container">
+                        <div id="events-filter-bar">
+                            <div id="events-filter-controls">
+                                <div class="filter-group">
+                                    <label class="filter-label">Show:</label>
+                                    <div class="custom-select-wrapper">
+                                        <div class="custom-select-trigger" data-select="event">
+                                            <span class="custom-select-value">All My Events</span>
+                                            <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                        <div class="custom-select-dropdown">
+                                            <div class="custom-select-option selected" data-value="all">All My Events</div>
+                                            <div class="custom-select-option" data-value="favorite">Favorite Stadiums</div>
+                                            <div class="custom-select-option" data-value="wishlist">Wishlist Stadiums</div>
+                                        </div>
+                                        <select class="filter-select" id="event-filter">
+                                            <option value="all">All My Events</option>
+                                            <option value="favorite">Favorite Stadiums</option>
+                                            <option value="wishlist">Wishlist Stadiums</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="filter-divider"></div>
+                                <div class="filter-group">
+                                    <label class="filter-label">Sort By:</label>
+                                    <div class="custom-select-wrapper">
+                                        <div class="custom-select-trigger" data-select="sort">
+                                            <span class="custom-select-value">Event Date (Soonest)</span>
+                                            <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                        <div class="custom-select-dropdown">
+                                            <div class="custom-select-option selected" data-value="date-asc">Event Date (Soonest)</div>
+                                            <div class="custom-select-option" data-value="date-desc">Event Date (Latest)</div>
+                                            <div class="custom-select-option" data-value="name-asc">Stadium Name (A-Z)</div>
+                                            <div class="custom-select-option" data-value="name-desc">Stadium Name (Z-A)</div>
+                                        </div>
+                                        <select class="filter-select" id="sort-filter">
+                                            <option value="date-asc">Event Date (Soonest)</option>
+                                            <option value="date-desc">Event Date (Latest)</option>
+                                            <option value="name-asc">Stadium Name (A-Z)</option>
+                                            <option value="name-desc">Stadium Name (Z-A)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="events-filter-bar-skeleton"></div>
+                        <div id="user-events"></div>
+                        <div id="no-events-container">
+                            <h3>No Events Found</h3>
+                            <p>We couldn't find any events matching your current filters.</p>
+                        </div>
+                        <div class="events-page-selector"></div>
+                        <div id="user-events-skeleton">
+                            <div class="user-event-skeleton"></div>
+                            <div class="user-event-skeleton"></div>
+                            <div class="user-event-skeleton"></div>
+                            <div class="user-event-skeleton"></div>
+                            <div class="user-event-skeleton"></div>
+                            <div class="user-event-skeleton"></div>
+                            <div class="user-event-skeleton"></div>
+                            <div class="user-event-skeleton"></div>
+                            <div class="user-event-skeleton"></div>
+                            <div class="user-event-skeleton"></div>
+                        </div>
+                    </div>
                 </div>
-                <div id="stadiums-skeleton">
-                    <div id="filter-bar-skeleton"></div>
-                    <div id="stadiums-container-skeleton">
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
+
+                <!-- Individual Stadium UI -->
+                <div id="events-stadium">
+                    <div class="events-text">
+                        <h2 id="events-stadium-name"></h2>
+                    </div>
+                    <div id="stadium-events-container">
+                        <div id="stadium-events"></div>
+                        <div id="no-stadium-events-container">
+                            <h3>No Events Found</h3>
+                            <p>We couldn't find any events for this stadium.</p>
+                        </div>
+                        <div class="events-page-selector"></div>
+                        <div id="stadium-events-skeleton">
+                            <div class="stadium-event-skeleton"></div>
+                            <div class="stadium-event-skeleton"></div>
+                            <div class="stadium-event-skeleton"></div>
+                            <div class="stadium-event-skeleton"></div>
+                            <div class="stadium-event-skeleton"></div>
+                            <div class="stadium-event-skeleton"></div>
+                            <div class="stadium-event-skeleton"></div>
+                            <div class="stadium-event-skeleton"></div>
+                            <div class="stadium-event-skeleton"></div>
+                            <div class="stadium-event-skeleton"></div>
+                        </div>
                     </div>
                 </div>
             </main>
-                
+
             <!-- Footer -->
             <footer>
                 <div id="footer-items">
@@ -348,7 +353,8 @@
         </div>
 
         <!-- Scripts -->
-        <script type="module" src="scripts/pages/stadiums-script.js"></script>
+        <script type="module" src="scripts/pages/events-script.js"></script>
         
     </body>
+
 </html>

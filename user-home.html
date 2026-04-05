@@ -82,7 +82,7 @@
                         </div>
                     </li>
                     <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="./index.html">Events</a></li>
+                    <li class="nav-item"><a href="events.html">Events</a></li>
                     <li class="nav-item"><a href="./index.html">About</a></li>
                     <li class="nav-item button" id="log-out">Log Out</li>
                     <li class="nav-item toggle">
@@ -117,7 +117,7 @@
                             </div>
                             <div class="sidebar-links">
                                 <a href="./stadiums.html">Stadiums</a>
-                                <a href="">Events</a>
+                                <a href="events.html">Events</a>
                                 <a href="">About</a>
                             </div>
                             <div class="account-buttons">
@@ -138,11 +138,21 @@
                 </script>
 
                 <div id="user-home-content">
+                    <div id="user-home-favorite-stadiums-container-skeleton"></div>
                     <div id="user-home-stadiums-container-skeleton"></div>
                     <div id="user-home-stats-container-skeleton"></div>
                     <div id="user-home-wishlist-container-skeleton"></div>
                     <div id="user-home-achievements-container-skeleton"></div>
                     <div id="user-home-stadium-map-container-skeleton"></div>
+                    <div class="user-home-item" id="user-home-favorite-stadiums-container">
+                        <div id="user-home-favorite-stadiums-header-container">
+                            <h2 id="user-home-favorite-stadiums-header">Favorite Stadiums</h2>
+                        </div>
+                        <div id="user-favorite-stadiums"></div>
+                        <div id="user-favorite-stadiums-no-favorites-text">
+                            <h3>You haven't added any <a href="settings.html">favorite stadiums</a> yet...</h3>
+                        </div>
+                    </div>
                     <div class="user-home-item" id="user-home-stadiums-container">
                         <div id="user-home-stadiums-header-container">
                             <h2 id="user-home-stadiums-header">My Stadiums</h2>
@@ -156,7 +166,7 @@
                         </div>
                     </div>
                     <div class="user-home-item" id="user-home-stats-container">
-                        <h2 id="user-home-stats-header">My Stats</h2>
+                        <h2 id="user-home-stats-header">Stats</h2>
                         <div id="user-stats">
                             <div class="user-stat">
                                 <h3 id="num-stadiums"></h3>

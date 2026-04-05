@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "node --no-deprecation server.js",
-    "dev": "concurrently \"npm start\" \"vite\"",
+    "dev": "concurrently \"npm start\" \"vite --open\"",
     "build": "vite build",
     "preview": "vite preview"
   },

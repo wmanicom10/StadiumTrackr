@@ -31,7 +31,18 @@ export const stadiumAPI = {
     loadUserHomeMap: (username) =>
         fetchAPI(ROUTES.USER_HOME_MAP, { username }),
 
-    loadPopularStadiums: () => {
-        fetchAPI(ROUTES.POPULAR_STADIUMS)
-    }
+    loadPopularStadiums: () =>
+        fetchAPI(ROUTES.POPULAR_STADIUMS),
+
+    loadUpcomingEvents: (id) =>
+        fetchAPI(ROUTES.UPCOMING_EVENTS, { id }),
+
+    loadLoggedOutEvents: () => 
+        fetchAPI(ROUTES.LOGGED_OUT_EVENTS),
+
+    loadLoggedInEvents: (username, event, sort) =>
+        fetchAPI(ROUTES.LOGGED_IN_EVENTS, { username, event, sort }),
+
+    loadStadiumEvents: (id) => 
+        fetchAPI(ROUTES.STADIUMS_EVENTS, { id })
 };

@@ -38,6 +38,10 @@ export const ROUTES = {
     STADIUM_LOAD: '/stadium/loadStadiums',
     STADIUM_INFO: '/stadium/loadStadiumInfo',
     STADIUM_MAP: '/stadium/loadStadiumMap',
+    UPCOMING_EVENTS: '/stadium/loadUpcomingEvents',
+    LOGGED_OUT_EVENTS: '/stadium/loadLoggedOutEvents',
+    LOGGED_IN_EVENTS: '/stadium/loadLoggedInEvents',
+    STADIUMS_EVENTS: '/stadium/loadStadiumEvents',
     USER_INFO: '/user/loadUserInfo',
     USER_ACTIVITY: '/user/loadUserActivity',
     USER_ACHIEVEMENTS: '/user/loadUserAchievements',
@@ -48,7 +52,9 @@ export const ROUTES = {
     USER_PROFILE_PIC: '/user/updateProfilePic',
     USER_EMAIL: '/user/updateEmail',
     USER_PASSWORD: '/user/updatePassword',
-    USER_DELETE: '/user/deleteAccount'
+    USER_DELETE: '/user/deleteAccount',
+    USER_SAVE_FAVORITES: '/user/saveFavoriteStadiums',
+    USER_FAVORITES: '/user/loadFavoriteStadiums'
 };
 export const searchStadiumsForm = getElement('search-stadiums');
 export const searchValue = getElement('home-search-field');

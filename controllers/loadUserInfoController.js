@@ -54,7 +54,9 @@ const handleLoadUserInfo = async (req, res) => {
 
         const [userAchievements] = await db.execute('SELECT a.achievement_name, a.achievement_image, a.achievement_description, ua.unlocked_on FROM achievements a LEFT JOIN user_achievements ua ON a.achievement_id = ua.achievement_id AND ua.user_id = ? WHERE ua.unlocked_on IS NOT NULL ORDER BY (ua.unlocked IS NOT TRUE) ASC, ua.unlocked_on DESC LIMIT 3', [userId]);
 
-        res.json({ userStadiums, numStadiumsVisited, numCountriesVisited, numEventsAttended, wishlistItems, userAchievements });
+        const [userFavoriteStadiums] = await db.execute('SELECT stadiums.stadium_id, stadium_name, city, state, image FROM user_favorite_stadiums JOIN stadiums ON user_favorite_stadiums.stadium_id = stadiums.stadium_id WHERE user_favorite_stadiums.user_id = ? ORDER BY user_favorite_stadiums.order_index ASC', [userId]);
+
+        res.json({ userStadiums, numStadiumsVisited, numCountriesVisited, numEventsAttended, wishlistItems, userAchievements, userFavoriteStadiums });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
