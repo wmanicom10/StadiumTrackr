@@ -5,6 +5,7 @@
     --color-danger: #ff4f4f;
     --color-bg-dark: #1a1d29;
     --color-bg-mid: #2d3142;
+    --color-bg: #202432;
 
     --color-primary-10: rgba(79, 172, 254, 0.1);
     --color-primary-15: rgba(79, 172, 254, 0.15);
@@ -29,7 +30,7 @@ body {
     color: var(--color-text);
     margin: 0;
     overflow-x: hidden;
-    background: var(--gradient-bg);
+    background: var(--color-bg);
 }
 
 #overlay {
@@ -233,7 +234,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: var(--gradient-bg);
+    background: var(--color-bg);
     border: 1px solid var(--color-primary-30);
     border-radius: 25px;
     z-index: 10001;
@@ -1210,7 +1211,7 @@ label img:hover {
 footer {
     background: rgba(26, 29, 41, 0.9);
     backdrop-filter: blur(10px);
-    height: 330px;
+    height: auto;
     text-align: left;
     margin-top: 50px;
 }
@@ -1250,6 +1251,7 @@ footer {
 .footer-links h5 {
     display: inline-block;
     margin: 13px 0;
+    transition: color 0.3s ease;
 }
 
 .footer-links h5:hover {
@@ -1294,7 +1296,8 @@ footer h5 {
 
 #email-field:focus {
     outline: none;
-    caret-color: #f0f0f0;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
 #subscribe-button {
@@ -1316,7 +1319,8 @@ footer h5 {
 
 #copyright {
     text-align: center;
-    margin-top: 27px;
+    padding: 30px 0;
+    margin: 0;
 }
 
 /*  Explore Text  */
@@ -2621,7 +2625,7 @@ footer h5 {
 
 .user-achievement-progress-bar-blue {
     height: 25px;
-    background: linear-gradient(90deg, var(--color-blue) 0%, #00f2fe 100%);
+    background: var(--color-blue);
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;
 }
@@ -4303,6 +4307,150 @@ footer h5 {
     line-height: 1.6;
 }
 
+/*  About  */
+#about-text {
+    width: 60%;
+    margin: 40px auto;
+    text-align: center;
+}
+
+#about-text h2 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+#about-hero {
+    width: 950px;
+    margin: 0 auto;
+}
+
+#about-hero-header {
+    font-weight: normal;
+    color: var(--color-text);
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+#about-hero-p {
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    line-height: 1.6;
+    width: 91%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.about-section {
+    display: flex;
+    align-items: center;
+    width: 1285px; 
+    margin: 80px auto;
+    justify-content: center;
+}
+
+.about-section-text {
+    margin: 0 25px;
+    width: 31%;
+}
+
+.about-section-text h3 {
+    font-weight: normal;
+    color: var(--color-text);
+    font-size: 1.5rem;
+}
+
+.about-section-text p {
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+.about-section img {
+    margin: 0 25px;
+}
+
+#about-visit-image {
+    width: 900px;
+}
+
+#about-wishlist-image {
+    width: 360px;
+}
+
+#about-log-image, #about-events-image {
+    width: 643px;
+}
+
+#about-map-image {
+    width: 771px;
+}
+
+#about-achievements-image {
+    width: 835px;
+}
+
+#about-numbers-section {
+    width: 60%;
+    margin: 0 auto 60px;
+    text-align: center;
+}
+
+#about-numbers-section h3 {
+    font-weight: normal;
+    color: var(--color-text);
+    font-size: 1.5rem;
+}
+
+#about-numbers {
+    display: flex;
+    justify-content: center;
+}
+
+.about-number {
+    margin: 20px 40px;
+}
+
+.about-number h4 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.about-number p {
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+#about-faq {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 1.2rem;
+    line-height: 1.6;
+}
+
+#about-faq a {
+    color: var(--color-text);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+#about-faq a:hover {
+    color: var(--color-blue);
+}
+
 /*  Skeleton Loading  */
 .skeleton-card {
     width: 390px;
@@ -4954,16 +5102,17 @@ footer h5 {
         margin: 10px 15px;
         height: 280px;
     }
-    
     #achievements-text {
         width: 90%;
     }
-    
     #achievements-text h2 {
         font-size: 2rem;
     }
     .achievements-skeleton-card {
         height: 323px !important;
+    }
+    #about-numbers {
+        flex-direction: column;
     }
 }
 
@@ -5180,6 +5329,12 @@ footer h5 {
     #user-home-favorite-stadiums-container-skeleton {
         height: 1108px !important;
     }
+    #about-log-image {
+        width: 97%;
+    }
+    #about-events-image {
+        width: 97%;
+    }
 }
 
 @media screen and (max-width: 715px) {
@@ -5339,12 +5494,12 @@ footer h5 {
     .setting-control img {
         margin: 0 auto;
     }
+    #about-map-image {
+        width: 97%;
+    }
 }
 
 @media screen and (max-width: 830px) {
-    footer {
-        height: 760px;
-    }
     #footer-items {
         width: 95%;
         margin: 0 auto;
@@ -5363,7 +5518,6 @@ footer h5 {
         padding: 0;
     }
     #copyright {
-        padding-bottom: 27px;
     }
     .footer-item {
         margin-top: 10px;
@@ -5438,7 +5592,12 @@ footer h5 {
     #events-logged-in, #events-stadium {
         width: 96%;
     }
-
+    #about-visit-image {
+        width: 360px !important;
+    }
+    #about-hero {
+        width: 95%;
+    }
 }
 
 @media screen and (max-width: 1000px) {
@@ -5509,6 +5668,10 @@ footer h5 {
     #delete-control {
         width: 198px;
     }
+}
+
+@media screen and (max-width: 1080px) {
+
 }
 
 @media screen and (max-width: 1100px) {
@@ -5585,6 +5748,21 @@ footer h5 {
     }
     #user-home-favorite-stadiums-container-skeleton {
         height: 604px;
+    }
+}
+
+@media screen and (max-width: 1285px) {
+    .about-section {
+        flex-direction: column;
+        width: 96%;
+    }
+    .about-section-text {
+        order: 2;
+        width: 80%;
+        text-align: center;
+    }
+    .about-section img {
+        order: 1;
     }
 }
 

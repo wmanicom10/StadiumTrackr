@@ -42,6 +42,7 @@ export const ROUTES = {
     LOGGED_OUT_EVENTS: '/stadium/loadLoggedOutEvents',
     LOGGED_IN_EVENTS: '/stadium/loadLoggedInEvents',
     STADIUMS_EVENTS: '/stadium/loadStadiumEvents',
+    ABOUT_INFO: '/stadium/loadAboutInfo',
     USER_INFO: '/user/loadUserInfo',
     USER_ACTIVITY: '/user/loadUserActivity',
     USER_ACHIEVEMENTS: '/user/loadUserAchievements',

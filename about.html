@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
     <head>
         <meta charset="utf-8">
-        <title>Stadiums - StadiumTrackr</title>
+        <title>About - StadiumTrackr</title>
         <link rel="stylesheet" href="css/style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,34 +54,8 @@
             </form>
         </div>
 
-        <!-- Add Stadium Menu -->
-        <div id="add-stadium-menu">
-            <div id="add-stadium-menu-header">
-                <h2>Log Your Visit</h2>
-                <h2 id="close-add-stadium-menu">×</h2>
-            </div>
-            <h2 id="add-stadium-name"></h2>
-            <div id="add-stadium-container">
-                <img src="" id="add-stadium-image">
-                <form id="add-stadium-form">
-                    <div id="add-stadium-date-visited-container">
-                        <h3 id="add-stadium-date-visited-text">Date Visited</h3>
-                        <input type="date" id="add-stadium-date-visited">
-                    </div>
-                    <div id="add-stadium-note-container">
-                        <h3 id="add-stadium-note-text">Note</h3>
-                        <textarea id="add-stadium-note" placeholder="Add a note..."></textarea>
-                    </div>
-                </form>
-            </div>
-            <div id="add-stadium-buttons">
-                <h3 id="add-stadium-log-button">Log Visit</h3>
-                <h3 id="add-stadium-cancel-button">Cancel</h3>
-            </div>
-        </div>
-
         <!-- Main Content -->
-        <div id="content-wrapper">
+         <div id="content-wrapper">
 
             <!-- Header -->
             <header id="site-header">
@@ -196,122 +170,80 @@
             </header>
 
             <main>
-                <!-- Explore Text -->
-                <div id="explore-text">
-                    <h2>Stadiums</h2>
+
+                <div id="about-text">
+                    <h2>About</h2>
                 </div>
 
-                <!-- Filter Bar -->
-                <div id="filter-bar">
-                    <div id="filter-controls">
-                        <div class="filter-group">
-                            <label class="filter-label">League:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="league">
-                                    <span class="custom-select-value">All Leagues</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="all">All Leagues</div>
-                                    <div class="custom-select-option" data-value="nfl">NFL</div>
-                                    <div class="custom-select-option" data-value="nba">NBA</div>
-                                    <div class="custom-select-option" data-value="mlb">MLB</div>
-                                    <div class="custom-select-option" data-value="nhl">NHL</div>
-                                    <div class="custom-select-option" data-value="mls">MLS</div>
-                                    <div class="custom-select-option" data-value="wnba">WNBA</div>
-                                    <div class="custom-select-option" data-value="ncaaf">NCAAF</div>
-                                </div>
-                                <select class="filter-select" id="league-filter">
-                                    <option value="all">All Leagues</option>
-                                    <option value="nfl">NFL</option>
-                                    <option value="nba">NBA</option>
-                                    <option value="mlb">MLB</option>
-                                    <option value="nhl">NHL</option>
-                                    <option value="mls">MLS</option>
-                                    <option value="wnba">WNBA</option>
-                                    <option value="ncaaf">NCAAF</option>
-                                </select>
-                            </div>
+                <div id="about-container">
+                    <div id="about-hero">
+                        <h3 id="about-hero-header">Track every stadium you've visited.</h3>
+                        <p id="about-hero-p">With StadiumTrackr, you can mark every stadium you've been to as visited, log when you went, add stadiums to your wishlist, and see upcoming events at stadiums around the world.</p>
+                    </div>
+                    <div class="about-section">
+                        <div class="about-section-text">
+                            <h3>Tell us where you've been</h3>
+                            <p>Visit the stadiums page and mark stadiums you've been to as visited. Every stadium you've been to shows up on your My Stadiums page.</p>
                         </div>
-                        <div class="filter-divider"></div>
-                        <div class="filter-group">
-                            <label class="filter-label">Country:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="country">
-                                    <span class="custom-select-value">All Countries</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="all">All Countries</div>
-                                    <div class="custom-select-option" data-value="us">USA</div>
-                                    <div class="custom-select-option" data-value="canada">Canada</div>
-                                </div>
-                                <select class="filter-select" id="country-filter">
-                                    <option value="all">All Countries</option>
-                                    <option value="us">USA</option>
-                                    <option value="canada">Canada</option>
-                                </select>
-                            </div>
+                        <img src="images/about/about-visit.png" id="about-visit-image">
+                    </div>
+                    <div class="about-section">
+                        <img src="images/about/about-wishlist.png" id="about-wishlist-image">
+                        <div class="about-section-text">
+                            <h3>Add stadiums to your wishlist</h3>
+                            <p>Adding stadiums to your wishlist lets you keep track of stadiums you want to visit in the future, and lets you see upcoming events at those stadiums on the Events page.</p>
                         </div>
-                        <div class="filter-divider"></div>
-                        <div class="filter-group">
-                            <label class="filter-label">Sort By:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="sort">
-                                    <span class="custom-select-value">Name (A-Z)</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="name-asc">Name (A-Z)</div>
-                                    <div class="custom-select-option" data-value="name-desc">Name (Z-A)</div>
-                                </div>
-                                <select class="filter-select" id="sort-filter">
-                                    <option value="name-asc">Name (A-Z)</option>
-                                    <option value="name-desc">Name (Z-A)</option>
-                                </select>
+                    </div>
+                    <div class="about-section">
+                        <div class="about-section-text">
+                            <h3>Log your visits</h3>
+                            <p>Log the date you visited a stadium and add notes to remember the experience. Each visit counts as an event and shows up in your stats and activity timeline.</p>
+                        </div>
+                        <img src="images/about/about-log.png" id="about-log-image">
+                    </div>
+                    <div class="about-section">
+                        <img src="images/about/about-events.png" id="about-events-image">
+                        <div class="about-section-text">
+                            <h3>Never miss a game</h3>
+                            <p>Follow upcoming games at your favorite stadiums and stadiums in your wishlist. All event data comes straight from Ticketmaster, and you can buy tickets for any event with one click.</p>
+                        </div>
+                    </div>
+                    <div class="about-section">
+                        <div class="about-section-text">
+                            <h3>Visualize your stadium journey</h3>
+                            <p>Every stadium you visit shows up on the map on your home page, so you can see where in the world you've been.</p>
+                        </div>
+                        <img src="images/about/about-map.png" id="about-map-image">
+                    </div>
+                    <div class="about-section">
+                        <img src="images/about/about-achievements.png" id="about-achievements-image">
+                        <div class="about-section-text">
+                            <h3>Earn achievements</h3>
+                            <p>Unlock achievements as you explore stadiums across different sports, leagues, states, and countries. Track your progress and see how close you are to your next achievement.</p>
+                        </div>
+                    </div>
+                    <div id="about-numbers-section">
+                        <h3>By the numbers</h3>
+                        <div id="about-numbers">
+                            <div class="about-number">
+                                <h4 id="stadiums-number"></h4>
+                                <p>Stadiums</p>
+                            </div>
+                            <div class="about-number">
+                                <h4 id="leagues-number"></h4>
+                                <p>Leagues</p>
+                            </div>
+                            <div class="about-number">
+                                <h4 id="countries-number"></h4>
+                                <p>Countries</p>
                             </div>
                         </div>
                     </div>
-                    <div class="filter-actions">
-                        <button class="clear-filters" id="clear-filters">Clear Filters</button>
-                        <div id="results-count"></div>
-                        <form id="search-stadiums" autocomplete="off">
-                            <div id="search-wrapper">
-                                <input type="text" placeholder="Search stadiums..." id="home-search-field">
-                                <div id="autocomplete-list"></div>
-                            </div>
-                        </form>
-                    </div>
+                    <p id="about-faq">Have more questions? Visit our <a href="faqs.html">FAQs</a> page</p>
                 </div>
 
-                <!-- Stadium List -->
-                <div id="stadiums-list-container">
-                    <div id="stadiums-list"></div>
-                    <div id="no-stadiums-container">
-                        <h3>No Stadiums Found</h3>
-                        <p>We couldn't find any stadiums matching your current filters.</p>
-                    </div>
-                    <div id="stadiums-page-selector"></div>
-                </div>
-                <div id="stadiums-skeleton">
-                    <div id="filter-bar-skeleton"></div>
-                    <div id="stadiums-container-skeleton">
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                        <div class="skeleton-card"></div>
-                    </div>
-                </div>
             </main>
-                
+
             <!-- Footer -->
             <footer>
                 <div id="footer-items">
@@ -348,7 +280,7 @@
         </div>
 
         <!-- Scripts -->
-        <script type="module" src="scripts/pages/stadiums-script.js"></script>
+        <script type="module" src="scripts/pages/about-script.js"></script>
         
     </body>
 </html>

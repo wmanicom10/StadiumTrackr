@@ -9,6 +9,7 @@ const loadStadiumMapController = require('../controllers/loadStadiumMapControlle
 const loadPopularStadiumsController = require('../controllers/loadPopularStadiumsController');
 const loadUpcomingEventsController = require('../controllers/loadUpcomingEventsController');
 const loadEventsController = require('../controllers/loadEventsController');
+const loadAboutInfoController = require('../controllers/loadAboutInfoController');
 
 router.post('/loadStadiumInfo', loadStadiumInfoController.handleLoadStadiumInfo);
 router.post('/loadStadiums', loadStadiumsController.handleLoadStadiums);
@@ -20,5 +21,6 @@ router.post('/loadUpcomingEvents', loadUpcomingEventsController.handleLoadUpcomi
 router.post('/loadLoggedOutEvents', loadEventsController.handleLoadLoggedOutEvents);
 router.post('/loadLoggedInEvents', loadEventsController.handleLoadLoggedInEvents);
 router.post('/loadStadiumEvents', loadEventsController.handleLoadStadiumEvents);
+router.post('/loadAboutInfo', loadAboutInfoController.handleLoadAboutInfo);
 
 module.exports = router;

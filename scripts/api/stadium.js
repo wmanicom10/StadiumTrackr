@@ -44,5 +44,8 @@ export const stadiumAPI = {
         fetchAPI(ROUTES.LOGGED_IN_EVENTS, { username, event, sort }),
 
     loadStadiumEvents: (id) => 
-        fetchAPI(ROUTES.STADIUMS_EVENTS, { id })
+        fetchAPI(ROUTES.STADIUMS_EVENTS, { id }),
+
+    loadAboutInfo: () => 
+        fetchAPI(ROUTES.ABOUT_INFO)
 };

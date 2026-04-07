@@ -2,7 +2,7 @@
 import { getAuthElements, getHeaderElements, MIN_LOADING_TIME } from "../constants.js";
 import { formatEventDate, formatEventTime, getEventIcon, getPageFromURL, getUsername, initializeCustomSelects, isLoggedIn, setPageInURL, syncSelectFromURL, truncateUsername } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
-import { stadiumAPI } from "../api/stadium.js"
+import { stadiumAPI } from "../api/stadium.js";
 
 /*  Variables  */
 const eventElements = {

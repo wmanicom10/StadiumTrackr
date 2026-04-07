@@ -5,6 +5,13 @@ import { activityAPI } from "./api/activity.js";
 const currentYear = new Date().getFullYear();
 document.getElementById('copyright').innerHTML = `&copy;2025-${currentYear} StadiumTrackr. All rights reserved.`;
 
+const footerHomeLink = document.getElementById('footer-home-link');
+if (localStorage.getItem('username')){
+    footerHomeLink.href = 'user-home.html';
+} else {
+    footerHomeLink.href = 'index.html';
+}
+
 /*  Functions  */
 function createSearchResultElement(text, isLink = false) {
     const searchResult = document.createElement('div');
