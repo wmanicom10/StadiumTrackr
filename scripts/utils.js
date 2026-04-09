@@ -54,35 +54,6 @@ function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
     });
 }
 
-export function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage, elements) {
-    elements.addStadiumName.textContent = stadiumName;
-    elements.addStadiumImage.src = stadiumImage;
-
-    const today = new Date().toISOString().split('T')[0];
-    elements.addStadiumDateVisited.setAttribute('max', today);
-    elements.addStadiumDateVisited.value = today;
-
-    elements.addStadiumLogButton.addEventListener('click', async () => {
-        const dateVisited = elements.addStadiumDateVisited.value;
-        const note = elements.addStadiumNote.value.trim() || null;
-
-        try {
-            await activityAPI.addStadium(stadiumId, username, dateVisited, note);
-            window.location.reload();
-        } catch (error) {
-            alert(error.message);
-        }
-    });
-
-    elements.addStadiumCancelButton.addEventListener('click', () => {
-        toggleMenu(elements.addStadiumMenu, false, overlay);
-    });
-
-    elements.closeAddStadiumMenu.addEventListener('click', () => {
-        toggleMenu(elements.addStadiumMenu, false, overlay);
-    });
-}
-
 /*  Exported Async Functions  */
 export async function searchStadiums(name, suggestionsContainer, searchValue) {
     try {
@@ -578,7 +549,7 @@ export function formatEventDate(dateString) {
 }
 
 export function formatEventTime(dateTime, timezone) {
-    if (!dateTime) return 'TBD';
+    if (!dateTime) return 'Time TBD';
     
     return new Date(dateTime).toLocaleTimeString('en-US', {
         hour: 'numeric',
@@ -715,8 +686,33 @@ export function setPageInURL(page) {
     window.location.search = params.toString();
 }
 
-export function setUsername(username) {
-    localStorage.setItem('username', username);
+export function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage, elements) {
+    elements.addStadiumName.textContent = stadiumName;
+    elements.addStadiumImage.src = stadiumImage;
+
+    const today = new Date().toISOString().split('T')[0];
+    elements.addStadiumDateVisited.setAttribute('max', today);
+    elements.addStadiumDateVisited.value = today;
+
+    elements.addStadiumLogButton.addEventListener('click', async () => {
+        const dateVisited = elements.addStadiumDateVisited.value;
+        const note = elements.addStadiumNote.value.trim() || null;
+
+        try {
+            await activityAPI.addStadium(stadiumId, username, dateVisited, note);
+            window.location.reload();
+        } catch (error) {
+            alert(error.message);
+        }
+    });
+
+    elements.addStadiumCancelButton.addEventListener('click', () => {
+        toggleMenu(elements.addStadiumMenu, false, overlay);
+    });
+
+    elements.closeAddStadiumMenu.addEventListener('click', () => {
+        toggleMenu(elements.addStadiumMenu, false, overlay);
+    });
 }
 
 export function setupFilterHandlers(elements) {
@@ -764,6 +760,10 @@ export function setupSearch(getAllStadiums, elements) {
 
     elements.clearFiltersButton.addEventListener('click', () => { searchInput.value = ''; });
     document.getElementById('search-stadiums')?.addEventListener('submit', e => e.preventDefault());
+}
+
+export function setUsername(username) {
+    localStorage.setItem('username', username);
 }
 
 export function showLoading(elements) {

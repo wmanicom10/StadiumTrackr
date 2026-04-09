@@ -37,6 +37,9 @@ const elements = {
     userWishlistImage: document.getElementById('user-wishlist-image')
 };
 
+let hasNoUpcomingEvents = false;
+let stadiumMapData = null;
+
 /*  Async Functions  */
 async function loadFullStadiumPage(id, username) {
     try {
@@ -55,8 +58,13 @@ async function loadFullStadiumPage(id, username) {
         document.getElementById('stadium-map-skeleton').style.display = 'none';
         document.getElementById('stadium-map').style.display = 'block';
 
-        if (window.stadiumMapData) {
-            const { latitude, longitude, name: stadiumName } = window.stadiumMapData;
+        if (hasNoUpcomingEvents) {
+            elements.noUpcomingEventsContainer.style.display = 'block';
+            hasNoUpcomingEvents = false;
+        }
+
+        if (stadiumMapData) {
+            const { latitude, longitude, name: stadiumName } = stadiumMapData;
             initializeStadiumMap(latitude, longitude, stadiumName);
         }
     } catch (error) {
@@ -102,7 +110,7 @@ async function loadStadiumMap(id) {
         const result = await stadiumAPI.loadStadiumMap(id);
         const stadium = result.result;
 
-        window.stadiumMapData = {
+        stadiumMapData = {
             latitude: stadium.latitude,
             longitude: stadium.longitude,
             name: stadium.stadium_name
@@ -162,6 +170,7 @@ function createEventElement(event) {
     const link = document.createElement('a');
     link.classList.add('upcoming-event-link')
     link.href = event.url;
+    link.target = '_blank';
     link.textContent = 'Buy Tickets →'
 
     infoContainer.appendChild(date);
@@ -197,7 +206,7 @@ function initializeStadiumMap(latitude, longitude, stadiumName) {
 
 function renderUpcomingEvents(events) {
     if (!events || events.length === 0) {
-        elements.noUpcomingEventsContainer.style.display = 'block';
+        hasNoUpcomingEvents = true;
         return;
     }
 
