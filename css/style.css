@@ -1057,10 +1057,10 @@ label img:hover {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    width: 297.5px;
+    width: 290px;
     text-align: center;
     border-radius: 15px;
-    margin: 10px 15px 15px;
+    margin: 10px 12px 15px;
 }
 
 .stadium-trackr-info div {
@@ -1109,7 +1109,7 @@ label img:hover {
 
 #home-stadium-map {
     display: none;
-    width: 91%;
+    width: 1232px;
     margin: 20px auto 0;
     height: 500px;
     border-radius: 20px;
@@ -4130,6 +4130,7 @@ footer h5 {
 
 .featured-event-stadium-name, .user-event-stadium-name {
     font-weight: normal;
+    text-decoration: none;
     margin: 0;
     font-size: 1.3rem !important;
     color: var(--color-text);

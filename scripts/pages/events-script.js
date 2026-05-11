@@ -74,9 +74,10 @@ async function showLoggedOutUI() {
             const featuredEventHeader = document.createElement('div');
             featuredEventHeader.classList.add('featured-event-header');
 
-            const featuredEventStadiumName = document.createElement('h3');
+            const featuredEventStadiumName = document.createElement('a');
             featuredEventStadiumName.classList.add('featured-event-stadium-name');
             featuredEventStadiumName.textContent = stadium.stadium_name;
+            featuredEventStadiumName.href = `stadium.html?id=${stadium.stadium_id}`;
             featuredEventHeader.appendChild(featuredEventStadiumName);
 
             const featuredEventStadiumLocation = document.createElement('h4');
@@ -444,8 +445,9 @@ function renderStadiumEventCard(event, container) {
     time.textContent = formatEventTime(event.dates.start.dateTime, event.dates.timezone);
 
     const link = document.createElement('a');
-    link.classList.add('upcoming-event-link')
+    link.classList.add('upcoming-event-link');
     link.href = event.url;
+    link.target = '_blank';
     link.textContent = 'Buy Tickets →'
 
     infoContainer.appendChild(date);

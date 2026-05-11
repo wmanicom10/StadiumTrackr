@@ -91,7 +91,7 @@ async function loadStadiumInfo(id, username) {
 
         elements.stadiumLocation.textContent = formatLocation(stadium.city, stadium.state);
         elements.stadiumOpenedDate.textContent = formatDate(stadium.openedDate);
-        elements.stadiumTeams.textContent = teams.map(t => t.team_name).join(', ');
+        elements.stadiumTeams.textContent = [...new Set(teams.map(t => t.team_name))].join(', ');
         elements.stadiumCapacity.textContent = stadium.capacity;
         elements.stadiumConstructionCost.textContent = stadium.constructionCost;
         elements.stadiumVisits.textContent = stadium.visits;
@@ -123,8 +123,6 @@ async function loadStadiumMap(id) {
 async function loadUpcomingEvents(id) {
     try {
         const result = await stadiumAPI.loadUpcomingEvents(id);
-
-        console.log(result.events)
         renderUpcomingEvents(result.events);
     } catch (error) {
         console.error('Error fetching events:', error);
