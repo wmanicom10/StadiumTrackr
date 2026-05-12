@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getHeaderElements, MIN_LOADING_TIME } from "../constants.js";
-import { createUserStadiumElement, getUsername } from "../utils.js";
+import { createUserStadiumElement, formatDate, getUsername, timeAgo } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { stadiumAPI } from "../api/stadium.js";
@@ -15,27 +15,25 @@ const elements = {
     addStadiumImage: document.getElementById('add-stadium-image'),
     addStadiumLogButton: document.getElementById('add-stadium-log-button'),
     addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
-    userHomeWelcomeText: document.getElementById('user-home-welcome-text'),
     userFavoriteStadiumsElement: document.getElementById('user-favorite-stadiums'),
     userFavoriteStadiumsNoFavoritesText: document.getElementById('user-favorite-stadiums-no-favorites-text'),
     userStadiumsElement: document.getElementById('user-stadiums'),
     userStadiumsNoStadiumsText: document.getElementById('user-stadiums-no-stadiums-text'),
     userHomeStadiumsSeeAllButton: document.getElementById('user-home-stadiums-see-all-button'),
-    numStadiums: document.getElementById('num-stadiums'),
-    numCountries: document.getElementById('num-countries'),
-    numEvents: document.getElementById('num-events'),
     userWishlistStadiumsElement: document.getElementById('user-wishlist-stadiums'),
     userWishlistStadiumsNoStadiumsText: document.getElementById('user-wishlist-stadiums-no-stadiums-text'),
     userHomeWishlistSeeAllButton: document.getElementById('user-home-wishlist-see-all-button'),
     userAchievementsNoAchievementsText: document.getElementById('user-home-no-achievements-text'),
-    userAchievementsElement: document.getElementById('user-achievements')
+    userAchievementsElement: document.getElementById('user-achievements'),
+    userActivityContainer: document.getElementById('user-activity'),
+    userActivityNoActivityText: document.getElementById('user-activity-no-activity-text')
 };
 
 /*  Async Functions  */
-async function loadFullUserHomePage(username) {
+async function loadFullUserHomePage(username, profilePic) {
     try {
         await Promise.all([
-            loadUserInfo(username),
+            loadUserInfo(username, profilePic),
             loadStadiumMap(username),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
@@ -65,9 +63,26 @@ async function loadStadiumMap(username) {
     }
 }
 
-async function loadUserInfo(username) {
+async function loadUserInfo(username, profilePic) {
     try {
         const result = await userAPI.loadUserInfo(username);
+        const activity = await userAPI.loadUserActivity(username, 'all', '', 'added-desc', 5, 0);
+
+        if (result.userFavoriteStadiums.length > 0) {
+            document.getElementById('user-home-header').classList.add('with-background-image');
+            const userHomeImage = document.createElement('img');
+            userHomeImage.id = 'user-home-image';
+            userHomeImage.src = result.userFavoriteStadiums[0].image;
+            document.querySelector('main').prepend(userHomeImage);
+        }
+
+        renderHeaderSection(
+            username,
+            profilePic,
+            result.numStadiumsVisited,
+            result.numCountriesVisited,
+            result.numEventsAttended
+        );
 
         renderFavoritesSection(
             result.userFavoriteStadiums,
@@ -82,15 +97,15 @@ async function loadUserInfo(username) {
             elements.userHomeStadiumsSeeAllButton
         );
 
-        elements.numStadiums.textContent = result.numStadiumsVisited;
-        elements.numCountries.textContent = result.numCountriesVisited;
-        elements.numEvents.textContent = result.numEventsAttended;
-
         renderStadiumSection(
             result.wishlistItems,
             elements.userWishlistStadiumsElement,
             elements.userWishlistStadiumsNoStadiumsText,
             elements.userHomeWishlistSeeAllButton
+        );
+
+        renderActivity(
+            activity.userActivity
         );
 
         renderAchievements(result.userAchievements);
@@ -129,12 +144,13 @@ function createAchievementElement(achievement) {
 
 function hideSkeletons() {
     const skeletons = [
-        'user-home-favorite-stadiums-container-skeleton',
-        'user-home-stadiums-container-skeleton',
-        'user-home-stats-container-skeleton',
-        'user-home-wishlist-container-skeleton',
-        'user-home-achievements-container-skeleton',
-        'user-home-stadium-map-container-skeleton'
+        'user-home-header-skeleton',
+        'user-favorite-stadiums-skeleton',
+        'user-stadiums-skeleton',
+        'user-activity-skeleton',
+        'user-wishlist-stadiums-skeleton',
+        'user-achievements-skeleton',
+        'user-home-stadium-map-skeleton'
     ];
 
     skeletons.forEach(id => {
@@ -195,9 +211,53 @@ function renderAchievements(achievements) {
     });
 }
 
+function renderActivity(activity) {
+    if (activity.length === 0) elements.userActivityNoActivityText.style.display = 'block';
+
+    activity.forEach(activity => {
+        const userActivity = document.createElement('div');
+        userActivity.classList.add('user-activity-text');
+
+        let activityText = document.createElement('h4');
+        if (activity.visited_on) {
+            const link = document.createElement('a');
+            link.href = `user-activity.html?id=${activity.stadium_id}`;
+            link.textContent = activity.stadium_name;
+            
+            activityText.appendChild(document.createTextNode('Visited '));
+            activityText.appendChild(link);
+            activityText.appendChild(document.createTextNode(' on ' + formatDate(activity.visited_on)));
+        } else if (activity.activity_type === 'wishlist') {
+            const link = document.createElement('a');
+            link.href = `stadium.html?id=${activity.stadium_id}`;
+            link.textContent = activity.stadium_name;
+            
+            activityText.appendChild(document.createTextNode('Added '));
+            activityText.appendChild(link);
+            activityText.appendChild(document.createTextNode(' to your wishlist'));
+        } else {
+            const link = document.createElement('a');
+            link.href = `stadium.html?id=${activity.stadium_id}`;
+            link.textContent = activity.stadium_name;
+            
+            activityText.appendChild(document.createTextNode('Marked '));
+            activityText.appendChild(link);
+            activityText.appendChild(document.createTextNode(' as visited'));
+        }
+        userActivity.appendChild(activityText);
+
+        const activityTime = document.createElement('h5');
+        activityTime.textContent = timeAgo(activity.added_on).replace(' ago', '');
+        userActivity.appendChild(activityTime);
+
+        elements.userActivityContainer.appendChild(userActivity);
+    })
+}
+
 function renderFavoritesSection(stadiums, container, noFavoritesText) {
     if (stadiums.length === 0) {
         noFavoritesText.style.display = 'block';
+        document.getElementById('user-home-header-skeleton').style.marginTop ='50px';
         return;
     }
 
@@ -238,6 +298,14 @@ function renderFavoritesSection(stadiums, container, noFavoritesText) {
     }   
 }
 
+function renderHeaderSection(username, profilePic, numStadiumsVisited, numCountriesVisited, numEventsAttended) {
+    document.getElementById('user-home-profile-pic').src = profilePic
+    document.getElementById('user-home-username').textContent = username;
+    document.getElementById('num-stadiums').textContent = numStadiumsVisited;
+    document.getElementById('num-events').textContent = numEventsAttended;
+    document.getElementById('num-countries').textContent = numCountriesVisited;
+}
+
 function renderStadiumSection(stadiums, container, noStadiumsText, seeAllButton) {
     if (stadiums.length === 0) {
         noStadiumsText.style.display = 'block';
@@ -249,25 +317,25 @@ function renderStadiumSection(stadiums, container, noStadiumsText, seeAllButton)
         const element = createUserStadiumElement(stadium, elements);
         container.appendChild(element);
     });
-
-    if (stadiums.length === 1) {
-        container.style.justifyContent = 'center';
-    }
 }
 
 function showContent() {
     const containers = [
-        'user-home-welcome-text',
-        'user-home-favorite-stadiums-container',
-        'user-home-stadiums-container',
-        'user-home-stats-container',
-        'user-home-wishlist-container',
-        'user-home-achievements-container',
-        'user-home-stadium-map-container'
+        'user-home-header',
+        'user-favorite-stadiums',
+        'user-stadiums',
+        'user-activity',
+        'user-wishlist-stadiums',
+        'user-achievements',
+        'user-home-stadium-map'
     ];
 
     containers.forEach(id => {
-        document.getElementById(id).style.display = 'block';
+        if (id === 'user-home-stadium-map') {
+            document.getElementById(id).style.display = 'block'
+        } else {
+            document.getElementById(id).style.display = 'flex';
+        }
     });
 }
 
@@ -284,6 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async () => {
     const username = getUsername();
+    const profilePic = localStorage.getItem('profilePic');
     showLoggedInUI();
-    loadFullUserHomePage(username);
+    loadFullUserHomePage(username, profilePic);
 };

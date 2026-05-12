@@ -129,34 +129,54 @@
             </header>
 
             <main>
-                <h2 id="user-home-welcome-text"></h2>
-                <script>
-                    (function() {
-                        const u = localStorage.getItem('username') || '';
-                        document.getElementById('user-home-welcome-text').textContent = 'Welcome, ' + u + '!';
-                    })();
-                </script>
-
                 <div id="user-home-content">
-                    <div id="user-home-favorite-stadiums-container-skeleton"></div>
-                    <div id="user-home-stadiums-container-skeleton"></div>
-                    <div id="user-home-stats-container-skeleton"></div>
-                    <div id="user-home-wishlist-container-skeleton"></div>
-                    <div id="user-home-achievements-container-skeleton"></div>
-                    <div id="user-home-stadium-map-container-skeleton"></div>
+                    <div id="user-home-header-skeleton"></div>
+                    <div id="user-home-header">
+                        <div id="user-home-header-info">
+                            <img id="user-home-profile-pic">
+                            <h2 id="user-home-username"></h2>
+                        </div>
+                        <div id="user-home-header-stats">
+                            <div>
+                                <h3 id="num-stadiums"></h3>
+                                <h4>Stadiums</h4>
+                            </div>
+                            <div>
+                                <h3 id="num-events"></h3>
+                                <h4>Events</h4>
+                            </div>
+                            <div>
+                                <h3 id="num-countries"></h3>
+                                <h4>Countries</h4>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="user-home-item" id="user-home-favorite-stadiums-container">
                         <div id="user-home-favorite-stadiums-header-container">
                             <h2 id="user-home-favorite-stadiums-header">Favorite Stadiums</h2>
                         </div>
-                        <div id="user-favorite-stadiums"></div>
-                        <div id="user-favorite-stadiums-no-favorites-text">
-                            <h3>You haven't added any <a href="settings.html">favorite stadiums</a> yet...</h3>
+                        <div id="user-favorite-stadiums-skeleton">
+                            <div class="user-favorite-stadium-skeleton"></div>
+                            <div class="user-favorite-stadium-skeleton"></div>
+                            <div class="user-favorite-stadium-skeleton"></div>
+                            <div class="user-favorite-stadium-skeleton"></div>
+                        </div>
+                        <div id="user-favorite-stadiums">
+                            <div id="user-favorite-stadiums-no-favorites-text">
+                                <h3>You haven't added any <a href="settings.html">favorite stadiums</a> yet...</h3>
+                            </div>
                         </div>
                     </div>
+                    
                     <div class="user-home-item" id="user-home-stadiums-container">
                         <div id="user-home-stadiums-header-container">
                             <h2 id="user-home-stadiums-header">My Stadiums</h2>
                             <a href="user-stadiums.html" class="user-home-see-all-button" id="user-home-stadiums-see-all-button">See All →</a>
+                        </div>
+                        <div id="user-stadiums-skeleton">
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
                         </div>
                         <div id="user-stadiums">
                             <div id="user-stadiums-no-stadiums-text">
@@ -165,27 +185,28 @@
                             </div>
                         </div>
                     </div>
-                    <div class="user-home-item" id="user-home-stats-container">
-                        <h2 id="user-home-stats-header">Stats</h2>
-                        <div id="user-stats">
-                            <div class="user-stat">
-                                <h3 id="num-stadiums"></h3>
-                                <h4>Stadiums</h4>
-                            </div>
-                            <div class="user-stat">
-                                <h3 id="num-countries"></h3>
-                                <h4>Countries</h4>
-                            </div>
-                            <div class="user-stat">
-                                <h3 id="num-events"></h3>
-                                <h4>Events</h4>
+
+                    <div class="user-home-item" id="user-home-activity-container">
+                        <div id="user-home-activity-header-container">
+                            <h2 id="user-home-activity-header">Recent Activity</h2>
+                            <a href="user-activity.html" class="user-home-see-all-button" id="user-home-activity-see-all-button">See All →</a>
+                        </div>
+                        <div id="user-activity-skeleton"></div>
+                        <div id="user-activity">
+                            <div id="user-activity-no-activity-text">
+                                <h3>No recent activity...</h3>
                             </div>
                         </div>
                     </div>
+
                     <div class="user-home-item" id="user-home-wishlist-container">
                         <div id="user-home-wishlist-header-container">
                             <h2 id="user-home-wishlist-header">Wishlist</h2>
-                            <a href="user-stadiums.html" class="user-home-see-all-button" id="user-home-wishlist-see-all-button">See All →</a>
+                            <a href="user-wishlist.html" class="user-home-see-all-button" id="user-home-wishlist-see-all-button">See All →</a>
+                        </div>
+                        <div id="user-wishlist-stadiums-skeleton">
+                            <div class="user-stadium-skeleton"></div>
+                            <div class="user-stadium-skeleton"></div>
                         </div>
                         <div id="user-wishlist-stadiums">
                             <div id="user-wishlist-stadiums-no-stadiums-text">
@@ -194,17 +215,23 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="user-home-item" id="user-home-achievements-container">
-                        <h2 id="user-home-achievements-header">Achievements</h2>
+                        <div id="user-home-achievements-header-container">
+                            <h2 id="user-home-achievements-header">Achievements</h2>
+                            <a href="user-achievements.html" class="user-home-see-all-button" id="user-home-achievements-see-all-button">See All →</a>
+                        </div>
+                        <div id="user-achievements-skeleton"></div>
                         <div id="user-achievements">
                             <div id="user-home-no-achievements-text">
                                 <h3>No achievements yet...</h3>
-                                <a href="stadiums.html" id="user-home-achievements-explore-button">Explore Stadiums</a>
                             </div>
                         </div>
                     </div>
+
                     <div class="user-home-item" id="user-home-stadium-map-container">
                         <h2>My Stadiums Map</h2>
+                        <div id="user-home-stadium-map-skeleton"></div>
                         <div id="user-home-stadium-map"></div>
                     </div>
                 </div>
