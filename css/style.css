@@ -1731,6 +1731,7 @@ footer h5 {
 /*  Stadium Info  */
 #stadium-content {
     display: none;
+    padding-top: 200px;
 }
 
 #stadium-container {
@@ -1739,7 +1740,6 @@ footer h5 {
 }
 
 #stadium-name {
-    text-align: center;
     font-size: 2.3rem;
     font-weight: normal;
     line-height: 1.4;
@@ -1747,7 +1747,7 @@ footer h5 {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin: 40px 0;
+    margin: 0;
 }
 
 #stadium-info-container {
@@ -1757,11 +1757,13 @@ footer h5 {
 
 #stadium-image {
     width: 100%;
-    aspect-ratio: 16/7.5;
+    height: 670px;
     object-fit: cover;
-    border-radius: 20px;
-    box-shadow: var(--shadow-default);
-    flex-shrink: 0;
+    opacity: 0.6 ;
+    position: absolute;
+    z-index: -10000;
+    mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
+    -webkit-mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
 }
 
 #stadium-user-controls {
@@ -1771,7 +1773,7 @@ footer h5 {
 }
 
 .stadium-user-control {
-    background: var(--color-primary-10);
+    background: #273147;
     border: 1px solid var(--color-primary-30);
     border-radius: 15px;
     transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
@@ -1788,7 +1790,7 @@ footer h5 {
 }
 
 .stadium-user-control:hover {
-    background: var(--color-primary-20);
+    background: #2A3F5B;
     transform: translateY(-3px);
     cursor: pointer;
 }
@@ -1838,7 +1840,7 @@ footer h5 {
 
 .stadium-info {
     box-shadow: var(--shadow-default);
-    background: var(--color-secondary);
+    background: #272B38;
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
     border-radius: 15px;
@@ -1885,7 +1887,6 @@ footer h5 {
 }
 
 #upcoming-events-header {
-    border-bottom: 1px solid var(--color-primary-20);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1893,7 +1894,6 @@ footer h5 {
 
 #upcoming-events-header h2 {
     margin: 0;
-    margin-bottom: 10px;
     font-size: 1.4rem;
     font-weight: normal;
 }
@@ -1989,13 +1989,8 @@ footer h5 {
     display: none;
 }
 
-#stadium-map-header {
-    border-bottom: 1px solid var(--color-primary-20);
-}
-
 #stadium-map-header h2 {
     margin: 0;
-    margin-bottom: 10px;
     font-size: 1.4rem;
     font-weight: normal;
 }
@@ -4618,11 +4613,14 @@ footer h5 {
     margin: 0 auto;
 }
 
+#stadium-skeleton {
+    padding-top: 200px;
+}
+
 #stadium-name-skeleton {
-    width: 50%;
-    height: 49px;
-    border-radius: 30px;
-    margin: 41px auto;
+    width: 100%;
+    height: 51px;
+    border-radius: 15px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
@@ -5845,6 +5843,9 @@ footer h5 {
     }
     #delete-control {
         width: 198px;
+    }
+    #stadium-content, #stadium-skeleton {
+        padding-top: 30px;
     }
 }
 
