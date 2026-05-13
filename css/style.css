@@ -38,7 +38,7 @@ body {
     background: rgba(0, 0, 0, 1);
     width: 100%;
     height: 100%;
-    z-index: 10001;
+    z-index: 10002;
     display: none;
 }
 
@@ -48,7 +48,7 @@ body {
     width: 428px;
     background: var(--gradient-bg);
     border: 1px solid var(--color-primary-30);
-    z-index: 10001;
+    z-index: 10002;
     display: none;
     top: 48%;
     left: 50%;
@@ -713,9 +713,20 @@ label img:hover {
 }
 
 /*  Welcome Text  */
+#home-image {
+    width: 100%;
+    height: 670px;
+    object-fit: cover;
+    opacity: 0.6 ;
+    position: absolute;
+    z-index: -10000;
+    mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
+    -webkit-mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
+}
+
 #welcome-text {
-    width: 50%;
-    margin: 50px auto 0;
+    width: 756px;
+    margin: 0 auto 0;
     text-align: center;
 }
 
@@ -728,6 +739,8 @@ label img:hover {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-weight: normal;
+    margin: 0;
+    padding: 150px 0 30px;
 }
 
 #button-container {
@@ -737,13 +750,13 @@ label img:hover {
 }
 
 #button-container button {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: normal;
-    background: var(--color-primary-10);
+    background: #273147;
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
     border-radius: 35px;
-    padding: 8px 25px;
+    padding: 10px 25px;
     margin: 0 15px;
     box-shadow: var(--shadow-default);
     transition: all 0.3s ease;
@@ -751,7 +764,7 @@ label img:hover {
 
 #button-container button:hover {
     cursor: pointer;
-    background: var(--color-primary-20);
+    background: #2A3F5B;
     transform: translateY(-3px);
 }
 
@@ -762,8 +775,8 @@ label img:hover {
 
 /*  Stadium Search  */
 #home-stadium-search-container {
-    width: 95%;
-    margin: 40px auto 0;
+    width: 550px;
+    margin: 35px auto 0;
 }
 
 #search-field-home {
@@ -772,9 +785,9 @@ label img:hover {
     border-radius: 35px;
     padding-left: 21px;
     z-index: 10;
-    width: 550px;
+    width: 100%;
     box-shadow: var(--shadow-default);
-    background: rgba(255, 255, 255, 0.05);
+    background: #2B2F3D;
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-20);
     color: var(--color-text);
@@ -789,7 +802,6 @@ label img:hover {
 
 #home-search-wrapper {
     position: relative;
-    width: fit-content;
     margin: 0 auto;
 }
 
@@ -955,40 +967,39 @@ label img:hover {
 
 /*  Popular Stadiums  */
 #popular-stadiums-container {
-    width: 95%;
-    margin: 45px auto;
+    width: 1090px;
+    margin: 70px auto;
 }
 
 #popular-stadiums-container h2 {
-    margin: 0 auto;
-    padding: 30px 0 20px;
-    text-align: center;
-    font-size: 1.8rem;
+    margin: 0;
+    font-size: 1.4rem;
     color: var(--color-text);
     font-weight: normal;
-    border-bottom: 1px solid var(--color-primary-20);
-    width: 95%;
 }
 
 #popular-stadiums {
     display: none;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 23px;
     margin-top: 20px;
 }
 
 .popular-stadium {
+    width: 348px;
     border-radius: 15px;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
-    padding: 0;
     box-shadow: var(--shadow-default);
-    margin: 10px 15px 15px;
     will-change: transform;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .popular-stadium img {
-    width: 390px;
-    height: 200px;
+    width: 100%;
+    height: 188px;
     object-fit: cover;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -996,22 +1007,24 @@ label img:hover {
 }
 
 .popular-stadium-text {
+    width: 100%;
     background: var(--color-secondary);
-    backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    padding: 15px 20px;
+    padding: 12px 0 12px 15px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
+    flex-grow: 1;
 }
 
 .popular-stadium-text h3, .popular-stadium-text h4 {
     font-weight: normal;
     margin: 10px;
-    border: 0px solid white;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .popular-stadium-text h3 {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     color: var(--color-text);
 }
 
@@ -1022,6 +1035,9 @@ label img:hover {
 .popular-stadium a {
     text-decoration: none;
     color: var(--color-text);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .popular-stadium:hover {
@@ -1031,24 +1047,22 @@ label img:hover {
 
 /*  StadiumTrackr Info  */
 #stadium-trackr-container {
-    width: 95%;
-    margin: 30px auto 0;
+    width: 1090px;
+    margin: 70px auto;
 }
 
 #stadium-trackr-container h2 {
-    margin: 0 auto;
-    padding: 30px 0 20px;
-    text-align: center;
-    font-size: 1.8rem;
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--color-text);
     font-weight: normal;
-    border-bottom: 1px solid var(--color-primary-20);
-    width: 95%;
 }
 
 #stadium-trackr-infos {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-between;
+    gap: 14px;
     margin-top: 20px;
 }
 
@@ -1057,10 +1071,9 @@ label img:hover {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    width: 290px;
+    width: 262px;
     text-align: center;
     border-radius: 15px;
-    margin: 10px 12px 15px;
 }
 
 .stadium-trackr-info div {
@@ -1073,7 +1086,7 @@ label img:hover {
 }
 
 .stadium-trackr-info img {
-    height: 50px;
+    height: 40px;
     object-fit: cover;
 }
 
@@ -1082,7 +1095,7 @@ label img:hover {
 }
 
 .stadium-trackr-info h3 {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     margin: 10px;
 }
 
@@ -1093,26 +1106,23 @@ label img:hover {
 
 /*  Home Stadium Map  */
 #home-stadium-map-container {
-    width: 95%;
-    margin: 30px auto 0;
+    width: 1090px;
+    margin: 70px auto;
 }
 
 #home-stadium-map-container h2 {
-    margin: 0 auto;
-    padding: 30px 0 20px;
-    text-align: center;
-    font-size: 1.8rem;
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--color-text);
     font-weight: normal;
-    border-bottom: 1px solid var(--color-primary-20);
-    width: 95%;
 }
 
 #home-stadium-map {
     display: none;
-    width: 1232px;
-    margin: 20px auto 0;
+    width: 100%;
+    margin-top: 20px;
     height: 500px;
-    border-radius: 20px;
+    border-radius: 15px;
     box-shadow: var(--shadow-default);
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
@@ -1233,7 +1243,7 @@ footer {
 
 .footer-item h4 {
     color: var(--color-blue);
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
 .footer-item h5 {
@@ -4134,7 +4144,7 @@ footer h5 {
     color: var(--color-text-muted);
     font-size: 1.2rem;
     line-height: 1.6;
-    width: 91%;
+    width: 65%;
     margin: 0 auto;
 }
 
@@ -4561,22 +4571,21 @@ footer h5 {
 
 /*  Skeleton Loading  */
 .skeleton-card {
-    width: 390px;
-    height: 306px;
+    width: 348px;
+    height: 285px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     border-radius: 15px;
-    margin: 10px 15px 15px;
     box-shadow: var(--shadow-default);
     border: 1px solid var(--color-primary-15);
 }
 
 #home-stadium-map-skeleton {
-    width: 91%;
+    width: 100%;
     margin: 20px auto 0;
     height: 500px;
-    border-radius: 25px;
+    border-radius: 15px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
@@ -4586,9 +4595,10 @@ footer h5 {
 
 #popular-stadiums-skeleton {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     flex-wrap: wrap;
     margin-top: 20px;
+    gap: 23px;
 }
 
 #filter-bar-skeleton {
@@ -5085,7 +5095,13 @@ footer h5 {
     }
     #button-container button {
         margin: 0 5px;
-        font-size: 1.2rem;
+    }
+    #welcome-text h2 {
+        font-size: 2rem;
+        padding-top: 50px;
+    }
+    #welcome-text, #popular-stadiums-container, #stadium-trackr-container, #home-stadium-map-container {
+        width: 90% !important;
     }
     .leaflet-popup-content-wrapper {
         width: 300px;
@@ -5277,6 +5293,12 @@ footer h5 {
     }
 }
 
+@media screen and (max-width: 566px) {
+    .stadium-trackr-info {
+        width: 100%;
+    }
+}
+
 @media screen and (max-width: 575px) {
     #user-stadiums-header-container, #user-stadiums-header-container-skeleton {
         flex-direction: column;
@@ -5342,9 +5364,6 @@ footer h5 {
 @media screen and (max-width: 600px) {
     #logged-out-nav .button #logged-in-nav .button {
         display: none;
-    }
-    #welcome-text {
-        width: 80%;
     }
     #button-container h4 {
         padding: 14px 22px;
@@ -5499,24 +5518,6 @@ footer h5 {
 }
 
 @media screen and (max-width: 715px) {
-    #welcome-text {
-        width: 75%;
-    }
-    #welcome-text h2 {
-        font-size: 2.2rem !important;
-    }
-    #button-container h4 {
-        font-size: 1rem !important;
-    }
-    #search-field-home {
-        height: 50px !important;
-    }
-    #stadiums-search-container {
-        width: 80%;
-    }
-    #home-content h2 {
-        font-size: 1.8rem;
-    }
     #filter-bar, #filter-bar-skeleton, #achievements-filter-bar, #achievements-filter-bar-skeleton, #activity-filter-bar, #activity-filter-bar-skeleton {
         width: 90%;
         margin: 20px auto 40px;
@@ -5595,6 +5596,15 @@ footer h5 {
     #events-filter-bar-skeleton {
         width: 100%;
         height: 196px;
+    }
+}
+
+@media screen and (max-width: 756px) {
+    #welcome-text {
+        width: 95%;
+    }
+    #home-stadium-search-container {
+        width: 100%;
     }
 }
 
@@ -5777,15 +5787,6 @@ footer h5 {
 }
 
 @media screen and (max-width: 1000px) {
-    #search-wrapper, #home-search-wrapper {
-        width: 100% !important;
-    }
-    #home-search-field, #search-field-home {
-        width: 100% !important;
-    }
-    #autocomplete-list, #home-autocomplete-list {
-        width: 100% !important;
-    }
     #filter-bar, #filter-bar-skeleton {
         max-width: 93%;
     }
@@ -5878,6 +5879,13 @@ footer h5 {
 }
 
 @media screen and (max-width: 1150px) {
+    #popular-stadiums-container, #stadium-trackr-container, #home-stadium-map-container {
+        width: 95%;
+    }
+    #popular-stadiums, #stadium-trackr-infos, #popular-stadiums-skeleton {
+        justify-content: start;
+    }
+    #home-stadium-map
     #user-home-content {
         width: 99%;
         padding: 0 20px;
