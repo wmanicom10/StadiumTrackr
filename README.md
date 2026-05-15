@@ -1,6 +1,6 @@
 # StadiumTrackr
 
-A web application for tracking stadium visits as you explore sports venues across the world.
+A web application for tracking stadium visits as you explore sports venues in the U.S and across the world.
 
 ## Features
 
