@@ -37,7 +37,7 @@ const handleLoadUserStadiums = async (req, res) => {
                     stadiums.city, stadiums.state, stadiums.country_id
         `;
 
-        query += buildSortOrder(sortBy, 'stadiums');
+        query += buildSortOrder(sortBy, 'stadiums', true);
 
         const params = [
             userId, 

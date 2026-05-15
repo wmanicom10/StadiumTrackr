@@ -42,8 +42,11 @@ const buildLeagueFilter = (league) => {
     };
 };
 
-const buildSortOrder = (sortBy, tablePrefix = '') => {
+const buildSortOrder = (sortBy, tablePrefix = '', isGrouped = false) => {
     const prefix = tablePrefix ? `${tablePrefix}.` : '';
+    const addedOn = isGrouped ? 'MAX(added_on)' : 'added_on';
+    const visitedOn = isGrouped ? 'MAX(visited_on)' : 'visited_on';
+    
     switch (sortBy) {
         case 'name-desc':
             return ` ORDER BY ${prefix}stadium_name DESC`;
@@ -51,14 +54,14 @@ const buildSortOrder = (sortBy, tablePrefix = '') => {
             return ` ORDER BY ${prefix}stadium_name ASC`;
         case 'date-desc':
         case 'added-desc':
-            return ` ORDER BY added_on DESC`;
+            return ` ORDER BY ${addedOn} DESC`;
         case 'date-asc':
         case 'added-asc':
-            return ` ORDER BY added_on ASC`;
+            return ` ORDER BY ${addedOn} ASC`;
         case 'visited-desc':
-            return ` ORDER BY visited_on IS NULL, visited_on DESC, added_on DESC`;
+            return ` ORDER BY ${visitedOn} IS NULL, ${visitedOn} DESC, ${addedOn} DESC`;
         case 'visited-asc':
-            return ` ORDER BY visited_on IS NULL, visited_on ASC, added_on ASC`;
+            return ` ORDER BY ${visitedOn} IS NULL, ${visitedOn} ASC, ${addedOn} ASC`;
         default:
             return ` ORDER BY ${prefix}stadium_name ASC`;
     }

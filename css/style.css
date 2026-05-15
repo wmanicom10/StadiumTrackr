@@ -237,7 +237,7 @@ body {
     background: var(--color-bg);
     border: 1px solid var(--color-primary-30);
     border-radius: 25px;
-    z-index: 10001;
+    z-index: 10002;
 }
 
 #add-stadium-menu-header {
@@ -603,6 +603,7 @@ label img:hover {
     width: 35px;
     margin-right: 10px;
     border-radius: 50px;
+    border: 1px solid var(--color-primary-20);
 }
 
 #logged-in-header-user-container {
@@ -683,6 +684,7 @@ label img:hover {
     width: 35px;
     margin-right: 10px;
     border-radius: 50px;
+    border: 1px solid var(--color-primary-20);
 }
 
 #sidebar-username {
@@ -717,7 +719,7 @@ label img:hover {
     width: 100%;
     height: 670px;
     object-fit: cover;
-    opacity: 0.6 ;
+    opacity: 0.6;
     position: absolute;
     z-index: -10000;
     mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
@@ -1353,12 +1355,12 @@ footer h5 {
 
 /*  Filter Bar  */
 #filter-bar {
-    max-width: 960px;
+    max-width: 1090px;
     margin: 30px auto 40px;
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    border-radius: 20px;
+    border-radius: 15px;
     box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
@@ -1375,7 +1377,7 @@ footer h5 {
 .filter-label {
     color: var(--color-text-muted);
     font-size: 0.95rem;
-    font-weight: 500;
+    font-weight: normal;
     margin-right: 5px;
 }
 
@@ -1388,7 +1390,7 @@ footer h5 {
 
 .custom-select-wrapper {
     position: relative;
-    min-width: 190px;
+    min-width: 234px;
     z-index: 100;
 }
 
@@ -1549,7 +1551,7 @@ footer h5 {
 
 /*  Stadiums List  */
 #stadiums-list-container {
-    width: 95%;
+    width: 1090px;
     margin: 0 auto;
     z-index: 100;
 }
@@ -1557,23 +1559,25 @@ footer h5 {
 #stadiums-list {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: start;
+    gap: 23px;
     transition: opacity 0.2s ease;
 }
 
 .stadiums-list-stadium {
+    width: 348px;
     border-radius: 15px;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
-    padding: 0;
     box-shadow: var(--shadow-default);
-    margin: 10px 15px 15px;
     will-change: transform;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .stadiums-list-stadium img {
-    width: 390px;
-    height: 200px;
+    width: 100%;
+    height: 188px;
     object-fit: cover;
     border-top-right-radius: 15px;
     border-top-left-radius: 15px;
@@ -1581,13 +1585,12 @@ footer h5 {
 }
 
 .stadiums-list-stadium-text {
+    width: 100%;
     background: var(--color-secondary);
-    backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    padding: 15px 18px;
+    padding: 12px 0 12px 15px;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-    width: 390px;
     flex-grow: 1;
 }
 
@@ -1599,13 +1602,12 @@ footer h5 {
 }
 
 .stadiums-list-stadium-text h3 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--color-text);
 }
 
 .stadiums-list-stadium-text h4 {
     color: var(--color-text-muted);
-    font-size: 1rem;
 }
 
 .stadiums-list-stadium a {
@@ -1613,7 +1615,7 @@ footer h5 {
     color: var(--color-text);
     display: flex;
     flex-direction: column;
-    height: 100%;  
+    flex: 1; 
 }
 
 .stadiums-list-stadium:hover {
@@ -1750,7 +1752,7 @@ footer h5 {
 }
 
 #stadium-name {
-    font-size: 2.3rem;
+    font-size: 2rem;
     font-weight: normal;
     line-height: 1.4;
     background: var(--gradient-text);
@@ -2051,10 +2053,11 @@ footer h5 {
 }
 
 #user-home-profile-pic {
-    width: 90px;
-    height: 90px;
+    width: 85px;
+    height: 85px;
     margin-right: 25px;
     border-radius: 50px;
+    border: 1px solid var(--color-primary-20);
 }
 
 #user-home-header-info {
@@ -2064,18 +2067,18 @@ footer h5 {
 
 #user-home-username {
     margin: 0;
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     font-weight: normal;
 }
 
 #user-home-header-stats {
     display: flex;
     align-items: center;
+    gap: 45px;
 }
 
 #user-home-header-stats div {
     text-align: center;
-    margin-left: 45px;
     border-radius: 15px;
 }
 
@@ -2101,7 +2104,7 @@ footer h5 {
     margin: 0;
     color: var(--color-text);
     text-decoration: none;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: normal;
 }
 
@@ -2177,7 +2180,7 @@ footer h5 {
 }
 
 .user-favorite-stadium-text h3 {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--color-text);
 }
 
@@ -2251,8 +2254,8 @@ footer h5 {
 #user-stadiums, #user-wishlist-stadiums {
     padding-top: 20px;
     display: none;
-    justify-content: space-between;
     flex-wrap: wrap;
+    gap: 19px;
 }
 
 .user-stadium {
@@ -2547,6 +2550,8 @@ footer h5 {
     flex-wrap: wrap;
     padding-top: 20px;
     gap: 9px;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .user-achievement {
@@ -2559,13 +2564,12 @@ footer h5 {
     display: flex;
     align-items: center;
     text-align: left;
-    height: 89.3px;
-    padding: 0 20px;
+    padding: 20px;
 }
 
 .user-achievement-image {
-    width: 35px;
-    height: 35px;
+    width: 30px;
+    height: 30px;
 }
 
 .user-achievement-text {
@@ -2575,14 +2579,14 @@ footer h5 {
 .user-achievement h3 {
     margin: 0;
     font-weight: normal;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--color-text);
 }
 
 .user-achievement h4 {
     margin: 0;
     font-weight: normal;
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: var(--color-text-muted);
     margin-top: 5px;
     display: -webkit-box;
@@ -2647,7 +2651,7 @@ footer h5 {
 }
 
 #achievements-filter-bar {
-    max-width: 630px;
+    max-width: 714px;
     margin: 30px auto 40px;
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
@@ -2861,9 +2865,8 @@ footer h5 {
     align-items: center;
     justify-content: space-between;
     width: 94%;
-    padding: 25px 0 15px;
+    padding: 25px 0 0;
     margin: 0 auto;
-    border-bottom: 1px solid var(--color-primary-20);
 }
 
 .activity-item-name {
@@ -3217,7 +3220,7 @@ footer h5 {
     background: var(--gradient-bg);
     border: 1px solid var(--color-primary-30);
     border-radius: 25px;
-    z-index: 10001;
+    z-index: 10002;
     text-align: center;
 }
 
@@ -3979,7 +3982,7 @@ footer h5 {
     background: var(--gradient-bg);
     border: 1px solid var(--color-primary-30);
     border-radius: 25px;
-    z-index: 10001;
+    z-index: 10002;
     text-align: center;
 }
 
@@ -4151,7 +4154,9 @@ footer h5 {
 #events-info {
     margin: 50px auto;
     display: flex;
-    justify-content: center;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 15px;
 }
 
 .event-info-card {
@@ -4160,8 +4165,7 @@ footer h5 {
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
     border-radius: 15px;
-    width: 275px;
-    margin: 10px 15px 15px;
+    width: 295px;
 }
 
 .event-info-card img {
@@ -4194,14 +4198,10 @@ footer h5 {
     margin: 0 auto;
 }
 
-#featured-events-header {
-    border-bottom: 1px solid var(--color-primary-20);
-}
-
 #featured-events-header h2  {
     margin: 0;
     margin-bottom: 10px;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: normal;
 }
 
@@ -4249,7 +4249,7 @@ footer h5 {
     font-weight: normal;
     text-decoration: none;
     margin: 0;
-    font-size: 1.3rem !important;
+    font-size: 1.2rem !important;
     color: var(--color-text);
     transition: color 0.3s ease;
 }
@@ -4602,13 +4602,13 @@ footer h5 {
 }
 
 #filter-bar-skeleton {
-    max-width: 960px;
+    max-width: 1090px;
     margin: 30px auto 40px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     border: 1px solid var(--color-primary-15);
-    border-radius: 20px;
+    border-radius: 15px;
     box-shadow: var(--shadow-default);
     position: relative;
     z-index: 1000;
@@ -4616,11 +4616,13 @@ footer h5 {
 }
 
 #stadiums-container-skeleton {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    width: 95%;
+    width: 1090px;
     margin: 0 auto;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 23px;
 }
 
 #stadium-skeleton {
@@ -4629,7 +4631,7 @@ footer h5 {
 
 #stadium-name-skeleton {
     width: 100%;
-    height: 51px;
+    height: 44px;
     border-radius: 15px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
@@ -4721,7 +4723,7 @@ footer h5 {
 
 #user-home-header-skeleton {
     width: 100%;
-    height: 90px;
+    height: 85px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
@@ -4742,7 +4744,7 @@ footer h5 {
 
 .user-favorite-stadium-skeleton {
     width: 265px;
-    height: 232px;
+    height: 231px;
     border-radius: 15px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
@@ -4873,7 +4875,7 @@ footer h5 {
 }
 
 #achievements-filter-bar-skeleton {
-    max-width: 630px;
+    max-width: 714px;
     margin: 30px auto 40px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
@@ -5193,7 +5195,7 @@ footer h5 {
     }
     .user-stadium, .stadiums-list-stadium {
         width: 100%;
-        max-width: 368px;
+        max-width: 348px;
     }
     .user-stadium img {
         width: 100% ;
@@ -5518,54 +5520,6 @@ footer h5 {
 }
 
 @media screen and (max-width: 715px) {
-    #filter-bar, #filter-bar-skeleton, #achievements-filter-bar, #achievements-filter-bar-skeleton, #activity-filter-bar, #activity-filter-bar-skeleton {
-        width: 90%;
-        margin: 20px auto 40px;
-    }
-    #filter-bar-skeleton {
-        height: 464px !important;
-        margin-bottom: 45px;
-    }
-    #achievements-filter-bar-skeleton {
-        height: 213px !important;
-        margin-bottom: 45px;
-    }
-    #filter-controls {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 20px;
-        gap: 20px;
-    }
-    .filter-group {
-        width: 100%;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 8px;
-    }
-    .custom-select-wrapper {
-        width: 100%;
-    }
-    .custom-select-trigger {
-        width: 100%;
-    }
-    .filter-label {
-        margin-bottom: 0;
-    }
-    .filter-divider {
-        display: none;
-    }
-    .filter-actions {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 15px 20px 20px;
-        gap: 12px;
-    }
-    .clear-filters {
-        width: 100%;
-    }
-    #results-count {
-        margin: 10px 0 !important;
-    }
     #activity-list-container, #activity-container-skeleton {
         width: 90% !important;
     }
@@ -5667,6 +5621,56 @@ footer h5 {
     }
     #about-map-image {
         width: 97%;
+    }
+    #stadiums-list-container, #stadiums-container-skeleton {
+        width: 90% !important;
+    }
+    #filter-bar-skeleton {
+        height: 466px !important;
+    }
+    #filter-bar, #filter-bar-skeleton, #achievements-filter-bar, #achievements-filter-bar-skeleton, #activity-filter-bar, #activity-filter-bar-skeleton {
+        width: 90%;
+        margin: 20px auto 40px;
+    }
+    #results-count {
+        margin: 10px 0 !important;
+    }
+    #achievements-filter-bar-skeleton {
+        height: 213px !important;
+        margin-bottom: 45px;
+    }
+    #filter-controls {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px;
+        gap: 20px;
+    }
+    .filter-group {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .custom-select-wrapper {
+        width: 100%;
+    }
+    .custom-select-trigger {
+        width: 100%;
+    }
+    .filter-label {
+        margin-bottom: 0;
+    }
+    .filter-divider {
+        display: none;
+    }
+    .filter-actions {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 15px 20px 20px;
+        gap: 12px;
+    }
+    .clear-filters {
+        width: 100%;
     }
 }
 
@@ -5786,15 +5790,6 @@ footer h5 {
     }
 }
 
-@media screen and (max-width: 1000px) {
-    #filter-bar, #filter-bar-skeleton {
-        max-width: 93%;
-    }
-    #filter-bar-skeleton {
-        height: 225px;  
-    }
-}
-
 @media screen and (max-width: 1025px) {
     #logged-out-nav, #logged-in-nav {
         margin-right: 10px;
@@ -5879,13 +5874,18 @@ footer h5 {
 }
 
 @media screen and (max-width: 1150px) {
-    #popular-stadiums-container, #stadium-trackr-container, #home-stadium-map-container {
+    #popular-stadiums-container, #stadium-trackr-container, #home-stadium-map-container, #stadiums-list-container, #stadiums-container-skeleton {
         width: 95%;
     }
-    #popular-stadiums, #stadium-trackr-infos, #popular-stadiums-skeleton {
+    #popular-stadiums, #stadium-trackr-infos, #popular-stadiums-skeleton, #stadiums-list, #stadiums-container-skeleton {
         justify-content: start;
     }
-    #home-stadium-map
+    #filter-bar, #filter-bar-skeleton {
+        max-width: 95%;
+    }
+    #filter-bar-skeleton {
+        height: 225px;  
+    }
     #user-home-content {
         width: 99%;
         padding: 0 20px;
