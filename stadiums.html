@@ -26,41 +26,49 @@
 
         <!-- Login Menu -->
         <div id="log-in-menu" class="menu">
-            <h2>Log In</h2>
-            <h3 id="close-log-in-menu">x</h3>
+            <div id="log-in-menu-header">
+                <h2></h2>
+                <h2>Login</h2>
+                <h2 id="close-log-in-menu">×</h2>
+            </div>
             <form id="log-in-form">
                 <input type="text" id="username" class="input-field" placeholder="Username"><br>
                 <input type="password" id="password" class="input-field" placeholder="Password"><br>
-                <span class="forgot-password">Forgot Password?</span>
-                <input type="submit" id="log-in-button" value="Login">
-                <span class="sign-up-link">Don't have an account? <span>Sign up here</span></span>
+                <input type="submit" id="log-in-button" value="Log In">
             </form>
+            <h3>Don't have an account? <span id="sign-up-link">Sign up here</span></h3>
+            <h3 class="forgot-password">Forgot Password?</h3>
         </div>
 
         <!-- Create Account Menu -->
         <div id="create-account-menu" class="menu">
-            <h2>Create Account</h2>
-            <h3 id="close-create-account-menu">x</h3>
+            <div id="create-account-menu-header">
+                <h2></h2>
+                <h2>Sign Up</h2>
+                <h2 id="close-create-account-menu">×</h2>
+            </div>
             <form id="create-account-form">
                 <input type="text" id="new-username" class="input-field" placeholder="Username"><br>
                 <input type="text" id="new-email" class="input-field" placeholder="Email address"><br>
-                <input type="text" id="new-password" class="input-field" placeholder="Password"><br>
+                <input type="password" id="new-password" class="input-field" placeholder="Password"><br>
                 <div id="terms-and-conditions-container">
                     <input type="checkbox" id="terms-and-conditions">
                     <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a></label>
                 </div>
                 <input type="submit" id="sign-up-button" value="Sign Up"><br>
-                <span class="sign-in-link">Already have an account? <span>Log in here</span></span>
             </form>
+            <h3>Already have an account? <span id="sign-in-link">Log in here</span></h3>
         </div>
 
         <!-- Add Stadium Menu -->
         <div id="add-stadium-menu">
             <div id="add-stadium-menu-header">
+                <h2></h2>
                 <h2>Log Your Visit</h2>
                 <h2 id="close-add-stadium-menu">×</h2>
             </div>
             <h2 id="add-stadium-name"></h2>
+            <h3 id="add-stadium-location"></h3>
             <div id="add-stadium-container">
                 <img src="" id="add-stadium-image">
                 <form id="add-stadium-form">
@@ -284,7 +292,7 @@
                         <button class="clear-filters" id="clear-filters">Clear Filters</button>
                         <div id="results-count"></div>
                         <form id="search-stadiums" autocomplete="off">
-                            <div id="search-wrapper">
+                            <div class="search-wrapper">
                                 <input type="text" placeholder="Search stadiums..." id="home-search-field" spellcheck="false">
                                 <div id="autocomplete-list"></div>
                             </div>

@@ -291,7 +291,7 @@ export function createStadiumCard(stadium, elements) {
 
     controls.appendChild(createCornerButton('Log Visit', 'images/icons/log.png', 'btn-log', (btn, e) => {
         e.preventDefault();
-        setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, getUsername(), stadium.image, elements);
+        setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, stadium.city, stadium.state, getUsername(), stadium.image, elements);
         toggleMenu(elements.addStadiumMenu, true, overlay);
     }));
 
@@ -456,7 +456,7 @@ export function createUserStadiumElement(stadium, elements) {
     controls.appendChild(createCornerButton('Log Visit', 'images/icons/log.png', 'btn-log', (btn, e) => {
         e.preventDefault();
         if (elements) {
-            setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, getUsername(), stadium.image, elements);
+            setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, stadium.city, stadium.state, getUsername(), stadium.image, elements);
             toggleMenu(elements.addStadiumMenu, true, document.getElementById('overlay'));
         }
     }));
@@ -686,8 +686,9 @@ export function setPageInURL(page) {
     window.location.search = params.toString();
 }
 
-export function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage, elements) {
+export function setupAddStadiumModal(stadiumId, stadiumName, city, state, username, stadiumImage, elements) {
     elements.addStadiumName.textContent = stadiumName;
+    elements.addStadiumLocation.textContent = city + ', ' + state;
     elements.addStadiumImage.src = stadiumImage;
 
     const today = new Date().toISOString().split('T')[0];

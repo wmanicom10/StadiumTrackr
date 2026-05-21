@@ -112,8 +112,6 @@ async function waitForImages() {
 function hideSearchSuggestions(container, input) {
     container.classList.remove('active');
     input.value = '';
-    input.style.borderBottomLeftRadius = '35px';
-    input.style.borderBottomRightRadius = '35px';
 }
 
 function initializeMap(stadiums) {

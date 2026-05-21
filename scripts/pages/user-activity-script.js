@@ -13,6 +13,7 @@ const elements = {
     editLogSaveButton: document.getElementById('edit-log-save-button'),
     editLogCancelButton: document.getElementById('edit-log-cancel-button'),
     editLogName: document.getElementById('edit-log-name'),
+    editLogLocation: document.getElementById('edit-log-location'),
     editLogImage: document.getElementById('edit-log-image'),
     editLogDateVisited: document.getElementById('edit-log-date-visited'),
     editLogNote: document.getElementById('edit-log-note'),
@@ -228,6 +229,7 @@ function createEditButton(activity, username) {
     btn.addEventListener('click', () => {
         currentData = { visit_id: activity.visit_id, username };
         elements.editLogName.textContent = activity.stadium_name;
+        elements.editLogLocation.textContent = activity.city + ', ' + activity.state;
         elements.editLogImage.src = activity.image;
         elements.editLogDateVisited.value = activity.visited_on.split('T')[0];
         const now = new Date();

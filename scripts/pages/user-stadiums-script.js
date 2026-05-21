@@ -11,6 +11,7 @@ const elements = {
     addStadiumNote: document.getElementById('add-stadium-note'),
     closeAddStadiumMenu: document.getElementById('close-add-stadium-menu'),
     addStadiumName: document.getElementById('add-stadium-name'),
+    addStadiumLocation: document.getElementById('add-stadium-location'),
     addStadiumImage: document.getElementById('add-stadium-image'),
     addStadiumLogButton: document.getElementById('add-stadium-log-button'),
     addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
@@ -36,8 +37,6 @@ async function setView(username, league, country, sortBy) {
         await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
         const result = await userAPI.loadUserStadiums(username, league, country, sortBy);
         const stadiums = result.userStadiums;
-
-        console.log(stadiums);
 
         allStadiums = stadiums;
 

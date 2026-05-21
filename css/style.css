@@ -45,8 +45,10 @@ body {
 /*  Log In Menu, Create Account Menu  */
 #create-account-menu, #log-in-menu {
     position: fixed;
-    width: 428px;
-    background: var(--gradient-bg);
+    width: 500px;
+    height: auto;
+    padding: 30px 35px;
+    background: var(--color-bg);
     border: 1px solid var(--color-primary-30);
     z-index: 10002;
     display: none;
@@ -54,58 +56,60 @@ body {
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 15px;
-    color: var(--color-text);
 }
 
-#log-in-menu {
-    height: 375px;
-}
-
-#create-account-menu {
-    height: 450px;
+#log-in-menu-header, #create-account-menu-header {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 #create-account-menu h2, #log-in-menu h2 {
-    text-align: center;
-    font-size: 30px;
+    font-size: 1.5rem;
     font-weight: normal;
-    margin-bottom: 0;
+    margin: 0;
     color: var(--color-blue);
+}
+
+#log-in-menu-header h2:first-of-type, #create-account-menu-header h2:first-of-type {
+    visibility: hidden;
+    width: 15px;
 }
 
 #close-create-account-menu, #close-log-in-menu {
-    font-size: 25px;
-    position: absolute;
-    left: 380px;
-    top: 1px;
-    font-weight: normal;
-    color: var(--color-text-muted);
+    color: var(--color-text) !important;
     cursor: pointer;
-    transition: color 0.1s ease;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    font-size: 1.5rem !important;
 }
 
 #close-create-account-menu:hover, #close-log-in-menu:hover {
-    cursor: pointer;
     color: var(--color-blue);
 }
 
-#create-account-form, #log-in-form{
+#create-account-form, #log-in-form {
     text-align: center;
     width: auto;
     height: auto;
-    margin-top: 15px;
+    margin-top: 25px;
 }
 
 .input-field {
     height: 40px;
-    width: 325px;
-    border-radius: 20px;
+    width: 100%;
+    border-radius: 10px;
     border: none;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     font-size: 16px;
     padding: 0 10px 0 20px;
-    margin-top: 20px;
+    margin-bottom: 20px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     color: var(--color-text);
 }
@@ -120,15 +124,11 @@ body {
     box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
-#log-in-form span, #create-account-menu span {
-    display: block;
-}
-
 .forgot-password {
-    width: 140px;
-    margin-left: 55px;
-    text-align: left;
-    margin-top: 22px;
+    display: inline;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: normal;
     transition: color 0.3s ease;
 }
 
@@ -141,11 +141,10 @@ body {
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
-    font-size: 20px;
-    width: 325px;
+    font-size: 1.2rem;
+    width: 100%;
     height: 40px;
-    border-radius: 20px;
-    margin-top: 22px;
+    border-radius: 10px;
     transition: all 0.3s ease-in-out;
     cursor: pointer;
 }
@@ -170,34 +169,42 @@ body {
     cursor: pointer;
 }
 
-.sign-up-link, .sign-in-link {
-    margin-top: 22px;
+#log-in-menu h3 {
+    margin: 20px 0;
+    font-weight: normal;
+    font-size: 1rem;
 }
 
-.sign-up-link span, .sign-in-link span {
+#create-account-menu h3 {
+    margin: 20px 0 0;
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+#sign-up-link, #sign-in-link {
     transition: color 0.3s ease;
+    color: var(--color-blue);
+    cursor: pointer;
 } 
 
-.sign-up-link span:hover, .sign-in-link span:hover {
-    color: #4088c7 !important;
+#sign-up-link:hover, #sign-in-link:hover {
+    color: #1e7ccf;
 }
 
 #terms-and-conditions {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
 }
 
 #terms-and-conditions-container {
-    width: 305px;
     display: flex;
-    margin-top: 22px;
+    margin-bottom: 20px;
     text-align: left;
-    margin-left: 55px;
     align-items: center;
 }
 
 #terms-and-conditions-container label {
-    margin-left: 8px;
+    margin-left: 10px;
 }
 
 #terms-and-conditions-container label a {
@@ -236,7 +243,7 @@ body {
     transform: translate(-50%, -50%);
     background: var(--color-bg);
     border: 1px solid var(--color-primary-30);
-    border-radius: 25px;
+    border-radius: 15px;
     z-index: 10002;
 }
 
@@ -246,28 +253,33 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 0 15px;
+    padding: 25px 0 20px;
     border-bottom: 1px solid var(--color-primary-20);
 }
 
 #add-stadium-menu-header h2 {
-    font-size: 1.7rem;
+    font-size: 1.3rem;
     font-weight: normal;
     margin: 0;
 }
 
 #add-stadium-menu-header h2:first-of-type {
+    visibility: hidden;
+}
+
+#add-stadium-menu-header h2:nth-of-type(2) {
     color: var(--color-blue);
 }
 
 #close-add-stadium-menu {
-    color: var(--color-text-muted);
+    color: var(--color-text);
     cursor: pointer;
     transition: color 0.2s;
     background: none;
     border: none;
     padding: 0;
     line-height: 1;
+    font-size: 1.5rem !important;
 }
 
 #close-add-stadium-menu:hover {
@@ -275,10 +287,18 @@ body {
 }
 
 #add-stadium-name {
-    margin: 30px 0 0;
-    text-align: center;
+    width: 92%;
+    margin: 25px auto 0;
     font-weight: normal;
-    font-size: 1.8rem;
+    font-size: 1.4rem;
+}
+
+#add-stadium-location {
+    color: var(--color-text-muted);
+    width: 92%;
+    margin: 10px auto 0;
+    font-weight: normal;
+    font-size: 1.1rem;
 }
 
 #add-stadium-container {
@@ -290,9 +310,9 @@ body {
 
 #add-stadium-image {
     width: 48%;
-    height: 270px;
+    height: 274px;
     object-fit: cover;
-    border-radius: 25px;
+    border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -308,11 +328,11 @@ body {
 }
 
 #add-stadium-date-visited {
-    border-radius: 25px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     color: var(--color-text);
-    padding: 10px 20px;
+    padding: 10px 18px;
     font-size: 0.9rem;
     margin: 10px 0 20px 0;
     font-family: "Inter", sans-serif;
@@ -333,12 +353,12 @@ body {
 
 #add-stadium-note {
     margin-top: 10px;
-    border-radius: 25px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     width: 100%;
     padding: 20px;
-    height: 147px !important;
+    height: 151px !important;
     resize: none;
     color: var(--color-text);
     font-size: 1rem;
@@ -362,14 +382,14 @@ body {
     display: flex;
     justify-content: space-between;
     width: 37%;
-    margin: 0 auto;
+    margin: 0 auto 30px;
 }
 
 #add-stadium-log-button, #add-stadium-cancel-button {
     font-weight: normal;
     font-size: 1rem;
-    border-radius: 25px;
-    margin: 0 auto 30px;
+    border-radius: 10px;
+    margin: 0 auto;
     width: 160px;
     padding: 8px 0;
     text-align: center;
@@ -465,7 +485,7 @@ header h1:hover {
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
     padding: 7px 22px;
-    border-radius: 20px;
+    border-radius: 10px;
     margin: 0 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transition: all 0.3s ease;
@@ -622,7 +642,7 @@ label img:hover {
     backdrop-filter: blur(20px);
     border: 1px solid var(--color-primary-30);
     padding: 60px 0 0;
-    border-radius: 16px;
+    border-radius: 10px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     z-index: 100;
     opacity: 0;
@@ -650,8 +670,8 @@ label img:hover {
 }
 
 #logged-in-header-user-container-hidden a:last-of-type {
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 #logged-in-header-user-container-hidden a:first-of-type {
@@ -757,8 +777,8 @@ label img:hover {
     background: #273147;
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
-    border-radius: 35px;
-    padding: 10px 25px;
+    border-radius: 10px;
+    padding: 12px 25px;
     margin: 0 15px;
     box-shadow: var(--shadow-default);
     transition: all 0.3s ease;
@@ -777,19 +797,19 @@ label img:hover {
 
 /*  Stadium Search  */
 #home-stadium-search-container {
-    width: 550px;
+    width: 650px;
     margin: 35px auto 0;
 }
 
 #search-field-home {
     border: none;
     height: 45px;
-    border-radius: 35px;
+    border-radius: 10px;
     padding-left: 21px;
     z-index: 10;
     width: 100%;
     box-shadow: var(--shadow-default);
-    background: #2B2F3D;
+    background: #272B38;
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-20);
     color: var(--color-text);
@@ -818,9 +838,9 @@ label img:hover {
 
 #home-autocomplete-list {
     width: 100%;
-    background: var(--color-bg-mid);
+    background: #272B38;
     border: 1px solid var(--color-primary-30);
-    border-radius: 16px;
+    border-radius: 10px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     margin: 8px auto 0;
     z-index: 1001;
@@ -879,10 +899,10 @@ label img:hover {
     margin: 40px auto;
 }
 
-#home-search-field {
+#home-search-field, #wishlist-search-field {
     border: none;
     height: 60px;
-    border-radius: 35px;
+    border-radius: 10px;
     padding-left: 20px;
     z-index: 10;
     box-shadow: var(--shadow-default);
@@ -892,19 +912,19 @@ label img:hover {
     font-size: 0.95rem;
 }
 
-#search-wrapper {
+.search-wrapper {
     position: relative;
     width: fit-content;
     margin: 0 auto;
 }
 
-#home-search-field:focus {
+#home-search-field:focus, #wishlist-search-field:focus {
     outline: none;
     border-color: rgba(79, 172, 254, 0.6);
     box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
-#home-search-field::placeholder {
+#home-search-field::placeholder, #wishlist-search-field::placeholder {
     font-size: 1.1rem;
     color: var(--color-text-muted);
 }
@@ -1010,7 +1030,7 @@ label img:hover {
 
 .popular-stadium-text {
     width: 100%;
-    background: var(--color-secondary);
+    background: #272B38;
     border: 1px solid var(--color-primary-15);
     padding: 12px 0 12px 15px;
     border-bottom-left-radius: 15px;
@@ -1070,7 +1090,7 @@ label img:hover {
 
 .stadium-trackr-info {
     box-shadow: var(--shadow-default);
-    background: var(--color-secondary);
+    background: #272B38;
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
     width: 262px;
@@ -1132,7 +1152,7 @@ label img:hover {
 }
 
 .leaflet-popup-content-wrapper {
-    background: var(--gradient-bg) !important; 
+    background: var(--color-bg) !important; 
     border: 1px solid var(--color-primary-15);
     width: 350px;
     border-radius: 10px;
@@ -1221,7 +1241,7 @@ label img:hover {
 
 /*  Footer  */
 footer {
-    background: rgba(26, 29, 41, 0.9);
+    background: rgba(26, 29, 41, 0.8);
     backdrop-filter: blur(10px);
     height: auto;
     text-align: left;
@@ -1230,17 +1250,18 @@ footer {
 
 #footer-items {
     margin: 0 auto;
-    width: 90%;
+    width: 88%;
     list-style-type: none;
     padding: 0;
     display: flex;
-    justify-content: space-around;
+    flex-wrap: wrap;
+    justify-content: space-between;
     padding-bottom: 20px;
     border-bottom: 1px solid var(--color-primary-20);
 }
 
 .footer-item:last-of-type {
-    padding-left: 38px;
+    padding-left: 35px;
 }
 
 .footer-item h4 {
@@ -1273,8 +1294,7 @@ footer {
 
 .footer-item {
     width: 300px;
-    margin-top: 40px;
-    margin: 40px 10px 0;
+    margin: 40px 0 0;
 }
 
 .footer-item h4 {
@@ -1292,8 +1312,8 @@ footer h5 {
 }
 
 #email-field {
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
     border: none;
     margin: 0;
     padding: 12px 18px;
@@ -1313,13 +1333,12 @@ footer h5 {
 }
 
 #subscribe-button {
-    padding: 12px 25px;
     background: var(--color-primary-10);
     border: 0.5px solid var(--color-primary-30);
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
     margin: 0;
-    padding: 0 15px 0 12px;
+    padding: 0 15px 0;
     color: var(--color-blue);
     transition: background-color 0.1s ease-in-out;
 }
@@ -1398,7 +1417,7 @@ footer h5 {
     padding: 12px 20px 12px 18px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
-    border-radius: 25px;
+    border-radius: 10px;
     color: var(--color-text);
     font-size: 0.9rem;
     font-family: "Inter", sans-serif;
@@ -1437,7 +1456,7 @@ footer h5 {
     background: rgba(45, 49, 66, 1);
     backdrop-filter: blur(20px);
     border: 1px solid var(--color-primary-30);
-    border-radius: 16px;
+    border-radius: 10px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     z-index: 10001;
     opacity: 0;
@@ -1466,13 +1485,13 @@ footer h5 {
 }
 
 .custom-select-option:first-child {
-    border-top-left-radius: 16px;
-    border-top-right-radius: 16px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
 }
 
 .custom-select-option:last-child {
-    border-bottom-left-radius: 16px;
-    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .custom-select-option:hover {
@@ -1501,7 +1520,7 @@ footer h5 {
     padding: 8px 20px;
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
-    border-radius: 20px;
+    border-radius: 10px;
     color: var(--color-blue);
     font-size: 0.9rem;
     font-family: "Inter", sans-serif;
@@ -1523,7 +1542,7 @@ footer h5 {
     padding-top: 20px;
 }
 
-#results-count {
+#results-count, #wishlist-results-count {
     color: var(--color-text-muted);
     font-size: 0.95rem;
     margin-right: 40px;
@@ -1534,7 +1553,7 @@ footer h5 {
     flex: 1;
 }
 
-.filter-actions #search-wrapper {
+.filter-actions .search-wrapper {
     width: 100%;
     margin: 0;
 }
@@ -1568,7 +1587,6 @@ footer h5 {
     width: 348px;
     border-radius: 15px;
     transition: transform 0.15s ease-in-out, border-color 0.15s ease-in-out;
-    box-shadow: var(--shadow-default);
     will-change: transform;
     position: relative;
     display: flex;
@@ -1586,7 +1604,8 @@ footer h5 {
 
 .stadiums-list-stadium-text {
     width: 100%;
-    background: var(--color-secondary);
+    background: #272B38;
+    box-shadow: var(--shadow-default);
     border: 1px solid var(--color-primary-15);
     padding: 12px 0 12px 15px;
     border-bottom-left-radius: 15px;
@@ -1649,7 +1668,7 @@ footer h5 {
     animation: iconSwap 0.4s ease;
 }
 
-#stadiums-page-selector {
+#stadiums-page-selector, #visits-page-selector, #wishlist-page-selector, #activity-page-selector, #achievements-page-selector {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -1715,7 +1734,7 @@ footer h5 {
 }
 
 #no-stadiums-container h3 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 600;
     margin: 0 0 15px;
     color: var(--color-text);
@@ -1787,7 +1806,7 @@ footer h5 {
 .stadium-user-control {
     background: #273147;
     border: 1px solid var(--color-primary-30);
-    border-radius: 15px;
+    border-radius: 10px;
     transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
     color: var(--color-blue);
     cursor: pointer;
@@ -1848,6 +1867,7 @@ footer h5 {
     justify-content: space-between;
     width: 100%;
     margin-top: 25px;
+    gap: 12px;
 }
 
 .stadium-info {
@@ -1857,21 +1877,20 @@ footer h5 {
     border: 1px solid var(--color-primary-15);
     border-radius: 15px;
     width: 300px;
-    padding: 25px 25px;
-    margin-bottom: 15px;
+    padding: 20px 20px;
 }
 
 .stadium-info h4 {
     font-weight: normal;
     margin: 0;
     color: var(--color-text-muted);
-    font-size: 1.1rem;
+    font-size: 1rem;
 }
 
 .stadium-info h3 {
     font-weight: normal;
     margin: 20px 0 0;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     line-height: 1.6;
 }
 
@@ -1891,7 +1910,7 @@ footer h5 {
 /*  Upcoming Events  */
 #upcoming-events-container {
     width: 925px;
-    margin: 35px auto 0;
+    margin: 60px auto 0;
 }
 
 #upcoming-events-content {
@@ -2096,6 +2115,629 @@ footer h5 {
     font-size: 1.1rem;
 }
 
+#user-home-nav-bar {
+    width: 100%;
+    display: flex;
+    border-bottom: 2px solid #2A3F5B;
+    margin-top: 50px;
+}
+
+.user-home-nav-bar-tab {
+    margin: 0;
+    font-weight: normal;
+    padding: 0 18px 5px;
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+#user-home-home-tab {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.user-home-nav-bar-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-blue);
+    transform: translateX(-50%);
+    transition: width 0.3s ease; 
+}
+
+.user-home-nav-bar-tab:hover {
+    color: var(--color-blue);
+}
+
+.user-home-nav-bar-tab:hover::after {
+    width: 100%;
+}
+
+.active-tab {
+    color: var(--color-blue);
+    border-bottom: 2px solid var(--color-blue);
+    margin-bottom: -2px;
+}
+
+.active-tab::after {
+    display: none;
+}
+
+.user-home-tab-container {
+    display: none;
+}
+
+#user-home-home-tab-container {
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#user-home-stadiums-tab-container, #user-home-wishlist-tab-container {
+    width: 100%;
+    margin-top: 40px;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#user-home-stadiums, #user-home-wishlist {
+    width: 65%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 19px;
+    align-content: flex-start;
+}
+
+#user-home-no-stadiums-container {
+    display: none;
+    width: 65%;
+    text-align: center;
+    padding: 40px;
+}
+
+#user-home-no-stadiums-container h3 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin: 0 0 15px;
+    color: var(--color-text);
+}
+
+#user-home-no-stadiums-container p {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    margin: 0 0 30px;
+    line-height: 1.6;
+}
+
+
+#user-home-stadiums-filters-container, #user-home-wishlist-filters-container {
+    width: 30%;
+}
+
+#user-home-stadiums-filters-container h3, #user-home-wishlist-filters-container h3 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.3rem;
+}
+
+#user-home-stadiums-filters, #user-home-wishlist-filters {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#user-home-stadiums-filters .filter-group, #user-home-wishlist-filters .filter-group {
+    justify-content: space-between;
+}
+
+#user-home-stadiums-filters .filter-label, #user-home-wishlist-filters .filter-label {
+    width: 20%;
+    margin: 0;
+    color: var(--color-text);
+}
+
+#user-home-stadiums-filters .custom-select-wrapper, #user-home-wishlist-filters .custom-select-wrapper {
+    width: 72%;
+}
+
+#user-home-stadiums-filters .custom-select-trigger, #user-home-wishlist-filters .custom-select-trigger {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-stadiums-filters .search-wrapper, #user-home-stadiums-filters #home-search-field, #user-home-wishlist-filters .search-wrapper, #user-home-wishlist-filters #wishlist-search-field {
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    background: #272B38;
+}
+
+#user-home-stadiums-filters #home-search-field, #user-home-wishlist-filters #wishlist-search-field {
+    padding-left: 15px;
+}
+
+#user-home-stadiums-filters #home-search-field::placeholder, #user-home-wishlist-filters #wishlist-search-field::placeholder {
+    font-size: 0.95rem;
+}
+
+#user-home-stadiums-filters #clear-filters, #user-home-wishlist-filters #wishlist-clear-filters {
+    margin-right: 15px;
+    width: 140px;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-stadiums-filters #results-count, #user-home-wishlist-filters #wishlist-results-count {
+    margin: 0;
+}
+
+#user-home-visits-tab-container {
+    width: 100%;
+    margin-top: 40px;
+    justify-content: space-between;
+}
+
+#user-home-visits {
+    width: 65%;
+}
+
+.user-home-visit {
+    display: flex;
+    align-items: center;
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 15px;
+    padding: 16px 25px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.user-home-visit-date {
+    text-align: center;
+    margin-right: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.user-home-visit-month, .user-home-visit-day {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.1rem;
+}
+
+.user-home-visit-image {
+    height: 94px;
+    border-radius: 15px;
+    margin-right: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+}
+
+.user-home-visit-info {
+    margin-right: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+}
+
+.user-home-visit-name, .user-home-visit-location {
+    margin: 0;
+    font-weight: normal;
+}
+
+.user-home-visit-name {
+    font-size: 1.1rem;
+}
+
+.user-home-visit-location {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+}
+
+.user-home-visit-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.user-home-visit-buttons button {
+    width: 40px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.user-home-visit-buttons button img {
+    height: 15px;
+}
+
+.user-home-visit-edit-log-button {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 10px;
+    color: #4facfe;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    padding-top: 4px;
+}
+
+.user-home-visit-edit-log-button:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px) translateZ(0);
+}
+
+.user-home-visit-remove-button {
+    background: rgba(255, 79, 79, 0.2);
+    color: #ff4f4f;
+    border: 1px solid rgba(255, 79, 79, 0.4);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    height: 38px;
+    padding-top: 4px;
+}
+
+.user-home-visit-remove-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#user-home-visits-filters-container {
+    width: 30%;
+}
+
+#user-home-visits-filters-container h3 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.3rem;
+}
+
+#user-home-visits-filters {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#user-home-visits-filters .filter-group {
+    justify-content: space-between;
+}
+
+#user-home-visits-filters .filter-label {
+    width: 20%;
+    margin: 0;
+    color: var(--color-text);
+}
+
+#user-home-visits-filters .custom-select-wrapper {
+    width: 72%;
+}
+
+#user-home-visits-filters .custom-select-trigger {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-visits-filters #visits-clear-filters {
+    margin-right: 15px;
+    width: 100%;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-activity-tab-container {
+    width: 100%;
+    margin-top: 40px;
+    justify-content: space-between;
+}
+
+#user-home-activity {
+    width: 65%;
+}
+
+.user-home-visit-activity, .user-home-wishlist-activity, .user-home-log-activity {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.user-home-visit-activity, .user-home-wishlist-activity {
+    min-height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-home-visit-activity h3, .user-home-wishlist-activity h3, .user-home-log-activity h3 {
+    font-weight: normal;
+    margin: 0;
+    font-size: 1rem;
+    color: var(--color-text-muted);
+}
+
+.user-home-visit-activity h3 a, .user-home-wishlist-activity h3 a, .user-home-log-activity h3 a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.user-home-visit-activity h3 a:hover, .user-home-wishlist-activity h3 a:hover, .user-home-log-activity h3 a:hover {
+    color: var(--color-blue);
+}
+
+.user-home-visit-activity h4, .user-home-wishlist-activity h4, .user-home-log-activity h4 {
+    font-weight: normal;
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.user-home-log-activity-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.user-home-log-activity-info-container {
+    margin-top: 20px;
+    display: flex;
+    gap: 25px;
+}
+
+.user-home-activity-log-image {
+    width: 348px;
+    height: 188px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+}
+
+.user-home-log-activity-info {
+    width: 100%;
+}
+
+.user-home-log-activity-details {
+    padding: 15px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.user-home-log-activity-details div h5 {
+    color: var(--color-text-muted);
+    margin: 0;
+    font-weight: normal;
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+}
+
+.user-home-log-activity-details div h4 {
+    color: var(--color-text);
+    margin: 0;
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+.user-home-log-activity-buttons {
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.user-home-log-activity-edit-log-button {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 10px;
+    color: #4facfe;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    width: 142px;
+    height: 38px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-home-log-activity-edit-log-button:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px) translateZ(0);
+}
+
+.user-home-log-activity-remove-button {
+    background: rgba(255, 79, 79, 0.2);
+    border: 1px solid rgba(255, 79, 79, 0.4);
+    border-radius: 10px;
+    color: #ff4f4f;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    width: 142px;
+    height: 38px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.user-home-log-activity-remove-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#user-home-activity-filters-container {
+    width: 30%;
+}
+
+#user-home-activity-filters-container h3 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.3rem;
+}
+
+#user-home-activity-filters {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#user-home-activity-filters .filter-group {
+    justify-content: space-between;
+}
+
+#user-home-activity-filters .filter-label {
+    width: 20%;
+    margin: 0;
+    color: var(--color-text);
+}
+
+#user-home-activity-filters .custom-select-wrapper {
+    width: 72%;
+}
+
+#user-home-activity-filters .custom-select-trigger {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-activity-filters #activity-clear-filters {
+    margin-right: 15px;
+    width: 100%;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-achievements-tab-container {
+    margin-top: 40px;
+    justify-content: space-between;
+}
+
+#user-home-achievements {
+    width: 65%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 19px;
+}
+
+.user-home-achievement {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 15px;
+    padding: 20px;
+    width: 348px;
+}
+
+.user-home-achievement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-home-achievement h3 {
+    font-weight: normal;
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.user-home-achievement-percent {
+    color: var(--color-blue);
+}
+
+.user-home-achievement-info {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.user-home-achievement-image {
+    width: 35px;
+    margin-right: 20px;
+}
+
+.user-home-achievment-description {
+    color: var(--color-text-muted);
+}
+
+.user-home-achievement-progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.user-home-achievement-progress-bar {
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 25px;
+    width: 100%;
+    height: 25px;
+    margin-right: 15px;
+}
+
+.user-home-achievement-progress {
+    width: 63px;
+    text-align: center;
+}
+
+.user-home-achievement-unlocked-text {
+    font-style: italic;
+    margin: 0;
+    font-weight: normal;
+    color: var(--color-blue);
+    margin-top: 20px;
+}
+
+#user-home-achievements-filters-container {
+    width: 30%;
+}
+
+#user-home-achievements-filters-container h3 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.3rem;
+}
+
+#user-home-achievements-filters {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#user-home-achievements-filters .filter-group {
+    justify-content: space-between;
+}
+
+#user-home-achievements-filters .filter-label {
+    width: 20%;
+    margin: 0;
+    color: var(--color-text);
+}
+
+#user-home-achievements-filters .custom-select-wrapper {
+    width: 72%;
+}
+
+#user-home-achievements-filters .custom-select-trigger {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-achievements-filters #achievements-clear-filters {
+    margin-right: 15px;
+    width: 100%;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
 .user-home-item {
     margin: 40px 0 0px;
 }
@@ -2236,19 +2878,6 @@ footer h5 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-#user-home-stadiums-header-container a, #user-home-wishlist-header-container a {
-    color: var(--color-blue);
-    text-decoration: none;
-}
-
-#user-home-stadiums-see-all-button, #user-home-wishlist-see-all-button {
-    transition: color 0.3s ease;
-}
-
-#user-home-stadiums-see-all-button:hover, #user-home-wishlist-see-all-button:hover {
-    color: #3f8acc;
 }
 
 #user-stadiums, #user-wishlist-stadiums {
@@ -2438,6 +3067,17 @@ footer h5 {
     animation: textFade 0.5s ease;
 }
 
+.user-home-see-all-button {
+    color: var(--color-blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.user-home-see-all-button:hover {
+    color: #1e7ccf;
+}
+
 #user-home-activity-container {
     width: 29%;
 }
@@ -2446,19 +3086,6 @@ footer h5 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-#user-home-activity-header-container a, #user-home-achievements-header-container a {
-    color: var(--color-blue);
-    text-decoration: none;
-}
-
-#user-home-activity-see-all-button, #user-home-achievements-see-all-button {
-    transition: color 0.3s ease;
-}
-
-#user-home-activity-see-all-button:hover, #user-home-achievements-see-all-button:hover {
-    color: #3f8acc;
 }
 
 #user-activity-no-activity-text {
@@ -2495,7 +3122,7 @@ footer h5 {
     font-weight: normal;
     color: var(--color-text-muted);
     line-height: 1.5;
-    font-size: 1rem;
+    font-size: 0.9rem;
 }
 
 .user-activity-text h4 a {
@@ -2599,7 +3226,6 @@ footer h5 {
 
 #user-home-stadium-map-container {
     width: 100%;
-    padding-bottom: 30px;
 }
 
 #user-home-stadium-map {
@@ -3044,10 +3670,10 @@ footer h5 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: var(--gradient-bg);
+    background: var(--color-bg);
     border: 1px solid var(--color-primary-30);
-    border-radius: 25px;
-    z-index: 10001;
+    border-radius: 15px;
+    z-index: 10002;
 }
 
 #edit-log-menu-header {
@@ -3056,28 +3682,33 @@ footer h5 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 0 15px;
+    padding: 25px 0 20px;
     border-bottom: 1px solid var(--color-primary-20);
 }
 
 #edit-log-menu-header h2 {
-    font-size: 1.7rem;
+    font-size: 1.3rem;
     font-weight: normal;
     margin: 0;
 }
 
 #edit-log-menu-header h2:first-of-type {
+    visibility: hidden;
+}
+
+#edit-log-menu-header h2:nth-of-type(2) {
     color: var(--color-blue);
 }
 
 #close-edit-log-menu {
-    color: var(--color-text-muted);
+    color: var(--color-text);
     cursor: pointer;
     transition: color 0.2s;
     background: none;
     border: none;
     padding: 0;
     line-height: 1;
+    font-size: 1.5rem !important;
 }
 
 #close-edit-log-menu:hover {
@@ -3085,10 +3716,18 @@ footer h5 {
 }
 
 #edit-log-name {
-    margin: 30px 0 0;
-    text-align: center;
+    width: 92%;
+    margin: 25px auto 0;
     font-weight: normal;
-    font-size: 1.8rem;
+    font-size: 1.4rem;
+}
+
+#edit-log-location {
+    color: var(--color-text-muted);
+    width: 92%;
+    margin: 10px auto 0;
+    font-weight: normal;
+    font-size: 1.1rem;
 }
 
 #edit-log-container {
@@ -3100,9 +3739,9 @@ footer h5 {
 
 #edit-log-image {
     width: 48%;
-    height: 270px;
+    height: 274px;
     object-fit: cover;
-    border-radius: 25px;
+    border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -3118,11 +3757,11 @@ footer h5 {
 }
 
 #edit-log-date-visited {
-    border-radius: 25px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     color: var(--color-text);
-    padding: 10px 20px;
+    padding: 10px 18px;
     font-size: 0.9rem;
     margin: 10px 0 20px 0;
     font-family: "Inter", sans-serif;
@@ -3143,17 +3782,18 @@ footer h5 {
 
 #edit-log-note {
     margin-top: 10px;
-    border-radius: 25px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     width: 100%;
     padding: 20px;
-    height: 147px !important;
+    height: 151px !important;
     resize: none;
     color: var(--color-text);
     font-size: 1rem;
     font-family: "Inter", sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    scrollbar-width: none;
 }
 
 #edit-log-note:focus {
@@ -3171,14 +3811,14 @@ footer h5 {
     display: flex;
     justify-content: space-between;
     width: 37%;
-    margin: 0 auto;
+    margin: 0 auto 30px;
 }
 
 #edit-log-save-button, #edit-log-cancel-button {
     font-weight: normal;
     font-size: 1rem;
-    border-radius: 25px;
-    margin: 0 auto 30px;
+    border-radius: 10px;
+    margin: 0 auto;
     width: 160px;
     padding: 8px 0;
     text-align: center;
@@ -3212,48 +3852,44 @@ footer h5 {
 #delete-log-menu {
     position: fixed;
     display: none;
-    width: 475px;
+    width: 490px;
     height: auto;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: var(--gradient-bg);
     border: 1px solid var(--color-primary-30);
-    border-radius: 25px;
+    border-radius: 15px;
     z-index: 10002;
     text-align: center;
+    padding: 25px 0;
 }
 
 #delete-log-menu-header {
-    position: relative;
-    text-align: center;
-    padding: 25px 40px;
+    width: 88%;
+    margin: 0 auto;
     border-bottom: 1px solid var(--color-primary-20);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 10px;
 }
 
 #delete-log-menu h2 {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     font-weight: normal;
     margin: 0;
 }
 
-#delete-log-menu-header h2:first-of-type {
-    color: var(--color-blue);
-    font-weight: bold;
-}
-
 #close-delete-log-menu {
-    position: absolute;
-    right: 30px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--color-text-muted);
+    color: var(--color-text);
     cursor: pointer;
     transition: color 0.2s;
     background: none;
     border: none;
     padding: 0;
     line-height: 1;
+    font-size: 1.5rem !important;
 }
 
 #close-delete-log-menu:hover {
@@ -3262,7 +3898,9 @@ footer h5 {
 
 #delete-log-menu p {
     color: var(--color-text-muted);
-    margin: 20px 40px 20px;
+    width: 85%;
+    margin: 25px auto;
+    text-align: center;
     font-size: 1.1rem;
     line-height: 1.7;
 }
@@ -3270,22 +3908,23 @@ footer h5 {
 #delete-log-warning {
     font-weight: normal;
     color: var(--color-danger);
+    margin: 0;
 }
 
 #delete-log-buttons {
     display: flex;
     justify-content: space-between;
-    width: 80%;
-    margin: 30px auto 0;
+    width: 74%;
+    margin: 25px auto 0;
 }
 
 #delete-log-cancel-button, #delete-log-delete-button {
     font-weight: normal;
-    font-size: 1.1rem;
-    border-radius: 25px;
-    margin: 0 auto 30px;
-    padding: 10px 0;
+    font-size: 1rem;
+    border-radius: 10px;
+    margin: 0 auto;
     width: 160px;
+    padding: 8px 0;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -3366,7 +4005,7 @@ footer h5 {
     display: flex;
     align-items: center;
     width: 100%;
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 12px 20px;
     margin-bottom: 10px;
     border: 1px solid transparent;
@@ -3401,6 +4040,7 @@ footer h5 {
 
 #delete-control {
     margin-top: 10px;
+    margin-bottom: 0;
 }
 
 #delete-control span {
@@ -3430,10 +4070,14 @@ footer h5 {
     background: var(--color-secondary);
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
-    border-radius: 10px;
+    border-radius: 15px;
     padding: 20px 25px;
     margin-bottom: 20px;
     box-shadow: var(--shadow-default);
+}
+
+#favorite-stadiums-settings, .setting:last-of-type {
+    margin-bottom: 0;
 }
 
 #username-settings, #profile-pic-settings {
@@ -3474,7 +4118,7 @@ footer h5 {
 
 #settings-container #new-username, 
 #settings-container #new-email {
-    border-radius: 25px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     padding: 20px;
@@ -3527,7 +4171,7 @@ footer h5 {
     color: var(--color-blue);
     font-weight: normal;
     font-size: 1rem;
-    border-radius: 25px;
+    border-radius: 10px;
     width: 160px;
     padding: 8px 0;
     text-align: center;
@@ -3569,7 +4213,7 @@ footer h5 {
     color: var(--color-blue);
     font-weight: normal;
     font-size: 1rem;
-    border-radius: 25px;
+    border-radius: 10px;
     padding: 8px 0;
     width: 180px;
     text-align: center;
@@ -3601,7 +4245,7 @@ footer h5 {
 }
 
 .favorite-stadiums-setting {
-    background: var(--color-secondary);
+    background: #272B38;
     border: 1px solid var(--color-primary-15);
     border-radius: 15px;
     width: 49%;
@@ -3648,7 +4292,7 @@ footer h5 {
 }
 
 .favorite-stadiums-setting-text {
-    background: var(--color-secondary);
+    background: #272B38;
     backdrop-filter: blur(10px);
     border: 1px solid var(--color-primary-15);
     padding: 15px 20px;
@@ -3700,16 +4344,16 @@ footer h5 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: var(--gradient-bg);
+    background: var(--color-bg);
     border: 1px solid var(--color-primary-30);
-    border-radius: 25px;
-    z-index: 10001;
+    border-radius: 15px;
+    z-index: 10002;
     text-align: center;
-    padding: 30px 0;
+    padding: 25px 0;
 }
 
 #add-favorite-stadium-menu-header {
-    width: 86%;
+    width: 88%;
     margin: 0 auto;
     border-bottom: 1px solid var(--color-primary-20);
     display: flex;
@@ -3719,20 +4363,20 @@ footer h5 {
 }
 
 #add-favorite-stadium-menu-header h2 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: normal;
     margin: 0;
 }
 
 #close-add-favorite-stadium-menu {
-    color: var(--color-text-muted);
+    color: var(--color-text);
     cursor: pointer;
     transition: color 0.2s;
     background: none;
     border: none;
     padding: 0;
     line-height: 1;
-    font-size: 1.8rem !important;
+    font-size: 1.5rem !important;
 }
 
 #close-add-favorite-stadium-menu:hover {
@@ -3740,7 +4384,7 @@ footer h5 {
 }
 
 #favorite-search-wrapper {
-    width: 86%;
+    width: 88%;
     margin: 15px auto 0;
 }
 
@@ -3748,7 +4392,7 @@ footer h5 {
     border: none;
     width: 100%;
     height: 45px;
-    border-radius: 35px;
+    border-radius: 10px;
     padding-left: 20px;
     z-index: 10;
     box-shadow: var(--shadow-default);
@@ -3770,10 +4414,10 @@ footer h5 {
 }
 
 #favorite-autocomplete-list {
-    width: 86%;
+    width: 429px;
     background: var(--color-bg-mid);
     border: 1px solid var(--color-primary-30);
-    border-radius: 16px;
+    border-radius: 10px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     margin: 8px auto 0;
     z-index: 1001;
@@ -3858,7 +4502,7 @@ footer h5 {
 }
 
 .password-input-wrapper input {
-    border-radius: 25px;
+    border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     padding: 20px;
@@ -3936,7 +4580,7 @@ footer h5 {
     color: var(--color-blue);
     font-weight: normal;
     font-size: 1rem;
-    border-radius: 25px;
+    border-radius: 10px;
     width: 190px;
     padding: 8px 0;
     text-align: center;
@@ -3954,7 +4598,7 @@ footer h5 {
     margin-top: 20px;
     font-weight: normal;
     font-size: 1rem;
-    border-radius: 25px;
+    border-radius: 10px;
     width: 180px;
     padding: 8px 0;
     text-align: center;
@@ -4311,11 +4955,15 @@ footer h5 {
     background: var(--color-secondary);
     border: 1px solid var(--color-primary-15);
     box-shadow: var(--shadow-default);
-    border-radius: 15px;
+    border-radius: 10px;
     padding: 20px 25px;
     align-items: center;
     width: 94%;
     margin: 15px auto;
+}
+
+.stadium-event {
+    border-radius: 15px;
 }
 
 .featured-event {
@@ -4679,6 +5327,7 @@ footer h5 {
     justify-content: space-between;
     width: 100%;
     margin-top: 25px;
+    gap: 12px;
 }
 
 .stadium-info-skeleton {
@@ -4689,8 +5338,7 @@ footer h5 {
     box-shadow: var(--shadow-default);
     border-radius: 15px;
     width: 300px;
-    height: 127px;
-    margin-bottom: 15px;
+    height: 115px;
 }
 
 #upcoming-events-skeleton {
@@ -4932,7 +5580,7 @@ footer h5 {
 
 .activity-skeleton-card {
     width: 800px;
-    height: 157px;
+    height: 141px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
@@ -5370,7 +6018,7 @@ footer h5 {
     #button-container h4 {
         padding: 14px 22px;
     }
-    #search-wrapper {
+    .search-wrapper {
         width: 100%;
     }
     #home-search-field {

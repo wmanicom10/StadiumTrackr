@@ -12,6 +12,7 @@ const elements = {
     addStadiumNote: document.getElementById('add-stadium-note'),
     closeAddStadiumMenu: document.getElementById('close-add-stadium-menu'),
     addStadiumName: document.getElementById('add-stadium-name'),
+    addStadiumLocation: document.getElementById('add-stadium-location'),
     addStadiumImage: document.getElementById('add-stadium-image'),
     addStadiumLogButton: document.getElementById('add-stadium-log-button'),
     addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
@@ -98,7 +99,7 @@ async function loadStadiumInfo(id, username) {
         elements.upcomingEventsStadiumLink.href = `events.html?id=${stadium.id}`
 
         setupUserControls(id, username, userVisited, userWishlist);
-        setupAddStadiumModal(id, stadium.name, username, stadium.image);
+        setupAddStadiumModal(id, stadium.name, stadium.city, stadium.state, username, stadium.image);
 
     } catch (error) {
         alert(error.message);
@@ -228,8 +229,9 @@ function replaceVisitedWithLoggedLink(stadiumId) {
     elements.stadiumUserControlVisited.parentNode.replaceChild(visitLink, elements.stadiumUserControlVisited);
 }
 
-function setupAddStadiumModal(stadiumId, stadiumName, username, stadiumImage) {
+function setupAddStadiumModal(stadiumId, stadiumName, city, state, username, stadiumImage) {
     elements.addStadiumName.textContent = stadiumName;
+    elements.addStadiumLocation.textContent = city + ', ' + state;
     elements.addStadiumImage.src = stadiumImage;
 
     const now = new Date();

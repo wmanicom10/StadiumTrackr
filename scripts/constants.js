@@ -65,9 +65,9 @@ export const sidebarSignUpButton = getElement('sidebar-sign-up');
 export const sidebarToggle = getElement('sidebar-active');
 export const sidebarToggleLoggedIn = getElement('sidebar-active-logged-in');
 export const sidebarUsername = getElement('sidebar-username');
-export const signInLink = getElements('sign-in-link')[0];
+export const signInLink = getElement('sign-in-link');
 export const signUp = getElement('sign-up-button');
-export const signUpLink = getElements('sign-up-link')[0];
+export const signUpLink = getElement('sign-up-link')
 export const suggestionsContainer = getElement('autocomplete-list');
 export const USERNAME_CONSTRAINTS = {
     MIN_LENGTH: 6,
