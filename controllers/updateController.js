@@ -1,6 +1,12 @@
 const db = require('../database/connection.js');
 const { getUserId } = require('../database/dbHelpers.js');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const PROFILE_PIC_DIR = process.env.PROFILE_PIC_DIR;
+const bcrypt = require('bcryptjs');
 
+/*  updateUserAchievements (TODO) */ 
 async function updateAchievementProgress(name, username, isVisited) {
     if (!isVisited) {
         let newAchievements = [];
@@ -159,8 +165,184 @@ async function updateAchievementProgress(name, username, isVisited) {
         }
 
     }
-}
+};
 
+/*  deleteLog  */
+const handleDeleteLog = async (req, res) => {
+    const { visitId } = req.body;
+
+    if (!visitId) {
+        return res.status(400).json({ error: 'Visit ID is required' });
+    }
+
+    try {
+        const [rows] = await db.execute('DELETE FROM user_stadiums WHERE visit_id = ?', [visitId]);
+
+        res.json({ rows });
+    } catch (err) {
+        console.error('Error in handleDeleteLog:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  editLog  */
+const handleEditLog = async (req, res) => {
+    const { visitId, editDateVisited, editNote } = req.body;
+
+    if (!visitId) {
+        return res.status(400).json({ error: 'Visit ID is required' });
+    }
+
+    try {
+        const [rows] = await db.execute('UPDATE user_stadiums SET visited_on = ?, user_note = ? WHERE visit_id = ?', [editDateVisited, editNote, visitId]);
+
+        res.json({ rows });
+    } catch (err) {
+        console.error('Error in handleEditLog:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  updateEmail  */
+const handleUpdateEmail = async (req, res) => {
+    const { username, newEmail } = req.body;
+
+    try {
+        const [[existingUser]] = await db.execute('SELECT user_id FROM users WHERE email = ?', [newEmail]);
+
+        if (existingUser) {
+            return res.status(409).json({ error: 'Email already in use' });
+        }
+
+        const userId = await getUserId(username);
+
+        if (!userId) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const [[currentEmail]] = await db.execute('SELECT email FROM users WHERE user_id = ?', [userId]);
+        
+        if (currentEmail.email === newEmail) {
+            return res.status(409).json({ error: 'New email must be different from current email' });
+        }
+
+        const [result] = await db.query('UPDATE users SET email = ? WHERE user_id = ?', [newEmail, userId]);
+
+        res.json({ result });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  updatePassword  */
+const handleUpdatePassword = async (req, res) => {
+    const { username, currentPassword, newPassword } = req.body;
+
+    try {
+        const [[user]] = await db.execute('SELECT user_id, password FROM users WHERE username = ?', [username]);
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: 'Incorrect password' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+        const [result] = await db.query('UPDATE users SET password = ? WHERE user_id = ?', [hashedPassword, user.user_id]);
+
+        res.json({ result });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  updateProfilePic  */
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, PROFILE_PIC_DIR);
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        cb(null, `temp_${Date.now()}${ext}`);
+    }
+});
+
+const upload = multer({ storage });
+
+const handleUpdateProfilePic = async (req, res) => {
+    const { username } = req.body;
+    const ext = path.extname(req.file.filename);
+
+    try {
+        const userId = await getUserId(username);
+        if (!userId) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const [[user]] = await db.execute('SELECT profile_pic FROM users WHERE user_id = ?', [userId]);
+        if (user.profile_pic && !user.profile_pic.includes('default.png')) {
+            const fullOldPath = path.join(PROFILE_PIC_DIR, path.basename(user.profile_pic));
+            if (fs.existsSync(fullOldPath)) {
+                fs.unlinkSync(fullOldPath);
+            }
+        }
+
+        const newFilename = `user_${userId}${ext}`;
+	const oldPath = path.join(PROFILE_PIC_DIR, req.file.filename);
+	const newPath = path.join(PROFILE_PIC_DIR, newFilename);
+	const webPath = `images/profile-pics/${newFilename}`;
+
+        fs.renameSync(oldPath, newPath);
+
+        await db.query('UPDATE users SET profile_pic = ? WHERE user_id = ?', [webPath, userId]);
+        res.json({ profile_pic: webPath });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  updateUsername  */
+const handleUpdateUsername = async (req, res) => {
+    const { username, newUsername } = req.body;
+
+    try {
+        const [[existingUser]] = await db.execute('SELECT user_id FROM users WHERE username = ?', [newUsername]);
+
+        if (existingUser) {
+            return res.status(409).json({ error: 'Username is taken' });
+        }
+
+        if (username === newUsername) {
+            return res.status(409).json({ error: 'New username must be different from current username' });
+        }
+
+        const userId = await getUserId(username);
+
+        if (!userId) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const [result] = await db.query('UPDATE users SET username = ? WHERE user_id = ?', [newUsername, userId]);
+
+        res.json({ result });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  updateUserStadium  */
 const handleUpdateUserStadium = async (req, res) => {
     const { stadiumId, username, isVisited } = req.body;
 
@@ -197,6 +379,7 @@ const handleUpdateUserStadium = async (req, res) => {
     }
 };
 
+/*  updateUserWishlist  */
 const handleUpdateUserWishlist = async (req, res) => {
     const { stadiumId, username, isWishlist } = req.body;
 
@@ -226,84 +409,4 @@ const handleUpdateUserWishlist = async (req, res) => {
     }
 };
 
-const handleRemoveActivityWishlist = async (req, res) => {
-    const { stadiumId, username } = req.body;
-
-    if (!stadiumId || !username) {
-        return res.status(400).json({ error: 'Stadium ID and username are required' });
-    }
-
-    try {
-        const userId = await getUserId(username);
-
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        const [rows] = await db.execute(`DELETE FROM user_wishlist_stadiums WHERE stadium_id = ? AND user_id = ? ORDER BY added_on DESC LIMIT 1`, [stadiumId, userId]);
-
-        res.json({ rows });
-    } catch (err) {
-        console.error('Error in handleRemoveActivityWishlist:', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
-
-const handleRemoveActivityVisited = async (req, res) => {
-    const { stadiumId, username } = req.body;
-
-    if (!stadiumId || !username) {
-        return res.status(400).json({ error: 'Stadium ID and username are required' });
-    }
-
-    try {
-        const userId = await getUserId(username);
-
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
-        const [rows] = await db.execute(`DELETE FROM user_stadiums WHERE stadium_id = ? AND user_id = ? AND visited_on IS NULL ORDER BY added_on DESC LIMIT 1`, [stadiumId, userId]);
-
-        res.json({ rows });
-    } catch (err) {
-        console.error('Error in handleRemoveActivityVisited:', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
-
-const handleEditLog = async (req, res) => {
-    const { visitId, editDateVisited, editNote } = req.body;
-
-    if (!visitId) {
-        return res.status(400).json({ error: 'Visit ID is required' });
-    }
-
-    try {
-        const [rows] = await db.execute('UPDATE user_stadiums SET visited_on = ?, user_note = ? WHERE visit_id = ?', [editDateVisited, editNote, visitId]);
-
-        res.json({ rows });
-    } catch (err) {
-        console.error('Error in handleEditLog:', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-};
-
-const handleDeleteLog = async (req, res) => {
-    const { visitId } = req.body;
-
-    if (!visitId) {
-        return res.status(400).json({ error: 'Visit ID is required' });
-    }
-
-    try {
-        const [rows] = await db.execute('DELETE FROM user_stadiums WHERE visit_id = ?', [visitId]);
-
-        res.json({ rows });
-    } catch (err) {
-        console.error('Error in handleDeleteLog:', err);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
-
-module.exports = { handleUpdateUserStadium, handleUpdateUserWishlist, handleRemoveActivityWishlist, handleRemoveActivityVisited, handleEditLog, handleDeleteLog };
+module.exports = { handleDeleteLog, handleEditLog, handleUpdateEmail, handleUpdatePassword, upload, handleUpdateProfilePic, handleUpdateUsername, handleUpdateUserStadium, handleUpdateUserWishlist };

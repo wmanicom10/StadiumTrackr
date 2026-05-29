@@ -1,7 +1,10 @@
 /*  Imports  */
-import { API_BASE_URL, ROUTES, DEBOUNCE_TIME, MIN_LOADING_TIME, overlay } from "../constants.js";
-import { debounce, getUsername, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
+import { DEBOUNCE_TIME, MIN_LOADING_TIME, overlay } from "../constants.js";
+import { debounce, getUsername, setupSearchAutocomplete, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
+import { authAPI } from "../api/auth.js";
+import { loadAPI } from "../api/load.js";
+import { updateAPI } from "../api/update.js";
 import { userAPI } from "../api/user.js";
 
 /*  Variables  */
@@ -34,57 +37,22 @@ const controls = [
         activeClass: 'delete-active'
     }
 ];
-const currentUsername = document.getElementById('current-username');
-const usernameSaveButton = document.getElementById('username-save-button');
-const usernameStatus = document.getElementById('username-status');
 
-const currentProfilePic = document.getElementById('new-profile-pic');
-const choosePhotoButton = document.getElementById('upload-profile-pic-button');
 const profilePicInput = document.getElementById('profile-pic-input');
-const profilePicSaveButton = document.getElementById('profile-pic-save-button');
-
-const currentEmail = document.getElementById('current-email');
-const emailSaveButton = document.getElementById('email-save-button');
-
-const passwordSaveButton = document.getElementById('change-password-button');
 const newPasswordInput = document.getElementById('new-password');
 const confirmPasswordInput = document.getElementById('confirm-password');
-const passwordMatchStatus = document.getElementById('password-match-status');
-const passwordStrengthStatus = document.getElementById('password-strength-status');
 
-const deleteAccountButton = document.getElementById('delete-account-button');
 const deleteAccountMenu = document.getElementById('delete-account-menu');
-const closeDeleteAccountMenu = document.getElementById('close-delete-account-menu');
-const deleteAccountCancelButton = document.getElementById('delete-account-cancel-button');
-const deleteAccountDeleteButton = document.getElementById('delete-account-delete-button');
-
 const addFavoriteStadiumMenu = document.getElementById('add-favorite-stadium-menu');
-const closeAddFavoriteStadiumMenu = document.getElementById('close-add-favorite-stadium-menu');
-const favoriteStadiumsSettingContainer = document.getElementById('favorite-stadiums-settings-container')
-
-const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
-const MAX_SIZE_MB = 2;
 
 /*  Async Functions  */
 async function loadFavoriteStadiums(username) {
     try {
-        const response = await fetch(`${API_BASE_URL}${ROUTES.USER_FAVORITES}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Unknown error');
-        }
-
-        const result = await response.json();
+        const result = await userAPI.loadFavoriteStadiums(username);
         const favoriteStadiums = result.favoriteStadiums;
+        const favoriteStadiumsSettingContainer = document.getElementById('favorite-stadiums-settings-container')
 
         favoriteStadiums.forEach(stadium => {
-            console.log(stadium)
-
             favoriteStadiumsSettingContainer.appendChild(createActiveSlot(stadium));
         });
 
@@ -97,44 +65,11 @@ async function loadFavoriteStadiums(username) {
     }
 }
 
-async function searchStadiums(name, suggestionsContainer, searchValue) {
-    try {
-        const response = await fetch(`${API_BASE_URL}${ROUTES.STADIUM_SEARCH}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Unknown error');
-        }
-
-        const result = await response.json();
-        const stadiums = result.stadiums;
-
-        renderSearchSuggestions(stadiums, suggestionsContainer, searchValue);
-
-    } catch (error) {
-        alert(error.message);
-    }
-}
-
 /*  Functions  */
-function attachRemoveListener(button) {
-    button.addEventListener('click', async () => {
-        const container = document.getElementById('favorite-stadiums-settings-container');
-        
-        button.closest('.favorite-stadiums-setting-active').remove();
-
-        const empty = createEmptySlot();
-        container.appendChild(empty);
-    });
-}
-
 function checkPasswordMatch() {
     const newPassword = newPasswordInput.value;
     const confirmPassword = confirmPasswordInput.value;
+    const passwordMatchStatus = document.getElementById('password-match-status');
 
     if (!confirmPassword) {
         passwordMatchStatus.textContent = '';
@@ -152,6 +87,7 @@ function checkPasswordMatch() {
 
 function checkPasswordStrength() {
     const password = newPasswordInput.value;
+    const passwordStrengthStatus = document.getElementById('password-strength-status');
 
     if (!password) {
         passwordStrengthStatus.textContent = '';
@@ -198,7 +134,14 @@ function createActiveSlot(stadium) {
 
     const button = document.createElement('button');
     button.classList.add('user-stadium-icon-btn');
-    attachRemoveListener(button);
+    button.addEventListener('click', async () => {
+        const container = document.getElementById('favorite-stadiums-settings-container');
+        
+        button.closest('.favorite-stadiums-setting-active').remove();
+
+        const empty = createEmptySlot();
+        container.appendChild(empty);
+    });
 
     const img = document.createElement('img');
     img.src = 'images/icons/x.png';
@@ -224,46 +167,6 @@ function createEmptySlot() {
     return slot;
 }
 
-function hideSearchSuggestions(container, input) {
-    container.classList.remove('active');
-    input.value = '';
-}
-
-function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
-    suggestionsContainer.innerHTML = '';
-    suggestionsContainer.classList.add('active');
-
-    if (stadiums.length === 0) {
-        const searchResult = document.createElement('div');
-        searchResult.classList.add('search-result');
-        
-        const stadiumName = document.createElement('h4');
-        stadiumName.classList.add('no-search-result')
-        stadiumName.textContent = 'No stadiums found';
-        
-        searchResult.appendChild(stadiumName);
-        suggestionsContainer.appendChild(searchResult);
-        return;
-    }
-
-    stadiums.forEach(stadium => {
-        const searchResult = document.createElement('div');
-        searchResult.classList.add('search-result');
-        
-        const stadiumName = document.createElement('h4');
-        stadiumName.textContent = stadium.stadium_name;
-        
-        searchResult.appendChild(stadiumName);
-        
-        searchResult.addEventListener('click', () => {
-            toggleMenu(addFavoriteStadiumMenu, false, overlay);
-            document.querySelector('.favorite-stadiums-setting').replaceWith(createActiveSlot(stadium));
-        });
-
-        suggestionsContainer.appendChild(searchResult);
-    });
-}
-
 function setActiveControl(activeId) {
     controls.forEach(({ id, control, image, settings, activeSrc, inactiveSrc, activeClass }) => {
         const isActive = id === activeId;
@@ -284,40 +187,12 @@ function setActiveControl(activeId) {
     });
 }
 
-function setupSearchAutocomplete() {
-    const searchStadiumsForm = document.getElementById('search-favorite-stadiums');
-    const searchValue = document.getElementById('favorite-search-field');
-    const suggestionsContainer = document.getElementById('favorite-autocomplete-list');
-
-    const debouncedSearch = debounce((name) => {
-        if (name) {
-            searchStadiums(name, suggestionsContainer, searchValue);
-        } else {
-            hideSearchSuggestions(suggestionsContainer, searchValue);
-        }
-    }, DEBOUNCE_TIME);
-
-    searchValue.addEventListener('input', (event) => {
-        debouncedSearch(event.target.value);
-    });
-
-    document.addEventListener('click', (event) => {
-        const isClickInside = searchValue.contains(event.target) || suggestionsContainer.contains(event.target);
-
-        if (!isClickInside) {
-            hideSearchSuggestions(suggestionsContainer, searchValue);
-        }
-    });
-
-    searchStadiumsForm?.addEventListener('submit', (e) => e.preventDefault());
-}
-
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
     registerUserLogOutEvents();
-    setupSearchAutocomplete();
-
+    setupSearchAutocomplete('search-favorite-stadiums', 'favorite-search-field', 'favorite-autocomplete-list');
+    
     controls.filter(c => c.id !== 'delete').forEach(({ control, image, activeSrc, inactiveSrc }) => {
         control.addEventListener('mouseenter', () => {
             if (!control.classList.contains('setting-active')) image.src = activeSrc;
@@ -331,13 +206,13 @@ document.addEventListener('DOMContentLoaded', () => {
         control.addEventListener('click', () => setActiveControl(id));
     });
 
-    currentUsername.textContent = 'Current: ' + getUsername();
-    currentEmail.textContent = 'Current: ' + (localStorage.getItem('email') || '');
-    currentProfilePic.src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
-
+    document.getElementById('current-username').textContent = 'Current: ' + getUsername();
+    document.getElementById('current-email').textContent = 'Current: ' + (localStorage.getItem('email') || '');
+    document.getElementById('new-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
 });
 
 document.getElementById('new-username').addEventListener('input', () => {
+    const usernameStatus = document.getElementById('username-status');
     const value = document.getElementById('new-username').value;
     if (!value) {
         usernameStatus.textContent = '';
@@ -353,7 +228,7 @@ document.getElementById('new-username').addEventListener('input', () => {
     }
 });
 
-usernameSaveButton.addEventListener('click', async () => {
+document.getElementById('username-save-button').addEventListener('click', async () => {
     const newUsername = document.getElementById('new-username').value;
     const usernameError = validateUsername(newUsername);
     if (usernameError) {
@@ -361,7 +236,7 @@ usernameSaveButton.addEventListener('click', async () => {
     }
     else {
         try {
-            const result = await userAPI.updateUsername(getUsername(), newUsername);
+            const result = await updateAPI.updateUsername(getUsername(), newUsername);
 
             if (result.result.affectedRows === 1) {
                 localStorage.setItem('username', newUsername);
@@ -374,9 +249,12 @@ usernameSaveButton.addEventListener('click', async () => {
     }
 });
 
-choosePhotoButton.addEventListener('click', () => profilePicInput.click());
+document.getElementById('upload-profile-pic-button').addEventListener('click', () => profilePicInput.click());
 
 profilePicInput.addEventListener('change', () => {
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png'];
+    const MAX_SIZE_MB = 2;
+
     const file = profilePicInput.files[0];
     if (!file) return;
 
@@ -399,7 +277,7 @@ profilePicInput.addEventListener('change', () => {
     reader.readAsDataURL(file);
 });
 
-profilePicSaveButton.addEventListener('click', async () => {
+document.getElementById('profile-pic-save-button').addEventListener('click', async () => {
     const file = profilePicInput.files[0];
     if (!file) {
         alert('Please choose a photo first.');
@@ -411,7 +289,7 @@ profilePicSaveButton.addEventListener('click', async () => {
     formData.append('username', getUsername());
 
     try {
-        const result = await userAPI.updateProfilePic(formData);
+        const result = await updateAPI.updateProfilePic(formData);
         localStorage.setItem('profilePic', result.profile_pic);
         alert('Profile picture updated successfully.');
         window.location.reload();
@@ -420,14 +298,14 @@ profilePicSaveButton.addEventListener('click', async () => {
     }
 });
 
-emailSaveButton.addEventListener('click', async () => {
+document.getElementById('email-save-button').addEventListener('click', async () => {
     const newEmail = document.getElementById('new-email').value;
     if (!validateEmail(newEmail)) {
         alert('Please enter a valid email address.');
         return;
     }
     try {
-        const result = await userAPI.updateEmail(getUsername(), newEmail);
+        const result = await updateAPI.updateEmail(getUsername(), newEmail);
         if (result.result.affectedRows === 1) {
             localStorage.setItem('email', newEmail);
             alert('Email changed successfully.');
@@ -454,7 +332,7 @@ newPasswordInput.addEventListener('input', () => {
     checkPasswordMatch();
 });
 
-passwordSaveButton.addEventListener('click', async () => {
+document.getElementById('change-password-button').addEventListener('click', async () => {
     const currentPassword = document.getElementById('current-password').value;
     const newPassword = newPasswordInput.value;
     const confirmPassword = confirmPasswordInput.value;
@@ -476,7 +354,7 @@ passwordSaveButton.addEventListener('click', async () => {
     }
 
     try {
-        const result = await userAPI.updatePassword(getUsername(), currentPassword, newPassword);
+        const result = await updateAPI.updatePassword(getUsername(), currentPassword, newPassword);
         if (result.result.affectedRows === 1) {
             alert('Password changed successfully.');
             window.location.reload();
@@ -486,19 +364,19 @@ passwordSaveButton.addEventListener('click', async () => {
     }
 });
 
-deleteAccountButton.addEventListener('click', () => {
+document.getElementById('delete-account-button').addEventListener('click', () => {
     toggleMenu(deleteAccountMenu, true, overlay);
 });
 
-closeDeleteAccountMenu.addEventListener('click', () => {
+document.getElementById('close-delete-account-menu').addEventListener('click', () => {
     toggleMenu(deleteAccountMenu, false, overlay);
 });
 
-deleteAccountCancelButton.addEventListener('click', () => {
+document.getElementById('delete-account-cancel-button').addEventListener('click', () => {
     toggleMenu(deleteAccountMenu, false, overlay);
 });
 
-deleteAccountDeleteButton.addEventListener('click', async () => {
+document.getElementById('delete-account-delete-button').addEventListener('click', async () => {
     const password = document.getElementById('delete-account-password').value;
 
     if (!password) {
@@ -507,7 +385,7 @@ deleteAccountDeleteButton.addEventListener('click', async () => {
     }
 
     try {
-        const result = await userAPI.deleteAccount(getUsername(), password);
+        const result = await authAPI.deleteAccount(getUsername(), password);
         if (result.result.affectedRows === 1) {
             localStorage.clear();
             alert('Account deleted successfully.');
@@ -518,7 +396,7 @@ deleteAccountDeleteButton.addEventListener('click', async () => {
     }
 });
 
-closeAddFavoriteStadiumMenu.addEventListener('click', () => {
+document.getElementById('close-add-favorite-stadium-menu').addEventListener('click', () => {
     toggleMenu(addFavoriteStadiumMenu, false, overlay)
 });
 
@@ -528,32 +406,14 @@ document.getElementById('favorite-stadiums-save-button').addEventListener('click
     const stadiumNames = activeSlots.map(slot => slot.querySelector('h3').textContent);
 
     try {
-        const response = await fetch(`${API_BASE_URL}${ROUTES.USER_SAVE_FAVORITES}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, stadiumNames })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Unknown error');
-        }
-
-        const result = await response.json();
+        const result = await userAPI.saveFavoriteStadiums(username, stadiumNames);
+        
         if (result.success) {
             alert('Favorites saved successfully.');
             window.location.reload();
         }
     } catch (error) {
         alert(error.message);
-    }
-});
-
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        if (addFavoriteStadiumMenu.style.display !== 'none') {
-            toggleMenu(addFavoriteStadiumMenu, false, overlay);
-        }
     }
 });
 

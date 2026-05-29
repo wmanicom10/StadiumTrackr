@@ -1,13 +1,19 @@
 /*  Imports  */
 import { MIN_LOADING_TIME, overlay } from "../constants.js";
-import { formatDate, getUsername, initializeCustomSelects, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
+import { createEllipsis, createNavigationButton, createPageButton, formatDate, getPageFromURL, getUsername, initializeCustomSelects, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
-import { stadiumAPI } from "../api/stadium.js";
-import { activityAPI } from "../api/activity.js";
+import { loadAPI } from "../api/load.js";
+import { updateAPI } from "../api/update.js";
 
 /*  Variables  */
 const elements = {
+    activityFilter: document.getElementById('activity-filter'),
+    sortFilter: document.getElementById('sort-filter'),
+    clearFiltersButton: document.getElementById('activity-clear-filters'),
+    stadiumsList: document.getElementById('activity-list'),
+    stadiumsPageSelector: document.getElementById('activity-page-selector'),
+    noStadiumsContainer: document.getElementById('no-activity-container'),
     editLogMenu: document.getElementById('edit-log-menu'),
     closeEditLogMenu: document.getElementById('close-edit-log-menu'),
     editLogSaveButton: document.getElementById('edit-log-save-button'),
@@ -20,386 +26,271 @@ const elements = {
     deleteLogMenu: document.getElementById('delete-log-menu'),
     closeDeleteLogMenu: document.getElementById('close-delete-log-menu'),
     deleteLogCancelButton: document.getElementById('delete-log-cancel-button'),
-    deleteLogDeleteButton: document.getElementById('delete-log-delete-button'),
-    activityWelcomeText: document.getElementById('user-activity-welcome-text'),
-    activityListContainer: document.getElementById('activity-list-container'),
-    activityList: document.getElementById('activity-list'),
-    noActivityContainer: document.getElementById('no-activity-container'),
-    activitySkeleton: document.getElementById('activity-skeleton'),
-    activityFilterBar: document.getElementById('activity-filter-bar'),
-    activityFilter: document.getElementById('activity-filter'),
-    sortFilter: document.getElementById('sort-filter')
+    deleteLogDeleteButton: document.getElementById('delete-log-delete-button')
 };
 
-const PAGE_SIZE = 18;
 let currentData = null;
-let currentOffset = 0;
-let currentUsername = null;
-let currentFilters = {};
 
 /*  Async Functions  */
 async function loadStadiumInfo(id, username) {
     try {
-        const result = await stadiumAPI.loadStadiumInfo(id, username);
+        const result = await loadAPI.loadStadiumInfo(id, username);
         const { stadium } = result.stadiumInfo;
-        return stadium.name;
+        return { stadiumName: stadium.name, image: stadium.image };
     } catch (error) {
         alert(error.message);
     }
 }
 
-async function setView(username, activity, id, sortBy) {
-    try {
-        currentOffset = 0;
-        currentUsername = username;
-        currentFilters = { activity, id, sortBy };
+async function setView(username) {
+    const params = new URLSearchParams(window.location.search);
+    const activity = params.get('activity') || 'all';
+    const sort = params.get('sort') || 'added-desc';
+    const stadium = params.get('id') || null;
 
-        showLoading();
-        await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const result = await userAPI.loadUserActivity(username, activity, id, sortBy, PAGE_SIZE, 0);
-        const activities = result.userActivity;
+    setupActivityFilterHandlers(elements, stadium);
 
-        if (activities.length === 0) {
-            showNoResults();
-        } else {
-            showResults();
-            elements.activityList.innerHTML = '';
-            activities.forEach(a => elements.activityList.appendChild(createActivityItem(a, username)));
-            currentOffset = activities.length;
-            updateShowMoreButton(activities.length);
-        }
+    if (stadium) {
+        const { stadiumName, image } = await loadStadiumInfo(stadium, username);
+        document.title = `${stadiumName} Activity - StadiumTrackr`;
+        document.getElementById('user-activity-welcome-text').textContent = `${stadiumName} Activity`;
 
-        hideLoading();
-    } catch (err) {
-        alert(err.message);
-        hideLoading();
+        const stadiumImage = document.createElement('img');
+        stadiumImage.id = 'stadium-image';
+        stadiumImage.src = image;
+        document.querySelector('main').prepend(stadiumImage);
+        stadiumImage.onload = () => {
+            stadiumImage.classList.add('loaded');
+        };
     }
-}
 
-async function loadMore() {
-    try {
-        const btn = document.getElementById('show-more-button');
-        if (!btn) return;
-        
-        let dotCount = 0;
-        const ellipsisInterval = setInterval(() => {
-            dotCount = (dotCount + 1) % 4;
-            btn.textContent = 'Loading' + '.'.repeat(dotCount);
-        }, 250);
+    syncSelectFromURL('activity-filter', activity);
+    syncSelectFromURL('sort-filter', sort);
 
-        const startTime = Date.now();
-        
-        const { activity, id, sortBy } = currentFilters;
-        const result = await userAPI.loadUserActivity(currentUsername, activity, id, sortBy, PAGE_SIZE, currentOffset);
-        
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = MIN_LOADING_TIME - elapsedTime;
-        
-        if (remainingTime > 0) {
-            await new Promise(resolve => setTimeout(resolve, remainingTime));
-        }
-        
-        clearInterval(ellipsisInterval);
-        
-        const activities = result.userActivity;
+    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
+    const result = await userAPI.loadUserActivity(username, activity, stadium, sort);
+    const stadiums = result.userActivity;
 
-        activities.forEach(a => elements.activityList.appendChild(createActivityItem(a, currentUsername)));
-        currentOffset += activities.length;
-        updateShowMoreButton(activities.length);
-    } catch (err) {
-        const btn = document.getElementById('show-more-button');
-        if (btn) btn.textContent = 'Show More';
-        alert(err.message);
-    }
+    renderActivity(stadiums, elements, username);
+
+    document.getElementById('activity-skeleton').style.display = 'none';
+    document.getElementById('activity-list').style.display = 'flex';
+    document.getElementById('activity-filter-bar-skeleton').style.display = 'none';
+    document.getElementById('activity-filter-bar').style.display = 'block';
 }
 
 /*  Functions  */
-function createActivityItem(activity, username) {
-    const item = document.createElement('div');
-    item.classList.add('activity-item');
-
-    const header = createActivityHeader(activity);
-    item.appendChild(header);
-
-    if (activity.visited_on) {
-        const logDetailsContainer = createLogDetailsContainer(activity, username);
-        item.appendChild(logDetailsContainer);
+function renderActivity(stadiums, elements, username) {
+    if (stadiums.length === 0) {
+        elements.stadiumsList.style.display = 'none';
+        elements.stadiumsPageSelector.style.display = 'none';
+        elements.noStadiumsContainer.style.display = 'block';
     } else {
-        const detailsContainer = createSimpleDetailsContainer(activity, username);
-        item.appendChild(detailsContainer);
+        elements.stadiumsList.style.display = 'flex';
+        elements.stadiumsPageSelector.style.display = 'flex';
+        elements.noStadiumsContainer.style.display = 'none';
+
+        const perPage = 18;
+        const pageCount = Math.ceil(stadiums.length / perPage);
+        let currentPage = Math.min(getPageFromURL(), pageCount);
+
+        const hasLoggedVisits = stadiums.some(s => s.activity_type === "stadium" && s.visited_on);
+        if (hasLoggedVisits) {
+            setupEditLogHandlers(elements, () => currentData);
+            setupDeleteLogHandlers(elements, () => currentData);
+        }
+
+        function renderPage(page) {
+            elements.stadiumsList.innerHTML = '';
+            const start = (page - 1) * perPage;
+            const end = start + perPage;
+            stadiums.slice(start, end).forEach(stadium => {
+                if (stadium.activity_type === "stadium" && stadium.visited_on) {
+                    const userHomeLogActivity = document.createElement('div');
+                    userHomeLogActivity.classList.add('user-home-log-activity');
+
+                    const userHomeLogActivityHeader = document.createElement('div');
+                    userHomeLogActivityHeader.classList.add('user-home-log-activity-header');
+
+                    const userHomeLogActivityTitle = document.createElement('h3');
+                    userHomeLogActivityTitle.textContent = 'Logged visit to ';
+
+                    const userHomeLogActivityTitleLink = document.createElement('a');
+                    userHomeLogActivityTitleLink.href = `stadium.html?id=${stadium.stadium_id}`;
+                    userHomeLogActivityTitleLink.textContent = stadium.stadium_name;
+
+                    userHomeLogActivityTitle.appendChild(userHomeLogActivityTitleLink);
+
+                    const userHomeActivityDate = document.createElement('h4');
+                    userHomeActivityDate.classList.add('user-home-activity-date');
+                    userHomeActivityDate.textContent = timeAgo(stadium.added_on);
+
+                    userHomeLogActivityHeader.appendChild(userHomeLogActivityTitle);
+                    userHomeLogActivityHeader.appendChild(userHomeActivityDate);
+
+                    const userHomeLogActivityInfoContainer = document.createElement('div');
+                    userHomeLogActivityInfoContainer.classList.add('user-home-log-activity-info-container');
+
+                    const userHomeActivityLogImage = document.createElement('img');
+                    userHomeActivityLogImage.classList.add('user-home-activity-log-image');
+                    userHomeActivityLogImage.src = stadium.image;
+
+                    const userHomeLogActivityInfo = document.createElement('div');
+                    userHomeLogActivityInfo.classList.add('user-home-log-activity-info');
+
+                    const userHomeLogActivityDetails = document.createElement('div');
+                    userHomeLogActivityDetails.classList.add('user-home-log-activity-details');
+
+                    const dateContainer = document.createElement('div');
+
+                    const dateVisited = document.createElement('h5');
+                    dateVisited.textContent = 'Date Visited';
+
+                    const date = document.createElement('h4');
+                    date.textContent = formatDate(stadium.visited_on);
+
+                    dateContainer.appendChild(dateVisited);
+                    dateContainer.appendChild(date);
+
+                    const noteContainer = document.createElement('div');
+
+                    const noteTitle = document.createElement('h5');
+                    noteTitle.textContent = 'Note';
+
+                    const note = document.createElement('h4');
+                    if (stadium.user_note) {
+                        note.textContent = stadium.user_note;
+                    } else {
+                        note.style.color = 'var(--color-text-muted)';
+                        note.style.fontStyle = 'italic';
+                        note.textContent = 'No note added';
+                    }
+
+                    noteContainer.appendChild(noteTitle);
+                    noteContainer.appendChild(note);
+
+                    userHomeLogActivityDetails.appendChild(dateContainer);
+                    userHomeLogActivityDetails.appendChild(noteContainer);
+
+                    const userHomeLogActivityButtons = document.createElement('div');
+                    userHomeLogActivityButtons.classList.add('user-home-log-activity-buttons');
+
+                    const userHomeLogActivityEditLogButton = document.createElement('button');
+                    userHomeLogActivityEditLogButton.classList.add('user-home-log-activity-edit-log-button');
+                    userHomeLogActivityEditLogButton.textContent = 'Edit Log';
+
+                    userHomeLogActivityEditLogButton.addEventListener('click', () => {
+                        currentData = { visit_id: stadium.visit_id, username };
+                        elements.editLogName.textContent = stadium.stadium_name;
+                        elements.editLogLocation.textContent = stadium.city + ', ' + stadium.state;
+                        elements.editLogImage.src = stadium.image;
+                        elements.editLogDateVisited.value = stadium.visited_on.split('T')[0];
+                        const now = new Date();
+                        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+                        elements.editLogDateVisited.setAttribute('max', today);
+                        elements.editLogNote.value = stadium.user_note || '';
+                        toggleMenu(elements.editLogMenu, true, overlay);
+                    });
+
+                    const userHomeLogActivityRemoveButton = document.createElement('button');
+                    userHomeLogActivityRemoveButton.classList.add('user-home-log-activity-remove-button');
+                    userHomeLogActivityRemoveButton.textContent = 'Remove';
+
+                    userHomeLogActivityRemoveButton.addEventListener('click', () => {
+                        currentData = { visit_id: stadium.visit_id, username };
+                        toggleMenu(elements.deleteLogMenu, true, overlay);
+                    });
+
+                    userHomeLogActivityButtons.appendChild(userHomeLogActivityEditLogButton);
+                    userHomeLogActivityButtons.appendChild(userHomeLogActivityRemoveButton);
+
+                    userHomeLogActivityInfo.appendChild(userHomeLogActivityDetails);
+                    userHomeLogActivityInfo.appendChild(userHomeLogActivityButtons);
+
+                    userHomeLogActivityInfoContainer.appendChild(userHomeActivityLogImage);
+                    userHomeLogActivityInfoContainer.appendChild(userHomeLogActivityInfo);
+
+                    userHomeLogActivity.appendChild(userHomeLogActivityHeader);
+                    userHomeLogActivity.appendChild(userHomeLogActivityInfoContainer);
+
+                    elements.stadiumsList.appendChild(userHomeLogActivity);
+                } else if (stadium.activity_type === "stadium") {
+                    const userHomeVisitActivity = document.createElement('div');
+                    userHomeVisitActivity.classList.add('user-home-visit-activity');
+
+                    const userHomeVisitActivityTitle = document.createElement('h3');
+                    userHomeVisitActivityTitle.textContent = 'Marked ';
+
+                    const link = document.createElement('a');
+                    link.href = `stadium.html?id=${stadium.stadium_id}`;
+                    link.textContent = stadium.stadium_name;
+
+                    userHomeVisitActivityTitle.appendChild(link);
+                    userHomeVisitActivityTitle.appendChild(document.createTextNode(' as visited'));
+
+                    const userHomeActivityDate = document.createElement('h4');
+                    userHomeActivityDate.textContent = timeAgo(stadium.added_on);
+
+                    userHomeVisitActivity.appendChild(userHomeVisitActivityTitle);
+                    userHomeVisitActivity.appendChild(userHomeActivityDate);
+
+                    elements.stadiumsList.appendChild(userHomeVisitActivity);
+                } else if (stadium.activity_type === "wishlist") {
+                    const userHomeWishlistActivity = document.createElement('div');
+                    userHomeWishlistActivity.classList.add('user-home-wishlist-activity');
+
+                    const userHomeWishlistActivityTitle = document.createElement('h3');
+                    userHomeWishlistActivityTitle.textContent = 'Added ';
+
+                    const link = document.createElement('a');
+                    link.href = `stadium.html?id=${stadium.stadium_id}`;
+                    link.textContent = stadium.stadium_name;
+
+                    userHomeWishlistActivityTitle.appendChild(link);
+                    userHomeWishlistActivityTitle.appendChild(document.createTextNode(' to your wishlist'));
+
+                    const userHomeActivityDate = document.createElement('h4');
+                    userHomeActivityDate.textContent = timeAgo(stadium.added_on);
+
+                    userHomeWishlistActivity.appendChild(userHomeWishlistActivityTitle);
+                    userHomeWishlistActivity.appendChild(userHomeActivityDate);
+
+                    elements.stadiumsList.appendChild(userHomeWishlistActivity);
+                }
+            });
+        }
+
+        renderPage(currentPage);
+        renderPageNumbers(elements, currentPage, pageCount);
     }
-
-    return item;
 }
 
-function createActivityHeader(activity) {
-    const header = document.createElement('div');
-    header.classList.add('activity-item-header');
-
-    const nameLink = document.createElement('a');
-    nameLink.classList.add('activity-item-name');
-    nameLink.textContent = activity.stadium_name;
-    nameLink.href = `stadium.html?id=${encodeURIComponent(activity.stadium_id)}`;
-
-    const time = document.createElement('span');
-    time.classList.add('activity-item-time');
-    time.textContent = timeAgo(activity.added_on);
-
-    header.appendChild(nameLink);
-    header.appendChild(time);
-    return header;
-}
-
-function createLogDetailsContainer(activity, username) {
-    const container = document.createElement('div');
-    container.classList.add('activity-log-details-container');
-
-    const img = document.createElement('img');
-    img.src = activity.image;
-    img.alt = activity.stadium_name;
-    img.classList.add('activity-item-image');
-    container.appendChild(img);
-
-    const wrapper = document.createElement('div');
-
-    const details = createLogDetails(activity);
-    wrapper.appendChild(details);
-
-    const buttons = createLogButtons(activity, username);
-    wrapper.appendChild(buttons);
-
-    container.appendChild(wrapper);
-    return container;
-}
-
-function createSimpleDetailsContainer(activity, username) {
-    const container = document.createElement('div');
-    container.classList.add('activity-details-container');
-
-    const text = document.createElement('h3');
-    text.classList.add('activity-type-text');
-    text.textContent = activity.activity_type === 'wishlist' ? 'ADDED TO WISHLIST' : 'MARKED AS VISITED';
-    container.appendChild(text);
-
-    const btn = createRemoveButton(activity, username);
-    container.appendChild(btn);
-
-    return container;
-}
-
-function createLogDetails(activity) {
-    const details = document.createElement('div');
-    details.classList.add('activity-item-details');
-
-    const dateLabel = document.createElement('h4');
-    dateLabel.textContent = 'DATE VISITED';
-    details.appendChild(dateLabel);
-
-    const dateValue = document.createElement('span');
-    dateValue.textContent = formatDate(activity.visited_on);
-    details.appendChild(dateValue);
-
-    const noteLabel = document.createElement('h4');
-    noteLabel.textContent = 'NOTE';
-    details.appendChild(noteLabel);
-
-    const noteValue = document.createElement('span');
-    noteValue.textContent = activity.user_note || 'No note';
-    if (!activity.user_note) noteValue.classList.add('no-note');
-    details.appendChild(noteValue);
-
-    return details;
-}
-
-function createLogButtons(activity, username) {
-    const buttons = document.createElement('div');
-    buttons.classList.add('activity-buttons');
-
-    buttons.appendChild(createEditButton(activity, username));
-    buttons.appendChild(createDeleteButton(activity, username));
-
-    return buttons;
-}
-
-function createEditButton(activity, username) {
-    const btn = document.createElement('button');
-    btn.classList.add('edit-log-button');
-    btn.textContent = 'Edit Log';
-
-    btn.addEventListener('click', () => {
-        currentData = { visit_id: activity.visit_id, username };
-        elements.editLogName.textContent = activity.stadium_name;
-        elements.editLogLocation.textContent = activity.city + ', ' + activity.state;
-        elements.editLogImage.src = activity.image;
-        elements.editLogDateVisited.value = activity.visited_on.split('T')[0];
-        const now = new Date();
-        const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-        elements.editLogDateVisited.setAttribute('max', today);
-        elements.editLogNote.value = activity.user_note || '';
-        toggleMenu(elements.editLogMenu, true, overlay);
+function setupActivityFilterHandlers(elements, id) {
+    const getFilters = () => ({
+        activity: elements.activityFilter.value,
+        sort: elements.sortFilter.value
     });
-
-    return btn;
-}
-
-function createDeleteButton(activity, username) {
-    const btn = document.createElement('button');
-    btn.classList.add('delete-log-button');
-    btn.textContent = 'Delete Log';
-
-    btn.addEventListener('click', () => {
-        currentData = { visit_id: activity.visit_id, username };
-        toggleMenu(elements.deleteLogMenu, true, overlay);
-    });
-
-    return btn;
-}
-
-function createRemoveButton(activity, username) {
-    const btn = document.createElement('button');
-    btn.classList.add('remove-button');
-    btn.textContent = 'Remove';
-
-    btn.addEventListener('click', async () => {
-        try {
-            if (activity.activity_type === 'wishlist') {
-                await activityAPI.removeActivityWishlist(activity.stadium_id, username);
-            } else {
-                await activityAPI.removeActivityVisited(activity.stadium_id, username);
-            }
-            const { activity: actFilter, sort, stadium } = getFiltersFromURL();
-            setView(username, actFilter, stadium, sort);
-        } catch (error) {
-            alert(error.message);
-        }
-    });
-
-    return btn;
-}
-
-function getFiltersFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    return {
-        activity: params.get('activity') || 'all',
-        sort: params.get('sort') || 'date-desc',
-        stadium: params.get('id') || null
-    };
-}
-
-function hideLoading() {
-    elements.activitySkeleton.style.display = 'none';
-    elements.activityListContainer.style.display = 'block';
-    elements.activityFilterBar.style.display = 'block';
-}
-
-function setupDeleteLogHandlers() {
-    elements.deleteLogDeleteButton.addEventListener('click', async () => {
-        if (!currentData) return;
-        try {
-            await activityAPI.deleteLog(currentData.visit_id);
-            toggleMenu(elements.deleteLogMenu, false, overlay);
-            const { activity, sort, stadium } = getFiltersFromURL();
-            await setView(currentData.username, activity, stadium, sort);
-            currentData = null;
-        } catch (err) {
-            alert(err.message);
-        }
-    });
-
-    elements.deleteLogCancelButton.addEventListener('click', () => {
-        toggleMenu(elements.deleteLogMenu, false, overlay);
-    });
-
-    elements.closeDeleteLogMenu.addEventListener('click', () => {
-        toggleMenu(elements.deleteLogMenu, false, overlay);
-    });
-}
-
-function setupEditLogHandlers() {
-    elements.editLogSaveButton.addEventListener('click', async () => {
-        if (!currentData) return;
-        try {
-            await activityAPI.editLog(currentData.visit_id, elements.editLogDateVisited.value, elements.editLogNote.value);
-            toggleMenu(elements.editLogMenu, false, overlay);
-            const { activity, sort, stadium } = getFiltersFromURL();
-            await setView(currentData.username, activity, stadium, sort);
-            currentData = null;
-        } catch (err) {
-            alert(err.message);
-        }
-    });
-
-    elements.editLogCancelButton.addEventListener('click', () => {
-        toggleMenu(elements.editLogMenu, false, overlay);
-        currentData = null;
-    });
-
-    elements.closeEditLogMenu.addEventListener('click', () => {
-        toggleMenu(elements.editLogMenu, false, overlay);
-        currentData = null;
-    });
-}
-
-function setupEscapeKeyHandler() {
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            if (elements.editLogMenu.style.display !== 'none') {
-                toggleMenu(elements.editLogMenu, false, overlay);
-                currentData = null;
-            }
-            if (elements.deleteLogMenu.style.display !== 'none') {
-                toggleMenu(elements.deleteLogMenu, false, overlay);
-                currentData = null;
-            }
-        }
-    });
-}
-
-function setupFilterHandlers() {
-    const { stadium } = getFiltersFromURL();
 
     function applyFilter() {
-        const activity = elements.activityFilter.value;
-        const sort = elements.sortFilter.value;
+        const { activity, sort } = getFilters();
         const params = new URLSearchParams();
-        if (stadium) params.set('stadium', stadium);
-        if (activity !== 'all') params.set('activity', activity);
-        if (sort !== 'date-desc') params.set('sort', sort);
+        params.set('page', '1');
+        params.set('activity', activity);
+        params.set('sort', sort);
+        params.set('id', id)
         window.location.search = params.toString();
     }
 
     elements.activityFilter.addEventListener('change', applyFilter);
     elements.sortFilter.addEventListener('change', applyFilter);
-}
-
-function showLoading() {
-    elements.activitySkeleton.style.display = 'block';
-    void elements.activitySkeleton.offsetWidth;
-    elements.activityListContainer.style.display = 'none';
-    elements.activityFilterBar.style.display = 'none';
-}
-
-function showNoResults() {
-    elements.noActivityContainer.style.display = 'block';
-    elements.activityList.style.display = 'none';
-}
-
-function showResults() {
-    elements.noActivityContainer.style.display = 'none';
-    elements.activityList.style.display = 'block';
-}
-
-function updateShowMoreButton(returnedCount) {
-    const existing = document.getElementById('show-more-button');
-    if (existing) existing.remove();
-
-    if (returnedCount === PAGE_SIZE) {
-        const btn = document.createElement('button');
-        btn.id = 'show-more-button';
-        btn.textContent = 'Show More';
-        btn.addEventListener('click', loadMore);
-        elements.activityListContainer.appendChild(btn);
-    }
+    
+    elements.clearFiltersButton.addEventListener('click', () => {
+        elements.activityFilter.value = 'all';
+        elements.sortFilter.value = 'added-desc';
+        const params = new URLSearchParams();
+        params.set('id', id)
+        window.location.search = params.toString();
+    });
 }
 
 /*  Events  */
@@ -407,29 +298,10 @@ document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
     registerUserLogOutEvents();
     initializeCustomSelects();
-    setupFilterHandlers();
-    setupEditLogHandlers();
-    setupDeleteLogHandlers();
-    setupEscapeKeyHandler();
 });
 
 window.onload = async () => {
     const username = getUsername();
     showLoggedInUI(username);
-
-    const { activity, sort, stadium } = getFiltersFromURL();
-
-    if (stadium) {
-        const stadiumName = await loadStadiumInfo(stadium, username);
-        document.title = `${stadiumName} Activity - StadiumTrackr`;
-        elements.activityWelcomeText.textContent = `${stadiumName} Activity`;
-    } else {
-        document.title = 'Activity - StadiumTrackr';
-        elements.activityWelcomeText.textContent = 'Activity';
-    }
-
-    syncSelectFromURL('activity-filter', activity);
-    syncSelectFromURL('sort-filter', sort);
-
-    setView(username, activity, stadium, sort);
+    setView(username);
 };

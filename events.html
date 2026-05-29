@@ -125,10 +125,12 @@
                             </div>
                             <div id="logged-in-header-user-container-hidden">
                                 <a href="user-home.html">Home</a>
-                                <a href="user-stadiums.html">My Stadiums</a>
-                                <a href="user-wishlist.html">Wishlist</a>
-                                <a href="user-activity.html">Activity</a>
-                                <a href="user-achievements.html">Achievements</a>
+                                <a href="user-home.html?tab=stadiums">Stadiums</a>
+                                <a href="user-home.html?tab=visits">Visits</a>
+                                <a href="user-home.html?tab=events">Events</a>
+                                <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=activity">Activity</a>
+                                <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="settings.html">Settings</a>
                             </div>
                         </div>
@@ -161,10 +163,12 @@
                             </div>
                             <div id="sidebar-user-links">
                                 <a href="user-home.html">Home</a>
-                                <a href="user-stadiums.html">My Stadiums</a>
-                                <a href="user-wishlist.html">Wishlist</a>
-                                <a href="user-activity.html">Activity</a>
-                                <a href="user-achievements.html">Achievements</a>
+                                <a href="user-home.html?tab=stadiums">Stadiums</a>
+                                <a href="user-home.html?tab=visits">Visits</a>
+                                <a href="user-home.html?tab=events">Events</a>
+                                <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=activity">Activity</a>
+                                <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="settings.html">Settings</a>
                             </div>
                             <div class="sidebar-links">
@@ -181,13 +185,13 @@
             </header>
 
             <main id="events-page">
-                <!-- Logged Out UI -->
-                <div id="events-logged-out">
+                <!-- Events UI -->
+                <div id="events-container">
                     <div class="events-text">
                         <h2>Events</h2>
                     </div>
                     <h3>Never miss an event at your favorite stadiums and stadiums you want to visit.</h3>
-                    <p id="logged-out-hero-p">Set your favorite stadiums and add stadiums to your wishlist and we'll show you upcoming events, all in one place.</p>
+                    <p id="events-hero-p">Set your favorite stadiums and add stadiums to your wishlist and we'll show you upcoming events, all in one place.</p>
                     <div id="events-info">
                         <div class="event-info-card">
                             <img src="images/icons/heart.png" alt="Heart">
@@ -218,83 +222,6 @@
                     </div>
                 </div>
 
-                <!-- Logged In UI -->
-                <div id="events-logged-in">
-                    <div class="events-text">
-                        <h2>My Events</h2>
-                    </div>
-                    <div id="user-events-container">
-                        <div id="events-filter-bar">
-                            <div id="events-filter-controls">
-                                <div class="filter-group">
-                                    <label class="filter-label">Show:</label>
-                                    <div class="custom-select-wrapper">
-                                        <div class="custom-select-trigger" data-select="event">
-                                            <span class="custom-select-value">All My Events</span>
-                                            <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                            </svg>
-                                        </div>
-                                        <div class="custom-select-dropdown">
-                                            <div class="custom-select-option selected" data-value="all">All My Events</div>
-                                            <div class="custom-select-option" data-value="favorite">Favorite Stadiums</div>
-                                            <div class="custom-select-option" data-value="wishlist">Wishlist Stadiums</div>
-                                        </div>
-                                        <select class="filter-select" id="event-filter">
-                                            <option value="all">All My Events</option>
-                                            <option value="favorite">Favorite Stadiums</option>
-                                            <option value="wishlist">Wishlist Stadiums</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="filter-divider"></div>
-                                <div class="filter-group">
-                                    <label class="filter-label">Sort By:</label>
-                                    <div class="custom-select-wrapper">
-                                        <div class="custom-select-trigger" data-select="sort">
-                                            <span class="custom-select-value">Event Date (Soonest)</span>
-                                            <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                            </svg>
-                                        </div>
-                                        <div class="custom-select-dropdown">
-                                            <div class="custom-select-option selected" data-value="date-asc">Event Date (Soonest)</div>
-                                            <div class="custom-select-option" data-value="date-desc">Event Date (Latest)</div>
-                                            <div class="custom-select-option" data-value="name-asc">Stadium Name (A-Z)</div>
-                                            <div class="custom-select-option" data-value="name-desc">Stadium Name (Z-A)</div>
-                                        </div>
-                                        <select class="filter-select" id="sort-filter">
-                                            <option value="date-asc">Event Date (Soonest)</option>
-                                            <option value="date-desc">Event Date (Latest)</option>
-                                            <option value="name-asc">Stadium Name (A-Z)</option>
-                                            <option value="name-desc">Stadium Name (Z-A)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="events-filter-bar-skeleton"></div>
-                        <div id="user-events"></div>
-                        <div id="no-events-container">
-                            <h3>No Events Found</h3>
-                            <p>We couldn't find any events matching your current filters.</p>
-                        </div>
-                        <div class="events-page-selector"></div>
-                        <div id="user-events-skeleton">
-                            <div class="user-event-skeleton"></div>
-                            <div class="user-event-skeleton"></div>
-                            <div class="user-event-skeleton"></div>
-                            <div class="user-event-skeleton"></div>
-                            <div class="user-event-skeleton"></div>
-                            <div class="user-event-skeleton"></div>
-                            <div class="user-event-skeleton"></div>
-                            <div class="user-event-skeleton"></div>
-                            <div class="user-event-skeleton"></div>
-                            <div class="user-event-skeleton"></div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Individual Stadium UI -->
                 <div id="events-stadium">
                     <div class="events-text">
@@ -306,7 +233,6 @@
                             <h3>No Events Found</h3>
                             <p>We couldn't find any events for this stadium.</p>
                         </div>
-                        <div class="events-page-selector"></div>
                         <div id="stadium-events-skeleton">
                             <div class="stadium-event-skeleton"></div>
                             <div class="stadium-event-skeleton"></div>
@@ -319,6 +245,7 @@
                             <div class="stadium-event-skeleton"></div>
                             <div class="stadium-event-skeleton"></div>
                         </div>
+                        <div class="events-page-selector"></div>
                     </div>
                 </div>
             </main>

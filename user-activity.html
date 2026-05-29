@@ -50,6 +50,7 @@
         <!-- Delete Log Menu -->
         <div id="delete-log-menu">
             <div id="delete-log-menu-header">
+                <h2></h2>
                 <h2>Delete Stadium Log?</h2>
                 <h2 id="close-delete-log-menu">×</h2>
             </div>
@@ -89,10 +90,12 @@
                             </div>
                             <div id="logged-in-header-user-container-hidden">
                                 <a href="user-home.html">Home</a>
-                                <a href="user-stadiums.html">My Stadiums</a>
-                                <a href="user-wishlist.html">Wishlist</a>
-                                <a href="user-activity.html">Activity</a>
-                                <a href="user-achievements.html">Achievements</a>
+                                <a href="user-home.html?tab=stadiums">Stadiums</a>
+                                <a href="user-home.html?tab=visits">Visits</a>
+                                <a href="user-home.html?tab=events">Events</a>
+                                <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=activity">Activity</a>
+                                <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="settings.html">Settings</a>
                             </div>
                         </div>
@@ -125,10 +128,12 @@
                             </div>
                             <div id="sidebar-user-links">
                                 <a href="user-home.html">Home</a>
-                                <a href="user-stadiums.html">My Stadiums</a>
-                                <a href="user-wishlist.html">Wishlist</a>
-                                <a href="user-activity.html">Activity</a>
-                                <a href="user-achievements.html">Achievements</a>
+                                <a href="user-home.html?tab=stadiums">Stadiums</a>
+                                <a href="user-home.html?tab=visits">Visits</a>
+                                <a href="user-home.html?tab=events">Events</a>
+                                <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=activity">Activity</a>
+                                <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="settings.html">Settings</a>
                             </div>
                             <div class="sidebar-links">
@@ -145,114 +150,79 @@
             </header>
 
             <main>
-                <h2 id="user-activity-welcome-text"></h2>
-
-                <!-- Filter Bar -->
-                <div id="activity-filter-bar">
-                    <div id="activity-filter-controls">
-                        <div class="filter-group">
-                            <label class="filter-label">Show:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="activity">
-                                    <span class="custom-select-value">All Activity</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="all">All Activity</div>
-                                    <div class="custom-select-option" data-value="logged">Logged Visit</div>
-                                    <div class="custom-select-option" data-value="visited">Marked as Visited</div>
-                                    <div class="custom-select-option" data-value="wishlist">Added to Wishlist</div>
-                                </div>
-                                <select class="filter-select" id="activity-filter">
-                                    <option value="all">All Activity</option>
-                                    <option value="logged">Logged Visit</option>
-                                    <option value="visited">Marked as Visited</option>
-                                    <option value="wishlist">Added to Wishlist</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="filter-divider"></div>
-                        <div class="filter-group">
-                            <label class="filter-label">Sort By:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="sort">
-                                    <span class="custom-select-value">Date (Newest)</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="date-desc">Date (Newest)</div>
-                                    <div class="custom-select-option" data-value="date-asc">Date (Earliest)</div>
-                                    <div class="custom-select-option" data-value="name-asc">Stadium Name (A-Z)</div>
-                                    <div class="custom-select-option" data-value="name-desc">Stadium Name (Z-A)</div>
-                                </div>
-                                <select class="filter-select" id="sort-filter">
-                                    <option value="date-desc">Date (Newest)</option>
-                                    <option value="date-asc">Date (Earliest)</option>
-                                    <option value="name-asc">Stadium Name (A-Z)</option>
-                                    <option value="name-desc">Stadium Name (Z-A)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Activity List -->
                 <div id="activity-list-container">
-                    <div id="activity-list">
-                        <div class="activity-item">
-                            <div class="activity-item-header">
-                                <a class="activity-item-name" href="stadium.html?id=222">Alamodome</a>
-                                <span class="activity-item-time">3w ago</span>
-                            </div>
-                            <div class="activity-log-details-container">
-                                <img src="../images/stadiums/alamodome.jpg" alt="Alamodome" class="activity-item-image">
-                                <div>
-                                    <div class="activity-item-details">
-                                        <h4>DATE VISITED</h4>
-                                        <span>February 27, 2026</span>
-                                        <h4>NOTE</h4>
-                                        <span class="no-note">No note</span>
-                                    </div>
-                                    <div class="activity-buttons">
-                                        <button class="edit-log-button">Edit Log</button>
-                                        <button class="delete-log-button">Delete Log</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-item-header">
-                                <a class="activity-item-name" href="stadium.html?id=222">Alamodome</a>
-                                <span class="activity-item-time">3w ago</span>
-                            </div>
-                            <div class="activity-details-container">
-                                <h3 class="activity-type-text">MARKED AS VISITED</h3>
-                                <button class="remove-button">Remove</button>
-                            </div>
-                        </div>
+                    <h2 id="user-activity-welcome-text"></h2>
+                    <div id="activity-skeleton">
+                        <div class="activity-skeleton-card"></div>
+                        <div class="activity-skeleton-card"></div>
+                        <div class="activity-skeleton-card"></div>
+                        <div class="activity-skeleton-card"></div>
+                        <div class="activity-skeleton-card"></div>
+                        <div class="activity-skeleton-card"></div>
                     </div>
+                    <div id="activity-list"></div>
                     <div id="no-activity-container">
                         <h3>No Activity Found</h3>
                         <p>We couldn't find any activity matching your current filters.</p>
                     </div>
-                </div>
-            
-                <!-- Skeleton -->
-                <div id="activity-skeleton">
                     <div id="activity-filter-bar-skeleton"></div>
-                    <div id="activity-container-skeleton">
-                        <div class="activity-skeleton-card"></div>
-                        <div class="activity-skeleton-card"></div>
-                        <div class="activity-skeleton-card"></div>
-                        <div class="activity-skeleton-card"></div>
-                        <div class="activity-skeleton-card"></div>
-                        <div class="activity-skeleton-card"></div>
+                    <div id="activity-filter-bar">
+                        <h3>Filters</h3>
+                        <div id="activity-filter-controls">
+                            <div class="filter-group">
+                                <label class="filter-label">Show:</label>
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select-trigger" data-select="activity">
+                                        <span class="custom-select-value">All Activity</span>
+                                        <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="custom-select-dropdown">
+                                        <div class="custom-select-option selected" data-value="all">All Activity</div>
+                                        <div class="custom-select-option" data-value="logged">Logged Visit</div>
+                                        <div class="custom-select-option" data-value="visited">Marked as Visited</div>
+                                        <div class="custom-select-option" data-value="wishlist">Added to Wishlist</div>
+                                    </div>
+                                    <select class="filter-select" id="activity-filter">
+                                        <option value="all">All Activity</option>
+                                        <option value="logged">Logged Visit</option>
+                                        <option value="visited">Marked as Visited</option>
+                                        <option value="wishlist">Added to Wishlist</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                    <label class="filter-label">Sort By:</label>
+                                    <div class="custom-select-wrapper">
+                                        <div class="custom-select-trigger" data-select="sort">
+                                            <span class="custom-select-value">Added (Newest)</span>
+                                            <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                        <div class="custom-select-dropdown">
+                                            <div class="custom-select-option selected" data-value="added-desc">Added (Newest)</div>
+                                            <div class="custom-select-option" data-value="added-asc">Added (Earliest)</div>
+                                            <div class="custom-select-option" data-value="name-asc">Stadium Name (A-Z)</div>
+                                            <div class="custom-select-option" data-value="name-desc">Stadium Name (Z-A)</div>
+                                        </div>
+                                        <select class="filter-select" id="sort-filter">
+                                            <option value="added-desc">Added (Newest)</option>
+                                            <option value="added-asc">Added (Earliest)</option>
+                                            <option value="name-asc">Stadium Name (A-Z)</option>
+                                            <option value="name-desc">Stadium Name (Z-A)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            <div>
+                                <button class="clear-filters" id="activity-clear-filters">Clear Filters</button>
+                            </div>
+                        </div>
                     </div>
+                    <div id="activity-page-selector"></div>
                 </div>
+
             </main>
 
             <!-- Footer -->

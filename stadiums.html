@@ -148,10 +148,12 @@
                             </div>
                             <div id="logged-in-header-user-container-hidden">
                                 <a href="user-home.html">Home</a>
-                                <a href="user-stadiums.html">My Stadiums</a>
-                                <a href="user-wishlist.html">Wishlist</a>
-                                <a href="user-activity.html">Activity</a>
-                                <a href="user-achievements.html">Achievements</a>
+                                <a href="user-home.html?tab=stadiums">Stadiums</a>
+                                <a href="user-home.html?tab=visits">Visits</a>
+                                <a href="user-home.html?tab=events">Events</a>
+                                <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=activity">Activity</a>
+                                <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="settings.html">Settings</a>
                             </div>
                         </div>
@@ -184,10 +186,12 @@
                             </div>
                             <div id="sidebar-user-links">
                                 <a href="user-home.html">Home</a>
-                                <a href="user-stadiums.html">My Stadiums</a>
-                                <a href="user-wishlist.html">Wishlist</a>
-                                <a href="user-activity.html">Activity</a>
-                                <a href="user-achievements.html">Achievements</a>
+                                <a href="user-home.html?tab=stadiums">Stadiums</a>
+                                <a href="user-home.html?tab=visits">Visits</a>
+                                <a href="user-home.html?tab=events">Events</a>
+                                <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=activity">Activity</a>
+                                <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="settings.html">Settings</a>
                             </div>
                             <div class="sidebar-links">
@@ -209,108 +213,8 @@
                     <h2>Stadiums</h2>
                 </div>
 
-                <!-- Filter Bar -->
-                <div id="filter-bar">
-                    <div id="filter-controls">
-                        <div class="filter-group">
-                            <label class="filter-label">League:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="league">
-                                    <span class="custom-select-value">All Leagues</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="all">All Leagues</div>
-                                    <div class="custom-select-option" data-value="nfl">NFL</div>
-                                    <div class="custom-select-option" data-value="nba">NBA</div>
-                                    <div class="custom-select-option" data-value="mlb">MLB</div>
-                                    <div class="custom-select-option" data-value="nhl">NHL</div>
-                                    <div class="custom-select-option" data-value="mls">MLS</div>
-                                    <div class="custom-select-option" data-value="wnba">WNBA</div>
-                                    <div class="custom-select-option" data-value="ncaaf">NCAAF</div>
-                                    <div class="custom-select-option" data-value="ncaab">NCAAB</div>
-                                </div>
-                                <select class="filter-select" id="league-filter">
-                                    <option value="all">All Leagues</option>
-                                    <option value="nfl">NFL</option>
-                                    <option value="nba">NBA</option>
-                                    <option value="mlb">MLB</option>
-                                    <option value="nhl">NHL</option>
-                                    <option value="mls">MLS</option>
-                                    <option value="wnba">WNBA</option>
-                                    <option value="ncaaf">NCAAF</option>
-                                    <option value="ncaab">NCAAB</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="filter-divider"></div>
-                        <div class="filter-group">
-                            <label class="filter-label">Country:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="country">
-                                    <span class="custom-select-value">All Countries</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="all">All Countries</div>
-                                    <div class="custom-select-option" data-value="us">USA</div>
-                                    <div class="custom-select-option" data-value="canada">Canada</div>
-                                </div>
-                                <select class="filter-select" id="country-filter">
-                                    <option value="all">All Countries</option>
-                                    <option value="us">USA</option>
-                                    <option value="canada">Canada</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="filter-divider"></div>
-                        <div class="filter-group">
-                            <label class="filter-label">Sort By:</label>
-                            <div class="custom-select-wrapper">
-                                <div class="custom-select-trigger" data-select="sort">
-                                    <span class="custom-select-value">Name (A-Z)</span>
-                                    <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                        <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                </div>
-                                <div class="custom-select-dropdown">
-                                    <div class="custom-select-option selected" data-value="name-asc">Name (A-Z)</div>
-                                    <div class="custom-select-option" data-value="name-desc">Name (Z-A)</div>
-                                </div>
-                                <select class="filter-select" id="sort-filter">
-                                    <option value="name-asc">Name (A-Z)</option>
-                                    <option value="name-desc">Name (Z-A)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="filter-actions">
-                        <button class="clear-filters" id="clear-filters">Clear Filters</button>
-                        <div id="results-count"></div>
-                        <form id="search-stadiums" autocomplete="off">
-                            <div class="search-wrapper">
-                                <input type="text" placeholder="Search stadiums..." id="home-search-field" spellcheck="false">
-                                <div id="autocomplete-list"></div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
                 <!-- Stadium List -->
                 <div id="stadiums-list-container">
-                    <div id="stadiums-list"></div>
-                    <div id="no-stadiums-container">
-                        <h3>No Stadiums Found</h3>
-                        <p>We couldn't find any stadiums matching your current filters.</p>
-                    </div>
-                    <div id="stadiums-page-selector"></div>
-                </div>
-                <div id="stadiums-skeleton">
-                    <div id="filter-bar-skeleton"></div>
                     <div id="stadiums-container-skeleton">
                         <div class="skeleton-card"></div>
                         <div class="skeleton-card"></div>
@@ -319,6 +223,101 @@
                         <div class="skeleton-card"></div>
                         <div class="skeleton-card"></div>
                     </div>
+                    <div id="stadiums-list"></div>
+                    <div id="no-stadiums-container">
+                        <h3>No Stadiums Found</h3>
+                        <p>We couldn't find any stadiums matching your current filters.</p>
+                    </div>
+                    <div id="filter-bar-skeleton"></div>
+                    <div id="filter-bar">
+                        <h3>Filters</h3>
+                        <div id="filter-controls">
+                            <div class="filter-group">
+                                <label class="filter-label">League:</label>
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select-trigger" data-select="league">
+                                        <span class="custom-select-value">All Leagues</span>
+                                        <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="custom-select-dropdown">
+                                        <div class="custom-select-option selected" data-value="all">All Leagues</div>
+                                        <div class="custom-select-option" data-value="nfl">NFL</div>
+                                        <div class="custom-select-option" data-value="nba">NBA</div>
+                                        <div class="custom-select-option" data-value="mlb">MLB</div>
+                                        <div class="custom-select-option" data-value="nhl">NHL</div>
+                                        <div class="custom-select-option" data-value="mls">MLS</div>
+                                        <div class="custom-select-option" data-value="wnba">WNBA</div>
+                                        <div class="custom-select-option" data-value="ncaaf">NCAAF</div>
+                                        <div class="custom-select-option" data-value="ncaab">NCAAB</div>
+                                    </div>
+                                    <select class="filter-select" id="league-filter">
+                                        <option value="all">All Leagues</option>
+                                        <option value="nfl">NFL</option>
+                                        <option value="nba">NBA</option>
+                                        <option value="mlb">MLB</option>
+                                        <option value="nhl">NHL</option>
+                                        <option value="mls">MLS</option>
+                                        <option value="wnba">WNBA</option>
+                                        <option value="ncaaf">NCAAF</option>
+                                        <option value="ncaab">NCAAB</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Country:</label>
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select-trigger" data-select="country">
+                                        <span class="custom-select-value">All Countries</span>
+                                        <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="custom-select-dropdown">
+                                        <div class="custom-select-option selected" data-value="all">All Countries</div>
+                                        <div class="custom-select-option" data-value="us">USA</div>
+                                        <div class="custom-select-option" data-value="canada">Canada</div>
+                                    </div>
+                                    <select class="filter-select" id="country-filter">
+                                        <option value="all">All Countries</option>
+                                        <option value="us">USA</option>
+                                        <option value="canada">Canada</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label class="filter-label">Sort By:</label>
+                                <div class="custom-select-wrapper">
+                                    <div class="custom-select-trigger" data-select="sort">
+                                        <span class="custom-select-value">Name (A-Z)</span>
+                                        <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="custom-select-dropdown">
+                                        <div class="custom-select-option selected" data-value="name-asc">Name (A-Z)</div>
+                                        <div class="custom-select-option" data-value="name-desc">Name (Z-A)</div>
+                                    </div>
+                                    <select class="filter-select" id="sort-filter">
+                                        <option value="name-asc">Name (A-Z)</option>
+                                        <option value="name-desc">Name (Z-A)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <form id="search-stadiums" autocomplete="off">
+                                <div class="search-wrapper">
+                                    <input type="text" placeholder="Search stadiums..." id="home-search-field" spellcheck="false">
+                                    <div id="autocomplete-list"></div>
+                                </div>
+                            </form>
+                            <div>
+                                <button class="clear-filters" id="clear-filters">Clear Filters</button>
+                                <span id="results-count"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="stadiums-page-selector"></div>
                 </div>
             </main>
                 

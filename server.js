@@ -9,10 +9,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/auth', require('./routes/authRoutes'));
-app.use('/stadium', require('./routes/stadiumRoutes'));
+app.use('/load', require('./routes/loadRoutes'));
+app.use('/update', require('./routes/updateRoutes'));
 app.use('/user', require('./routes/userRoutes'));
-app.use('/league', require('./routes/leagueRoutes'));
-app.use('/activity', require('./routes/activityRoutes'));
 
 app.use((req, res) => {
   res.status(404).json({ 

@@ -1,9 +1,10 @@
 /*  Imports  */
 import { createAccountMenu, getAuthElements, getHeaderElements, MIN_LOADING_TIME, overlay } from "../constants.js";
-import { formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, getUsername, isLoggedIn, showLoggedOutUI, toggleMenu, truncateUsername } from "../utils.js";
+import { formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, getUsername, isLoggedIn, setupAddStadiumModal, showLoggedInUI, showLoggedOutUI, toggleMenu, truncateUsername } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
-import { stadiumAPI } from "../api/stadium.js";
-import { activityAPI } from "../api/activity.js";
+import { loadAPI } from "../api/load.js";
+import { updateAPI } from "../api/update.js";
+import { userAPI } from "../api/user.js";
 
 /*  Variables  */
 const elements = {
@@ -17,7 +18,6 @@ const elements = {
     addStadiumLogButton: document.getElementById('add-stadium-log-button'),
     addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
     stadiumName: document.getElementById('stadium-name'),
-    stadiumImage: document.getElementById('stadium-image'),
     stadiumUserControls: document.getElementById('stadium-user-controls'),
     stadiumVisits: document.getElementById('stadium-visits'),
     stadiumLocation: document.getElementById('stadium-location'),
@@ -75,20 +75,20 @@ async function loadFullStadiumPage(id, username) {
 
 async function loadStadiumInfo(id, username) {
     try {
-        const result = await stadiumAPI.loadStadiumInfo(id, username);
+        const result = await loadAPI.loadStadiumInfo(id, username);
         const { stadium, teams, userVisited, userWishlist } = result.stadiumInfo;
 
+        const stadiumImage = document.createElement('img');
+        stadiumImage.id = 'stadium-image';
+        stadiumImage.src = stadium.image;
+        document.querySelector('main').prepend(stadiumImage);
+        stadiumImage.onload = () => {
+            stadiumImage.classList.add('loaded');
+        };
+        
         elements.stadiumName.textContent = stadium.name;
-        elements.stadiumImage.src = stadium.image;
 
         document.title = `${stadium.name} - StadiumTrackr`;
-        
-        await new Promise(resolve => {
-            if (elements.stadiumImage.complete) resolve();
-            else {
-                elements.stadiumImage.onload = elements.stadiumImage.onerror = resolve;
-            }
-        });
 
         elements.stadiumLocation.textContent = formatLocation(stadium.city, stadium.state);
         elements.stadiumOpenedDate.textContent = formatDate(stadium.openedDate);
@@ -99,7 +99,7 @@ async function loadStadiumInfo(id, username) {
         elements.upcomingEventsStadiumLink.href = `events.html?id=${stadium.id}`
 
         setupUserControls(id, username, userVisited, userWishlist);
-        setupAddStadiumModal(id, stadium.name, stadium.city, stadium.state, username, stadium.image);
+        setupAddStadiumModal(id, stadium.name, stadium.city, stadium.state, username, stadium.image, elements);
 
     } catch (error) {
         alert(error.message);
@@ -108,7 +108,7 @@ async function loadStadiumInfo(id, username) {
 
 async function loadStadiumMap(id) {
     try {
-        const result = await stadiumAPI.loadStadiumMap(id);
+        const result = await loadAPI.loadStadiumMap(id);
         const stadium = result.result;
 
         stadiumMapData = {
@@ -123,26 +123,26 @@ async function loadStadiumMap(id) {
 
 async function loadUpcomingEvents(id) {
     try {
-        const result = await stadiumAPI.loadUpcomingEvents(id);
-        renderUpcomingEvents(result.events);
+        const result = await loadAPI.loadStadiumEvents(id);
+        const events = result.events;
+
+        if (!events || events.length === 0) {
+            hasNoUpcomingEvents = true;
+            return;
+        }
+
+        const maxEvents = Math.min(events.length, 3);
+        for (let i = 0; i < maxEvents; i++) {
+            const event = events[i];
+            const eventElement = createEventElement(event);
+            elements.upcomingEventsContainer.appendChild(eventElement);
+        }
     } catch (error) {
         console.error('Error fetching events:', error);
     }
 }
 
 /*  Functions  */
-function animateWishlistRemoval() {
-    elements.stadiumUserControlWishlist.classList.add('animating');
-    
-    setTimeout(() => {
-        updateWishlistUI(false);
-    }, 200);
-    
-    setTimeout(() => {
-        elements.stadiumUserControlWishlist.classList.remove('animating');
-    }, 400);
-}
-
 function createEventElement(event) {
     const container = document.createElement('div');
     container.classList.add('upcoming-event');
@@ -203,68 +203,33 @@ function initializeStadiumMap(latitude, longitude, stadiumName) {
         .bindPopup(`<div class="popup-card"><h4>${stadiumName}</h4></div>`);
 }
 
-function renderUpcomingEvents(events) {
-    if (!events || events.length === 0) {
-        hasNoUpcomingEvents = true;
-        return;
+function setupUserControls(stadiumId, username, userVisited, userWishlist) {
+    const hasLogged = userVisited.some(activity => activity.visited_on !== null);
+    let isWishlist = userWishlist.length > 0;
+    let isVisited = userVisited.length > 0;
+
+    elements.stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
+    elements.userWishlistImage.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+    
+    if (hasLogged) {
+        const visitLink = document.createElement('a');
+        visitLink.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
+        visitLink.className = 'stadium-user-control';
+        visitLink.id = 'stadium-user-control-visited';
+        visitLink.innerHTML = `
+            <img src="images/icons/check.png" alt="Check icon" id="user-visited-image">
+            <h3 id="stadium-user-control-visited-text">Logged</h3>
+        `;
+        elements.stadiumUserControlVisited.parentNode.replaceChild(visitLink, elements.stadiumUserControlVisited);
+    } else {
+        elements.stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
+        elements.userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+        setupVisitedClickHandler(stadiumId, username, isVisited, isWishlist);
     }
 
-    const maxEvents = Math.min(events.length, 3);
-    for (let i = 0; i < maxEvents; i++) {
-        const event = events[i];
-        const eventElement = createEventElement(event);
-        elements.upcomingEventsContainer.appendChild(eventElement);
-    }
-}
+    setupWishlistClickHandler(stadiumId, username, isWishlist);
 
-function replaceVisitedWithLoggedLink(stadiumId) {
-    const visitLink = document.createElement('a');
-    visitLink.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
-    visitLink.className = 'stadium-user-control';
-    visitLink.id = 'stadium-user-control-visited';
-    visitLink.innerHTML = `
-        <img src="images/icons/check.png" alt="Check icon" id="user-visited-image">
-        <h3 id="stadium-user-control-visited-text">Logged</h3>
-    `;
-    elements.stadiumUserControlVisited.parentNode.replaceChild(visitLink, elements.stadiumUserControlVisited);
-}
-
-function setupAddStadiumModal(stadiumId, stadiumName, city, state, username, stadiumImage) {
-    elements.addStadiumName.textContent = stadiumName;
-    elements.addStadiumLocation.textContent = city + ', ' + state;
-    elements.addStadiumImage.src = stadiumImage;
-
-    const now = new Date();
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-
-    elements.addStadiumDateVisited.setAttribute('max', today);
-    elements.addStadiumDateVisited.value = today;
-
-    elements.addStadiumLogButton.addEventListener('click', async () => {
-        const dateVisited = elements.addStadiumDateVisited.value;
-        const note = elements.addStadiumNote.value.trim() || null;
-
-        try {
-            await activityAPI.addStadium(stadiumId, username, dateVisited, note);
-            window.location.reload();
-        } catch (error) {
-            alert(error.message);
-        }
-    });
-
-    elements.addStadiumCancelButton.addEventListener('click', () => {
-        toggleMenu(elements.addStadiumMenu, false, overlay);
-    });
-
-    elements.closeAddStadiumMenu.addEventListener('click', () => {
-        toggleMenu(elements.addStadiumMenu, false, overlay);
-    });
-}
-
-function setupStadiumButtons(stadiumId, username) {
     elements.stadiumLogButton.addEventListener('click', () => {
-        console.log(username)
-
         if (username === "") {
             toggleMenu(createAccountMenu, true, overlay);
         } else {
@@ -282,24 +247,6 @@ function setupStadiumButtons(stadiumId, username) {
     elements.stadiumActivityButton.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
 }
 
-function setupUserControls(stadiumId, username, userVisited, userWishlist) {
-    const hasLogged = userVisited.some(activity => activity.visited_on !== null);
-    let isWishlist = userWishlist.length > 0;
-    let isVisited = userVisited.length > 0;
-
-    updateWishlistUI(isWishlist);
-    
-    if (hasLogged) {
-        replaceVisitedWithLoggedLink(stadiumId);
-    } else {
-        updateVisitedUI(isVisited);
-        setupVisitedClickHandler(stadiumId, username, isVisited, isWishlist);
-    }
-
-    setupWishlistClickHandler(stadiumId, username, isWishlist);
-    setupStadiumButtons(stadiumId, username);
-}
-
 function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initialIsWishlist) {
     let isVisited = initialIsVisited;
     let isWishlist = initialIsWishlist;
@@ -314,11 +261,22 @@ function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initial
         const newIsVisited = !isVisited;
 
         setTimeout(() => {
-            updateVisitedUI(newIsVisited);
+            elements.stadiumUserControlVisitedText.textContent = newIsVisited ? 'Visited' : 'Visit';
+            elements.userVisitedImage.src = newIsVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
             
             if (newIsVisited && isWishlist) {
-                animateWishlistRemoval();
-                activityAPI.updateUserWishlist(stadiumId, username, true)
+                elements.stadiumUserControlWishlist.classList.add('animating');
+    
+                setTimeout(() => {
+                    elements.stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
+                    elements.userWishlistImage.src = 'images/icons/heart-plus.png';
+                }, 200);
+                
+                setTimeout(() => {
+                    elements.stadiumUserControlWishlist.classList.remove('animating');
+                }, 400);
+
+                updateAPI.updateUserWishlist(stadiumId, username, true)
                     .catch(error => alert(error.message));
                 isWishlist = false;
             }
@@ -329,7 +287,7 @@ function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initial
         }, 400);
 
         try {
-            await activityAPI.updateUserStadium(stadiumId, username, isVisited);
+            await updateAPI.updateUserStadium(stadiumId, username, isVisited);
             isVisited = newIsVisited;
         } catch (error) {
             alert(error.message);
@@ -350,7 +308,8 @@ function setupWishlistClickHandler(stadiumId, username, initialIsWishlist) {
         const newIsWishlist = !isWishlist;
 
         setTimeout(() => {
-            updateWishlistUI(newIsWishlist);
+            elements.stadiumUserControlWishlistText.textContent = newIsWishlist ? 'In Wishlist' : 'Add to Wishlist';
+            elements.userWishlistImage.src = newIsWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
         }, 200);
 
         setTimeout(() => {
@@ -358,33 +317,12 @@ function setupWishlistClickHandler(stadiumId, username, initialIsWishlist) {
         }, 400);
 
         try {
-            await activityAPI.updateUserWishlist(stadiumId, username, isWishlist);
+            await updateAPI.updateUserWishlist(stadiumId, username, isWishlist);
             isWishlist = newIsWishlist;
         } catch (error) {
             alert(error.message);
         }
     });
-}
-
-function showLoggedInUI(username) {
-    const { loggedInHeader, loggedOutHeader, loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
-    
-    const displayName = truncateUsername(username);
-    loggedInHeaderUsername.textContent = displayName;
-    sidebarUsername.textContent = displayName;
-    loggedOutHeader.style.display = 'none';
-    loggedInHeader.style.display = 'flex';
-    elements.stadiumUserControls.style.display = 'flex';
-}
-
-function updateVisitedUI(isVisited) {
-    elements.stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
-    elements.userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
-}
-
-function updateWishlistUI(isWishlist) {
-    elements.stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
-    elements.userWishlistImage.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
 }
 
 /*  Events  */

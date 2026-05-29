@@ -1,36 +1,13 @@
 /*  Imports  */
-import { API_BASE_URL, DEBOUNCE_TIME, getAuthElements, ROUTES, MIN_LOADING_TIME } from "../constants.js";
-import { debounce, searchStadiums } from "../utils.js";
+import { DEBOUNCE_TIME, getAuthElements, MIN_LOADING_TIME } from "../constants.js";
+import { debounce, setupSearchAutocomplete, searchStadiums } from "../utils.js";
 import { registerCommonEvents, registerEventListeners } from "../events.js";
-
-/*  Variables  */
-const header = document.querySelector('header');
-const popularStadiums = document.getElementById('popular-stadiums');
+import { loadAPI } from "../api/load.js";
 
 /*  Async Functions  */
-async function handlePageLoad() {
-    header.style.display = 'flex';
-
-    loadPopularStadiums();
-    await waitForImages();
-    loadMapStadiums();
-    showPopularStadiums();
-}
-
 async function loadPopularStadiums() {
     try {
-        const response = await fetch(`${API_BASE_URL}${ROUTES.POPULAR_STADIUMS}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({})
-        })
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Unknown error');
-        }
-
-        const result = await response.json();
+        const result = await loadAPI.loadPopularStadiums();
 
         result.popularStadiums.forEach(stadium => {
             const popularStadium = document.createElement('div');
@@ -60,7 +37,7 @@ async function loadPopularStadiums() {
 
             popularStadium.appendChild(popularStadiumLink);
 
-            popularStadiums.appendChild(popularStadium);
+            document.getElementById('popular-stadiums').appendChild(popularStadium);
 
         });
 
@@ -71,18 +48,7 @@ async function loadPopularStadiums() {
 
 async function loadMapStadiums() {
     try {
-        const response = await fetch(`${API_BASE_URL}${ROUTES.STADIUM_MAP_HOME}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({})
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Unknown error');
-        }
-
-        const result = await response.json();
+        const result = await loadAPI.loadMapStadiums();
         const stadiums = result.rows;
 
         initializeMap(stadiums);
@@ -109,11 +75,6 @@ async function waitForImages() {
 }
 
 /*  Functions  */
-function hideSearchSuggestions(container, input) {
-    container.classList.remove('active');
-    input.value = '';
-}
-
 function initializeMap(stadiums) {
     const map = L.map('home-stadium-map').setView([42.8283, -96.5795], 4);
 
@@ -166,46 +127,19 @@ function initializeMap(stadiums) {
     });
 }
 
-function setupSearchAutocomplete() {
-    const searchStadiumsForm = document.getElementById('home-search-stadiums');
-    const searchValue = document.getElementById('search-field-home');
-    const suggestionsContainer = document.getElementById('home-autocomplete-list');
-
-    const debouncedSearch = debounce((name) => {
-        if (name) {
-            searchStadiums(name, suggestionsContainer, searchValue);
-        } else {
-            hideSearchSuggestions(suggestionsContainer, searchValue);
-        }
-    }, DEBOUNCE_TIME);
-
-    searchValue.addEventListener('input', (event) => {
-        debouncedSearch(event.target.value);
-    });
-
-    document.addEventListener('click', (event) => {
-        const isClickInside = searchValue.contains(event.target) || suggestionsContainer.contains(event.target);
-
-        if (!isClickInside) {
-            hideSearchSuggestions(suggestionsContainer, searchValue);
-        }
-    });
-
-    searchStadiumsForm?.addEventListener('submit', (e) => e.preventDefault());
-}
-
-function showPopularStadiums() {
-    document.getElementById('popular-stadiums-skeleton').style.display = 'none';
-    document.getElementById('popular-stadiums').style.display = 'flex';
-    document.getElementById('home-stadium-map-skeleton').style.display = 'none';
-    document.getElementById('home-stadium-map').style.display = 'block'
-}
-
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerEventListeners(getAuthElements());
     registerCommonEvents();
-    setupSearchAutocomplete();
+    setupSearchAutocomplete('home-search-stadiums', 'search-field-home', 'home-autocomplete-list');
 });
 
-window.addEventListener('load', handlePageLoad);
+window.onload = async () => {
+    await loadPopularStadiums();
+    await waitForImages();
+    loadMapStadiums();
+    document.getElementById('popular-stadiums-skeleton').style.display = 'none';
+    document.getElementById('popular-stadiums').style.display = 'flex';
+    document.getElementById('home-stadium-map-skeleton').style.display = 'none';
+    document.getElementById('home-stadium-map').style.display = 'block';
+};

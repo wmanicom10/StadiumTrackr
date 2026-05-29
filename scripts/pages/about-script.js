@@ -2,7 +2,7 @@
 import { getAuthElements } from "../constants.js";
 import { getUsername, isLoggedIn, showLoggedInUI, showLoggedOutUI } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
-import { stadiumAPI } from "../api/stadium.js";
+import { loadAPI } from "../api/load.js";
 
 /*  Variables  */
 const visitImg = document.getElementById('about-visit-image');
@@ -11,10 +11,8 @@ const achievementsImg = document.getElementById('about-achievements-image');
 /*  Async Functions  */
 async function loadAboutInfo() {
     try {
-        const result = await stadiumAPI.loadAboutInfo();
+        const result = await loadAPI.loadAboutInfo();
         const aboutInfo = result.aboutInfo;
-
-        console.log(aboutInfo)
 
         document.getElementById('stadiums-number').textContent = aboutInfo[0].num_stadiums;
         document.getElementById('leagues-number').textContent = aboutInfo[0].num_leagues;
@@ -57,9 +55,7 @@ window.onload = async () => {
     } else {
         showLoggedOutUI();
     }
-
     await loadAboutInfo();
-
     updateImageSource();
 };
 

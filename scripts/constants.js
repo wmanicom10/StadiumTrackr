@@ -30,35 +30,45 @@ export const PASSWORD_CONSTRAINTS = {
     SPECIAL_CHARS: '!@#$%^&*'
 };
 export const ROUTES = {
-    AUTH_SIGNUP: '/auth/signup',
+    /* AUTH */
+    AUTH_DELETE: '/auth/deleteAccount',
     AUTH_LOGIN: '/auth/login',
-    POPULAR_STADIUMS: '/stadium/loadPopularStadiums',
-    STADIUM_SEARCH: '/stadium/searchStadiums',
-    STADIUM_MAP_HOME: '/stadium/loadMapStadiums',
-    STADIUM_LOAD: '/stadium/loadStadiums',
-    STADIUM_INFO: '/stadium/loadStadiumInfo',
-    STADIUM_MAP: '/stadium/loadStadiumMap',
-    UPCOMING_EVENTS: '/stadium/loadUpcomingEvents',
-    LOGGED_OUT_EVENTS: '/stadium/loadLoggedOutEvents',
-    LOGGED_IN_EVENTS: '/stadium/loadLoggedInEvents',
-    STADIUMS_EVENTS: '/stadium/loadStadiumEvents',
-    ABOUT_INFO: '/stadium/loadAboutInfo',
-    USER_INFO: '/user/loadUserInfo',
-    USER_ACTIVITY: '/user/loadUserActivity',
-    USER_ACHIEVEMENTS: '/user/loadUserAchievements',
-    USER_HOME_MAP: '/user/loadUserHomeMap',
-    USER_STADIUMS: '/user/loadUserStadiums',
-    USER_WISHLIST: '/user/loadUserWishlist',
-    USER_USERNAME: '/user/updateUsername',
-    USER_PROFILE_PIC: '/user/updateProfilePic',
-    USER_EMAIL: '/user/updateEmail',
-    USER_PASSWORD: '/user/updatePassword',
-    USER_DELETE: '/user/deleteAccount',
-    USER_SAVE_FAVORITES: '/user/saveFavoriteStadiums',
-    USER_FAVORITES: '/user/loadFavoriteStadiums'
+    AUTH_SIGNUP: '/auth/signup',
+
+    /* LOAD */
+    LOAD_ABOUT_INFO: '/load/loadAboutInfo',
+    LOAD_FEATURED_EVENTS: '/load/loadFeaturedEvents',
+    LOAD_MAP_STADIUMS: '/load/loadMapStadiums',
+    LOAD_POPULAR_STADIUMS: '/load/loadPopularStadiums',
+    LOAD_STADIUMS_EVENTS: '/load/loadStadiumEvents',
+    LOAD_STADIUM_INFO: '/load/loadStadiumInfo',
+    LOAD_STADIUM_MAP: '/load/loadStadiumMap',
+    LOAD_STADIUMS: '/load/loadStadiums',
+    LOAD_USER_EVENTS: '/load/loadUserEvents',
+    SEARCH_STADIUMS: '/load/searchStadiums',
+
+    /* UPDATE */
+    DELETE_LOG: '/update/deleteLog',
+    EDIT_LOG: '/update/editLog',
+    UPDATE_EMAIL: '/update/updateEmail',
+    UPDATE_PASSWORD: '/update/updatePassword',
+    UPDATE_PROFILE_PIC: '/update/updateProfilePic',
+    UPDATE_USERNAME: '/update/updateUsername',
+    UPDATE_USER_STADIUMS: '/update/updateUserStadium',
+    UPDATE_USER_WISHLIST: '/update/updateUserWishlist',
+
+    /* USER */
+    ADD_STADIUM: '/user/addStadium',
+    LOAD_FAVORITE_STADIUMS: '/user/loadFavoriteStadiums',
+    LOAD_USER_ACHIEVEMENTS: '/user/loadUserAchievements',
+    LOAD_USER_ACTIVITY: '/user/loadUserActivity',
+    LOAD_USER_HOME_MAP: '/user/loadUserHomeMap',
+    LOAD_USER_INFO: '/user/loadUserInfo',
+    LOAD_USER_STADIUMS: '/user/loadUserStadiums',
+    LOAD_USER_VISITS: '/user/loadUserVisits',
+    LOAD_USER_WISHLIST: '/user/loadUserWishlist',
+    SAVE_FAVORITE_STADIUMS: '/user/saveFavoriteStadiums',
 };
-export const searchStadiumsForm = getElement('search-stadiums');
-export const searchValue = getElement('home-search-field');
 export const sidebarLogInButton = getElement('sidebar-log-in');
 export const sidebarLogOutButton = getElement('sidebar-log-out');
 export const sidebarSignUpButton = getElement('sidebar-sign-up');
@@ -68,7 +78,6 @@ export const sidebarUsername = getElement('sidebar-username');
 export const signInLink = getElement('sign-in-link');
 export const signUp = getElement('sign-up-button');
 export const signUpLink = getElement('sign-up-link')
-export const suggestionsContainer = getElement('autocomplete-list');
 export const USERNAME_CONSTRAINTS = {
     MIN_LENGTH: 6,
     MAX_LENGTH: 30
@@ -77,10 +86,6 @@ export const USERNAME_CONSTRAINTS = {
 /*  Functions  */
 function getElement(id) {
     return document.getElementById(id);
-}
-
-function getElements(className) {
-    return document.getElementsByClassName(className);
 }
 
 /*  Exported Functions  */
@@ -112,13 +117,5 @@ export function getHeaderElements() {
         logOutButton,
         sidebarUsername,
         sidebarLogOutButton
-    };
-}
-
-export function getSearchElements() {
-    return {
-        searchStadiumsForm,
-        searchValue,
-        suggestionsContainer
     };
 }

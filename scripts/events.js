@@ -122,16 +122,6 @@ export function registerCommonEvents() {
             }
         });
     });
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
-            const activeModals = document.querySelectorAll('.menu[style*="display: block"]');
-            activeModals.forEach(modal => {
-                const overlay = document.getElementById('overlay');
-                toggleMenu(modal, false, overlay);
-            });
-        }
-    });
 }
 
 export function registerEventListeners({

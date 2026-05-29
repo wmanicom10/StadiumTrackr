@@ -1,6 +1,8 @@
 /*  Imports  */
-import { API_BASE_URL, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS, getHeaderElements } from './constants.js';
-import { activityAPI } from "./api/activity.js";
+import { API_BASE_URL, DEBOUNCE_TIME, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS, getHeaderElements } from './constants.js';
+import { loadAPI } from './api/load.js';
+import { updateAPI } from './api/update.js';
+import { userAPI } from './api/user.js';
 
 const currentYear = new Date().getFullYear();
 document.getElementById('copyright').innerHTML = `&copy;2025-${currentYear} StadiumTrackr. All rights reserved.`;
@@ -13,79 +15,7 @@ if (localStorage.getItem('username')){
 }
 
 /*  Functions  */
-function createSearchResultElement(text, isLink = false) {
-    const searchResult = document.createElement('div');
-    searchResult.classList.add('search-result');
-    
-    const stadiumName = document.createElement('h4');
-    stadiumName.textContent = text;
-    
-    searchResult.appendChild(stadiumName);
-    return searchResult;
-}
-
-function createStadiumLinkElement(stadium, searchValue) {
-    const stadiumLink = document.createElement('a');
-    stadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
-    
-    const searchResult = createSearchResultElement(stadium.stadium_name);
-    stadiumLink.appendChild(searchResult);
-    
-    stadiumLink.addEventListener('click', () => {
-        searchValue.value = '';
-    });
-    
-    return stadiumLink;
-}
-
-function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
-    suggestionsContainer.innerHTML = '';
-    suggestionsContainer.classList.add('active');
-
-    if (stadiums.length === 0) {
-        const searchResult = createSearchResultElement('No stadiums found');
-        suggestionsContainer.appendChild(searchResult);
-        return;
-    }
-
-    stadiums.forEach(stadium => {
-        const stadiumLink = createStadiumLinkElement(stadium, searchValue);
-        suggestionsContainer.appendChild(stadiumLink);
-    });
-}
-
-/*  Exported Async Functions  */
-export async function searchStadiums(name, suggestionsContainer, searchValue) {
-    try {
-        const response = await fetch(`${API_BASE_URL}${ROUTES.STADIUM_SEARCH}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name })
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Unknown error');
-        }
-
-        const result = await response.json();
-        const stadiums = result.stadiums;
-
-        renderSearchSuggestions(stadiums, suggestionsContainer, searchValue);
-
-    } catch (error) {
-        alert(error.message);
-    }
-}
-
-/*  Exported Functions  */
-export function clearUsername() {
-    localStorage.setItem('username', '');
-    localStorage.removeItem('email');
-    localStorage.removeItem('profilePic');
-}
-
-export function closeAllDropdowns(except = null) {
+function closeAllDropdowns(except = null) {
     document.querySelectorAll('.custom-select-dropdown.active').forEach(d => {
         if (d !== except) {
             d.classList.remove('active');
@@ -94,7 +24,29 @@ export function closeAllDropdowns(except = null) {
     });
 }
 
-export function createPagination(elements, stadiums, perPage = 18, scrollTop = 0) {
+function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
+    const btn = document.createElement(href ? 'a' : 'button');
+    btn.classList.add('user-stadium-icon-btn');
+    if (extraClass) btn.classList.add(extraClass);
+    btn.dataset.tip = tip;
+
+    if (href) btn.href = href;
+
+    const img = document.createElement('img');
+    img.src = iconSrc;
+    img.alt = tip;
+    btn.appendChild(img);
+
+    const tooltip = document.createElement('span');
+    tooltip.classList.add('icon-btn-tooltip');
+    tooltip.textContent = tip;
+    btn.appendChild(tooltip);
+
+    btn.addEventListener('click', (e) => onClick(btn, e));
+    return btn;
+}
+
+function createPagination(elements, stadiums, perPage = 18, scrollTop = 0) {
     const pageCount = Math.ceil(stadiums.length / perPage);
     let currentPage = Math.min(getPageFromURL(), pageCount);
 
@@ -107,62 +59,25 @@ export function createPagination(elements, stadiums, perPage = 18, scrollTop = 0
         });
     }
 
-    function renderPageNumbers() {
-        elements.stadiumsPageSelector.innerHTML = '';
-        const prevBtn = createNavigationButton('←', currentPage === 1, () => {
-            setPageInURL(currentPage - 1);
-        });
-        elements.stadiumsPageSelector.appendChild(prevBtn);
-        calculatePageButtons(currentPage, pageCount).forEach(item => {
-            elements.stadiumsPageSelector.appendChild(item === '...' ? createEllipsis() : createPageButton(item));
-        });
-        const nextBtn = createNavigationButton('→', currentPage === pageCount, () => {
-            setPageInURL(currentPage + 1);
-        });
-        elements.stadiumsPageSelector.appendChild(nextBtn);
-    }
-
-    function createPageButton(pageNum) {
-        const btn = document.createElement('button');
-        btn.className = 'page-btn';
-        btn.textContent = pageNum;
-        btn.dataset.page = pageNum;
-        if (pageNum === currentPage) btn.classList.add('active');
-        btn.addEventListener('click', () => { setPageInURL(pageNum); });
-        return btn;
-    }
-
-    function createNavigationButton(text, disabled, onClick) {
-        const btn = document.createElement('button');
-        btn.className = 'page-btn arrow';
-        btn.textContent = text;
-        btn.disabled = disabled;
-        if (!disabled) btn.addEventListener('click', onClick);
-        return btn;
-    }
-
-    function createEllipsis() {
-        const span = document.createElement('span');
-        span.className = 'page-ellipsis';
-        span.textContent = '...';
-        return span;
-    }
-
-    function calculatePageButtons(current, total) {
-        if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
-        if (current <= 3) return [1, 2, 3, 4, 5, '...', total];
-        if (current >= total - 2) return [1, '...', total - 4, total - 3, total - 2, total - 1, total];
-        return [1, '...', current - 1, current, current + 1, '...', total];
-    }
-
     renderPage(currentPage);
-    renderPageNumbers();
+    renderPageNumbers(elements, currentPage, pageCount);
     requestAnimationFrame(() => {
         window.scrollTo({ top: scrollTop, behavior: 'smooth' });
     });
 }
 
-export function createStadiumCard(stadium, elements) {
+function createSearchResultElement(text, isLink = false) {
+    const searchResult = document.createElement('div');
+    searchResult.classList.add('search-result');
+    
+    const stadiumName = document.createElement('h4');
+    stadiumName.textContent = text;
+    
+    searchResult.appendChild(stadiumName);
+    return searchResult;
+}
+
+function createStadiumCard(stadium, elements) {
     const card = document.createElement('div');
     card.classList.add('stadiums-list-stadium');
 
@@ -230,7 +145,7 @@ export function createStadiumCard(stadium, elements) {
         const newIsVisited = !isVisited;
 
         try {
-            const result = await activityAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
+            const result = await updateAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
 
             if (result.locked) {
                 alert('Cannot remove a stadium with logged visits. Delete your logs first.')
@@ -253,7 +168,7 @@ export function createStadiumCard(stadium, elements) {
                         wishlistTooltip.textContent = 'Add to Wishlist';
                     }, 200);
                     setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
-                    activityAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
+                    updateAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
                         .catch(err => alert(err.message));
                 }
             }, 200);
@@ -279,7 +194,7 @@ export function createStadiumCard(stadium, elements) {
         setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
 
         try {
-            await activityAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist)
+            await updateAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist)
             isWishlist = newIsWishlist;
         } catch (err) {
             alert(err.message);
@@ -308,6 +223,103 @@ export function createStadiumCard(stadium, elements) {
     return card;
 }
 
+function createStadiumLinkElement(stadium, searchValue) {
+    const stadiumLink = document.createElement('a');
+    stadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
+    
+    const searchResult = createSearchResultElement(stadium.stadium_name);
+    stadiumLink.appendChild(searchResult);
+    
+    stadiumLink.addEventListener('click', () => {
+        searchValue.value = '';
+    });
+    
+    return stadiumLink;
+}
+
+function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
+    suggestionsContainer.innerHTML = '';
+    suggestionsContainer.classList.add('active');
+
+    if (stadiums.length === 0) {
+        const searchResult = createSearchResultElement('No stadiums found');
+        suggestionsContainer.appendChild(searchResult);
+        return;
+    }
+
+    stadiums.forEach(stadium => {
+        const stadiumLink = createStadiumLinkElement(stadium, searchValue);
+        suggestionsContainer.appendChild(stadiumLink);
+    });
+}
+
+function showNoResults(elements) {
+    elements.stadiumsList.style.display = 'none';
+    elements.stadiumsPageSelector.style.display = 'none';
+    elements.noStadiumsContainer.style.display = 'block';
+}
+
+function showResults(elements) {
+    elements.stadiumsList.style.display = 'flex';
+    elements.stadiumsPageSelector.style.display = 'flex';
+    elements.noStadiumsContainer.style.display = 'none';
+}
+
+/*  Exported Async Functions  */
+export async function fetchAPI(endpoint, body) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+        throw new Error(result.error || 'Unknown error');
+    }
+
+    return result;
+}
+
+export async function fetchFormData(endpoint, formData) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        body: formData
+    });
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Unknown error');
+    }
+    return response.json();
+}
+
+export async function searchStadiums(name, suggestionsContainer, searchValue) {
+    try {
+        const result = await loadAPI.searchStadiums(name);
+        const stadiums = result.stadiums;
+
+        renderSearchSuggestions(stadiums, suggestionsContainer, searchValue);
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+/*  Exported Functions  */
+export function calculatePageButtons(current, total) {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    if (current <= 3) return [1, 2, 3, 4, 5, '...', total];
+    if (current >= total - 2) return [1, '...', total - 4, total - 3, total - 2, total - 1, total];
+    return [1, '...', current - 1, current, current + 1, '...', total];
+}
+
+export function clearUsername() {
+    localStorage.setItem('username', '');
+    localStorage.removeItem('email');
+    localStorage.removeItem('profilePic');
+}
+
 export function createElement(tag, className = null, attributes = {}) {
     const element = document.createElement(tag);
     
@@ -328,6 +340,32 @@ export function createElement(tag, className = null, attributes = {}) {
     });
     
     return element;
+}
+
+export function createEllipsis() {
+    const span = document.createElement('span');
+    span.className = 'page-ellipsis';
+    span.textContent = '...';
+    return span;
+}
+
+export function createNavigationButton(text, disabled, onClick) {
+    const btn = document.createElement('button');
+    btn.className = 'page-btn arrow';
+    btn.textContent = text;
+    btn.disabled = disabled;
+    if (!disabled) btn.addEventListener('click', onClick);
+    return btn;
+}
+
+export function createPageButton(pageNum, currentPage) {
+    const btn = document.createElement('button');
+    btn.className = 'page-btn';
+    btn.textContent = pageNum;
+    btn.dataset.page = pageNum;
+    if (pageNum === currentPage) btn.classList.add('active');
+    btn.addEventListener('click', () => { setPageInURL(pageNum); });
+    return btn;
 }
 
 export function createUserStadiumElement(stadium, elements) {
@@ -394,7 +432,7 @@ export function createUserStadiumElement(stadium, elements) {
         const newIsVisited = !isVisited;
 
         try {
-            const result = await activityAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
+            const result = await updateAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
 
             if (result.locked) {
                 alert('Cannot remove a stadium with logged visits. Delete your logs first.');
@@ -417,7 +455,7 @@ export function createUserStadiumElement(stadium, elements) {
                         wishlistTooltip.textContent = 'Add to Wishlist';
                     }, 200);
                     setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
-                    activityAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
+                    updateAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
                         .catch(err => alert(err.message));
                 }
             }, 200);
@@ -443,7 +481,7 @@ export function createUserStadiumElement(stadium, elements) {
         setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
 
         try {
-            await activityAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist);
+            await updateAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist);
             isWishlist = newIsWishlist;
         } catch (err) {
             alert(err.message);
@@ -472,28 +510,6 @@ export function createUserStadiumElement(stadium, elements) {
     userStadium.appendChild(controls);
 
     return userStadium;
-}
-
-export function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
-    const btn = document.createElement(href ? 'a' : 'button');
-    btn.classList.add('user-stadium-icon-btn');
-    if (extraClass) btn.classList.add(extraClass);
-    btn.dataset.tip = tip;
-
-    if (href) btn.href = href;
-
-    const img = document.createElement('img');
-    img.src = iconSrc;
-    img.alt = tip;
-    btn.appendChild(img);
-
-    const tooltip = document.createElement('span');
-    tooltip.classList.add('icon-btn-tooltip');
-    tooltip.textContent = tip;
-    btn.appendChild(tooltip);
-
-    btn.addEventListener('click', (e) => onClick(btn, e));
-    return btn;
 }
 
 export function debounce(func, wait) {
@@ -584,12 +600,6 @@ export function getUsername() {
     return localStorage.getItem('username') || '';
 }
 
-export function hideLoading(elements) {
-    elements.stadiumsSkeleton.style.display = 'none';
-    elements.stadiumsListContainer.style.display = 'block';
-    elements.filterBar.style.display = 'block';
-}
-
 export function initializeCustomSelects() {
     const triggers = document.querySelectorAll('.custom-select-trigger');
 
@@ -621,6 +631,21 @@ export function initializeCustomSelects() {
 export function isLoggedIn() {
     const username = getUsername();
     return username !== '' && username !== null;
+}
+
+export function renderPageNumbers(elements, currentPage, pageCount) {
+    elements.stadiumsPageSelector.innerHTML = '';
+    const prevBtn = createNavigationButton('←', currentPage === 1, () => {
+        setPageInURL(currentPage - 1);
+    });
+    elements.stadiumsPageSelector.appendChild(prevBtn);
+    calculatePageButtons(currentPage, pageCount).forEach(item => {
+        elements.stadiumsPageSelector.appendChild(item === '...' ? createEllipsis() : createPageButton(item, currentPage));
+    });
+    const nextBtn = createNavigationButton('→', currentPage === pageCount, () => {
+        setPageInURL(currentPage + 1);
+    });
+    elements.stadiumsPageSelector.appendChild(nextBtn);
 }
 
 export function renderWithoutTransition(elements, stadiums) {
@@ -655,31 +680,6 @@ export function renderWithTransition(elements, stadiums) {
     }, 150);
 }
 
-export function resetFilters() {
-    document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
-        const firstOption = wrapper.querySelector('.custom-select-option[data-value="all"], .custom-select-option[data-value="name-asc"]');
-        const valueDisplay = wrapper.querySelector('.custom-select-value');
-        const hiddenSelect = wrapper.querySelector('.filter-select');
-        const allOptions = wrapper.querySelectorAll('.custom-select-option');
-        allOptions.forEach(opt => opt.classList.remove('selected'));
-        if (firstOption) {
-            firstOption.classList.add('selected');
-            valueDisplay.textContent = firstOption.textContent;
-            hiddenSelect.value = firstOption.dataset.value;
-        }
-    });
-}
-
-export function selectOption(option, allOptions, valueDisplay, hiddenSelect, dropdown, trigger) {
-    allOptions.forEach(opt => opt.classList.remove('selected'));
-    option.classList.add('selected');
-    valueDisplay.textContent = option.textContent;
-    hiddenSelect.value = option.dataset.value;
-    hiddenSelect.dispatchEvent(new Event('change'));
-    dropdown.classList.remove('active');
-    trigger.classList.remove('active');
-}
-
 export function setPageInURL(page) {
     const params = new URLSearchParams(window.location.search);
     params.set('page', page);
@@ -700,7 +700,7 @@ export function setupAddStadiumModal(stadiumId, stadiumName, city, state, userna
         const note = elements.addStadiumNote.value.trim() || null;
 
         try {
-            await activityAPI.addStadium(stadiumId, username, dateVisited, note);
+            await userAPI.addStadium(stadiumId, username, dateVisited, note);
             window.location.reload();
         } catch (error) {
             alert(error.message);
@@ -713,6 +713,52 @@ export function setupAddStadiumModal(stadiumId, stadiumName, city, state, userna
 
     elements.closeAddStadiumMenu.addEventListener('click', () => {
         toggleMenu(elements.addStadiumMenu, false, overlay);
+    });
+}
+
+export function setupDeleteLogHandlers(elements, getCurrentData) {
+    elements.deleteLogDeleteButton.addEventListener('click', async () => {
+        let currentData = getCurrentData();
+        if (!currentData) return;
+        try {
+            await updateAPI.deleteLog(currentData.visit_id);
+            toggleMenu(elements.deleteLogMenu, false, overlay);
+            window.location.reload();
+            currentData = null;
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+
+    elements.deleteLogCancelButton.addEventListener('click', () => {
+        toggleMenu(elements.deleteLogMenu, false, overlay);
+    });
+
+    elements.closeDeleteLogMenu.addEventListener('click', () => {
+        toggleMenu(elements.deleteLogMenu, false, overlay);
+    });
+}
+
+export function setupEditLogHandlers(elements, getCurrentData) {
+    elements.editLogSaveButton.addEventListener('click', async () => {
+        let currentData = getCurrentData();
+        if (!currentData) return;
+        try {
+            await updateAPI.editLog(currentData.visit_id, elements.editLogDateVisited.value, elements.editLogNote.value);
+            toggleMenu(elements.editLogMenu, false, overlay);
+            window.location.reload();
+            currentData = null;
+        } catch (err) {
+            alert(err.message);
+        }
+    });
+
+    elements.editLogCancelButton.addEventListener('click', () => {
+        toggleMenu(elements.editLogMenu, false, overlay);
+    });
+
+    elements.closeEditLogMenu.addEventListener('click', () => {
+        toggleMenu(elements.editLogMenu, false, overlay);
     });
 }
 
@@ -763,15 +809,33 @@ export function setupSearch(getAllStadiums, elements) {
     document.getElementById('search-stadiums')?.addEventListener('submit', e => e.preventDefault());
 }
 
-export function setUsername(username) {
-    localStorage.setItem('username', username);
-}
+export function setupSearchAutocomplete(formId, searchFieldId, suggestionsId) {
+    const searchStadiumsForm = document.getElementById(formId);
+    const searchValue = document.getElementById(searchFieldId);
+    const suggestionsContainer = document.getElementById(suggestionsId);
 
-export function showLoading(elements) {
-    elements.stadiumsSkeleton.style.display = 'block';
-    void elements.stadiumsSkeleton.offsetWidth;
-    elements.stadiumsListContainer.style.display = 'none';
-    elements.filterBar.style.display = 'none';
+    const debouncedSearch = debounce((name) => {
+        if (name) {
+            searchStadiums(name, suggestionsContainer, searchValue);
+        } else {
+            suggestionsContainer.classList.remove('active');
+            searchValue.value = '';
+        }
+    }, DEBOUNCE_TIME);
+
+    searchValue.addEventListener('input', (event) => {
+        debouncedSearch(event.target.value);
+    });
+
+    document.addEventListener('click', (event) => {
+        const isClickInside = searchValue.contains(event.target) || suggestionsContainer.contains(event.target);
+        if (!isClickInside) {
+            suggestionsContainer.classList.remove('active');
+            searchValue.value = '';
+        }
+    });
+
+    searchStadiumsForm?.addEventListener('submit', (e) => e.preventDefault());
 }
 
 export function showLoggedInUI(username) {
@@ -786,18 +850,6 @@ export function showLoggedInUI(username) {
 export function showLoggedOutUI() {
     document.documentElement.classList.remove('logged-in');
     document.documentElement.classList.add('logged-out');
-}
-
-export function showNoResults(elements) {
-    elements.stadiumsList.style.display = 'none';
-    elements.stadiumsPageSelector.style.display = 'none';
-    elements.noStadiumsContainer.style.display = 'block';
-}
-
-export function showResults(elements) {
-    elements.stadiumsList.style.display = 'flex';
-    elements.stadiumsPageSelector.style.display = 'flex';
-    elements.noStadiumsContainer.style.display = 'none';
 }
 
 export function syncSelectFromURL(selectId, value) {
