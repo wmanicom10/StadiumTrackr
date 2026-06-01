@@ -44,9 +44,8 @@ let stadiumMapData = null;
 /*  Async Functions  */
 async function loadFullStadiumPage(id, username) {
     try {
-        await loadStadiumInfo(id, username);
-        
-        await Promise.all([
+        const [result] = await Promise.all([
+            loadStadiumInfo(id, username),
             loadStadiumMap(id),
             loadUpcomingEvents(id),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))

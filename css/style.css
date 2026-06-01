@@ -33,10 +33,6 @@ body {
     background: var(--color-bg);
 }
 
-main {
-    min-height: calc(100vh - 85px);
-}
-
 #overlay {
     position: fixed;
     background: rgba(0, 0, 0, 1);
@@ -314,7 +310,8 @@ main {
 
 #add-stadium-image {
     width: 48%;
-    height: 274px;
+    aspect-ratio: 16/9;
+    height: auto;
     object-fit: cover;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -338,7 +335,7 @@ main {
     color: var(--color-text);
     padding: 10px 18px;
     font-size: 0.9rem;
-    margin: 10px 0 20px 0;
+    margin-top: 10px;
     font-family: "Inter", sans-serif;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -355,14 +352,18 @@ main {
     -webkit-appearance: none;
 }
 
+#add-stadium-note-container {
+    margin-top: 20px;
+}
+
 #add-stadium-note {
     margin-top: 10px;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     width: 100%;
+    height: 121px;
     padding: 20px;
-    height: 151px !important;
     resize: none;
     color: var(--color-text);
     font-size: 1rem;
@@ -1992,6 +1993,7 @@ footer {
 
 .event-info {
     width: 82%;
+    margin-right: 10px;
 }
 
 .event-info h4 {
@@ -2002,6 +2004,7 @@ footer {
 .event-stadium-name {
     font-weight: normal;
     font-size: 1rem;
+    line-height: 1.4;
 }
 
 .event-info-container {
@@ -2245,7 +2248,7 @@ footer {
 
 #user-home-no-stadiums-container h3, #no-visits-container h3, #user-home-no-wishlist-container h3, #user-home-no-activity-container h3, #user-home-no-achievements-container h3, #user-home-no-events-container h3, #no-activity-container h3 {
     font-size: 1.4rem;
-    font-weight: 600;
+    font-weight: 400;
     margin: 0 0 15px;
     color: var(--color-text);
 }
@@ -3117,6 +3120,7 @@ footer {
 #user-favorite-stadiums-no-favorites-text h3 {
     font-weight: normal;
     font-size: 1.2rem;
+    line-height: 1.5;
     margin: 0;
     color: var(--color-text-muted);
 }
@@ -3959,7 +3963,8 @@ footer {
 
 #edit-log-image {
     width: 48%;
-    height: 274px;
+    aspect-ratio: 16/9;
+    height: auto;
     object-fit: cover;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -3983,7 +3988,7 @@ footer {
     color: var(--color-text);
     padding: 10px 18px;
     font-size: 0.9rem;
-    margin: 10px 0 20px 0;
+    margin-top: 10px;
     font-family: "Inter", sans-serif;
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -4000,14 +4005,18 @@ footer {
     -webkit-appearance: none;
 }
 
+#edit-log-note-container {
+    margin-top: 20px;
+}
+
 #edit-log-note {
     margin-top: 10px;
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
     width: 100%;
+    height: 121px;
     padding: 20px;
-    height: 151px !important;
     resize: none;
     color: var(--color-text);
     font-size: 1rem;
@@ -4325,6 +4334,7 @@ footer {
     color: var(--color-text-muted);
     margin-top: 10px;
     font-size: 1rem;
+    line-height: 1.5;
 }
 
 #new-username-container, #new-email-container {
@@ -4476,8 +4486,8 @@ footer {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-15);
     border-radius: 15px;
-    width: 49%;
-    min-height: 258px;  
+    width: 322px;
+    min-height: 262px;  
     display: flex;
     justify-content: center;
     align-items: center;
@@ -4503,7 +4513,7 @@ footer {
     box-shadow: var(--shadow-default);
     will-change: transform;
     position: relative;
-    width: 49%;
+    width: 322px;
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
@@ -4622,6 +4632,7 @@ footer {
 #favorite-search-wrapper {
     width: 88%;
     margin: 15px auto 0;
+    position: relative;
 }
 
 #favorite-search-field {
@@ -4649,7 +4660,7 @@ footer {
 }
 
 #favorite-autocomplete-list {
-    width: 429px;
+    width: 100%;
     background: var(--color-bg-mid);
     border: 1px solid var(--color-primary-30);
     border-radius: 10px;
@@ -4659,7 +4670,7 @@ footer {
     padding: 0 !important;
     text-align: left;
     position: absolute;
-    top: 80%;
+    top: 95%;
     max-height: 300px;
     overflow-y: auto;
     opacity: 0;
@@ -4853,7 +4864,7 @@ footer {
 #delete-account-menu {
     position: fixed;
     display: none;
-    width: 490px;
+    width: 500px;
     height: auto;
     top: 50%;
     left: 50%;
@@ -5041,6 +5052,8 @@ footer {
     font-weight: normal;
     color: var(--color-text);
     font-size: 1.5rem;
+    margin: 0 auto;
+    width: 95%;
 }
 
 #events-hero-p {
@@ -5048,14 +5061,14 @@ footer {
     font-size: 1.2rem;
     line-height: 1.6;
     width: 75%;
-    margin: 0 auto;
+    margin: 20px auto 0;
 }
 
 #events-info {
     margin: 50px auto;
     display: flex;
     flex-wrap: wrap;
-    justify-content: start;
+    justify-content: center;
     gap: 15px;
 }
 
@@ -5220,7 +5233,7 @@ footer {
     border: 1px solid var(--color-primary-15);
     box-shadow: var(--shadow-default);
     border-radius: 10px;
-    padding: 20px 25px;
+    padding: 25px;
     align-items: center;
     width: 94%;
     margin: 0 auto 15px;
@@ -5239,9 +5252,6 @@ footer {
     width: 100%;
 }
 
-.stadium-event .event-info {
-    width: 81%;
-}
 .user-event img, .stadium-event img {
     width: 35px;
     margin-right: 25px;
@@ -5324,6 +5334,7 @@ footer {
 }
 
 #events-stadium-name {
+    display: none;
     font-size: 2rem;
 }
 
@@ -5377,6 +5388,7 @@ footer {
     color: var(--color-text);
     font-size: 1.5rem;
     text-align: center;
+    margin: 0;
 }
 
 #about-hero-p {
@@ -5384,7 +5396,7 @@ footer {
     font-size: 1.2rem;
     line-height: 1.6;
     width: 91%;
-    margin: 0 auto;
+    margin: 20px auto 0;
     text-align: center;
 }
 
@@ -5480,6 +5492,8 @@ footer {
     color: var(--color-text-muted);
     font-size: 1.2rem;
     line-height: 1.6;
+    width: 95%;
+    margin: 0 auto;
 }
 
 #about-faq a {
@@ -5626,7 +5640,7 @@ footer {
     border-radius: 15px;
     margin-bottom: 15px;
     width: 100%;
-    height: 99px;
+    height: 101px;
 }
 
 #stadium-map-skeleton {
@@ -5996,9 +6010,20 @@ footer {
     margin: 30px auto 50px;
 }
 
+#events-stadium-name-skeleton {
+    width: 100%;
+    height: 44px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
 .stadium-event-skeleton {
     width: 100%;
-    height: 89px;
+    height: 101px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
     background-size: 400% 100%;
@@ -6012,6 +6037,20 @@ footer {
 @media screen and (max-width: 355px) {
     #upload-profile-pic-button img {
         width: 18px;
+    }
+}
+
+@media screen and (max-width: 365px) {
+    #sign-up-link {
+        display: inline-block;
+        margin-top: 5px;
+    }
+}
+
+@media screen and (max-width: 372px) {
+    #sign-in-link {
+        display: inline-block;
+        margin-top: 5px;
     }
 }
 
@@ -6070,9 +6109,6 @@ footer {
 @media screen and (max-width: 390px) {
     .event-info {
         margin-top: 20px !important;
-    }
-    .stadium-event-skeleton {
-        height: 206px !important;
     }
     #filter-bar .custom-select-wrapper, #user-home-stadiums-filters .custom-select-wrapper, #user-home-visits-filters .custom-select-wrapper, #user-home-wishlist-filters .custom-select-wrapper, #user-home-activity-filters .custom-select-wrapper, #user-home-achievements-filters .custom-select-wrapper, #activity-filter-controls .custom-select-wrapper {
         width: 65% !important;
@@ -6154,6 +6190,28 @@ footer {
 }
 
 @media screen and (max-width: 450px) {
+    #add-stadium-menu-header, #add-stadium-name, #add-stadium-location, #add-stadium-container, #edit-log-menu-header, #edit-log-name, #edit-log-location, #edit-log-container {
+        width: 88%;
+    }
+    #add-stadium-image, #edit-log-image {
+        width: 100% !important;
+    }
+    #add-stadium-form, #edit-log-form {
+        flex-direction: column;
+        gap: 20px !important;
+    }
+    #add-stadium-buttons, #edit-log-buttons {
+        width: 70% !important;
+        gap: 20px;
+    }
+    #delete-log-buttons {
+        width: 80% !important;
+        gap: 20px;
+    }
+    #delete-account-buttons {
+        width: 90% !important;
+        gap: 15px;
+    }
     header h1 {
         margin-left: 30px;
         font-size: 1.7rem !important;
@@ -6202,6 +6260,12 @@ footer {
         font-size: 1rem;
         width: 180px;
     }
+    .favorite-stadiums-setting {
+        width: 100%;
+        height: auto !important;
+        min-height: 0;
+        aspect-ratio: 16 / 9;
+    }
     .favorite-stadiums-setting-active {
         width: 100% !important;
     }
@@ -6233,43 +6297,21 @@ footer {
         width: 273px !important;
         height: 152px !important;
     }
+    #events-stadium {
+        width: 91% !important;
+    }
+}
+
+@media screen and (max-width: 489px) {
+    .event-info {
+        margin-top: 20px !important;
+    }
+    .stadium-event-skeleton, .upcoming-event-skeleton {
+        height: 217px !important;
+    }
 }
 
 @media screen and (max-width: 500px) {
-    #create-account-menu, #log-in-menu {
-        width: 300px;
-    }
-    #close-create-account-menu, #close-log-in-menu {
-        left: 260px;
-        top: -6px;
-    }
-    #create-account-menu h2, #log-in-menu h2 {
-        font-size: 25px;
-    }
-    .input-field, #sign-up-button, #log-in-button {
-        width: 250px;
-    }
-    .forgot-password {
-        margin-right: 35px;
-    }
-    #log-in-form span, #create-account-form span, #create-account-form a, #create-account-form label {
-        font-size: 14px;
-    }
-    #log-in-menu {
-        height: 350px;
-    }
-    #terms-and-conditions-container {
-        margin-left: 15px;
-    }
-    #terms-and-conditions-container label {
-        margin-left: 5px;
-    }
-    #create-account-menu {
-        height: 425px;
-    }
-    #sign-up-button, #log-in-button {
-        font-size: 18px;
-    }
     .popular-stadium img {
         max-width: 100%;
     }
@@ -6376,6 +6418,15 @@ footer {
     #welcome-text {
         width: 90% !important;
     }
+    #log-in-menu, #create-account-menu, #add-favorite-stadium-menu, #delete-log-menu, #delete-account-menu {
+        width: 95%;
+    }
+    #delete-log-buttons {
+        width: 361px;
+    }
+    #delete-account-buttons {
+        width: 369px;
+    }
 }
 
 @media screen and (max-width: 566px) {
@@ -6427,25 +6478,6 @@ footer {
     }
 }
 
-@media screen and (max-width: 550px) {
-    #add-stadium-menu-header, #edit-log-menu-header {
-        width: 88%;
-    }
-    #add-stadium-container, #edit-log-container {
-        width: 88%;
-    }
-    #add-stadium-image, #edit-log-image {
-        max-width: 640px !important;
-        width: 100% !important;
-        aspect-ratio: 16 / 9;
-        height: auto;
-    }
-    #add-stadium-form, #edit-log-form {
-        flex-direction: column;
-        margin: 30px 0 0 !important;
-    }
-}
-
 @media screen and (max-width: 600px) {
     #logged-out-nav .button, #logged-in-nav .button {
         display: none;
@@ -6472,13 +6504,12 @@ footer {
     .featured-event, .upcoming-event, .user-event, .stadium-event {
         flex-wrap: wrap;
         justify-content: start;
-        width: 91%;
     }
     .featured-event-container {
         text-align: left;
     }
     .featured-event-header, .user-event-header {
-        width: 91%;
+        width: 100%;
         flex-direction: column;
         align-items: start;
     }
@@ -6494,26 +6525,19 @@ footer {
         margin-left: 0;
         margin-top: 10px;
     }
+    #featured-events-container {
+        width: 95%;
+    }
     .featured-event-stadium-location {
         margin-left: 0;
         margin-top: 10px;
     }
-    .featured-event img, .upcoming-event img, .user-event img, .stadium-event img {
-        margin-right: 20px;
-    }
     .upcoming-event {
-        width: 100%;
-    }
-    .upcoming-event .event-info {
-        margin-top: 20px;
-    }
-    .event-info {
-        margin-top: 15px;
         width: 100%;
     }
     .featured-event-link, .upcoming-event-link, .user-event-link {
         text-align: left !important;
-        margin-top: 15px;
+        margin-top: 20px;
         width: auto;
     }
     .featured-event-skeleton {
@@ -6522,10 +6546,8 @@ footer {
     .user-event-skeleton {
         height: 292px;
     }
-    .stadium-event-skeleton {
-        margin: 0 auto 15px;
-        width: 91%;
-        height: 132px;
+    .stadium-event-skeleton, .upcoming-event-skeleton {
+        height: 138px;
     }
     .user-home-event-header {
         flex-direction: column;
@@ -6620,6 +6642,17 @@ footer {
 }
 
 @media screen and (max-width: 715px) {
+    #add-stadium-container, #edit-log-container {
+        flex-direction: column;
+    }
+    #add-stadium-form, #edit-log-form {
+        display: flex;
+        width: 100%;
+        gap: 35px;
+    }
+    #add-stadium-note-container, #edit-log-note-container {
+        margin-top: 0;
+    }
     .activity-log-details-container {
         flex-direction: column;
     }
@@ -6747,13 +6780,20 @@ footer {
 }
 
 @media screen and (max-width: 800px) {
+    #add-stadium-image, #edit-log-image {
+        width: 350px;
+        aspect-ratio: 16/9;
+        height: auto;
+    }
+    #add-stadium-note, #edit-log-note {
+        height: auto !important;
+    }
     #settings-container {
         width: 85% !important;
     }
     #username-settings-skeleton {
         height: 305px;
     }
-
     #profile-pic-settings-skeleton {
         height: 248px;
     }
@@ -6773,7 +6813,7 @@ footer {
         margin-top: 10px;
         width: 100% !important;
     }
-    #new-email {
+    #new-email-container #new-email {
         margin-top: 17px;
         width: 100% !important;
     }
@@ -6895,7 +6935,7 @@ footer {
     #change-password-button {
         margin-top: 20px;
     }
-    #events-logged-in, #events-stadium {
+    #events-logged-in {
         width: 96%;
     }
     #about-visit-image {
@@ -6916,8 +6956,8 @@ footer {
     #logged-out-nav .toggle, #logged-in-nav .toggle {
         display: list-item;
     }
-    #stadium-container, #upcoming-events-container, #stadium-map-container {
-        width: 93%;
+    #stadium-container, #upcoming-events-container, #stadium-map-container, #events-stadium {
+        width: 90%;
     }
     #stadium-user-controls, #stadium-user-controls-skeleton {
         flex-wrap: wrap;
@@ -6956,37 +6996,25 @@ footer {
     #delete-control {
         width: 198px;
     }
-    #stadium-content, #stadium-skeleton {
-        padding-top: 30px;
+    #stadium-content, #stadium-skeleton, #events-stadium, #activity-list-container {
+        padding-top: 30px !important;
+    }
+}
+
+@media screen and (max-width: 1050px) {
+    #add-stadium-menu, #edit-log-menu {
+        width: 95%;
+    }
+    #add-stadium-container, #edit-log-container {
+        justify-content: start;
+        gap: 35px;
+    }
+    #add-stadium-buttons, #edit-log-buttons {
+        width: 371px;
     }
 }
 
 @media screen and (max-width: 1100px) {
-    #add-stadium-menu, #edit-log-menu {
-        width: 92%;
-    }
-    #add-stadium-container, #edit-log-container {
-        flex-direction: column;
-    }
-    #add-stadium-image, #edit-log-image {
-        width: 465px;
-        margin: 0 auto;
-    }
-    #add-stadium-form, #edit-log-form {
-        width: 465px;
-        display: flex;
-        margin: 30px auto 0;
-    }
-    #add-stadium-date-visited-container, #edit-log-date-visited-container {
-        margin-right: 20px;
-    }
-    #add-stadium-note, #edit-log-note {
-        width: 300px;
-        height: 120px !important;
-    }
-    #add-stadium-buttons, #edit-log-buttons {
-        width: 374px;
-    }
     #user-home-header-info {
         display: flex;
         align-items: center;
@@ -7003,6 +7031,11 @@ footer {
 }
 
 @media screen and (max-width: 1150px) {
+    #user-home-no-stadiums-container, #no-visits-container, #user-home-no-wishlist-container, #user-home-no-activity-container, #user-home-no-achievements-container, #user-home-no-events-container, #no-activity-container {
+        order: 2;
+        width: 100%;
+        margin-top: 30px;
+    }
     #popular-stadiums-container, #stadium-trackr-container, #home-stadium-map-container {
         width: 95%;
     }

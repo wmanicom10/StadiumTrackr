@@ -8,8 +8,7 @@ import { loadAPI } from "../api/load.js";
 async function loadStadiumInfo(id) {
     try {
         const result = await loadAPI.loadStadiumInfo(id);
-        const { stadium } = result.stadiumInfo;
-        return stadium.name;
+        return result;
     } catch (error) {
         alert(error.message);
     }
@@ -96,9 +95,17 @@ async function showEventsUI() {
 }
 
 async function showStadiumUI(stadiumId) {
-    const stadiumName = await loadStadiumInfo(stadiumId);
-    document.title = `${stadiumName} Events - StadiumTrackr`;
-    document.getElementById('events-stadium-name').textContent = `${stadiumName} Events`;
+    const result = await loadStadiumInfo(stadiumId);
+    document.title = `${result.stadiumInfo.stadium.name} Events - StadiumTrackr`;
+    document.getElementById('events-stadium-name').textContent = `${result.stadiumInfo.stadium.name} Events`;
+
+    const stadiumImage = document.createElement('img');
+    stadiumImage.id = 'stadium-image';
+    stadiumImage.src = result.stadiumInfo.stadium.image;
+    document.querySelector('main').prepend(stadiumImage);
+    stadiumImage.onload = () => {
+        stadiumImage.classList.add('loaded');
+    };
 
     document.getElementById('events-container').style.display = 'none';
 
@@ -110,21 +117,15 @@ async function showStadiumUI(stadiumId) {
 
         const events = result.events;
 
-        const stadiumImage = document.createElement('img');
-        stadiumImage.id = 'stadium-image';
-        stadiumImage.src = result.image;
-        document.querySelector('main').prepend(stadiumImage);
-        stadiumImage.onload = () => {
-            stadiumImage.classList.add('loaded');
-        };
-
         if (events.length === 0) {
             document.getElementById('no-stadium-events-container').style.display = 'block';
         } else {
             createStadiumEventsPagination(events, 18);
         }
 
+        document.getElementById('events-stadium-name-skeleton').style.display = 'none';
         document.getElementById('stadium-events-skeleton').style.display = 'none';
+        document.getElementById('events-stadium-name').style.display = 'block';
         document.getElementById('stadium-events').style.display = 'block';
         
     } catch (error) {

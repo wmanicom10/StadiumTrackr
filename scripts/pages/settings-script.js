@@ -1,6 +1,6 @@
 /*  Imports  */
 import { DEBOUNCE_TIME, MIN_LOADING_TIME, overlay } from "../constants.js";
-import { debounce, getUsername, setupSearchAutocomplete, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
+import { debounce, getUsername, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { authAPI } from "../api/auth.js";
 import { loadAPI } from "../api/load.js";
@@ -60,6 +60,18 @@ async function loadFavoriteStadiums(username) {
             favoriteStadiumsSettingContainer.appendChild(createEmptySlot());
         }
         
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+async function searchStadiums(name, suggestionsContainer, searchValue) {
+    try {
+        const result = await loadAPI.searchStadiums(name)
+        const stadiums = result.stadiums;
+
+        renderSearchSuggestions(stadiums, suggestionsContainer, searchValue);
+
     } catch (error) {
         alert(error.message);
     }
@@ -167,6 +179,46 @@ function createEmptySlot() {
     return slot;
 }
 
+function hideSearchSuggestions(container, input) {
+    container.classList.remove('active');
+    input.value = '';
+}
+
+function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
+    suggestionsContainer.innerHTML = '';
+    suggestionsContainer.classList.add('active');
+
+    if (stadiums.length === 0) {
+        const searchResult = document.createElement('div');
+        searchResult.classList.add('search-result');
+        
+        const stadiumName = document.createElement('h4');
+        stadiumName.classList.add('no-search-result')
+        stadiumName.textContent = 'No stadiums found';
+        
+        searchResult.appendChild(stadiumName);
+        suggestionsContainer.appendChild(searchResult);
+        return;
+    }
+
+    stadiums.forEach(stadium => {
+        const searchResult = document.createElement('div');
+        searchResult.classList.add('search-result');
+        
+        const stadiumName = document.createElement('h4');
+        stadiumName.textContent = stadium.stadium_name;
+        
+        searchResult.appendChild(stadiumName);
+        
+        searchResult.addEventListener('click', () => {
+            toggleMenu(addFavoriteStadiumMenu, false, overlay);
+            document.querySelector('.favorite-stadiums-setting').replaceWith(createActiveSlot(stadium));
+        });
+
+        suggestionsContainer.appendChild(searchResult);
+    });
+}
+
 function setActiveControl(activeId) {
     controls.forEach(({ id, control, image, settings, activeSrc, inactiveSrc, activeClass }) => {
         const isActive = id === activeId;
@@ -185,6 +237,34 @@ function setActiveControl(activeId) {
             settings.style.display = 'none';
         }
     });
+}
+
+function setupSearchAutocomplete() {
+    const searchStadiumsForm = document.getElementById('search-favorite-stadiums');
+    const searchValue = document.getElementById('favorite-search-field');
+    const suggestionsContainer = document.getElementById('favorite-autocomplete-list');
+
+    const debouncedSearch = debounce((name) => {
+        if (name) {
+            searchStadiums(name, suggestionsContainer, searchValue);
+        } else {
+            hideSearchSuggestions(suggestionsContainer, searchValue);
+        }
+    }, DEBOUNCE_TIME);
+
+    searchValue.addEventListener('input', (event) => {
+        debouncedSearch(event.target.value);
+    });
+
+    document.addEventListener('click', (event) => {
+        const isClickInside = searchValue.contains(event.target) || suggestionsContainer.contains(event.target);
+
+        if (!isClickInside) {
+            hideSearchSuggestions(suggestionsContainer, searchValue);
+        }
+    });
+
+    searchStadiumsForm?.addEventListener('submit', (e) => e.preventDefault());
 }
 
 /*  Events  */

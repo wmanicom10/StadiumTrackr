@@ -46,7 +46,7 @@ function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
     return btn;
 }
 
-function createPagination(elements, stadiums, perPage = 18, scrollTop = 0) {
+function createPagination(elements, stadiums, perPage = 18) {
     const pageCount = Math.ceil(stadiums.length / perPage);
     let currentPage = Math.min(getPageFromURL(), pageCount);
 
@@ -61,9 +61,6 @@ function createPagination(elements, stadiums, perPage = 18, scrollTop = 0) {
 
     renderPage(currentPage);
     renderPageNumbers(elements, currentPage, pageCount);
-    requestAnimationFrame(() => {
-        window.scrollTo({ top: scrollTop, behavior: 'smooth' });
-    });
 }
 
 function createSearchResultElement(text, isLink = false) {

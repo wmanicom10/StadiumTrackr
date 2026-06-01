@@ -44,7 +44,7 @@ async function loadAchievementsTab(username, tab) {
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
     document.getElementById('user-home-achievements-skeleton').style.display = 'none';
-    document.getElementById('user-home-achievements').style.display = 'flex';
+    if (achievements.length > 0) document.getElementById('user-home-achievements').style.display = 'flex';
     document.getElementById('user-home-achievements-filters-container-skeleton').style.display = 'none';
     document.getElementById('user-home-achievements-filters-container').style.display = 'block';
 }
@@ -92,7 +92,7 @@ async function loadActivityTab(username, tab) {
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
     document.getElementById('user-home-activity-skeleton').style.display = 'none';
-    document.getElementById('user-home-activity').style.display = 'flex';
+    if (stadiums.length > 0) document.getElementById('user-home-activity').style.display = 'flex';
     document.getElementById('user-home-activity-filters-container-skeleton').style.display = 'none';
     document.getElementById('user-home-activity-filters-container').style.display = 'block';
 }
@@ -127,7 +127,7 @@ async function loadEventsTab(username, tab) {
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
     document.getElementById('user-home-events-skeleton').style.display = 'none';
-    document.getElementById('user-home-events').style.display = 'flex';
+    if (events.length > 0) document.getElementById('user-home-events').style.display = 'flex';
     document.getElementById('user-home-events-filters-container-skeleton').style.display = 'none';
     document.getElementById('user-home-events-filters-container').style.display = 'block';
 }
@@ -234,7 +234,7 @@ async function loadStadiumsTab(username, tab) {
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
     document.getElementById('user-home-stadiums-skeleton').style.display = 'none';
-    document.getElementById('user-home-stadiums').style.display = 'flex';
+    if (filtered.length > 0) document.getElementById('user-home-stadiums').style.display = 'flex';
     document.getElementById('user-home-stadiums-filters-container-skeleton').style.display = 'none';
     document.getElementById('user-home-stadiums-filters-container').style.display = 'block';
 }
@@ -347,7 +347,7 @@ async function loadVisitsTab(username, tab) {
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
     document.getElementById('user-home-visits-skeleton').style.display = 'none';
-    document.getElementById('user-home-visits').style.display = 'flex';
+    if (loggedStadiums.length > 0) document.getElementById('user-home-visits').style.display = 'flex';
     document.getElementById('user-home-visits-filters-container-skeleton').style.display = 'none';
     document.getElementById('user-home-visits-filters-container').style.display = 'block';
 }
@@ -406,7 +406,7 @@ async function loadWishlistTab(username, tab) {
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
     document.getElementById('user-home-wishlist-skeleton').style.display = 'none';
-    document.getElementById('user-home-wishlist').style.display = 'flex';
+    if (filtered.length > 0) document.getElementById('user-home-wishlist').style.display = 'flex';
     document.getElementById('user-home-wishlist-filters-container-skeleton').style.display = 'none';
     document.getElementById('user-home-wishlist-filters-container').style.display = 'block';
 }
