@@ -6,167 +6,6 @@ const fs = require('fs');
 const PROFILE_PIC_DIR = process.env.PROFILE_PIC_DIR;
 const bcrypt = require('bcryptjs');
 
-/*  updateUserAchievements (TODO) */ 
-async function updateAchievementProgress(name, username, isVisited) {
-    if (!isVisited) {
-        let newAchievements = [];
-
-        let achievementIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 30];
-        const [unlockedAchievements] = await db.execute('select * from user_achievements where user_id = (select user_id from users where username = "test") and unlocked = true');
-
-        unlockedAchievements.forEach(unlockedAchievement => {
-            achievementIds = achievementIds.filter(achievementId => achievementId !== unlockedAchievement.achievement_id);
-        })
-
-        for (const achievementId of achievementIds) {
-            if (achievementId >= 1 && achievementId <= 7) {
-                await db.execute('insert into user_achievements (achievement_id, user_id, progress_value) values (?, (select user_id from users where username = ?), 1) on duplicate key update achievement_id = VALUES(achievement_id), user_id = VALUES(user_id), progress_value = progress_value + 1', [achievementId, username]);
-            }
-            else if (achievementId >= 8 && achievementId <= 11) {
-                const [stadiumCountry] = await db.execute('select country_name from stadiums join countries on stadiums.country_id = countries.country_id where stadiums.stadium_name = ?', [name]);
-
-                if (stadiumCountry[0].country_name == "The United States of America") {
-                    let [states] = await db.execute('select count(distinct s.state) as num_states, ua.progress_value from users u left join user_achievements ua on ua.user_id = u.user_id and ua.achievement_id = ? left join user_stadiums us on us.user_id = u.user_id left join stadiums s on s.stadium_id = us.stadium_id where u.username = ? group by ua.progress_value', [achievementId, username]);
-
-                    if (states[0].progress_value === null) {
-                        await db.execute('insert into user_achievements (achievement_id, user_id, progress_value) values (?, (select user_id from users where username = ?), 1)', [achievementId, username]);
-
-                        states = await db.execute('select count(distinct s.state) as num_states, ua.progress_value from users u left join user_achievements ua on ua.user_id = u.user_id and ua.achievement_id = ? left join user_stadiums us on us.user_id = u.user_id left join stadiums s on s.stadium_id = us.stadium_id where u.username = ? group by ua.progress_value', [achievementId, username]);
-                    }
-
-                    if (states[0].num_states > states[0].progress_value) {
-                        await db.execute('update user_achievements set progress_value = progress_value + 1 where achievement_id = ? and user_id = (select user_id from users where username = ?)', [achievementId, username]);
-                    }
-                }
-            }
-            else if (achievementId === 12) {
-                const [stadiumCountry] = await db.execute('select country_name from stadiums join countries on stadiums.country_id = countries.country_id where stadiums.stadium_name = ?', [name]);
-
-                if (stadiumCountry[0].country_name == "Canada") {
-                    await db.execute('insert into user_achievements (achievement_id, user_id, progress_value) values (12, (select user_id from users where username = ?), 1)', [username]);
-                }
-            }
-            else if (achievementId === 13) {
-                const [stadiumCountry] = await db.execute('select country_name from stadiums join countries on stadiums.country_id = countries.country_id where stadiums.stadium_name = ?', [name]);
-
-                if (!(stadiumCountry[0].country_name == "The United States of America" || stadiumCountry[0].country_name == "Canada")) {
-                    await db.execute('insert into user_achievements (achievement_id, user_id, progress_value) values (13, (select user_id from users where username = ?), 1)', [username]);
-                }
-            }
-            else if (achievementId === 14) {
-                const [stadiumState] = await db.execute('select state from stadiums where stadiums.stadium_name = ?', [name]);
-
-                if (stadiumState[0].state == "CA" || stadiumState[0].state == "FL" || stadiumState[0].state == "TX") {
-                    const [states] = await db.execute('SELECT st.state, COUNT(s.state) AS num_visited FROM (SELECT "CA" AS state UNION ALL SELECT "FL" UNION ALL SELECT "TX") st LEFT JOIN user_stadiums us ON us.user_id = (SELECT user_id FROM users WHERE username = ?) LEFT JOIN stadiums s ON us.stadium_id = s.stadium_id AND s.state = st.state GROUP BY st.state', [username]);
-
-                    for (const state of states) {
-                        if (state.num_visited == 1) {
-                            await db.execute('insert into user_achievements (achievement_id, user_id, progress_value) values (14, (select user_id from users where username = ?), 1) on duplicate key update achievement_id = VALUES(achievement_id), user_id = VALUES(user_id), progress_value = progress_value + 1', [username]);
-                            break;
-                        }
-                    }
-                }
-            }
-            else if (achievementId >= 15 && achievementId <= 19) {
-                const [leagueName] = await db.execute('select league_name from stadiums join teams on stadiums.stadium_id = teams.stadium_id join leagues on teams.league_id = leagues.league_id where stadiums.stadium_name = ?', [name])
-
-                if (leagueName[0].league_name === "NFL" && achievementId === 15 || leagueName[0].league_name === "NBA" && achievementId === 16 || leagueName[0].league_name === "MLB" && achievementId === 17 || leagueName[0].league_name === "NHL" && achievementId === 18 || leagueName[0].league_name === "MLS" && achievementId === 19) {  
-                    const [leagueCount] = await db.execute('select count(distinct user_stadiums.stadium_id) as league_count from user_stadiums join stadiums on user_stadiums.stadium_id = stadiums.stadium_id join teams on stadiums.stadium_id = teams.stadium_id join leagues on teams.league_id = leagues.league_id where league_name = ? and user_stadiums.user_id = (select user_id from users where username = ?)', [leagueName[0].league_name, username]);
-
-                    const [progressCount] = await db.execute('select progress_value from user_achievements where achievement_id = ? and user_id = (select user_id from users where username = ?)', [achievementId, username]);
-
-                    const progressValue = progressCount?.[0]?.progress_value ?? 0;
-
-                    if (progressValue === 0) {
-                        await db.execute('insert into user_achievements (achievement_id, user_id, progress_value) values (?, (select user_id from users where username = ?), 1)', [achievementId, username]);
-                    }
-                    else if (progressValue < leagueCount[0].league_count) {
-                        await db.execute('update user_achievements set progress_value = progress_value + 1 where achievement_id = ? and user_id = (select user_id from users where username = ?)', [achievementId, username]);
-                    }
-                }
-            }
-            else if (achievementId === 20) {
-                const [stadiumLeague] = await db.execute('select league_name from stadiums join teams on stadiums.stadium_id = teams.stadium_id join leagues on teams.league_id = leagues.league_id where stadiums.stadium_name = ?', [name]);
-
-                if (stadiumLeague[0].league_name == "NFL" || stadiumLeague[0].league_name == "NBA" || stadiumLeague[0].league_name == "MLB") {
-                    const [leagues] = await db.execute('SELECT ls.league_name, COUNT(DISTINCT uls.stadium_id) AS num_visited FROM (SELECT "NFL" AS league_name UNION ALL SELECT "NBA" UNION ALL SELECT "MLB") ls LEFT JOIN (SELECT DISTINCT s.stadium_id, l.league_name FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id WHERE us.user_id = (SELECT user_id FROM users WHERE username = ?)) AS uls ON uls.league_name = ls.league_name GROUP BY ls.league_name', [username]);
-
-                    for (const league of leagues) {
-                        if (league.num_visited == 1) {
-                            await db.execute('insert into user_achievements (achievement_id, user_id, progress_value) values (20, (select user_id from users where username = ?), 1) on duplicate key update achievement_id = VALUES(achievement_id), user_id = VALUES(user_id), progress_value = progress_value + 1', [username]);
-                            break;
-                        }
-                    }
-                }
-            }
-            else if (achievementId === 21) {
-                const [stadiumLeague] = await db.execute('select league_name from stadiums join teams on stadiums.stadium_id = teams.stadium_id join leagues on teams.league_id = leagues.league_id where stadiums.stadium_name = ?', [name]);
-
-                if (stadiumLeague[0].league_name == "NFL" || stadiumLeague[0].league_name == "NBA" || stadiumLeague[0].league_name == "MLB" || stadiumLeague[0].league_name == "NHL" || stadiumLeague[0].league_name == "MLS") {
-                    const [leagues] = await db.execute('SELECT ls.league_name, COUNT(DISTINCT uls.stadium_id) AS num_visited FROM (SELECT "NFL" AS league_name UNION ALL SELECT "NBA" UNION ALL SELECT "MLB" UNION ALL SELECT "NHL" UNION ALL SELECT "MLS") ls LEFT JOIN (SELECT DISTINCT s.stadium_id, l.league_name FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id WHERE us.user_id = (SELECT user_id FROM users WHERE username = ?)) AS uls ON uls.league_name = ls.league_name GROUP BY ls.league_name', [username]);
-
-                    for (const league of leagues) {
-                        if (league.num_visited == 1) {
-                            await db.execute('insert into user_achievements (achievement_id, user_id, progress_value) values (21, (select user_id from users where username = ?), 1) on duplicate key update achievement_id = VALUES(achievement_id), user_id = VALUES(user_id), progress_value = progress_value + 1', [username]);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        const [userAchievements] = await db.execute('select * from achievements join user_achievements on achievements.achievement_id = user_achievements.achievement_id where user_id = (select user_id from users where username = ?) and (unlocked = false or unlocked = null)', [username]);
-
-        for (const achievement of userAchievements) {
-            if (achievement.progress_value === achievement.progress_goal) {
-                await db.execute('update user_achievements set unlocked = 1, unlocked_on = now() where achievement_id = ? and user_id = (select user_id from users where username = ?)', [achievement.achievement_id, username]);
-                newAchievements.push({
-                    achievementName: achievement.achievement_name,
-                    achievementDescription: achievement.achievement_description,
-                    achievementImage: achievement.achievement_image,
-                })
-            }
-        }
-
-        return newAchievements;
-    }
-    else if (isVisited) {
-        let achievementIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 30];
-
-        const [lockedAchievements] = await db.execute('select * from user_achievements where user_id = (select user_id from users where username = "test") and unlocked = false');
-
-        lockedAchievements.forEach(lockedAchievement => {
-            achievementIds = achievementIds.filter(achievementId => achievementId === lockedAchievement.achievement_id);
-        })
-
-        for (const achievementId of achievementIds) {
-            if (achievementId >= 1 && achievementId <= 7) {
-                await db.execute('update user_achievements set progress_value = progress_value - 1 where achievement_id = ? and user_id = (select user_id from users where username = ?)', [achievementId, username]);
-            }
-            else if (achievementId >= 8 && achievementId <= 11) {
-                const [stadiumCountry] = await db.execute('select country_name from stadiums join countries on stadiums.country_id = countries.country_id where stadiums.stadium_name = ?', [name]);
-
-                if (stadiumCountry[0].country_name == "The United States of America") {
-                    let [states] = await db.execute('select count(distinct s.state) as num_states, ua.progress_value from users u left join user_achievements ua on ua.user_id = u.user_id and ua.achievement_id = ? left join user_stadiums us on us.user_id = u.user_id left join stadiums s on s.stadium_id = us.stadium_id where u.username = ? group by ua.progress_value', [achievementId, username]);
-
-                    if (states[0].num_states < states[0].progress_value) {
-                        await db.execute('update user_achievements set progress_value = progress_value - 1 where achievement_id = ? and user_id = (select user_id from users where username = ?)', [achievementId, username]);
-                    }
-                }
-            }
-        }
-
-        const [userAchievements] = await db.execute('select * from achievements join user_achievements on achievements.achievement_id = user_achievements.achievement_id where user_id = (select user_id from users where username = ?) and unlocked = true', [username]);
-
-        for (const achievement of userAchievements) {
-            if (achievement.progress_value < achievement.progress_goal) {
-                await db.execute('update user_achievements set unlocked = 0, unlocked_on = null where achievement_id = ? and user_id = (select user_id from users where username = ?)', [achievement.achievement_id, username]);
-            }
-        }
-
-    }
-};
-
 /*  deleteLog  */
 const handleDeleteLog = async (req, res) => {
     const { visitId } = req.body;
@@ -176,7 +15,10 @@ const handleDeleteLog = async (req, res) => {
     }
 
     try {
+        const [[{ user_id }]] = await db.execute('SELECT user_id FROM user_stadiums WHERE visit_id = ?', [visitId]);
         const [rows] = await db.execute('DELETE FROM user_stadiums WHERE visit_id = ?', [visitId]);
+
+        await handleUpdateAchievementProgress(user_id);
 
         res.json({ rows });
     } catch (err) {
@@ -194,7 +36,10 @@ const handleEditLog = async (req, res) => {
     }
 
     try {
+        const [[{ user_id }]] = await db.execute('SELECT user_id FROM user_stadiums WHERE visit_id = ?', [visitId]);
         const [rows] = await db.execute('UPDATE user_stadiums SET visited_on = ?, user_note = ? WHERE visit_id = ?', [editDateVisited, editNote, visitId]);
+
+        await handleUpdateAchievementProgress(user_id);
 
         res.json({ rows });
     } catch (err) {
@@ -202,6 +47,217 @@ const handleEditLog = async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 };
+
+/*  updateAchievementProgress  */
+async function getStats(userId) {
+    const [[{ numStadiumsVisited, numStatesVisited, numCanada, numNonNorthAmerica, numCalifornia, numTexas, numFlorida }]] = await db.execute(`
+        SELECT
+            COUNT(DISTINCT us.stadium_id) AS numStadiumsVisited,
+            COUNT(DISTINCT s.state) AS numStatesVisited,
+            COUNT(DISTINCT CASE WHEN c.country_name = 'Canada' THEN us.stadium_id END) AS numCanada,
+            COUNT(DISTINCT CASE WHEN c.country_name NOT IN ('Canada', 'The United States of America', 'Mexico') THEN us.stadium_id END) AS numNonNorthAmerica,
+            COUNT(DISTINCT CASE WHEN s.state = 'CA' THEN us.stadium_id END) AS numCalifornia,
+            COUNT(DISTINCT CASE WHEN s.state = 'TX' THEN us.stadium_id END) AS numTexas,
+            COUNT(DISTINCT CASE WHEN s.state = 'FL' THEN us.stadium_id END) AS numFlorida
+        FROM user_stadiums us
+        JOIN stadiums s ON us.stadium_id = s.stadium_id
+        JOIN countries c ON s.country_id = c.country_id
+        WHERE us.user_id = ?
+    `, [userId]);
+
+    const [[{ numNFLVisited, numNBAVisited, numMLBVisited, numNHLVisited, numMLSVisited, numWNBAVisited, numNCAAFVisited, numNCAABVisited }]] = await db.execute(`
+        SELECT
+            COUNT(DISTINCT CASE WHEN l.league_name = 'NFL' THEN us.stadium_id END) AS numNFLVisited,
+            COUNT(DISTINCT CASE WHEN l.league_name = 'NBA' THEN us.stadium_id END) AS numNBAVisited,
+            COUNT(DISTINCT CASE WHEN l.league_name = 'MLB' THEN us.stadium_id END) AS numMLBVisited,
+            COUNT(DISTINCT CASE WHEN l.league_name = 'NHL' THEN us.stadium_id END) AS numNHLVisited,
+            COUNT(DISTINCT CASE WHEN l.league_name = 'MLS' THEN us.stadium_id END) AS numMLSVisited,
+            COUNT(DISTINCT CASE WHEN l.league_name = 'WNBA' THEN us.stadium_id END) AS numWNBAVisited,
+            COUNT(DISTINCT CASE WHEN l.league_name = 'NCAAF' THEN us.stadium_id END) AS numNCAAFVisited,
+            COUNT(DISTINCT CASE WHEN l.league_name = 'NCAAB' THEN us.stadium_id END) AS numNCAABVisited
+        FROM user_stadiums us
+        JOIN stadiums s ON us.stadium_id = s.stadium_id
+        JOIN teams t ON s.stadium_id = t.stadium_id
+        JOIN leagues l ON t.league_id = l.league_id
+        WHERE us.user_id = ?
+    `, [userId]);
+
+    const [[{ numMaxVisits }]] = await db.execute(`
+        SELECT COALESCE(MAX(visit_count), 0) AS numMaxVisits
+        FROM (
+            SELECT us.stadium_id, COUNT(us.visit_id) AS visit_count
+            FROM user_stadiums us
+            WHERE us.user_id = ?
+            AND us.visited_on IS NOT NULL
+            GROUP BY us.stadium_id
+        ) AS repeatVisits
+    `, [userId]);
+
+    const [visitDates] = await db.execute(`
+        SELECT us.stadium_id, us.visited_on, s.city
+        FROM user_stadiums us
+        JOIN stadiums s ON us.stadium_id = s.stadium_id
+        WHERE us.user_id = ?
+    `, [userId]);
+
+    return {
+        numStadiumsVisited,
+        numStatesVisited,
+        numCanada,
+        numNonNorthAmerica,
+        numCalifornia,
+        numTexas,
+        numFlorida,
+        numNFLVisited,
+        numNBAVisited,
+        numMLBVisited,
+        numNHLVisited,
+        numMLSVisited,
+        numWNBAVisited,
+        numNCAAFVisited,
+        numNCAABVisited,
+        numMaxVisits,
+        visitDates
+    };
+}
+
+function calculateAchievementProgress(achievement, stats) {
+    switch (achievement.achievement_id) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 7:
+        case 34:
+        case 35:
+        case 36:
+            return stats.numStadiumsVisited;
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+            return stats.numStatesVisited;
+        case 12:
+            return stats.numCanada > 0 ? 1 : 0;
+        case 13:
+            return stats.numNonNorthAmerica > 0 ? 1 : 0;
+        case 14:
+            return (stats.numCalifornia > 0 ? 1 : 0) + 
+                   (stats.numTexas > 0 ? 1 : 0) + 
+                   (stats.numFlorida > 0 ? 1 : 0);
+        case 15:
+            return stats.numNFLVisited;
+        case 16:
+            return stats.numNBAVisited;
+        case 17:
+            return stats.numMLBVisited;
+        case 18:
+            return stats.numNHLVisited;
+        case 19:
+            return stats.numMLSVisited;
+        case 37:
+            return stats.numWNBAVisited;
+        case 38:
+        case 39:
+        case 40:
+            return stats.numNCAAFVisited;
+        case 41:
+        case 42:
+        case 43:
+            return stats.numNCAABVisited;
+        case 20:
+            return (stats.numNFLVisited > 0 ? 1 : 0) + 
+                   (stats.numNBAVisited > 0 ? 1 : 0) + 
+                   (stats.numMLBVisited > 0 ? 1 : 0);
+        case 21:
+            return (stats.numNFLVisited > 0 ? 1 : 0) + 
+                   (stats.numNBAVisited > 0 ? 1 : 0) + 
+                   (stats.numMLBVisited > 0 ? 1 : 0) +
+                   (stats.numNHLVisited > 0 ? 1 : 0) + 
+                   (stats.numMLSVisited > 0 ? 1 : 0);
+        case 22:
+        case 23:
+        case 24:
+        case 25:
+        case 26:
+            return stats.numMaxVisits;
+        case 28: {
+            const seasons = new Set();
+            for (const visit of stats.visitDates) {
+                if (!visit.visited_on) continue
+                const month = new Date(visit.visited_on).getMonth() + 1;
+                if (month >= 3 && month <= 5) seasons.add('spring');
+                else if (month >= 6 && month <= 8) seasons.add('summer');
+                else if (month >= 9 && month <= 11) seasons.add('fall');
+                else seasons.add('winter');
+            }
+            return seasons.size;
+        }
+        case 31: {
+            const uniqueDates = [...new Set(
+                stats.visitDates
+                .filter(v => v.visited_on)
+                .map(v => new Date(v.visited_on).toDateString())
+            )].map(d => new Date(d)).sort((a, b) => a - b);
+
+            for (let i = 0; i <= uniqueDates.length - 3; i++) {
+                const diff = (uniqueDates[i + 2] - uniqueDates[i]) / (1000 * 60 * 60 * 24);
+                if (diff <= 2) {
+                const stadiumsInWindow = new Set(
+                    stats.visitDates.filter(v => {
+                    const d = new Date(v.visited_on);
+                    return d >= uniqueDates[i] && d <= uniqueDates[i + 2];
+                    }).map(v => v.stadium_id)
+                );
+                if (stadiumsInWindow.size >= 3) return 1;
+                }
+            }
+            return 0;
+        }
+        case 32: {
+            const cityCounts = {};
+            for (const visit of stats.visitDates) {
+                if (!visit.city) continue;
+                const city = visit.city;
+                cityCounts[city] = cityCounts[city] || new Set();
+                cityCounts[city].add(visit.stadium_id);
+            }
+            return Object.values(cityCounts).some(stadiums => stadiums.size >= 3) ? 1 : 0;
+        }
+        case 33: {
+            const dateCounts = {};
+            for (const visit of stats.visitDates) {
+                if (!visit.visited_on) continue;
+                const date = new Date(visit.visited_on).toDateString();
+                dateCounts[date] = dateCounts[date] || new Set();
+                dateCounts[date].add(visit.stadium_id);
+            }
+            return Object.values(dateCounts).some(stadiums => stadiums.size >= 2) ? 1 : 0;
+        }
+        default: return 0;
+    }
+}
+
+const handleUpdateAchievementProgress = async (userId) => {
+    const stats = await getStats(userId);
+    const [achievements] = await db.query('SELECT * FROM achievements');
+
+    for (const achievement of achievements) {
+        const progress = calculateAchievementProgress(achievement, stats);
+        const unlocked = progress >= achievement.progress_goal;
+
+        await db.execute(`
+            INSERT INTO user_achievements (user_id, achievement_id, progress_value, unlocked, unlocked_on)
+            VALUES (?, ?, ?, ?, IF(?, NOW(), NULL))
+            ON DUPLICATE KEY UPDATE
+                progress_value = VALUES(progress_value),
+                unlocked = VALUES(unlocked),
+                unlocked_on = IF(? AND unlocked_on IS NULL, NOW(), IF(?, unlocked_on, NULL))`,
+            [userId, achievement.achievement_id, progress, unlocked, unlocked, unlocked, unlocked]
+        );
+    }
+}
 
 /*  updateEmail  */
 const handleUpdateEmail = async (req, res) => {
@@ -359,6 +415,9 @@ const handleUpdateUserStadium = async (req, res) => {
 
         if (!isVisited) {
             const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on) VALUES (?, ?, NOW())', [stadiumId, userId]);
+
+            await handleUpdateAchievementProgress(userId);
+
             res.json({ rows });
         } else {
             const [logged] = await db.execute(
@@ -371,6 +430,9 @@ const handleUpdateUserStadium = async (req, res) => {
             }
 
             const [rows] = await db.execute('DELETE FROM user_stadiums WHERE stadium_id = ? AND user_id = ?', [stadiumId, userId]);
+            
+            await handleUpdateAchievementProgress(userId);
+            
             res.json({ rows });
         }
     } catch (err) {
@@ -409,4 +471,4 @@ const handleUpdateUserWishlist = async (req, res) => {
     }
 };
 
-module.exports = { handleDeleteLog, handleEditLog, handleUpdateEmail, handleUpdatePassword, upload, handleUpdateProfilePic, handleUpdateUsername, handleUpdateUserStadium, handleUpdateUserWishlist };
+module.exports = { handleDeleteLog, handleEditLog, handleUpdateAchievementProgress, handleUpdateEmail, handleUpdatePassword, upload, handleUpdateProfilePic, handleUpdateUsername, handleUpdateUserStadium, handleUpdateUserWishlist };

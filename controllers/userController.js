@@ -1,5 +1,6 @@
 const db = require('../database/connection.js');
 const { getUserId, getStadiumId, buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
+const { handleUpdateAchievementProgress } = require('./updateController.js');
 
 /*  addStadium  */
 const handleAddStadium = async (req, res) => {
@@ -17,6 +18,8 @@ const handleAddStadium = async (req, res) => {
         }
 
         const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on, visited_on, user_note) SELECT s.stadium_id, u.user_id, NOW(), ?, ? FROM stadiums s, users u WHERE s.stadium_id = ? AND u.username = ?', [dateVisited, note, stadiumId, username]);
+
+        await handleUpdateAchievementProgress(userId);
 
         await db.execute('DELETE FROM user_wishlist_stadiums WHERE stadium_id = ? AND user_id = ?', [stadiumId, userId]);
 

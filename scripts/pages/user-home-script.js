@@ -492,7 +492,7 @@ function renderAchievementsTab(achievements, elements, username) {
                 const userHomeAchievementPercent = document.createElement('h3');
                 userHomeAchievementPercent.classList.add('user-home-achievement-percent');
                 const progressValue = achievement.progress_value ?? 0;
-                const progressPercent = (progressValue / achievement.progress_goal) * 100;
+                const progressPercent = Math.min((progressValue / achievement.progress_goal) * 100, 100);
                 userHomeAchievementPercent.textContent = `${progressPercent.toFixed(0)}%`;
 
                 userHomeAchievementHeader.appendChild(userHomeAchievementName);
@@ -538,7 +538,7 @@ function renderAchievementsTab(achievements, elements, username) {
 
                 const userHomeAchievementProgress = document.createElement('span');
                 userHomeAchievementProgress.classList.add('user-home-achievement-progress');
-                userHomeAchievementProgress.textContent = `${progressValue}/${achievement.progress_goal}`;
+                userHomeAchievementProgress.textContent = `${Math.min(progressValue, achievement.progress_goal)}/${achievement.progress_goal}`;
 
                 userHomeAchievementProgressContainer.appendChild(userHomeAchievementProgressBar)
                 userHomeAchievementProgressContainer.appendChild(userHomeAchievementProgress);
