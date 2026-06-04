@@ -1,15 +1,15 @@
 /*  Imports  */
-import { clearUsername, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
-import { getHeaderElements } from "./constants.js";
+import { clearUsername, createToast, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
+import { getHeaderElements, PROFILE_PIC_PATH } from "./constants.js";
 import { authAPI } from "./api/auth.js";
 
 /*  Async Functions  */
 async function handleLogin() {
-    const { username, password } = getLoginFormData();
+    const username = document.getElementById('username')?.value.trim() || '';
+    const password = document.getElementById('password')?.value.trim() || '';
     
-    const error = validateLoginForm(username, password);
-    if (error) {
-        alert(error);
+    if (!username || !password) {
+        shakeOrReplace('Please fill in all fields.')
         return;
     }
 
@@ -18,19 +18,23 @@ async function handleLogin() {
         
         localStorage.setItem('username', result.username);
         localStorage.setItem('email', result.email)
-        localStorage.setItem('profilePic', result.profile_pic || 'images/profile-pics/default.png');
+        localStorage.setItem('profilePic', PROFILE_PIC_PATH + result.profile_pic || 'images/profile-pics/default.png');
         window.location.replace('user-home.html');
     } catch (error) {
-        alert(error.message || 'Login failed. Please try again.');
+        console.error(error);
+        shakeOrReplace(error.message || 'Login failed. Please try again.')
     }
 }
 
 async function handleSignup() {
-    const { email, username, password, termsAccepted } = getSignupFormData();
+    const email = document.getElementById('new-email')?.value.trim() || '';
+    const username = document.getElementById('new-username')?.value.trim() || '';
+    const password = document.getElementById('new-password')?.value.trim() || '';
+    const termsAccepted = document.getElementById('terms-and-conditions')?.checked || false;
     
-    const errors = validateSignupForm(email, username, password, termsAccepted);
-    if (errors.length > 0) {
-        alert(errors[0]);
+    const signupErrors = validateSignupForm(email, username, password, termsAccepted);
+    if (signupErrors.length > 0) {
+        shakeOrReplace(signupErrors[0]);
         return;
     }
 
@@ -42,40 +46,17 @@ async function handleSignup() {
         localStorage.setItem('profilePic', 'images/profile-pics/default.png');
         window.location.replace('user-home.html');
     } catch (error) {
-        console.error('Signup error:', error);
-        alert(error.message || 'There was an error creating your account. Please try again later.');
+        console.error(error);
+        shakeOrReplace(error.message || 'There was an error creating your account. Please try again.');
     }
 }
 
 /*  Functions  */
-function getLoginFormData() {
-    return {
-        username: document.getElementById('username')?.value.trim() || '',
-        password: document.getElementById('password')?.value.trim() || ''
-    };
-}
-
-function getSignupFormData() {
-    return {
-        email: document.getElementById('new-email')?.value.trim() || '',
-        username: document.getElementById('new-username')?.value.trim() || '',
-        password: document.getElementById('new-password')?.value.trim() || '',
-        termsAccepted: document.getElementById('terms-and-conditions')?.checked || false
-    };
-}
-
 function handleMenuSwitch(fromMenu, toMenu, overlay) {
     toggleMenu(fromMenu, false, overlay, true);
     setTimeout(() => {
         toggleMenu(toMenu, true, overlay, true);
     }, 200);
-}
-
-function validateLoginForm(username, password) {
-    if (!username || !password) {
-        return 'Please fill in all fields';
-    }
-    return null;
 }
 
 function validateSignupForm(email, username, password, termsAccepted) {
@@ -91,13 +72,13 @@ function validateSignupForm(email, username, password, termsAccepted) {
         return errors;
     }
 
-    if (!validateEmail(email)) {
-        errors.push('Please enter a valid email address');
-    }
-
     const usernameError = validateUsername(username);
     if (usernameError) {
         errors.push(usernameError);
+    }
+
+    if (!validateEmail(email)) {
+        errors.push('Please enter a valid email address');
     }
 
     const passwordError = validatePassword(password);

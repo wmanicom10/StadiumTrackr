@@ -325,25 +325,30 @@ const handleLoadUserStadiums = async (req, res) => {
             SELECT 
                 stadiums.stadium_id,
                 stadiums.stadium_name, 
-                stadiums.image, 
+                stadiums.image,
+                stadiums.opened_date,
+                stadiums.construction_cost,
+                stadiums.capacity,
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id,
                 MAX(user_stadiums.added_on) AS added_on,
                 MAX(user_stadiums.visited_on) AS visited_on,
                 1 AS visited,
-                CASE WHEN MAX(w.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist
+                CASE WHEN MAX(w.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist,
+                COUNT(DISTINCT us2.user_id) + COUNT(DISTINCT uw2.user_id) AS popularity
             FROM user_stadiums
             JOIN stadiums ON user_stadiums.stadium_id = stadiums.stadium_id
             JOIN teams ON stadiums.stadium_id = teams.stadium_id
             JOIN leagues ON teams.league_id = leagues.league_id
             JOIN countries ON stadiums.country_id = countries.country_id
             LEFT JOIN user_wishlist_stadiums w ON w.stadium_id = stadiums.stadium_id AND w.user_id = ?
+            LEFT JOIN user_stadiums us2 ON us2.stadium_id = stadiums.stadium_id
+            LEFT JOIN user_wishlist_stadiums uw2 ON uw2.stadium_id = stadiums.stadium_id
             WHERE user_stadiums.user_id = ?
             ${leagueFilter.sql}
             ${countryFilter.sql}
-            GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, 
-                    stadiums.city, stadiums.state, stadiums.country_id
+            GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, stadiums.opened_date, stadiums.construction_cost, stadiums.capacity, stadiums.city, stadiums.state, stadiums.country_id
         `;
 
         query += buildSortOrder(sortBy, 'stadiums', true);
@@ -380,7 +385,7 @@ const handleLoadUserVisits = async (req, res) => {
             SELECT 
                 stadiums.stadium_id,
                 stadiums.stadium_name, 
-                stadiums.image, 
+                stadiums.image,
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id,
@@ -429,43 +434,45 @@ const handleLoadUserWishlist = async (req, res) => {
         if (!userId) {
             return res.status(404).json({ error: 'User not found' });
         }
-
         const leagueFilter = buildLeagueFilter(league);
         const countryFilter = buildCountryFilter(country);
-
         let query = `
             SELECT 
                 stadiums.stadium_id,
                 stadiums.stadium_name, 
-                stadiums.image, 
+                stadiums.image,
+                stadiums.opened_date,
+                stadiums.construction_cost,
+                stadiums.capacity,
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id,
                 MAX(user_wishlist_stadiums.added_on) AS added_on,
                 1 AS wishlist,
-                CASE WHEN MAX(v.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited
+                CASE WHEN MAX(v.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited,
+                COUNT(DISTINCT us2.user_id) + COUNT(DISTINCT uw2.user_id) AS popularity
             FROM user_wishlist_stadiums
             JOIN stadiums ON user_wishlist_stadiums.stadium_id = stadiums.stadium_id
             JOIN teams ON stadiums.stadium_id = teams.stadium_id
             JOIN leagues ON teams.league_id = leagues.league_id
             JOIN countries ON stadiums.country_id = countries.country_id
             LEFT JOIN user_stadiums v ON v.stadium_id = stadiums.stadium_id AND v.user_id = ?
+            LEFT JOIN user_stadiums us2 ON us2.stadium_id = stadiums.stadium_id
+            LEFT JOIN user_wishlist_stadiums uw2 ON uw2.stadium_id = stadiums.stadium_id
             WHERE user_wishlist_stadiums.user_id = ?
             ${leagueFilter.sql}
             ${countryFilter.sql}
             GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, 
+                    stadiums.opened_date, stadiums.construction_cost, stadiums.capacity,
                     stadiums.city, stadiums.state, stadiums.country_id
         `;
-
         query += buildSortOrder(sortBy, 'stadiums', true);
-
         const params = [
             userId, 
             userId, 
             ...(leagueFilter.sql ? leagueFilter.params : []),
             ...countryFilter.params
         ];
-
         const [userWishlist] = await db.query(query, params);
         res.json({ userWishlist });
     } catch (err) {
@@ -510,4 +517,4 @@ const handleSaveFavoriteStadiums = async (req, res) => {
     }
 };
 
-module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserStadiums, handleLoadUserVisits, handleLoadUserWishlist, handleSaveFavoriteStadiums,  };
+module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserStadiums, handleLoadUserVisits, handleLoadUserWishlist, handleSaveFavoriteStadiums };

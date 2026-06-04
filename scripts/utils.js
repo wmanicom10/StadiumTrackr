@@ -1,5 +1,5 @@
 /*  Imports  */
-import { API_BASE_URL, DEBOUNCE_TIME, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS, getHeaderElements } from './constants.js';
+import { API_BASE_URL, DEBOUNCE_TIME, getHeaderElements, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS, STADIUM_IMAGE_PATH } from './constants.js';
 import { loadAPI } from './api/load.js';
 import { updateAPI } from './api/update.js';
 import { userAPI } from './api/user.js';
@@ -82,7 +82,7 @@ function createStadiumCard(stadium, elements) {
     link.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
     const img = document.createElement('img');
-    img.src = stadium.image;
+    img.src = STADIUM_IMAGE_PATH + stadium.image;
     img.alt = stadium.stadium_name;
 
     const textDiv = document.createElement('div');
@@ -145,7 +145,7 @@ function createStadiumCard(stadium, elements) {
             const result = await updateAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
 
             if (result.locked) {
-                alert('Cannot remove a stadium with logged visits. Delete your logs first.')
+                shakeOrReplace('Cannot remove a stadium with logged visits. Delete your logs first.')
                 return;
             }
 
@@ -166,13 +166,17 @@ function createStadiumCard(stadium, elements) {
                     }, 200);
                     setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
                     updateAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
-                        .catch(err => alert(err.message));
+                        .catch(err => {
+                            console.error(err);
+                            shakeOrReplace(err.message || 'Failed to update wishlist. Please try again.')
+                        });
                 }
             }, 200);
             setTimeout(() => visitedBtn.classList.remove('animating'), 400);
 
         } catch (err) {
-            alert(err.message);
+            console.error(err);
+            shakeOrReplace(err.message || 'Failed to update visit status. Please try again.')
         }
     });
 
@@ -194,7 +198,8 @@ function createStadiumCard(stadium, elements) {
             await updateAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist)
             isWishlist = newIsWishlist;
         } catch (err) {
-            alert(err.message);
+            console.error(err);
+            shakeOrReplace(err.message || 'Failed to update wishlist. Please try again.')
         }
     });
 
@@ -299,7 +304,8 @@ export async function searchStadiums(name, suggestionsContainer, searchValue) {
         renderSearchSuggestions(stadiums, suggestionsContainer, searchValue);
 
     } catch (error) {
-        alert(error.message);
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to search stadiums. Please try again.');
     }
 }
 
@@ -365,6 +371,60 @@ export function createPageButton(pageNum, currentPage) {
     return btn;
 }
 
+export function createToast(type, message) {
+    const toast = document.createElement('div');
+
+    const toastImage = document.createElement('img');
+    toastImage.classList.add('toast-image');
+    if (type === "success") {
+        toastImage.src = './images/icons/check.png';
+        toast.classList.add('toast-success');
+        const bar = document.createElement('div');
+        bar.classList.add('toast-progress');
+        toast.appendChild(bar);
+        setTimeout(() => {
+            toast.classList.remove('toast-show');
+            toast.addEventListener('transitionend', () => toast.remove());
+        }, 5000);
+    } else if (type === "error") {
+        toastImage.src = './images/icons/error.png';
+        toast.classList.add('toast-error');
+    }
+    
+    const toastMessage = document.createElement('p');
+    toastMessage.classList.add('toast-message');
+    toastMessage.textContent = message;
+
+    const closeToast = document.createElement('h3');
+    closeToast.classList.add('close-toast');
+    closeToast.textContent = '×';
+    closeToast.addEventListener('click', () => {
+        toast.classList.remove('toast-show');
+        toast.addEventListener('transitionend', () => toast.remove());
+    });
+
+    toast.appendChild(toastImage);
+    toast.appendChild(toastMessage);
+    toast.appendChild(closeToast);
+
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.classList.add('toast-container');
+        document.body.appendChild(container);
+    }
+    const existing = [...container.querySelectorAll('.toast-error, .toast-success')];
+    const duplicate = existing.find(t => t.querySelector('.toast-message').textContent === message);
+    if (duplicate) {
+        duplicate.classList.remove('toast-shake');
+        requestAnimationFrame(() => duplicate.classList.add('toast-shake'));
+        duplicate.addEventListener('animationend', () => duplicate.classList.remove('toast-shake'), { once: true });
+        return;
+    }
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('toast-show'));
+}
+
 export function createUserStadiumElement(stadium, elements) {
     const userStadium = document.createElement('div');
     userStadium.classList.add('user-stadium');
@@ -373,7 +433,7 @@ export function createUserStadiumElement(stadium, elements) {
     userStadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
     const userStadiumImage = document.createElement('img');
-    userStadiumImage.src = stadium.image;
+    userStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
     userStadiumImage.alt = stadium.stadium_name;
 
     const userStadiumText = document.createElement('div');
@@ -432,7 +492,7 @@ export function createUserStadiumElement(stadium, elements) {
             const result = await updateAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
 
             if (result.locked) {
-                alert('Cannot remove a stadium with logged visits. Delete your logs first.');
+                shakeOrReplace('Cannot remove a stadium with logged visits. Delete your logs first.');
                 return;
             }
 
@@ -453,13 +513,17 @@ export function createUserStadiumElement(stadium, elements) {
                     }, 200);
                     setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
                     updateAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
-                        .catch(err => alert(err.message));
+                        .catch(err => {
+                            console.error(err);
+                            shakeOrReplace(err.message || 'Failed to update wishlist. Please try again.');
+                        });
                 }
             }, 200);
             setTimeout(() => visitedBtn.classList.remove('animating'), 400);
 
         } catch (err) {
-            alert(err.message);
+            console.error(err);
+            shakeOrReplace(err.message || 'Failed to update visit status. Please try again.');
         }
     });
 
@@ -481,7 +545,8 @@ export function createUserStadiumElement(stadium, elements) {
             await updateAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist);
             isWishlist = newIsWishlist;
         } catch (err) {
-            alert(err.message);
+            console.error(err);
+            shakeOrReplace(err.message || 'Failed to update wishlist. Please try again.');
         }
     });
 
@@ -686,7 +751,7 @@ export function setPageInURL(page) {
 export function setupAddStadiumModal(stadiumId, stadiumName, city, state, username, stadiumImage, elements) {
     elements.addStadiumName.textContent = stadiumName;
     elements.addStadiumLocation.textContent = city + ', ' + state;
-    elements.addStadiumImage.src = stadiumImage;
+    elements.addStadiumImage.src = STADIUM_IMAGE_PATH + stadiumImage;
 
     const today = new Date().toISOString().split('T')[0];
     elements.addStadiumDateVisited.setAttribute('max', today);
@@ -698,9 +763,11 @@ export function setupAddStadiumModal(stadiumId, stadiumName, city, state, userna
 
         try {
             await userAPI.addStadium(stadiumId, username, dateVisited, note);
+            sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Stadium added successfully.' }));
             window.location.reload();
         } catch (error) {
-            alert(error.message);
+            console.error(error);
+            shakeOrReplace(error.message || 'Failed to add stadium. Please try again.');
         }
     });
 
@@ -723,7 +790,8 @@ export function setupDeleteLogHandlers(elements, getCurrentData) {
             window.location.reload();
             currentData = null;
         } catch (err) {
-            alert(err.message);
+            console.error(err);
+            shakeOrReplace(err.message || 'Failed to delete log. Please try again.');
         }
     });
 
@@ -746,7 +814,8 @@ export function setupEditLogHandlers(elements, getCurrentData) {
             window.location.reload();
             currentData = null;
         } catch (err) {
-            alert(err.message);
+            console.error(err);
+            shakeOrReplace(err.message || 'Failed to update log. Please try again.');
         }
     });
 
@@ -833,6 +902,18 @@ export function setupSearchAutocomplete(formId, searchFieldId, suggestionsId) {
     });
 
     searchStadiumsForm?.addEventListener('submit', (e) => e.preventDefault());
+}
+
+export function shakeOrReplace(message) {
+    const existing = document.querySelector('.toast-error');
+    if (existing && existing.querySelector('.toast-message').textContent === message) {
+        existing.classList.remove('toast-shake');
+        requestAnimationFrame(() => existing.classList.add('toast-shake'));
+        existing.addEventListener('animationend', () => existing.classList.remove('toast-shake'), { once: true });
+    } else {
+        existing?.remove();
+        createToast('error', message);
+    }
 }
 
 export function showLoggedInUI(username) {
@@ -926,6 +1007,7 @@ export function toggleMenu(menu, show, overlay, keepOverlay = false) {
         menu.classList.add('menu-fade-in');
     } 
     else {
+        document.querySelectorAll('.toast-error, .toast-success').forEach(t => t.remove());
         menu.classList.remove('menu-fade-in');
         menu.classList.add('menu-fade-out');
         if (!keepOverlay) {

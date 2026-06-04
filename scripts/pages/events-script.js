@@ -1,6 +1,6 @@
 /*  Imports  */
-import { getAuthElements, MIN_LOADING_TIME } from "../constants.js";
-import { calculatePageButtons, createEllipsis, createNavigationButton, createPageButton, formatEventDate, formatEventTime, getEventIcon, getPageFromURL, getUsername, initializeCustomSelects, isLoggedIn, setPageInURL } from "../utils.js";
+import { getAuthElements, MIN_LOADING_TIME, STADIUM_IMAGE_PATH } from "../constants.js";
+import { calculatePageButtons, createEllipsis, createNavigationButton, createPageButton, formatEventDate, formatEventTime, getEventIcon, getPageFromURL, getUsername, initializeCustomSelects, isLoggedIn, setPageInURL, shakeOrReplace } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -10,7 +10,7 @@ async function loadStadiumInfo(id) {
         const result = await loadAPI.loadStadiumInfo(id);
         return result;
     } catch (error) {
-        alert(error.message);
+        console.error(error);
     }
 }
 
@@ -23,74 +23,82 @@ async function showEventsUI() {
 
         const stadiums = result.stadiums;
 
-        stadiums.forEach(stadium => {
-            const featuredEventContainer = document.createElement('div');
-            featuredEventContainer.classList.add('featured-event-container');
+        if (stadiums.length === 0) {
+            document.getElementById('no-featured-events').style.display = 'block';
+            document.getElementById('featured-events').style.display = 'none';
+        } else {
+            document.getElementById('no-featured-events').style.display = 'none';
+            document.getElementById('featured-events').style.display = 'block';
 
-            const featuredEventHeader = document.createElement('div');
-            featuredEventHeader.classList.add('featured-event-header');
+            stadiums.forEach(stadium => {
+                const featuredEventContainer = document.createElement('div');
+                featuredEventContainer.classList.add('featured-event-container');
 
-            const featuredEventStadiumName = document.createElement('a');
-            featuredEventStadiumName.classList.add('featured-event-stadium-name');
-            featuredEventStadiumName.textContent = stadium.stadium_name;
-            featuredEventStadiumName.href = `stadium.html?id=${stadium.stadium_id}`;
-            featuredEventHeader.appendChild(featuredEventStadiumName);
+                const featuredEventHeader = document.createElement('div');
+                featuredEventHeader.classList.add('featured-event-header');
 
-            const featuredEventStadiumLocation = document.createElement('h4');
-            featuredEventStadiumLocation.classList.add('featured-event-stadium-location');
-            featuredEventStadiumLocation.textContent = stadium.city + ', ' + stadium.state;
-            featuredEventHeader.appendChild(featuredEventStadiumLocation);
+                const featuredEventStadiumName = document.createElement('a');
+                featuredEventStadiumName.classList.add('featured-event-stadium-name');
+                featuredEventStadiumName.textContent = stadium.stadium_name;
+                featuredEventStadiumName.href = `stadium.html?id=${stadium.stadium_id}`;
+                featuredEventHeader.appendChild(featuredEventStadiumName);
 
-            featuredEventContainer.appendChild(featuredEventHeader);
+                const featuredEventStadiumLocation = document.createElement('h4');
+                featuredEventStadiumLocation.classList.add('featured-event-stadium-location');
+                featuredEventStadiumLocation.textContent = stadium.city + ', ' + stadium.state;
+                featuredEventHeader.appendChild(featuredEventStadiumLocation);
 
-            const featuredEvent = document.createElement('div');
-            featuredEvent.classList.add('featured-event');
+                featuredEventContainer.appendChild(featuredEventHeader);
 
-            const featuredEventImage = document.createElement('img');
-            featuredEventImage.src = stadium.image;
-            featuredEvent.appendChild(featuredEventImage);
+                const featuredEvent = document.createElement('div');
+                featuredEvent.classList.add('featured-event');
 
-            const eventInfo = document.createElement('div');
-            eventInfo.classList.add('event-info');
+                const featuredEventImage = document.createElement('img');
+                featuredEventImage.src = STADIUM_IMAGE_PATH + stadium.image;
+                featuredEvent.appendChild(featuredEventImage);
 
-            const eventStadiumName = document.createElement('h4');
-            eventStadiumName.classList.add('event-stadium-name');
-            eventStadiumName.textContent = stadium.nextEvent.name;
-            eventInfo.appendChild(eventStadiumName);
+                const eventInfo = document.createElement('div');
+                eventInfo.classList.add('event-info');
 
-            const eventInfoContainer = document.createElement('div');
-            eventInfoContainer.classList.add('event-info-container');
+                const eventStadiumName = document.createElement('h4');
+                eventStadiumName.classList.add('event-stadium-name');
+                eventStadiumName.textContent = stadium.nextEvent.name;
+                eventInfo.appendChild(eventStadiumName);
 
-            const eventDate = document.createElement('h4');
-            eventDate.textContent = formatEventDate(stadium.nextEvent.dates.start.localDate);
-            eventInfoContainer.appendChild(eventDate);
+                const eventInfoContainer = document.createElement('div');
+                eventInfoContainer.classList.add('event-info-container');
 
-            const eventTime = document.createElement('h4');
-            eventTime.textContent = formatEventTime(stadium.nextEvent.dates.start.dateTime, stadium.nextEvent.dates.timezone);
-            eventInfoContainer.appendChild(eventTime);
+                const eventDate = document.createElement('h4');
+                eventDate.textContent = formatEventDate(stadium.nextEvent.dates.start.localDate);
+                eventInfoContainer.appendChild(eventDate);
 
-            eventInfo.appendChild(eventInfoContainer);
+                const eventTime = document.createElement('h4');
+                eventTime.textContent = formatEventTime(stadium.nextEvent.dates.start.dateTime, stadium.nextEvent.dates.timezone);
+                eventInfoContainer.appendChild(eventTime);
 
-            featuredEvent.appendChild(eventInfo);
+                eventInfo.appendChild(eventInfoContainer);
 
-            const featuredEventLink = document.createElement('a');
-            featuredEventLink.classList.add('featured-event-link');
-            featuredEventLink.href = stadium.nextEvent.url;
-            featuredEventLink.target = '_blank';
-            featuredEventLink.rel = 'noopener noreferrer';
-            featuredEventLink.textContent = 'Buy Tickets →';
-            featuredEvent.appendChild(featuredEventLink);
-            
-            featuredEventContainer.appendChild(featuredEvent);
+                featuredEvent.appendChild(eventInfo);
 
-            document.getElementById('featured-events').appendChild(featuredEventContainer);
-        });
+                const featuredEventLink = document.createElement('a');
+                featuredEventLink.classList.add('featured-event-link');
+                featuredEventLink.href = stadium.nextEvent.url;
+                featuredEventLink.target = '_blank';
+                featuredEventLink.rel = 'noopener noreferrer';
+                featuredEventLink.textContent = 'Buy Tickets →';
+                featuredEvent.appendChild(featuredEventLink);
+                
+                featuredEventContainer.appendChild(featuredEvent);
+
+                document.getElementById('featured-events').appendChild(featuredEventContainer);
+            });
+        }
 
         document.getElementById('featured-events-skeleton').style.display = 'none';
         document.getElementById('featured-events').style.display = 'block';
         
     } catch (error) {
-        alert('Failed to load events: ' + error.message);
+        console.error(error);
     }
 }
 
@@ -101,7 +109,7 @@ async function showStadiumUI(stadiumId) {
 
     const stadiumImage = document.createElement('img');
     stadiumImage.id = 'stadium-image';
-    stadiumImage.src = result.stadiumInfo.stadium.image;
+    stadiumImage.src = STADIUM_IMAGE_PATH + result.stadiumInfo.stadium.image;
     document.querySelector('main').prepend(stadiumImage);
     stadiumImage.onload = () => {
         stadiumImage.classList.add('loaded');
@@ -129,7 +137,7 @@ async function showStadiumUI(stadiumId) {
         document.getElementById('stadium-events').style.display = 'block';
         
     } catch (error) {
-        alert('Failed to load events: ' + error.message);
+        console.error(error);
     }
 }
 

@@ -51,7 +51,7 @@ const buildSortOrder = (sortBy, tablePrefix = '', isGrouped = false, isUnion = f
         stadiumName = 'stadium_name';
     } else if (isGrouped) {
         addedOn = 'MAX(added_on)';
-        visitedOn = 'MAX(visited_on)';
+        visitedOn = 'MAX(user_stadiums.visited_on)';
         stadiumName = 'stadium_name';
     } else {
         addedOn = 'user_stadiums.added_on';
@@ -60,20 +60,32 @@ const buildSortOrder = (sortBy, tablePrefix = '', isGrouped = false, isUnion = f
     }
     
     switch (sortBy) {
-        case 'name-desc':
-            return ` ORDER BY ${stadiumName} DESC`;
-        case 'name-asc':
-            return ` ORDER BY ${stadiumName} ASC`;
-        case 'date-desc':
-        case 'added-desc':
-            return ` ORDER BY ${addedOn} DESC`;
-        case 'date-asc':
         case 'added-asc':
             return ` ORDER BY ${addedOn} ASC`;
-        case 'visited-desc':
-            return ` ORDER BY ${visitedOn} IS NULL, ${visitedOn} DESC, ${addedOn} DESC`;
+        case 'added-desc':
+            return ` ORDER BY ${addedOn} DESC`;
+        case 'capacity-asc':
+            return ` ORDER BY capacity IS NULL, capacity ASC, stadiums.stadium_name ASC`;
+        case 'capacity-desc':
+            return ` ORDER BY capacity IS NULL, capacity DESC, stadiums.stadium_name ASC`;
+        case 'cost-asc':
+            return ` ORDER BY construction_cost IS NULL, construction_cost ASC, stadiums.stadium_name ASC`;
+        case 'cost-desc':
+            return ` ORDER BY construction_cost IS NULL, construction_cost DESC, stadiums.stadium_name ASC`;
+        case 'name-asc':
+            return ` ORDER BY ${stadiumName} ASC`;
+        case 'name-desc':
+            return ` ORDER BY ${stadiumName} DESC`;
+        case 'opened-asc':
+            return ` ORDER BY opened_date IS NULL, opened_date ASC, stadiums.stadium_name ASC`;
+        case 'opened-desc':
+            return ` ORDER BY opened_date IS NULL, opened_date DESC, stadiums.stadium_name ASC`;
+        case 'popularity':
+            return ` ORDER BY popularity DESC, stadiums.stadium_name ASC`;
         case 'visited-asc':
             return ` ORDER BY ${visitedOn} IS NULL, ${visitedOn} ASC, ${addedOn} ASC`;
+        case 'visited-desc':
+            return ` ORDER BY ${visitedOn} IS NULL, ${visitedOn} DESC, ${addedOn} DESC`;
         default:
             return ` ORDER BY ${stadiumName} ASC`;
     }

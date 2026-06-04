@@ -18,37 +18,56 @@ async function fetchWithRetry(url, retries = 3, delay = 1000, timeout = null) {
     }
 }
 
-async function getNextEvents(stadiums, limit = 1) {
-    const results = await Promise.all(
-        stadiums.map(async (stadium) => {
-            if (!stadium.ticketmaster_id) return null;
+async function getNextEvents(stadiums, limit = 1, options = {}) {
+    const { cascade = false, targetCount = 3 } = options;
+
+    if (cascade) {
+        const results = [];
+        for (const stadium of stadiums) {
+            if (results.length >= targetCount) break;
+            if (!stadium.ticketmaster_id) continue;
             try {
                 const url = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${stadium.ticketmaster_id}&apikey=${process.env.TICKETMASTER_API_KEY}`;
                 const data = await fetchWithRetry(url);
                 const events = data._embedded?.events || [];
-
-                return events.slice(0, limit).map(event => ({
+                if (events.length === 0) continue;
+                results.push(...events.slice(0, limit).map(event => ({
                     stadium_id: stadium.stadium_id,
                     stadium_name: stadium.stadium_name,
                     city: stadium.city,
                     state: stadium.state,
                     image: stadium.image,
-                    nextEvent: {
-                        ...event,
-                        dates: {
-                            ...event.dates,
-                            timezone: event.dates?.timezone
-                        }
-                    }
-                }));
+                    nextEvent: { ...event, dates: { ...event.dates, timezone: event.dates?.timezone } }
+                })));
             } catch (error) {
-                console.error(`Failed to fetch events for ${stadium.stadium_name} after retries:`, error.message);
-                return null;
+                console.error(`Failed to fetch events for ${stadium.stadium_name}:`, error.message);
             }
-        })
-    );
-
-    return results.flat().filter(r => r !== null && r.nextEvent !== null);
+        }
+        return results;
+    } else {
+        const results = await Promise.all(
+            stadiums.map(async (stadium) => {
+                if (!stadium.ticketmaster_id) return null;
+                try {
+                    const url = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${stadium.ticketmaster_id}&apikey=${process.env.TICKETMASTER_API_KEY}`;
+                    const data = await fetchWithRetry(url);
+                    const events = data._embedded?.events || [];
+                    return events.slice(0, limit).map(event => ({
+                        stadium_id: stadium.stadium_id,
+                        stadium_name: stadium.stadium_name,
+                        city: stadium.city,
+                        state: stadium.state,
+                        image: stadium.image,
+                        nextEvent: { ...event, dates: { ...event.dates, timezone: event.dates?.timezone } }
+                    }));
+                } catch (error) {
+                    console.error(`Failed to fetch events for ${stadium.stadium_name}:`, error.message);
+                    return null;
+                }
+            })
+        );
+        return results.flat().filter(r => r !== null);
+    }
 }
 
 function getLocalTimestamp(event) {
@@ -88,9 +107,9 @@ const handleLoadAboutInfo = async (req, res) => {
 /*  loadFeaturedEvents  */
 const handleLoadFeaturedEvents = async (req, res) => {
     try {
-        const [popularStadiums] = await db.execute('SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.ticketmaster_id, COUNT(DISTINCT us.user_id) + COUNT(DISTINCT w.user_id) AS popularity FROM stadiums s LEFT JOIN user_stadiums us ON us.stadium_id = s.stadium_id LEFT JOIN user_wishlist_stadiums w ON w.stadium_id = s.stadium_id GROUP BY s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.ticketmaster_id ORDER BY popularity DESC, s.stadium_name ASC LIMIT 3');
+        const [popularStadiums] = await db.execute('SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.ticketmaster_id, COUNT(DISTINCT us.user_id) + COUNT(DISTINCT w.user_id) AS popularity FROM stadiums s LEFT JOIN user_stadiums us ON us.stadium_id = s.stadium_id LEFT JOIN user_wishlist_stadiums w ON w.stadium_id = s.stadium_id GROUP BY s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.ticketmaster_id ORDER BY popularity DESC, s.stadium_name ASC LIMIT 25');
         
-        res.json({ stadiums: await getNextEvents(popularStadiums) });
+        res.json({ stadiums: await getNextEvents(popularStadiums, 1, { cascade: true, targetCount: 3 }) });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -244,20 +263,26 @@ const handleLoadStadiums = async (req, res) => {
         
     try {
         let query = `
-            SELECT DISTINCT 
+            SELECT 
                 stadiums.stadium_id,
                 stadiums.stadium_name, 
-                stadiums.image, 
+                stadiums.image,
+                stadiums.opened_date,
+                stadiums.construction_cost,
+                stadiums.capacity,
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id
                 ${username ? `,
                 CASE WHEN v.stadium_id IS NOT NULL THEN 1 ELSE 0 END AS visited,
-                CASE WHEN w.stadium_id IS NOT NULL THEN 1 ELSE 0 END AS wishlist` : ''}
+                CASE WHEN w.stadium_id IS NOT NULL THEN 1 ELSE 0 END AS wishlist` : ''},
+                COUNT(DISTINCT us.user_id) + COUNT(DISTINCT uw.user_id) AS popularity
             FROM stadiums
             JOIN teams ON stadiums.stadium_id = teams.stadium_id
             JOIN leagues ON teams.league_id = leagues.league_id
             JOIN countries ON stadiums.country_id = countries.country_id
+            LEFT JOIN user_stadiums us ON us.stadium_id = stadiums.stadium_id
+            LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = stadiums.stadium_id
             ${username ? `
                 LEFT JOIN users u ON u.username = ?
                 LEFT JOIN user_stadiums v ON v.stadium_id = stadiums.stadium_id AND v.user_id = u.user_id
@@ -275,6 +300,9 @@ const handleLoadStadiums = async (req, res) => {
         const countryFilter = buildCountryFilter(country);
         query += countryFilter.sql;
         params.push(...countryFilter.params);
+
+        query += ` GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, stadiums.city, stadiums.state, stadiums.country_id, stadiums.opened_date, stadiums.construction_cost, stadiums.capacity`;
+        if (username) query += `, CASE WHEN v.stadium_id IS NOT NULL THEN 1 ELSE 0 END, CASE WHEN w.stadium_id IS NOT NULL THEN 1 ELSE 0 END`;
 
         query += buildSortOrder(sortBy, 'stadiums');
 
@@ -307,37 +335,22 @@ const handleLoadUserEvents = async (req, res) => {
 
         const stadiums = await getNextEvents(userEventStadiums, 3);
 
-        stadiums.sort((a, b) => {
-            if (sort === 'date-asc') {
-                const timeA = getLocalTimestamp(a);
-                const timeB = getLocalTimestamp(b);
-                
-                if (timeA === null && timeB === null) return a.stadium_name.localeCompare(b.stadium_name);
+        if (sort === 'date-asc' || sort === 'date-desc') {
+            stadiums.sort((a, b) => {
+                const timeA = getLocalTimestamp(a.nextEvent);
+                const timeB = getLocalTimestamp(b.nextEvent);
+                if (timeA === null && timeB === null) return 0;
                 if (timeA === null) return 1;
                 if (timeB === null) return -1;
-                
-                if (timeA !== timeB) {
-                    return timeA - timeB;
-                }
-                return a.stadium_name.localeCompare(b.stadium_name);
-            } else if (sort === 'name-asc') {
-                return a.stadium_name.localeCompare(b.stadium_name);
-            } else if (sort === 'name-desc') {
-                return b.stadium_name.localeCompare(a.stadium_name);
-            } else {
-                const timeA = getLocalTimestamp(a);
-                const timeB = getLocalTimestamp(b);
-                
-                if (timeA === null && timeB === null) return a.stadium_name.localeCompare(b.stadium_name);
-                if (timeA === null) return 1;
-                if (timeB === null) return -1;
-                
-                if (timeA !== timeB) {
-                    return timeB - timeA;
-                }
-                return a.stadium_name.localeCompare(b.stadium_name);
-            }
-        });
+                return sort === 'date-asc' ? timeA - timeB : timeB - timeA;
+            });
+        } else {
+            stadiums.sort((a, b) => {
+                if (sort === 'name-asc') return a.stadium_name.localeCompare(b.stadium_name);
+                if (sort === 'name-desc') return b.stadium_name.localeCompare(a.stadium_name);
+                return 0;
+            });
+        }
         
         res.json({ stadiums });
     } catch (err) {

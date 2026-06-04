@@ -5,6 +5,7 @@ const path = require('path');
 const fs = require('fs');
 const PROFILE_PIC_DIR = process.env.PROFILE_PIC_DIR;
 const bcrypt = require('bcryptjs');
+const sharp = require('sharp');
 
 /*  deleteLog  */
 const handleDeleteLog = async (req, res) => {
@@ -336,7 +337,6 @@ const upload = multer({ storage });
 
 const handleUpdateProfilePic = async (req, res) => {
     const { username } = req.body;
-    const ext = path.extname(req.file.filename);
 
     try {
         const userId = await getUserId(username);
@@ -352,15 +352,19 @@ const handleUpdateProfilePic = async (req, res) => {
             }
         }
 
-        const newFilename = `user_${userId}${ext}`;
-	const oldPath = path.join(PROFILE_PIC_DIR, req.file.filename);
-	const newPath = path.join(PROFILE_PIC_DIR, newFilename);
-	const webPath = `images/profile-pics/${newFilename}`;
+        const newFilename = `user_${userId}.jpg`;
+        const tempPath = path.join(PROFILE_PIC_DIR, req.file.filename);
+        const newPath = path.join(PROFILE_PIC_DIR, newFilename);
 
-        fs.renameSync(oldPath, newPath);
+        await sharp(tempPath)
+            .resize(200, 200, { fit: 'cover', position: 'center' })
+            .jpeg({ quality: 80 })
+            .toFile(newPath);
 
-        await db.query('UPDATE users SET profile_pic = ? WHERE user_id = ?', [webPath, userId]);
-        res.json({ profile_pic: webPath });
+        fs.unlinkSync(tempPath);
+
+        await db.query('UPDATE users SET profile_pic = ? WHERE user_id = ?', [newFilename, userId]);
+        res.json({ profile_pic: newFilename });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });

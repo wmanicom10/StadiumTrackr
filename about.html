@@ -111,7 +111,7 @@
                                         const u = localStorage.getItem('username') || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
-                                        document.getElementById('logged-in-header-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
+                                        document.getElementById('logged-in-header-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
                                     })();
                                 </script>
                                 <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -152,7 +152,7 @@
                                         const u = localStorage.getItem('username') || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
-                                        document.getElementById('sidebar-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
+                                        document.getElementById('sidebar-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
                                     })();
                                 </script>
                             </div>
@@ -201,7 +201,7 @@
                         <img src="images/about/about-wishlist.png" id="about-wishlist-image">
                         <div class="about-section-text">
                             <h3>Add stadiums to your wishlist</h3>
-                            <p>Adding stadiums to your wishlist lets you keep track of stadiums you want to visit in the future, and lets you see upcoming events at those stadiums on the Events page.</p>
+                            <p>Adding stadiums to your wishlist lets you keep track of stadiums you want to visit in the future, and lets you see upcoming events at those stadiums on your Events page.</p>
                         </div>
                     </div>
                     <div class="about-section">

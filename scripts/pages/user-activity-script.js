@@ -1,5 +1,5 @@
 /*  Imports  */
-import { MIN_LOADING_TIME, overlay } from "../constants.js";
+import { MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
 import { createEllipsis, createNavigationButton, createPageButton, formatDate, getPageFromURL, getUsername, initializeCustomSelects, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
@@ -38,7 +38,7 @@ async function loadStadiumInfo(id, username) {
         const { stadium } = result.stadiumInfo;
         return { stadiumName: stadium.name, image: stadium.image };
     } catch (error) {
-        alert(error.message);
+        console.error(error);
     }
 }
 
@@ -57,7 +57,7 @@ async function setView(username) {
 
         const stadiumImage = document.createElement('img');
         stadiumImage.id = 'stadium-image';
-        stadiumImage.src = image;
+        stadiumImage.src = STADIUM_IMAGE_PATH + image;
         document.querySelector('main').prepend(stadiumImage);
         stadiumImage.onload = () => {
             stadiumImage.classList.add('loaded');
@@ -133,7 +133,7 @@ function renderActivity(stadiums, elements, username) {
 
                     const userHomeActivityLogImage = document.createElement('img');
                     userHomeActivityLogImage.classList.add('user-home-activity-log-image');
-                    userHomeActivityLogImage.src = stadium.image;
+                    userHomeActivityLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
 
                     const userHomeLogActivityInfo = document.createElement('div');
                     userHomeLogActivityInfo.classList.add('user-home-log-activity-info');
@@ -183,7 +183,7 @@ function renderActivity(stadiums, elements, username) {
                         currentData = { visit_id: stadium.visit_id, username };
                         elements.editLogName.textContent = stadium.stadium_name;
                         elements.editLogLocation.textContent = stadium.city + ', ' + stadium.state;
-                        elements.editLogImage.src = stadium.image;
+                        elements.editLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
                         elements.editLogDateVisited.value = stadium.visited_on.split('T')[0];
                         const now = new Date();
                         const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;

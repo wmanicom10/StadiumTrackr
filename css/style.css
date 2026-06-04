@@ -739,6 +739,100 @@ label img:hover {
     border-top: 1px solid var(--color-primary-20);
 }
 
+/*  Toasts  */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10010;
+}
+
+.toast-error, .toast-success {
+    width: 385px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    padding: 15px;
+    transform: translateX(-120%);
+    transition: transform 0.4s ease;
+}
+
+.toast-show {
+    transform: translateX(0);
+}
+
+.toast-error {
+    background: #4D2E38;
+    border: 1px solid rgba(255, 79, 79, 0.4);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.toast-success {
+    background: #273147;
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.toast-image {
+    width: 20px;
+    margin-right: 15px;
+}
+
+.toast-message {
+    margin: 0;
+    font-size: 1rem;
+    width: 100%;
+    margin-right: 10px;
+}
+
+.close-toast {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.toast-error .toast-message, .toast-error .close-toast {
+    color: var(--color-danger);
+}
+
+.toast-success .toast-message, .toast-success .close-toast {
+    color: var(--color-blue);
+}
+
+@keyframes toast-shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(2px); }
+}
+
+.toast-shake {
+    animation: toast-shake 0.4s ease;
+}
+
+.toast-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    width: 100%;
+    background: rgba(79, 172, 254, 0.5);
+    animation: toast-progress 5s linear forwards;
+}
+
+@keyframes toast-progress {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
 /*  Welcome Text  */
 #home-image {
     width: 100%;
@@ -1247,6 +1341,20 @@ label img:hover {
     color: var(--color-text);
 }
 
+#stadium-map .popup-card p {
+    margin: 10px 0 0 !important;
+}
+
+#stadium-map .popup-card p a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#stadium-map .popup-card p a:hover {
+    color: var(--color-blue);
+}
+
 .popup-card img {
     height: 175px;
     width: 100%;
@@ -1459,6 +1567,10 @@ footer {
     box-shadow: 0 0 0 3px var(--color-primary-10);
 }
 
+.custom-select-value {
+    line-height: 1.4;
+}
+
 .custom-select-arrow {
     width: 12px;
     height: 8px;
@@ -1488,7 +1600,7 @@ footer {
 }
 
 .custom-select-wrapper:has(.custom-select-dropdown.active) {
-    z-index: 10002;
+    z-index: 10000;
 }
 
 .custom-select-dropdown.active {
@@ -1670,7 +1782,7 @@ footer {
 }
 
 .stadiums-list-stadium .user-stadium-icon-btn {
-    height: 38px;
+    height: 36px;
     flex-direction: row;
 }
 
@@ -3272,8 +3384,8 @@ footer {
 }
 
 .user-stadium-icon-btn {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     background: rgba(15, 18, 30, 0.82);
     border: 1px solid var(--color-blue);
@@ -3288,7 +3400,7 @@ footer {
 }
 
 .user-stadium-icon-btn img {
-    width: 16px;
+    width: 15px;
     height: 100%;
     object-fit: contain;
     display: block;
@@ -3462,7 +3574,6 @@ footer {
 
 .user-achievement-image {
     width: 30px;
-    height: 30px;
 }
 
 .user-achievement-text {
@@ -4483,7 +4594,7 @@ footer {
 }
 
 .favorite-stadiums-setting {
-    background: rgba(255, 255, 255, 0.05);
+    background: #272B38;
     border: 1px solid var(--color-primary-15);
     border-radius: 15px;
     width: 322px;
@@ -4517,6 +4628,11 @@ footer {
     margin-bottom: 15px;
     display: flex;
     flex-direction: column;
+    cursor: grab;
+}
+
+.favorite-stadiums-setting-active:active {
+    cursor: grabbing;
 }
 
 .favorite-stadiums-setting-active img {
@@ -4527,6 +4643,7 @@ footer {
     border-top-left-radius: 15px;
     display: block;
     will-change: transform;
+    pointer-events: none;
 }
 
 .favorite-stadiums-setting-text {
@@ -4751,7 +4868,7 @@ footer {
     border-radius: 10px;
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--color-primary-20);
-    padding: 20px;
+    padding: 20px 18px;
     padding-right: 55px;
     width: 100%;
     height: 40px !important;
@@ -5144,6 +5261,21 @@ footer {
     align-items: center;
 }
 
+#no-featured-events {
+    display: none;
+    text-align: center;
+    margin: 60px 0;
+}
+
+#no-featured-events h3 {
+    font-size: 1.4rem;
+}
+
+#no-featured-events p {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+}
+
 .user-event-header {
     display: flex;
     align-items: center;
@@ -5429,24 +5561,16 @@ footer {
     margin: 0 25px;
 }
 
-#about-visit-image {
-    width: 900px;
-}
-
 #about-wishlist-image {
     width: 360px;
 }
 
-#about-log-image, #about-events-image {
+#about-visit-image, #about-log-image, #about-events-image, #about-achievements-image {
     width: 643px;
 }
 
 #about-map-image {
     width: 771px;
-}
-
-#about-achievements-image {
-    width: 835px;
 }
 
 #about-numbers-section {
@@ -5542,7 +5666,7 @@ footer {
 
 #filter-bar-skeleton {
     width: 330px;
-    height: 302px;
+    height: 311px;
     border-radius: 15px;
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     border: 1px solid var(--color-primary-15);
@@ -5602,7 +5726,7 @@ footer {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
-    border-radius: 15px;
+    border-radius: 10px;
     width: 24%;
     height: 62px;
 }
@@ -5958,28 +6082,16 @@ footer {
 }
 
 #username-settings-skeleton {
-    height: 244px;
+    height: 248px;
 }
 
 #profile-pic-settings-skeleton {
-    height: 249px;
+    height: 253px;
 }
 
 #favorite-stadiums-settings-skeleton {
-    height: 720px;
+    height: 732px;
     margin-bottom: 0;
-}
-
-@supports (-webkit-hyphens:none) {
-    #username-settings-skeleton {
-        height: 244px;
-    }
-    #profile-pic-settings-skeleton {
-        height: 249px;
-    }
-    #favorite-stadiums-settings-skeleton {
-        height: 720px;
-    }
 }
 
 #featured-events-skeleton {

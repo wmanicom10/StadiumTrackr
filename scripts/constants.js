@@ -12,6 +12,7 @@ export const createAccountButtons = [
 export const createAccountForm = getElement('create-account-form');
 export const createAccountMenu = getElement('create-account-menu');
 export const DEBOUNCE_TIME = 500;
+export const ICON_IMAGE_PATH = '/images/icons/';
 export const loggedInHeader = getElement('logged-in-nav');
 export const loggedInHeaderUsername = getElement('logged-in-header-username');
 export const loggedOutHeader = getElement('logged-out-nav');
@@ -29,6 +30,7 @@ export const PASSWORD_CONSTRAINTS = {
     REQUIRES_SPECIAL: true,
     SPECIAL_CHARS: '!@#$%^&*'
 };
+export const PROFILE_PIC_PATH = '/images/profile-pics/';
 export const ROUTES = {
     /* AUTH */
     AUTH_DELETE: '/auth/deleteAccount',
@@ -77,7 +79,8 @@ export const sidebarToggleLoggedIn = getElement('sidebar-active-logged-in');
 export const sidebarUsername = getElement('sidebar-username');
 export const signInLink = getElement('sign-in-link');
 export const signUp = getElement('sign-up-button');
-export const signUpLink = getElement('sign-up-link')
+export const signUpLink = getElement('sign-up-link');
+export const STADIUM_IMAGE_PATH = '/images/stadiums/';
 export const USERNAME_CONSTRAINTS = {
     MIN_LENGTH: 6,
     MAX_LENGTH: 30

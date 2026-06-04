@@ -1,6 +1,6 @@
 /*  Imports  */
-import { MIN_LOADING_TIME, overlay } from "../constants.js";
-import { createEllipsis, createNavigationButton, createPageButton, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getUsername, getPageFromURL, initializeCustomSelects, renderPageNumbers, renderWithoutTransition, renderWithTransition, setPageInURL, setupDeleteLogHandlers, setupEditLogHandlers, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
+import { ICON_IMAGE_PATH, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
+import { createEllipsis, createNavigationButton, createPageButton, createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getUsername, getPageFromURL, initializeCustomSelects, renderPageNumbers, renderWithoutTransition, renderWithTransition, setPageInURL, setupDeleteLogHandlers, setupEditLogHandlers, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
@@ -168,14 +168,18 @@ async function loadHomeTab(username) {
     userHomeHeader.style.display = 'flex';
     document.getElementById('user-favorite-stadiums-skeleton').style.display = 'none';
     document.getElementById('user-favorite-stadiums').style.display = 'flex';
+    if (userStadiums.length > 0) document.getElementById('user-home-stadiums-see-all-button').style.display = 'block';
     document.getElementById('user-stadiums-skeleton').style.display = 'none';
     document.getElementById('user-stadiums').style.display = 'flex';
     document.getElementById('user-activity-skeleton').style.display = 'none';
     document.getElementById('user-activity').style.display = 'flex';
+    if (userActivity.length > 0) document.getElementById('user-home-activity-see-all-button').style.display = 'block';
     document.getElementById('user-wishlist-stadiums-skeleton').style.display = 'none';
     document.getElementById('user-wishlist-stadiums').style.display = 'flex';
+    if (userWishlist.length > 0) document.getElementById('user-home-wishlist-see-all-button').style.display = 'block';
     document.getElementById('user-achievements-skeleton').style.display = 'none';
     document.getElementById('user-achievements').style.display = 'flex';
+    if (userAchievements.length > 0) document.getElementById('user-home-achievements-see-all-button').style.display = 'block';
     document.getElementById('user-home-stadium-map-skeleton').style.display = 'none';
     document.getElementById('user-home-stadium-map').style.display = 'block';
 }
@@ -281,7 +285,7 @@ async function loadUserHeader(username) {
             document.getElementById('user-home-header').classList.add('with-background-image');
             const userHomeImage = document.createElement('img');
             userHomeImage.id = 'user-home-image';
-            userHomeImage.src = result.userFavoriteStadiums[0].image;
+            userHomeImage.src = STADIUM_IMAGE_PATH + result.userFavoriteStadiums[0].image;
             document.querySelector('main').prepend(userHomeImage);
 
             userHomeImage.onload = () => {
@@ -295,8 +299,8 @@ async function loadUserHeader(username) {
         document.getElementById('num-events').textContent = numEvents;
         document.getElementById('num-countries').textContent = numCountries;
 
-    } catch (err) {
-        alert(err.message);
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -435,12 +439,6 @@ async function renderHomeTabMap() {
     }).addTo(window.userHomeMap);
     
     stadiums.forEach(stadium => {
-        const imageSlug = stadium.stadium_name
-            .toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/'/g, '')
-            .replace(/\./g, '');
-        
         L.marker(stadium.location, { icon: customIcon })
             .addTo(window.userHomeMap)
             .bindPopup(`
@@ -448,7 +446,7 @@ async function renderHomeTabMap() {
                     <h4>${stadium.stadium_name}</h4>
                     <p>${stadium.address}</p>
                     <a href="stadium.html?id=${encodeURIComponent(stadium.stadium_id)}">
-                        <img src="images/stadiums/${imageSlug}.jpg" alt="${stadium.stadium_name}" />
+                        <img src="images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
                     </a>
                 </div>
             `);
@@ -503,7 +501,7 @@ function renderAchievementsTab(achievements, elements, username) {
 
                 const userHomeAchievementImage = document.createElement('img');
                 userHomeAchievementImage.classList.add('user-home-achievement-image');
-                userHomeAchievementImage.src = achievement.achievement_image;
+                userHomeAchievementImage.src = ICON_IMAGE_PATH + achievement.achievement_image;
 
                 const userHomeAchievementDescription = document.createElement('p');
                 userHomeAchievementDescription.classList.add('user-home-achievement-description');
@@ -618,7 +616,7 @@ function renderActivityTab(stadiums, elements, username) {
 
                     const userHomeActivityLogImage = document.createElement('img');
                     userHomeActivityLogImage.classList.add('user-home-activity-log-image');
-                    userHomeActivityLogImage.src = stadium.image;
+                    userHomeActivityLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
 
                     const userHomeLogActivityInfo = document.createElement('div');
                     userHomeLogActivityInfo.classList.add('user-home-log-activity-info');
@@ -668,7 +666,7 @@ function renderActivityTab(stadiums, elements, username) {
                         currentData = { visit_id: stadium.visit_id, username };
                         elements.editLogName.textContent = stadium.stadium_name;
                         elements.editLogLocation.textContent = stadium.city + ', ' + stadium.state;
-                        elements.editLogImage.src = stadium.image;
+                        elements.editLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
                         elements.editLogDateVisited.value = stadium.visited_on.split('T')[0];
                         const now = new Date();
                         const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -793,7 +791,7 @@ function renderEventsTab(events, elements, username) {
                 infoContainer.classList.add('user-home-event-info-container');
 
                 const image = document.createElement('img');
-                image.src = event.image;
+                image.src = STADIUM_IMAGE_PATH + event.image;
                 image.classList.add('user-home-event-image');
 
                 const info = document.createElement('div');
@@ -847,8 +845,6 @@ function renderHomeTabAchievements(achievements) {
         return;
     }
 
-    document.getElementById('user-home-achievements-see-all-button').style.display = 'block';
-
     document.getElementById('user-achievements').innerHTML = '';
     achievements.forEach(achievement => {
         const container = document.createElement('div');
@@ -856,7 +852,7 @@ function renderHomeTabAchievements(achievements) {
 
         const img = document.createElement('img');
         img.classList.add('user-achievement-image');
-        img.src = achievement.achievement_image;
+        img.src = ICON_IMAGE_PATH + achievement.achievement_image;
         img.alt = achievement.achievement_name;
 
         const textDiv = document.createElement('div');
@@ -891,7 +887,7 @@ function renderHomeTabFavoriteStadiums(stadiums) {
         userFavoriteStadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
         const userFavoriteStadiumImage = document.createElement('img');
-        userFavoriteStadiumImage.src = stadium.image;
+        userFavoriteStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
         userFavoriteStadiumImage.alt = stadium.stadium_name;
         userFavoriteStadiumLink.appendChild(userFavoriteStadiumImage);
 
@@ -924,9 +920,7 @@ function renderHomeTabRecentActivity(activity) {
     if (activity.length === 0) {
         document.getElementById('user-activity-no-activity-text').style.display = 'block';
         return;
-    }
-
-    document.getElementById('user-home-activity-see-all-button').style.display = 'block';
+    }    
 
     activity.forEach(activity => {
         const userActivity = document.createElement('div');
@@ -974,8 +968,6 @@ function renderHomeTabUserStadiums(stadiums) {
         return;
     }
 
-    document.getElementById('user-home-stadiums-see-all-button').style.display = 'block';
-
     const elements = {
         addStadiumMenu: document.getElementById('add-stadium-menu'),
         addStadiumDateVisited: document.getElementById('add-stadium-date-visited'),
@@ -999,8 +991,6 @@ function renderHomeTabWishlist(stadiums) {
         document.getElementById('user-wishlist-stadiums-no-stadiums-text').style.display = 'block';
         return;
     }
-
-    document.getElementById('user-home-wishlist-see-all-button').style.display = 'block';
 
     const elements = {
         addStadiumMenu: document.getElementById('add-stadium-menu'),
@@ -1075,7 +1065,7 @@ function renderVisitsTab(stadiums, elements, username) {
 
             const userHomeVisitImage = document.createElement('img');
             userHomeVisitImage.classList.add('user-home-visit-image');
-            userHomeVisitImage.src = stadium.image;
+            userHomeVisitImage.src = STADIUM_IMAGE_PATH + stadium.image;
             userHomeVisitImage.alt = stadium.stadium_name;
             userHomeVisit.appendChild(userHomeVisitImage);
 
@@ -1108,7 +1098,7 @@ function renderVisitsTab(stadiums, elements, username) {
                 currentData = { visit_id: stadium.visit_id, username };
                 elements.editLogName.textContent = stadium.stadium_name;
                 elements.editLogLocation.textContent = stadium.city + ', ' + stadium.state;
-                elements.editLogImage.src = stadium.image;
+                elements.editLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
                 elements.editLogDateVisited.value = stadium.visited_on.split('T')[0];
                 const now = new Date();
                 const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -1350,6 +1340,12 @@ window.onload = async () => {
     
     const params = new URLSearchParams(window.location.search);
     const tab = params.get('tab') || 'home';
+    const pending = sessionStorage.getItem('toast');
+    if (pending) {
+        const { type, message } = JSON.parse(pending);
+        createToast(type, message);
+        sessionStorage.removeItem('toast');
+    }
     loadTab(tab, username);
 };
 

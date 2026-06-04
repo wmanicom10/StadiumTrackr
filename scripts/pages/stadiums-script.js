@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements, getHeaderElements, MIN_LOADING_TIME } from "../constants.js";
-import { filterAndRank, getUsername, initializeCustomSelects, isLoggedIn, renderWithoutTransition, setupFilterHandlers, setupSearch, showLoggedInUI, showLoggedOutUI, syncSelectFromURL, truncateUsername } from "../utils.js";
+import { createToast, filterAndRank, getUsername, initializeCustomSelects, isLoggedIn, renderWithoutTransition, setupFilterHandlers, setupSearch, showLoggedInUI, showLoggedOutUI, syncSelectFromURL, truncateUsername } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -77,6 +77,12 @@ window.onload = async () => {
         showLoggedInUI(username);
     } else {
         showLoggedOutUI();
+    }
+    const pending = sessionStorage.getItem('toast');
+    if (pending) {
+        const { type, message } = JSON.parse(pending);
+        createToast(type, message);
+        sessionStorage.removeItem('toast');
     }
     setView(username);
 };

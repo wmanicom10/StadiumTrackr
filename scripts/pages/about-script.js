@@ -19,7 +19,7 @@ async function loadAboutInfo() {
         document.getElementById('countries-number').textContent = aboutInfo[0].num_countries;
 
     } catch (error) {
-        alert(error.message);
+        console.error(error);
     }
 }
 

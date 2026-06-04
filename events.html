@@ -116,7 +116,7 @@
                                         const u = localStorage.getItem('username') || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
-                                        document.getElementById('logged-in-header-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
+                                        document.getElementById('logged-in-header-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
                                     })();
                                 </script>
                                 <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -157,7 +157,7 @@
                                         const u = localStorage.getItem('username') || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
-                                        document.getElementById('sidebar-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
+                                        document.getElementById('sidebar-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
                                     })();
                                 </script>
                             </div>
@@ -214,6 +214,10 @@
                             <h2>Featured Events</h2>
                         </div>
                         <div id="featured-events"></div>
+                        <div id="no-featured-events">
+                            <h3>No Events Found</h3>
+                            <p>There aren't any featured events right now, check again later...</p>
+                        </div>
                         <div id="featured-events-skeleton">
                             <div class="featured-event-skeleton"></div>
                             <div class="featured-event-skeleton"></div>

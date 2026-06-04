@@ -139,7 +139,7 @@
                                         const u = localStorage.getItem('username') || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
-                                        document.getElementById('logged-in-header-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
+                                        document.getElementById('logged-in-header-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
                                     })();
                                 </script>
                                 <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -180,7 +180,7 @@
                                         const u = localStorage.getItem('username') || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
-                                        document.getElementById('sidebar-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
+                                        document.getElementById('sidebar-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
                                     })();
                                 </script>
                             </div>
@@ -298,10 +298,24 @@
                                     <div class="custom-select-dropdown">
                                         <div class="custom-select-option selected" data-value="name-asc">Name (A-Z)</div>
                                         <div class="custom-select-option" data-value="name-desc">Name (Z-A)</div>
+                                        <div class="custom-select-option" data-value="popularity">Popularity</div>
+                                        <div class="custom-select-option" data-value="opened-desc">Opened (Newest)</div>
+                                        <div class="custom-select-option" data-value="opened-asc">Opened (Earliest)</div>
+                                        <div class="custom-select-option" data-value="cost-desc">Construction Cost (Highest)</div>
+                                        <div class="custom-select-option" data-value="cost-asc">Construction Cost (Lowest)</div>
+                                        <div class="custom-select-option" data-value="capacity-desc">Capacity (Highest)</div>
+                                        <div class="custom-select-option" data-value="capacity-asc">Capacity (Lowest)</div>
                                     </div>
                                     <select class="filter-select" id="sort-filter">
                                         <option value="name-asc">Name (A-Z)</option>
                                         <option value="name-desc">Name (Z-A)</option>
+                                        <option value="popularity">Popularity</option>
+                                        <option value="opened-desc">Opened (Newest)</option>
+                                        <option value="opened-asc">Opened (Earliest)</option>
+                                        <option value="cost-desc">Construction Cost (Highest)</option>
+                                        <option value="cost-asc">Construction Cost (Lowest)</option>
+                                        <option value="capacity-desc">Capacity (Highest)</option>
+                                        <option value="capacity-asc">Capacity (Lowest)</option>
                                     </select>
                                 </div>
                             </div>

@@ -1,6 +1,6 @@
 /*  Imports  */
-import { DEBOUNCE_TIME, MIN_LOADING_TIME, overlay } from "../constants.js";
-import { debounce, getUsername, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
+import { DEBOUNCE_TIME, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
+import { createToast, debounce, getUsername, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { authAPI } from "../api/auth.js";
 import { loadAPI } from "../api/load.js";
@@ -38,6 +38,8 @@ const controls = [
     }
 ];
 
+let dragSrcEl = null;
+
 const profilePicInput = document.getElementById('profile-pic-input');
 const newPasswordInput = document.getElementById('new-password');
 const confirmPasswordInput = document.getElementById('confirm-password');
@@ -61,7 +63,7 @@ async function loadFavoriteStadiums(username) {
         }
         
     } catch (error) {
-        alert(error.message);
+        console.error(error);
     }
 }
 
@@ -73,7 +75,8 @@ async function searchStadiums(name, suggestionsContainer, searchValue) {
         renderSearchSuggestions(stadiums, suggestionsContainer, searchValue);
 
     } catch (error) {
-        alert(error.message);
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to search stadiums. Please try again.');
     }
 }
 
@@ -123,9 +126,10 @@ function checkPasswordStrength() {
 function createActiveSlot(stadium) {
     const favoriteStadiumsSettingActive = document.createElement('div');
     favoriteStadiumsSettingActive.classList.add('favorite-stadiums-setting-active');
+    favoriteStadiumsSettingActive.draggable = true;
 
     const favoriteStadiumImage = document.createElement('img');
-    favoriteStadiumImage.src = stadium.image;
+    favoriteStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
     favoriteStadiumsSettingActive.appendChild(favoriteStadiumImage);
 
     const favoriteStadiumsSettingText = document.createElement('div');
@@ -163,6 +167,12 @@ function createActiveSlot(stadium) {
     cornerControls.appendChild(button);
     favoriteStadiumsSettingActive.appendChild(cornerControls);
 
+    favoriteStadiumsSettingActive.addEventListener('dragstart', handleDragStart);
+    favoriteStadiumsSettingActive.addEventListener('dragover', handleDragOver);
+    favoriteStadiumsSettingActive.addEventListener('drop', handleDrop);
+    favoriteStadiumsSettingActive.addEventListener('dragend', handleDragEnd);
+    favoriteStadiumsSettingActive.addEventListener('dragleave', handleDragLeave);
+
     return favoriteStadiumsSettingActive;
 }
 
@@ -177,6 +187,57 @@ function createEmptySlot() {
 
     slot.addEventListener('click', () => toggleMenu(addFavoriteStadiumMenu, true, overlay));
     return slot;
+}
+
+function handleDragEnd() {
+    this.style.opacity = '';
+    document.querySelectorAll('.favorite-stadiums-setting-active').forEach(el => {
+        el.style.outline = '';
+        el.style.outlineOffset = '';
+    });
+}
+
+function handleDragLeave() {
+    this.style.outline = '';
+    this.style.outlineOffset = '';
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+
+    if (this.classList.contains('favorite-stadiums-setting-active') && this !== dragSrcEl) {
+        this.style.outline = '2px solid var(--color-blue)';
+        this.style.outlineOffset = '3px';
+    }
+    return false;
+}
+
+function handleDragStart(e) {
+    dragSrcEl = this;
+    e.dataTransfer.effectAllowed = 'move';
+    this.style.opacity = '0.4';
+}
+
+function handleDrop(e) {
+    e.stopPropagation();
+
+    if (dragSrcEl !== this && this.classList.contains('favorite-stadiums-setting-active')) {
+        const container = document.getElementById('favorite-stadiums-settings-container');
+        const children = Array.from(container.children);
+        const srcIndex = children.indexOf(dragSrcEl);
+        const targetIndex = children.indexOf(this);
+
+        if (srcIndex < targetIndex) {
+            container.insertBefore(dragSrcEl, this.nextSibling);
+        } else {
+            container.insertBefore(dragSrcEl, this);
+        }
+    }
+
+    this.style.outline = '';
+    this.style.outlineOffset = '';
+    return false;
 }
 
 function hideSearchSuggestions(container, input) {
@@ -288,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('current-username').textContent = 'Current: ' + getUsername();
     document.getElementById('current-email').textContent = 'Current: ' + (localStorage.getItem('email') || '');
-    document.getElementById('new-profile-pic').src = localStorage.getItem('profilePic') || 'images/icons/person-circle.png';
+    document.getElementById('new-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
 });
 
 document.getElementById('new-username').addEventListener('input', () => {
@@ -312,7 +373,7 @@ document.getElementById('username-save-button').addEventListener('click', async 
     const newUsername = document.getElementById('new-username').value;
     const usernameError = validateUsername(newUsername);
     if (usernameError) {
-        alert(usernameError);
+        shakeOrReplace(usernameError);
     }
     else {
         try {
@@ -320,11 +381,12 @@ document.getElementById('username-save-button').addEventListener('click', async 
 
             if (result.result.affectedRows === 1) {
                 localStorage.setItem('username', newUsername);
-                alert('Username changed successfully.');
+                sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Username changed successfully.' }));
                 window.location.reload();
             }
         } catch (error) {
-            alert(error.message);
+            console.error(error);
+            shakeOrReplace(error.message || 'Failed to change username. Please try again.');
         }
     }
 });
@@ -339,13 +401,13 @@ profilePicInput.addEventListener('change', () => {
     if (!file) return;
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-        alert('File must be a JPG or PNG.');
+        shakeOrReplace('File must be a JPG or PNG.');
         profilePicInput.value = '';
         return;
     }
 
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-        alert('File must be under 2MB.');
+        shakeOrReplace('File must be under 2MB.');
         profilePicInput.value = '';
         return;
     }
@@ -360,7 +422,7 @@ profilePicInput.addEventListener('change', () => {
 document.getElementById('profile-pic-save-button').addEventListener('click', async () => {
     const file = profilePicInput.files[0];
     if (!file) {
-        alert('Please choose a photo first.');
+        shakeOrReplace('Please choose a photo first.');
         return;
     }
 
@@ -370,29 +432,31 @@ document.getElementById('profile-pic-save-button').addEventListener('click', asy
 
     try {
         const result = await updateAPI.updateProfilePic(formData);
-        localStorage.setItem('profilePic', result.profile_pic);
-        alert('Profile picture updated successfully.');
+        localStorage.setItem('profilePic', PROFILE_PIC_PATH + result.profile_pic);
+        sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Profile picture changed successfully.' }));
         window.location.reload();
     } catch (error) {
-        alert(error.message);
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to change profile pic. Please try again.');
     }
 });
 
 document.getElementById('email-save-button').addEventListener('click', async () => {
     const newEmail = document.getElementById('new-email').value;
     if (!validateEmail(newEmail)) {
-        alert('Please enter a valid email address.');
+        shakeOrReplace('Please enter a valid email address.');
         return;
     }
     try {
         const result = await updateAPI.updateEmail(getUsername(), newEmail);
         if (result.result.affectedRows === 1) {
             localStorage.setItem('email', newEmail);
-            alert('Email changed successfully.');
+            sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Email changed successfully.' }));
             window.location.reload();
         }
     } catch (error) {
-        alert(error.message);
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to change email. Please try again.');
     }
 });
 
@@ -418,29 +482,30 @@ document.getElementById('change-password-button').addEventListener('click', asyn
     const confirmPassword = confirmPasswordInput.value;
 
     if (!currentPassword) {
-        alert('Please enter your current password.');
+        shakeOrReplace('Please enter your current password.');
         return;
     }
 
     const strengthError = validatePassword(newPassword);
     if (strengthError) {
-        alert(strengthError);
+        shakeOrReplace(strengthError);
         return;
     }
 
     if (newPassword !== confirmPassword) {
-        alert('Passwords do not match.');
+        shakeOrReplace('Passwords do not match.');
         return;
     }
 
     try {
         const result = await updateAPI.updatePassword(getUsername(), currentPassword, newPassword);
         if (result.result.affectedRows === 1) {
-            alert('Password changed successfully.');
+            sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Password changed successfully.' }));
             window.location.reload();
         }
     } catch (error) {
-        alert(error.message);
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to change password. Please try again.');
     }
 });
 
@@ -460,7 +525,7 @@ document.getElementById('delete-account-delete-button').addEventListener('click'
     const password = document.getElementById('delete-account-password').value;
 
     if (!password) {
-        alert('Please enter your password.');
+        shakeOrReplace('Please enter your password.');
         return;
     }
 
@@ -468,11 +533,12 @@ document.getElementById('delete-account-delete-button').addEventListener('click'
         const result = await authAPI.deleteAccount(getUsername(), password);
         if (result.result.affectedRows === 1) {
             localStorage.clear();
-            alert('Account deleted successfully.');
+            sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Account deleted successfully.' }));
             window.location.replace('index.html');
         }
     } catch (error) {
-        alert(error.message);
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to delete your account. Please try again.')
     }
 });
 
@@ -489,11 +555,12 @@ document.getElementById('favorite-stadiums-save-button').addEventListener('click
         const result = await userAPI.saveFavoriteStadiums(username, stadiumNames);
         
         if (result.success) {
-            alert('Favorites saved successfully.');
+            sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Favorites saved successfully.' }));
             window.location.reload();
         }
     } catch (error) {
-        alert(error.message);
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to save favorite stadiums. Please try again.');
     }
 });
 
@@ -520,4 +587,11 @@ window.onload = async () => {
         control.style.pointerEvents = '';
         control.style.opacity = '';
     });
+
+    const pending = sessionStorage.getItem('toast');
+    if (pending) {
+        const { type, message } = JSON.parse(pending);
+        createToast(type, message);
+        sessionStorage.removeItem('toast');
+    }
 };

@@ -1,6 +1,6 @@
 /*  Imports  */
-import { createAccountMenu, getAuthElements, getHeaderElements, MIN_LOADING_TIME, overlay } from "../constants.js";
-import { formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, getUsername, isLoggedIn, setupAddStadiumModal, showLoggedInUI, showLoggedOutUI, toggleMenu, truncateUsername } from "../utils.js";
+import { createAccountMenu, getAuthElements, getHeaderElements, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
+import { createToast, formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, getUsername, isLoggedIn, setupAddStadiumModal, shakeOrReplace, showLoggedInUI, showLoggedOutUI, toggleMenu, truncateUsername } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 import { updateAPI } from "../api/update.js";
@@ -58,17 +58,23 @@ async function loadFullStadiumPage(id, username) {
         document.getElementById('stadium-map-skeleton').style.display = 'none';
         document.getElementById('stadium-map').style.display = 'block';
 
+        const pending = sessionStorage.getItem('toast');
+        if (pending) {
+            const { type, message } = JSON.parse(pending);
+            createToast(type, message);
+            sessionStorage.removeItem('toast');
+        }
+
         if (hasNoUpcomingEvents) {
             elements.noUpcomingEventsContainer.style.display = 'block';
             hasNoUpcomingEvents = false;
         }
 
-        if (stadiumMapData) {
-            const { latitude, longitude, name: stadiumName } = stadiumMapData;
-            initializeStadiumMap(latitude, longitude, stadiumName);
-        }
+        if (stadiumMapData) initializeStadiumMap(stadiumMapData);
+        
     } catch (error) {
-        alert('Failed to load stadium content: ' + error.message);
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to load stadium content');
     }
 }
 
@@ -79,7 +85,7 @@ async function loadStadiumInfo(id, username) {
 
         const stadiumImage = document.createElement('img');
         stadiumImage.id = 'stadium-image';
-        stadiumImage.src = stadium.image;
+        stadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
         document.querySelector('main').prepend(stadiumImage);
         stadiumImage.onload = () => {
             stadiumImage.classList.add('loaded');
@@ -92,8 +98,8 @@ async function loadStadiumInfo(id, username) {
         elements.stadiumLocation.textContent = formatLocation(stadium.city, stadium.state);
         elements.stadiumOpenedDate.textContent = formatDate(stadium.openedDate);
         elements.stadiumTeams.textContent = [...new Set(teams.map(t => t.team_name))].join(', ');
-        elements.stadiumCapacity.textContent = stadium.capacity;
-        elements.stadiumConstructionCost.textContent = stadium.constructionCost;
+        elements.stadiumCapacity.textContent = stadium.capacity ? stadium.capacity.toLocaleString() : 'Unknown';
+        elements.stadiumConstructionCost.textContent = formatConstructionCost(stadium.constructionCost);
         elements.stadiumVisits.textContent = stadium.visits;
         elements.upcomingEventsStadiumLink.href = `events.html?id=${stadium.id}`
 
@@ -101,7 +107,7 @@ async function loadStadiumInfo(id, username) {
         setupAddStadiumModal(id, stadium.name, stadium.city, stadium.state, username, stadium.image, elements);
 
     } catch (error) {
-        alert(error.message);
+        console.error(error);
     }
 }
 
@@ -113,10 +119,14 @@ async function loadStadiumMap(id) {
         stadiumMapData = {
             latitude: stadium.latitude,
             longitude: stadium.longitude,
-            name: stadium.stadium_name
+            name: stadium.stadium_name,
+            address: stadium.street_address,
+            city: stadium.city,
+            state: stadium.state,
+            zip: stadium.zip
         };
     } catch (error) {
-        alert(error.message);
+        console.error(error);
     }
 }
 
@@ -137,7 +147,7 @@ async function loadUpcomingEvents(id) {
             elements.upcomingEventsContainer.appendChild(eventElement);
         }
     } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error(error);
     }
 }
 
@@ -182,8 +192,16 @@ function createEventElement(event) {
     return container;
 }
 
-function initializeStadiumMap(latitude, longitude, stadiumName) {
-    const map = L.map('stadium-map').setView([latitude, longitude], 6);
+function formatConstructionCost(cost) {
+    if (cost === null || cost === undefined) return 'Unknown';
+    if (cost === 0) return '$0';
+    if (cost >= 1_000_000_000) return `$${(cost / 1_000_000_000).toFixed(2).replace(/\.?0+$/, '')} Billion`;
+    if (cost >= 1_000_000) return `$${(cost / 1_000_000).toFixed(2).replace(/\.?0+$/, '')} Million`;
+    return `$${cost.toLocaleString()}`;
+}
+
+function initializeStadiumMap(stadiumMapData) {
+    const map = L.map('stadium-map').setView([stadiumMapData.latitude, stadiumMapData.longitude], 6);
 
     const customIcon = L.icon({
         iconUrl: 'images/icons/pin-blue.png',
@@ -197,9 +215,18 @@ function initializeStadiumMap(latitude, longitude, stadiumName) {
         ext: 'jpg'
     }).addTo(map);
 
-    L.marker([latitude, longitude], { icon: customIcon })
-        .addTo(map)
-        .bindPopup(`<div class="popup-card"><h4>${stadiumName}</h4></div>`);
+    L.marker([stadiumMapData.latitude, stadiumMapData.longitude], { icon: customIcon })
+    .addTo(map)
+    .bindPopup(`
+        <div class="popup-card">
+            <h4>${stadiumMapData.name}</h4>
+            <p>
+                <a href="https://maps.google.com/?q=${encodeURIComponent(stadiumMapData.address + ', ' + stadiumMapData.city + ', ' + stadiumMapData.state + ' ' + stadiumMapData.zip)}" target="_blank" rel="noopener noreferrer">
+                    ${stadiumMapData.address}, ${stadiumMapData.city}, ${stadiumMapData.state} ${stadiumMapData.zip}
+                </a>
+            </p>
+        </div>
+    `);
 }
 
 function setupUserControls(stadiumId, username, userVisited, userWishlist) {
@@ -276,7 +303,10 @@ function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initial
                 }, 400);
 
                 updateAPI.updateUserWishlist(stadiumId, username, true)
-                    .catch(error => alert(error.message));
+                    .catch(error => {
+                        console.error(error);
+                        shakeOrReplace(error.message || 'Failed to update wishlist. Please try again.');
+                    });
                 isWishlist = false;
             }
         }, 200);
@@ -289,7 +319,8 @@ function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initial
             await updateAPI.updateUserStadium(stadiumId, username, isVisited);
             isVisited = newIsVisited;
         } catch (error) {
-            alert(error.message);
+            console.error(error);
+            shakeOrReplace(error.message || 'Failed to update visit status. Please try again.');
         }
     });
 }
@@ -319,7 +350,8 @@ function setupWishlistClickHandler(stadiumId, username, initialIsWishlist) {
             await updateAPI.updateUserWishlist(stadiumId, username, isWishlist);
             isWishlist = newIsWishlist;
         } catch (error) {
-            alert(error.message);
+            console.error(error);
+            shakeOrReplace(error.message || 'Failed to update wishlist. Please try again.');
         }
     });
 }

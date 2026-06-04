@@ -1,6 +1,6 @@
 /*  Imports  */
-import { DEBOUNCE_TIME, getAuthElements, MIN_LOADING_TIME } from "../constants.js";
-import { debounce, setupSearchAutocomplete, searchStadiums } from "../utils.js";
+import { DEBOUNCE_TIME, getAuthElements, MIN_LOADING_TIME, STADIUM_IMAGE_PATH } from "../constants.js";
+import { createToast, debounce, setupSearchAutocomplete, searchStadiums } from "../utils.js";
 import { registerCommonEvents, registerEventListeners } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -17,7 +17,7 @@ async function loadPopularStadiums() {
             popularStadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
             const popularStadiumImage = document.createElement('img');
-            popularStadiumImage.src = stadium.image;
+            popularStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
             popularStadiumImage.alt = stadium.stadium_name;
 
             const popularStadiumText = document.createElement('div');
@@ -42,7 +42,7 @@ async function loadPopularStadiums() {
         });
 
     } catch (error) {
-        alert(error.message);
+        console.error(error);
     }
 }
 
@@ -53,7 +53,7 @@ async function loadMapStadiums() {
 
         initializeMap(stadiums);
     } catch (error) {
-        alert(error.message);
+        console.error(error);
     }
 }
 
@@ -91,28 +91,6 @@ function initializeMap(stadiums) {
     }).addTo(map);
 
     stadiums.forEach(stadium => {
-        let imageSlug = stadium.stadium_name
-            .toLowerCase()
-            .replace(/\s+/g, '-')
-            .replace(/'/g, '')
-            .replace(/\./g, '');
-        
-        if (stadium.stadium_name === 'Memorial Stadium') {
-            if (stadium.address.includes("Bloomington")) {
-                imageSlug += '-indiana';
-            }
-            else if (stadium.address.includes("Clemson")) {
-                imageSlug += '-clemson';
-            }
-            else if (stadium.address.includes("Lincoln")) {
-                imageSlug += '-nebraska';
-            }
-        }
-
-        if (stadium.stadium_name === 'Johnny "Red" Floyd Stadium') {
-            imageSlug = 'johnny-red-floyd-stadium';
-        }
-
         L.marker(stadium.location, { icon: customIcon })
             .addTo(map)
             .bindPopup(`
@@ -120,7 +98,7 @@ function initializeMap(stadiums) {
                     <h4>${stadium.stadium_name}</h4>
                     <p>${stadium.address}</p>
                     <a href="stadium.html?id=${encodeURIComponent(stadium.stadium_id)}">
-                        <img src="images/stadiums/${imageSlug}.jpg" alt="${stadium.stadium_name}" />
+                        <img src="images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
                     </a>
                 </div>
             `);
@@ -142,4 +120,10 @@ window.onload = async () => {
     document.getElementById('popular-stadiums').style.display = 'flex';
     document.getElementById('home-stadium-map-skeleton').style.display = 'none';
     document.getElementById('home-stadium-map').style.display = 'block';
+    const pending = sessionStorage.getItem('toast');
+    if (pending) {
+        const { type, message } = JSON.parse(pending);
+        createToast(type, message);
+        sessionStorage.removeItem('toast');
+    }
 };
