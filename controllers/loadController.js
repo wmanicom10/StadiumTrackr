@@ -1,6 +1,46 @@
 const db = require('../database/connection.js');
 const { getUserId, buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
 
+const eventCache = new Map();
+const CACHE_TTL_MS = 60 * 60 * 1000;
+
+function getCached(key) {
+    const entry = eventCache.get(key);
+    if (!entry) {
+        return null;
+    }
+    if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+        eventCache.delete(key);
+        return null;
+    }
+    return entry.data;
+}
+
+async function fetchEventsForVenue(ticketmaster_id, limit = 1) {
+    const cacheKey = `venue:${ticketmaster_id}:${limit}`;
+    const cached = getCached(cacheKey);
+    if (cached) return cached;
+
+    if (limit !== 'all') {
+        const allCached = getCached(`venue:${ticketmaster_id}:all`);
+        if (allCached) {
+            const result = allCached.slice(0, limit);
+            eventCache.set(cacheKey, { data: result, timestamp: Date.now() });
+            return result;
+        }
+    }
+
+    const url = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${ticketmaster_id}&apikey=${process.env.TICKETMASTER_API_KEY}`;
+    const data = await fetchWithRetry(url, 3, 1000, 8000).catch(err => {
+        console.error(`[cache] FETCH ERROR: venue:${ticketmaster_id}:${limit} — ${err.message}`);
+        throw err;
+    });
+    const events = data._embedded?.events || [];
+    const result = limit === 'all' ? events : events.slice(0, limit);
+    eventCache.set(cacheKey, { data: result, timestamp: Date.now() });
+    return result;
+}
+
 async function fetchWithRetry(url, retries = 3, delay = 1000, timeout = null) {
     for (let i = 0; i < retries; i++) {
         try {
@@ -21,15 +61,20 @@ async function fetchWithRetry(url, retries = 3, delay = 1000, timeout = null) {
 async function getNextEvents(stadiums, limit = 1, options = {}) {
     const { cascade = false, targetCount = 3 } = options;
 
+    const seen = new Set();
+    stadiums = stadiums.filter(s => {
+        if (seen.has(s.ticketmaster_id)) return false;
+        seen.add(s.ticketmaster_id);
+        return true;
+    });
+
     if (cascade) {
         const results = [];
         for (const stadium of stadiums) {
             if (results.length >= targetCount) break;
             if (!stadium.ticketmaster_id) continue;
             try {
-                const url = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${stadium.ticketmaster_id}&apikey=${process.env.TICKETMASTER_API_KEY}`;
-                const data = await fetchWithRetry(url);
-                const events = data._embedded?.events || [];
+                const events = await fetchEventsForVenue(stadium.ticketmaster_id, limit);
                 if (events.length === 0) continue;
                 results.push(...events.slice(0, limit).map(event => ({
                     stadium_id: stadium.stadium_id,
@@ -49,9 +94,7 @@ async function getNextEvents(stadiums, limit = 1, options = {}) {
             stadiums.map(async (stadium) => {
                 if (!stadium.ticketmaster_id) return null;
                 try {
-                    const url = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${stadium.ticketmaster_id}&apikey=${process.env.TICKETMASTER_API_KEY}`;
-                    const data = await fetchWithRetry(url);
-                    const events = data._embedded?.events || [];
+                    const events = await fetchEventsForVenue(stadium.ticketmaster_id, limit);
                     return events.slice(0, limit).map(event => ({
                         stadium_id: stadium.stadium_id,
                         stadium_name: stadium.stadium_name,
@@ -164,9 +207,7 @@ const handleLoadStadiumEvents = async (req, res) => {
             return res.json({ events: [], stadiumImage: stadium?.image || null });
         }
 
-        const url = `https://app.ticketmaster.com/discovery/v2/events.json?classificationName=sports&sort=date,asc&venueId=${stadium.ticketmaster_id}&apikey=${process.env.TICKETMASTER_API_KEY}`;
-        const data = await fetchWithRetry(url, 3, 1000, 8000);
-        const events = data._embedded?.events || [];
+        const events = await fetchEventsForVenue(stadium.ticketmaster_id, 'all');
 
         events.sort((a, b) => {
             const timeA = getLocalTimestamp(a);

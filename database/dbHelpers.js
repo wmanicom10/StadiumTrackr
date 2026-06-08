@@ -42,7 +42,7 @@ const buildLeagueFilter = (league) => {
     };
 };
 
-const buildSortOrder = (sortBy, tablePrefix = '', isGrouped = false, isUnion = false) => {
+const buildSortOrder = (sortBy, tablePrefix = '', isGrouped = false, isUnion = false, addedOnTable = 'user_stadiums') => {
     let addedOn, visitedOn, stadiumName;
     
     if (isUnion) {
@@ -50,8 +50,8 @@ const buildSortOrder = (sortBy, tablePrefix = '', isGrouped = false, isUnion = f
         visitedOn = 'visited_on';
         stadiumName = 'stadium_name';
     } else if (isGrouped) {
-        addedOn = 'MAX(added_on)';
-        visitedOn = 'MAX(user_stadiums.visited_on)';
+        addedOn = `MAX(${addedOnTable}.added_on)`;
+        visitedOn = `MAX(${addedOnTable}.visited_on)`;
         stadiumName = 'stadium_name';
     } else {
         addedOn = 'user_stadiums.added_on';

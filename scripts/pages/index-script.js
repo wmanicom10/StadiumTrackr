@@ -109,7 +109,8 @@ function initializeMap(stadiums) {
 document.addEventListener('DOMContentLoaded', () => {
     registerEventListeners(getAuthElements());
     registerCommonEvents();
-    setupSearchAutocomplete('home-search-stadiums', 'search-field-home', 'home-autocomplete-list');
+    setupSearchAutocomplete('logged-out-nav-search', 'logged-out-search-field-nav', 'logged-out-nav-autocomplete-list');
+    setupSearchAutocomplete('logged-out-sidebar-nav-search', 'logged-out-sidebar-search-field-nav', 'logged-out-sidebar-nav-autocomplete-list');
 });
 
 window.onload = async () => {

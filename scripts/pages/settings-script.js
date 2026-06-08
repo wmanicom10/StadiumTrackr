@@ -1,6 +1,6 @@
 /*  Imports  */
 import { DEBOUNCE_TIME, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, debounce, getUsername, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
+import { createToast, debounce, getUsername, setupSearchAutocomplete, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { authAPI } from "../api/auth.js";
 import { loadAPI } from "../api/load.js";
@@ -300,7 +300,7 @@ function setActiveControl(activeId) {
     });
 }
 
-function setupSearchAutocomplete() {
+function setupFavoriteSearchAutocomplete() {
     const searchStadiumsForm = document.getElementById('search-favorite-stadiums');
     const searchValue = document.getElementById('favorite-search-field');
     const suggestionsContainer = document.getElementById('favorite-autocomplete-list');
@@ -332,7 +332,9 @@ function setupSearchAutocomplete() {
 document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
     registerUserLogOutEvents();
-    setupSearchAutocomplete('search-favorite-stadiums', 'favorite-search-field', 'favorite-autocomplete-list');
+    setupSearchAutocomplete('logged-in-nav-search', 'logged-in-search-field-nav', 'logged-in-nav-autocomplete-list');
+    setupSearchAutocomplete('logged-in-sidebar-nav-search', 'logged-in-sidebar-search-field-nav', 'logged-in-sidebar-nav-autocomplete-list');
+    setupFavoriteSearchAutocomplete('search-favorite-stadiums', 'favorite-search-field', 'favorite-autocomplete-list');
     
     controls.filter(c => c.id !== 'delete').forEach(({ control, image, activeSrc, inactiveSrc }) => {
         control.addEventListener('mouseenter', () => {

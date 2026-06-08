@@ -352,7 +352,7 @@ const handleUpdateProfilePic = async (req, res) => {
             }
         }
 
-        const newFilename = `user_${userId}.jpg`;
+        const newFilename = `user_${username}.jpg`;
         const tempPath = path.join(PROFILE_PIC_DIR, req.file.filename);
         const newPath = path.join(PROFILE_PIC_DIR, newFilename);
 

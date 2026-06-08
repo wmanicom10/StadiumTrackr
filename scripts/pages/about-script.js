@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements } from "../constants.js";
-import { getUsername, isLoggedIn, showLoggedInUI, showLoggedOutUI } from "../utils.js";
+import { getUsername, isLoggedIn, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -46,6 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerLogOutEvents();
+    setupSearchAutocomplete('logged-out-nav-search', 'logged-out-search-field-nav', 'logged-out-nav-autocomplete-list');
+    setupSearchAutocomplete('logged-out-sidebar-nav-search', 'logged-out-sidebar-search-field-nav', 'logged-out-sidebar-nav-autocomplete-list');
+    setupSearchAutocomplete('logged-in-nav-search', 'logged-in-search-field-nav', 'logged-in-nav-autocomplete-list');
+    setupSearchAutocomplete('logged-in-sidebar-nav-search', 'logged-in-sidebar-search-field-nav', 'logged-in-sidebar-nav-autocomplete-list');
 });
 
 window.onload = async () => {

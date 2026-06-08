@@ -351,7 +351,7 @@ const handleLoadUserStadiums = async (req, res) => {
             GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, stadiums.opened_date, stadiums.construction_cost, stadiums.capacity, stadiums.city, stadiums.state, stadiums.country_id
         `;
 
-        query += buildSortOrder(sortBy, 'stadiums', true);
+        query += buildSortOrder(sortBy, 'stadiums', true, false, 'user_stadiums');
 
         const params = [
             userId, 
@@ -466,7 +466,7 @@ const handleLoadUserWishlist = async (req, res) => {
                     stadiums.opened_date, stadiums.construction_cost, stadiums.capacity,
                     stadiums.city, stadiums.state, stadiums.country_id
         `;
-        query += buildSortOrder(sortBy, 'stadiums', true);
+        query += buildSortOrder(sortBy, 'stadiums', true, false, 'user_wishlist_stadiums');
         const params = [
             userId, 
             userId, 

@@ -68,6 +68,14 @@
                     <li class="nav-item"><a href="about.html">About</a></li>
                     <li class="nav-item button" id="log-in">Log In</li>
                     <li class="nav-item button" id="create-account">Sign Up</li>
+                    <li class="nav-item" id="logged-out-nav-search-container">
+                        <form id="logged-out-nav-search" autocomplete="off">
+                            <div id="logged-out-nav-search-wrapper">
+                                <input type="text" placeholder="Search stadiums..." id="logged-out-search-field-nav" spellcheck="false">
+                                <div id="logged-out-nav-autocomplete-list"></div>
+                            </div>
+                        </form>
+                    </li>
                     <li class="nav-item toggle">
                         <input type="checkbox" id="sidebar-active">
                         <label for="sidebar-active" class="open-sidebar-button">
@@ -87,6 +95,14 @@
                             <div class="account-buttons">
                                 <span id="sidebar-log-in">Log In</span>
                                 <span id="sidebar-sign-up">Sign Up</span>
+                            </div>
+                            <div id="logged-out-sidebar-search-container">
+                                <form id="logged-out-sidebar-nav-search" autocomplete="off">
+                                    <div id="logged-out-sidebar-nav-search-wrapper">
+                                        <input type="text" placeholder="Search stadiums..." id="logged-out-sidebar-search-field-nav" spellcheck="false">
+                                        <div id="logged-out-sidebar-nav-autocomplete-list"></div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </li>

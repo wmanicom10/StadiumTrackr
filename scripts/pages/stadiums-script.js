@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements, getHeaderElements, MIN_LOADING_TIME } from "../constants.js";
-import { createToast, filterAndRank, getUsername, initializeCustomSelects, isLoggedIn, renderWithoutTransition, setupFilterHandlers, setupSearch, showLoggedInUI, showLoggedOutUI, syncSelectFromURL, truncateUsername } from "../utils.js";
+import { createToast, filterAndRank, getUsername, initializeCustomSelects, isLoggedIn, renderWithoutTransition, setupFilterHandlers, setupSearch, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI, syncSelectFromURL, truncateUsername } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -69,6 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
     registerLogOutEvents();
     initializeCustomSelects();
+    setupSearchAutocomplete('logged-out-nav-search', 'logged-out-search-field-nav', 'logged-out-nav-autocomplete-list');
+    setupSearchAutocomplete('logged-out-sidebar-nav-search', 'logged-out-sidebar-search-field-nav', 'logged-out-sidebar-nav-autocomplete-list');
+    setupSearchAutocomplete('logged-in-nav-search', 'logged-in-search-field-nav', 'logged-in-nav-autocomplete-list');
+    setupSearchAutocomplete('logged-in-sidebar-nav-search', 'logged-in-sidebar-search-field-nav', 'logged-in-sidebar-nav-autocomplete-list');
 });
 
 window.onload = async () => {

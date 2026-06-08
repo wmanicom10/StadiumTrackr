@@ -1,6 +1,6 @@
 /*  Imports  */
 import { MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createEllipsis, createNavigationButton, createPageButton, formatDate, getPageFromURL, getUsername, initializeCustomSelects, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
+import { createEllipsis, createNavigationButton, createPageButton, formatDate, getPageFromURL, getUsername, initializeCustomSelects, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
@@ -298,6 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
     registerUserLogOutEvents();
     initializeCustomSelects();
+    setupSearchAutocomplete('logged-in-nav-search', 'logged-in-search-field-nav', 'logged-in-nav-autocomplete-list');
+    setupSearchAutocomplete('logged-in-sidebar-nav-search', 'logged-in-sidebar-search-field-nav', 'logged-in-sidebar-nav-autocomplete-list');
 });
 
 window.onload = async () => {
