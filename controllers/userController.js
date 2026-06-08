@@ -1,23 +1,18 @@
 const db = require('../database/connection.js');
-const { getUserId, getStadiumId, buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
+const { getStadiumId, buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
 const { handleUpdateAchievementProgress } = require('./updateController.js');
 
 /*  addStadium  */
 const handleAddStadium = async (req, res) => {
-    const { stadiumId, username, dateVisited, note } = req.body;
+    const { stadiumId, dateVisited, note } = req.body;
+    const { userId } = req.user;
 
-    if (!username || !stadiumId) {
-        return res.status(400).json({ error: 'Stadium id and/or username is required' });
+    if (!userId || !stadiumId) {
+        return res.status(400).json({ error: 'Stadium id and/or user id is required' });
     }
 
     try {
-        const userId = username ? await getUserId(username) : null;
-
-        if (!stadiumId || !userId) {
-            return res.status(404).json({ error: 'Stadium or user not found' });
-        }
-
-        const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on, visited_on, user_note) SELECT s.stadium_id, u.user_id, NOW(), ?, ? FROM stadiums s, users u WHERE s.stadium_id = ? AND u.username = ?', [dateVisited, note, stadiumId, username]);
+        const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on, visited_on, user_note) SELECT s.stadium_id, u.user_id, NOW(), ?, ? FROM stadiums s, users u WHERE s.stadium_id = ? AND u.user_id = ?', [dateVisited, note, stadiumId, userId]);
 
         await handleUpdateAchievementProgress(userId);
 
@@ -32,13 +27,11 @@ const handleAddStadium = async (req, res) => {
 
 /*  loadFavoriteStadiums  */
 const handleLoadFavoriteStadiums = async (req, res) => {
-    const { username } = req.body;
+    const { userId } = req.user;
+
+    if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
-        const userId = await getUserId(username);
-
-        if (!userId) return res.status(404).json({ error: 'User not found' });
-
         const [favoriteStadiums] = await db.query('SELECT stadiums.stadium_id, stadium_name, city, state, image, order_index FROM user_favorite_stadiums JOIN stadiums ON user_favorite_stadiums.stadium_id = stadiums.stadium_id WHERE user_id = ? ORDER BY order_index ASC', [userId]);
 
         res.json({ favoriteStadiums });
@@ -50,15 +43,12 @@ const handleLoadFavoriteStadiums = async (req, res) => {
 
 /*  loadUserAchievements  */
 const handleLoadUserAchievements = async (req, res) => {
-    const { username, earned, sortBy } = req.body;
+    const { earned, sortBy } = req.body;
+    const { userId } = req.user;
+
+    if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
-        const userId = await getUserId(username);
-        
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
         let query = `
             SELECT DISTINCT 
                 achievements.achievement_id,
@@ -117,13 +107,12 @@ const handleLoadUserAchievements = async (req, res) => {
 
 /*  loadUserActivity  */
 const handleLoadUserActivity = async (req, res) => {
-    const { username, activity, id, sortBy, limit } = req.body;
-    try {
-        const userId = await getUserId(username);
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+    const { activity, id, sortBy, limit } = req.body;
+    const { userId } = req.user;
 
+    if (!userId) return res.status(404).json({ error: 'User not found' });
+
+    try {
         let query = '';
         let params = [];
 
@@ -219,15 +208,11 @@ const handleLoadUserActivity = async (req, res) => {
 
 /*  loadUserHomeMap  */
 const handleLoadUserHomeMap = async (req, res) => {
-    const { username } = req.body;
+    const { userId } = req.user;
+
+    if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
-        const userId = await getUserId(username);
-        
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
         const [stadiums] = await db.execute('SELECT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude FROM stadiums s JOIN user_stadiums us ON s.stadium_id = us.stadium_id WHERE us.user_id = ?', [userId]);
 
         const formattedRows = stadiums.map(row => ({
@@ -247,15 +232,11 @@ const handleLoadUserHomeMap = async (req, res) => {
 
 /*  loadUserInfo  */
 const handleLoadUserInfo = async (req, res) => {
-    const { username } = req.body;
+    const { userId } = req.user;
+
+    if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
-        const userId = await getUserId(username);
-        
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
-        }
-
         const [userStadiums] = await db.execute(`
             SELECT 
                 MAX(us.added_on) AS added_on, 
@@ -311,13 +292,12 @@ const handleLoadUserInfo = async (req, res) => {
 
 /*  loadUserStadiums  */
 const handleLoadUserStadiums = async (req, res) => {
-    const { username, league, country, sortBy } = req.body;
-    try {
-        const userId = await getUserId(username);
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+    const { league, country, sortBy } = req.body;
+    const { userId } = req.user;
 
+    if (!userId) return res.status(404).json({ error: 'User not found' });
+
+    try {
         const leagueFilter = buildLeagueFilter(league);
         const countryFilter = buildCountryFilter(country);
 
@@ -371,13 +351,12 @@ const handleLoadUserStadiums = async (req, res) => {
 
 /*  loadUserVisits  */
 const handleLoadUserVisits = async (req, res) => {
-    const { username, league, country, sortBy } = req.body;
-    try {
-        const userId = await getUserId(username);
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+    const { league, country, sortBy } = req.body;
+    const { userId } = req.user;
 
+    if (!userId) return res.status(404).json({ error: 'User not found' });
+
+    try {
         const leagueFilter = buildLeagueFilter(league);
         const countryFilter = buildCountryFilter(country);
 
@@ -428,12 +407,12 @@ const handleLoadUserVisits = async (req, res) => {
 
 /*  loadUserWishlist  */
 const handleLoadUserWishlist = async (req, res) => {
-    const { username, league, country, sortBy } = req.body;
+    const { league, country, sortBy } = req.body;
+    const { userId } = req.user;
+
+    if (!userId) return res.status(404).json({ error: 'User not found' });
+
     try {
-        const userId = await getUserId(username);
-        if (!userId) {
-            return res.status(404).json({ error: 'User not found' });
-        }
         const leagueFilter = buildLeagueFilter(league);
         const countryFilter = buildCountryFilter(country);
         let query = `
@@ -483,12 +462,13 @@ const handleLoadUserWishlist = async (req, res) => {
 
 /*  saveFavoriteStadiums  */
 const handleSaveFavoriteStadiums = async (req, res) => {
-    const { username, stadiumNames } = req.body;
+    const { stadiumNames } = req.body;
+    const { userId } = req.user;
+
+    if (!userId) return res.status(404).json({ error: 'User not found' });
+
     const connection = await db.getConnection();
     try {
-        const userId = await getUserId(username);
-        if (!userId) return res.status(404).json({ error: 'User not found' });
-
         await connection.beginTransaction();
 
         await connection.query(

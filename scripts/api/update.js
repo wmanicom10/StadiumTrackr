@@ -8,21 +8,21 @@ export const updateAPI = {
     editLog: (visitId, editDateVisited, editNote) =>
         fetchAPI(ROUTES.EDIT_LOG, { visitId, editDateVisited, editNote }),
 
-    updateEmail: (username, newEmail) =>
-        fetchAPI(ROUTES.UPDATE_EMAIL, { username, newEmail }),
+    updateEmail: (newEmail) =>
+        fetchAPI(ROUTES.UPDATE_EMAIL, { newEmail }),
 
-    updatePassword: (username, currentPassword, newPassword) => 
-            fetchAPI(ROUTES.UPDATE_PASSWORD, { username, currentPassword, newPassword }),
+    updatePassword: (currentPassword, newPassword) => 
+        fetchAPI(ROUTES.UPDATE_PASSWORD, { currentPassword, newPassword }),
 
     updateProfilePic: (formData) =>
         fetchFormData(ROUTES.UPDATE_PROFILE_PIC, formData),
 
-    updateUsername: (username, newUsername) => 
-        fetchAPI(ROUTES.UPDATE_USERNAME, { username, newUsername }),
+    updateUsername: (newUsername) => 
+        fetchAPI(ROUTES.UPDATE_USERNAME, { newUsername }),
 
-    updateUserStadium: (stadiumId, username, isVisited) =>
-        fetchAPI(ROUTES.UPDATE_USER_STADIUMS, { stadiumId, username, isVisited }),
+    updateUserStadium: (stadiumId, isVisited) =>
+        fetchAPI(ROUTES.UPDATE_USER_STADIUMS, { stadiumId, isVisited }),
 
-    updateUserWishlist: (stadiumId, username, isWishlist) =>
-        fetchAPI(ROUTES.UPDATE_USER_WISHLIST, { stadiumId, username, isWishlist })
+    updateUserWishlist: (stadiumId, isWishlist) =>
+        fetchAPI(ROUTES.UPDATE_USER_WISHLIST, { stadiumId, isWishlist })
 };

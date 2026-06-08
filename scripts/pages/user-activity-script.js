@@ -1,6 +1,6 @@
 /*  Imports  */
 import { MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createEllipsis, createNavigationButton, createPageButton, formatDate, getPageFromURL, getUsername, initializeCustomSelects, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
+import { formatDate, getPageFromURL, initializeCustomSelects, isLoggedIn, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
@@ -32,9 +32,9 @@ const elements = {
 let currentData = null;
 
 /*  Async Functions  */
-async function loadStadiumInfo(id, username) {
+async function loadStadiumInfo(id) {
     try {
-        const result = await loadAPI.loadStadiumInfo(id, username);
+        const result = await loadAPI.loadStadiumInfo(id);
         const { stadium } = result.stadiumInfo;
         return { stadiumName: stadium.name, image: stadium.image };
     } catch (error) {
@@ -42,7 +42,7 @@ async function loadStadiumInfo(id, username) {
     }
 }
 
-async function setView(username) {
+async function setView() {
     const params = new URLSearchParams(window.location.search);
     const activity = params.get('activity') || 'all';
     const sort = params.get('sort') || 'added-desc';
@@ -51,7 +51,7 @@ async function setView(username) {
     setupActivityFilterHandlers(elements, stadium);
 
     if (stadium) {
-        const { stadiumName, image } = await loadStadiumInfo(stadium, username);
+        const { stadiumName, image } = await loadStadiumInfo(stadium);
         document.title = `${stadiumName} Activity - StadiumTrackr`;
         document.getElementById('user-activity-welcome-text').textContent = `${stadiumName} Activity`;
 
@@ -68,10 +68,10 @@ async function setView(username) {
     syncSelectFromURL('sort-filter', sort);
 
     await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserActivity(username, activity, stadium, sort);
+    const result = await userAPI.loadUserActivity(activity, stadium, sort);
     const stadiums = result.userActivity;
 
-    renderActivity(stadiums, elements, username);
+    renderActivity(stadiums, elements);
 
     document.getElementById('activity-skeleton').style.display = 'none';
     document.getElementById('activity-list').style.display = 'flex';
@@ -80,7 +80,7 @@ async function setView(username) {
 }
 
 /*  Functions  */
-function renderActivity(stadiums, elements, username) {
+function renderActivity(stadiums, elements) {
     if (stadiums.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -180,7 +180,7 @@ function renderActivity(stadiums, elements, username) {
                     userHomeLogActivityEditLogButton.textContent = 'Edit Log';
 
                     userHomeLogActivityEditLogButton.addEventListener('click', () => {
-                        currentData = { visit_id: stadium.visit_id, username };
+                        currentData = { visit_id: stadium.visit_id };
                         elements.editLogName.textContent = stadium.stadium_name;
                         elements.editLogLocation.textContent = stadium.city + ', ' + stadium.state;
                         elements.editLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
@@ -197,7 +197,7 @@ function renderActivity(stadiums, elements, username) {
                     userHomeLogActivityRemoveButton.textContent = 'Remove';
 
                     userHomeLogActivityRemoveButton.addEventListener('click', () => {
-                        currentData = { visit_id: stadium.visit_id, username };
+                        currentData = { visit_id: stadium.visit_id };
                         toggleMenu(elements.deleteLogMenu, true, overlay);
                     });
 
@@ -303,7 +303,11 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.onload = async () => {
-    const username = getUsername();
-    showLoggedInUI(username);
-    setView(username);
+    if (!isLoggedIn()) {
+        window.location.replace('index.html');
+        return;
+    }
+    
+    showLoggedInUI();
+    setView();
 };

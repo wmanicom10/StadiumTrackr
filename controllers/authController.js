@@ -1,14 +1,17 @@
 const db = require('../database/connection.js');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const path = require('path');
 const fs = require('fs');
 const PROFILE_PIC_DIR = process.env.PROFILE_PIC_DIR;
 
 /*  deleteAccount  */
 const handleDeleteAccount = async (req, res) => {
-    const { username, password } = req.body;
+    const { password } = req.body;
+    const { userId } = req.user;
+    
     try {
-        const [[user]] = await db.execute('SELECT user_id, password, profile_pic FROM users WHERE username = ?', [username]);
+        const [[user]] = await db.execute('SELECT password, profile_pic FROM users WHERE user_id = ?', [userId]);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -22,7 +25,9 @@ const handleDeleteAccount = async (req, res) => {
                 fs.unlinkSync(fullPath);
             }
         }
-        const [result] = await db.query('DELETE FROM users WHERE user_id = ?', [user.user_id]);
+
+        const [result] = await db.query('DELETE FROM users WHERE user_id = ?', [userId]);
+        
         res.json({ result });
     } catch (err) {
         console.error(err);
@@ -49,18 +54,17 @@ const handleLogin = async (req, res) => {
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
-
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Incorrect username or password' });
         }
 
-        res.json({ 
-            message: 'Login successful', 
-            user_id: user.user_id, 
-            username: user.username, 
-            email: user.email,
-            profile_pic: user.profile_pic 
-        });
+        const token = jwt.sign(
+            { userId: user.user_id, username: user.username, email: user.email, profilePic: user.profile_pic },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({ token });
     } catch (err) {
         console.error('Login error:', err);
         res.status(500).json({ error: 'Internal server error' });
@@ -98,12 +102,18 @@ const handleSignup = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(password, 12);
 
-        await db.execute(
+        const [result] = await db.execute(
             'INSERT INTO users (username, password, email, created_on, profile_pic) VALUES (?, ?, ?, now(), "default.png")',
             [username, hashedPassword, email]
         );
 
-        res.json({ message: 'Account created successfully' });
+        const token = jwt.sign(
+            { userId: result.insertId, username, email, profilePic: 'default.png' },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({ token });
     } catch (err) {
         console.error('Signup error:', err);
         res.status(500).json({ error: 'Internal server error' });

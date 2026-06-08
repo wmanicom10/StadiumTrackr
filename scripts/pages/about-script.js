@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements } from "../constants.js";
-import { getUsername, isLoggedIn, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI } from "../utils.js";
+import { isLoggedIn, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -53,9 +53,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.onload = async () => {
-    const username = getUsername();
     if (isLoggedIn()) {
-        showLoggedInUI(username);
+        showLoggedInUI();
     } else {
         showLoggedOutUI();
     }

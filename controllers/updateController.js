@@ -1,5 +1,5 @@
 const db = require('../database/connection.js');
-const { getUserId } = require('../database/dbHelpers.js');
+const jwt = require('jsonwebtoken');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
@@ -262,7 +262,8 @@ const handleUpdateAchievementProgress = async (userId) => {
 
 /*  updateEmail  */
 const handleUpdateEmail = async (req, res) => {
-    const { username, newEmail } = req.body;
+    const { newEmail } = req.body;
+    const { userId, username, email, profilePic } = req.user;
 
     try {
         const [[existingUser]] = await db.execute('SELECT user_id FROM users WHERE email = ?', [newEmail]);
@@ -271,22 +272,23 @@ const handleUpdateEmail = async (req, res) => {
             return res.status(409).json({ error: 'Email already in use' });
         }
 
-        const userId = await getUserId(username);
+        if (email === newEmail) {
+            return res.status(409).json({ error: 'New email must be different from current email' });
+        }
 
         if (!userId) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        const [[currentEmail]] = await db.execute('SELECT email FROM users WHERE user_id = ?', [userId]);
-        
-        if (currentEmail.email === newEmail) {
-            return res.status(409).json({ error: 'New email must be different from current email' });
-        }
+        await db.query('UPDATE users SET email = ? WHERE user_id = ?', [newEmail, userId]);
 
-        const [result] = await db.query('UPDATE users SET email = ? WHERE user_id = ?', [newEmail, userId]);
+        const token = jwt.sign(
+            { userId, username, email: newEmail, profilePic },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
 
-        res.json({ result });
-
+        res.json({ token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -295,10 +297,11 @@ const handleUpdateEmail = async (req, res) => {
 
 /*  updatePassword  */
 const handleUpdatePassword = async (req, res) => {
-    const { username, currentPassword, newPassword } = req.body;
+    const { currentPassword, newPassword } = req.body;
+    const { userId } = req.user;
 
     try {
-        const [[user]] = await db.execute('SELECT user_id, password FROM users WHERE username = ?', [username]);
+        const [[user]] = await db.execute('SELECT password FROM users WHERE user_id = ?', [userId]);
 
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
@@ -312,7 +315,7 @@ const handleUpdatePassword = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(newPassword, 12);
 
-        const [result] = await db.query('UPDATE users SET password = ? WHERE user_id = ?', [hashedPassword, user.user_id]);
+        const [result] = await db.query('UPDATE users SET password = ? WHERE user_id = ?', [hashedPassword, userId]);
 
         res.json({ result });
 
@@ -336,10 +339,9 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 const handleUpdateProfilePic = async (req, res) => {
-    const { username } = req.body;
+    const { userId, username, email } = req.user;
 
     try {
-        const userId = await getUserId(username);
         if (!userId) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -364,7 +366,14 @@ const handleUpdateProfilePic = async (req, res) => {
         fs.unlinkSync(tempPath);
 
         await db.query('UPDATE users SET profile_pic = ? WHERE user_id = ?', [newFilename, userId]);
-        res.json({ profile_pic: newFilename });
+        
+        const token = jwt.sign(
+            { userId, username, email, profilePic: newFilename },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({ token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -373,7 +382,8 @@ const handleUpdateProfilePic = async (req, res) => {
 
 /*  updateUsername  */
 const handleUpdateUsername = async (req, res) => {
-    const { username, newUsername } = req.body;
+    const { newUsername } = req.body;
+    const { userId, username, email, profilePic } = req.user;
 
     try {
         const [[existingUser]] = await db.execute('SELECT user_id FROM users WHERE username = ?', [newUsername]);
@@ -386,16 +396,19 @@ const handleUpdateUsername = async (req, res) => {
             return res.status(409).json({ error: 'New username must be different from current username' });
         }
 
-        const userId = await getUserId(username);
-
         if (!userId) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        const [result] = await db.query('UPDATE users SET username = ? WHERE user_id = ?', [newUsername, userId]);
+        await db.query('UPDATE users SET username = ? WHERE user_id = ?', [newUsername, userId]);
 
-        res.json({ result });
+        const token = jwt.sign(
+            { userId, username: newUsername, email, profilePic },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
 
+        res.json({ token });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -404,15 +417,14 @@ const handleUpdateUsername = async (req, res) => {
 
 /*  updateUserStadium  */
 const handleUpdateUserStadium = async (req, res) => {
-    const { stadiumId, username, isVisited } = req.body;
+    const { stadiumId, isVisited } = req.body;
+    const { userId } = req.user;
 
-    if (!stadiumId || !username) {
-        return res.status(400).json({ error: 'Stadium id and username are required' });
+    if (!stadiumId || !userId) {
+        return res.status(400).json({ error: 'Stadium id and user id are required' });
     }
 
     try {
-        const userId = await getUserId(username);
-
         if (!userId || !stadiumId) {
             return res.status(404).json({ error: 'User or stadium not found' });
         }
@@ -447,15 +459,14 @@ const handleUpdateUserStadium = async (req, res) => {
 
 /*  updateUserWishlist  */
 const handleUpdateUserWishlist = async (req, res) => {
-    const { stadiumId, username, isWishlist } = req.body;
+    const { stadiumId, isWishlist } = req.body;
+    const { userId } = req.user;
 
-    if (!stadiumId || !username) {
+    if (!stadiumId || !userId) {
         return res.status(400).json({ error: 'Stadium id and username are required' });
     }
 
     try {
-        const userId = await getUserId(username);
-
         if (!userId || !stadiumId) {
             return res.status(404).json({ error: 'User or stadium not found' });
         }

@@ -1,6 +1,6 @@
 /*  Imports  */
 import { DEBOUNCE_TIME, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, debounce, getUsername, setupSearchAutocomplete, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
+import { createToast, debounce, isLoggedIn, setupSearchAutocomplete, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { authAPI } from "../api/auth.js";
 import { loadAPI } from "../api/load.js";
@@ -48,9 +48,9 @@ const deleteAccountMenu = document.getElementById('delete-account-menu');
 const addFavoriteStadiumMenu = document.getElementById('add-favorite-stadium-menu');
 
 /*  Async Functions  */
-async function loadFavoriteStadiums(username) {
+async function loadFavoriteStadiums() {
     try {
-        const result = await userAPI.loadFavoriteStadiums(username);
+        const result = await userAPI.loadFavoriteStadiums();
         const favoriteStadiums = result.favoriteStadiums;
         const favoriteStadiumsSettingContainer = document.getElementById('favorite-stadiums-settings-container')
 
@@ -349,9 +349,12 @@ document.addEventListener('DOMContentLoaded', () => {
         control.addEventListener('click', () => setActiveControl(id));
     });
 
-    document.getElementById('current-username').textContent = 'Current: ' + getUsername();
-    document.getElementById('current-email').textContent = 'Current: ' + (localStorage.getItem('email') || '');
-    document.getElementById('new-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
+    const token = localStorage.getItem('token');
+    const payload = JSON.parse(atob(token.split('.')[1]));
+
+    document.getElementById('current-username').textContent = 'Current: ' + (payload.username || '');
+    document.getElementById('current-email').textContent = 'Current: ' + (payload.email || '');
+    document.getElementById('new-profile-pic').src = PROFILE_PIC_PATH + (payload.profilePic || 'default.png');
 });
 
 document.getElementById('new-username').addEventListener('input', () => {
@@ -379,10 +382,9 @@ document.getElementById('username-save-button').addEventListener('click', async 
     }
     else {
         try {
-            const result = await updateAPI.updateUsername(getUsername(), newUsername);
-
-            if (result.result.affectedRows === 1) {
-                localStorage.setItem('username', newUsername);
+            const result = await updateAPI.updateUsername(newUsername);
+            if (result.token) {
+                localStorage.setItem('token', result.token);
                 sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Username changed successfully.' }));
                 window.location.reload();
             }
@@ -430,13 +432,14 @@ document.getElementById('profile-pic-save-button').addEventListener('click', asy
 
     const formData = new FormData();
     formData.append('profilePic', file);
-    formData.append('username', getUsername());
 
     try {
         const result = await updateAPI.updateProfilePic(formData);
-        localStorage.setItem('profilePic', PROFILE_PIC_PATH + result.profile_pic);
-        sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Profile picture changed successfully.' }));
-        window.location.reload();
+        if (result.token) {
+            localStorage.setItem('token', result.token);
+            sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Profile picture changed successfully.' }));
+            window.location.reload();
+        }
     } catch (error) {
         console.error(error);
         shakeOrReplace(error.message || 'Failed to change profile pic. Please try again.');
@@ -450,9 +453,9 @@ document.getElementById('email-save-button').addEventListener('click', async () 
         return;
     }
     try {
-        const result = await updateAPI.updateEmail(getUsername(), newEmail);
-        if (result.result.affectedRows === 1) {
-            localStorage.setItem('email', newEmail);
+        const result = await updateAPI.updateEmail(newEmail);
+        if (result.token) {
+            localStorage.setItem('token', result.token);
             sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Email changed successfully.' }));
             window.location.reload();
         }
@@ -500,7 +503,7 @@ document.getElementById('change-password-button').addEventListener('click', asyn
     }
 
     try {
-        const result = await updateAPI.updatePassword(getUsername(), currentPassword, newPassword);
+        const result = await updateAPI.updatePassword(currentPassword, newPassword);
         if (result.result.affectedRows === 1) {
             sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Password changed successfully.' }));
             window.location.reload();
@@ -532,7 +535,7 @@ document.getElementById('delete-account-delete-button').addEventListener('click'
     }
 
     try {
-        const result = await authAPI.deleteAccount(getUsername(), password);
+        const result = await authAPI.deleteAccount(password);
         if (result.result.affectedRows === 1) {
             localStorage.clear();
             sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Account deleted successfully.' }));
@@ -549,12 +552,11 @@ document.getElementById('close-add-favorite-stadium-menu').addEventListener('cli
 });
 
 document.getElementById('favorite-stadiums-save-button').addEventListener('click', async () => {
-    const username = getUsername();
     const activeSlots = Array.from(document.querySelectorAll('.favorite-stadiums-setting-active'));
     const stadiumNames = activeSlots.map(slot => slot.querySelector('h3').textContent);
 
     try {
-        const result = await userAPI.saveFavoriteStadiums(username, stadiumNames);
+        const result = await userAPI.saveFavoriteStadiums(stadiumNames);
         
         if (result.success) {
             sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Favorites saved successfully.' }));
@@ -567,6 +569,11 @@ document.getElementById('favorite-stadiums-save-button').addEventListener('click
 });
 
 window.onload = async () => {
+    if (!isLoggedIn()) {
+        window.location.replace('index.html');
+        return;
+    }
+
     setActiveControl('profile');
     
     controls.forEach(({ control }) => {
@@ -574,7 +581,7 @@ window.onload = async () => {
     });
 
     await Promise.all([
-        loadFavoriteStadiums(getUsername()),
+        loadFavoriteStadiums(),
         new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
     ]);
 

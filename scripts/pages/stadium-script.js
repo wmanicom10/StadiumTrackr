@@ -1,6 +1,6 @@
 /*  Imports  */
-import { createAccountMenu, getAuthElements, getHeaderElements, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, getUsername, isLoggedIn, setupAddStadiumModal, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI, toggleMenu, truncateUsername } from "../utils.js";
+import { createAccountMenu, getAuthElements, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
+import { createToast, formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, isLoggedIn, setupAddStadiumModal, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 import { updateAPI } from "../api/update.js";
@@ -42,10 +42,10 @@ let hasNoUpcomingEvents = false;
 let stadiumMapData = null;
 
 /*  Async Functions  */
-async function loadFullStadiumPage(id, username) {
+async function loadFullStadiumPage(id) {
     try {
         const [result] = await Promise.all([
-            loadStadiumInfo(id, username),
+            loadStadiumInfo(id),
             loadStadiumMap(id),
             loadUpcomingEvents(id),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
@@ -78,9 +78,9 @@ async function loadFullStadiumPage(id, username) {
     }
 }
 
-async function loadStadiumInfo(id, username) {
+async function loadStadiumInfo(id) {
     try {
-        const result = await loadAPI.loadStadiumInfo(id, username);
+        const result = await loadAPI.loadStadiumInfo(id);
         const { stadium, teams, userVisited, userWishlist } = result.stadiumInfo;
 
         const stadiumImage = document.createElement('img');
@@ -103,8 +103,8 @@ async function loadStadiumInfo(id, username) {
         elements.stadiumVisits.textContent = stadium.visits;
         elements.upcomingEventsStadiumLink.href = `events.html?id=${stadium.id}`
 
-        setupUserControls(id, username, userVisited, userWishlist);
-        setupAddStadiumModal(id, stadium.name, stadium.city, stadium.state, username, stadium.image, elements);
+        setupUserControls(id, userVisited, userWishlist);
+        setupAddStadiumModal(id, stadium.name, stadium.city, stadium.state, stadium.image, elements);
 
     } catch (error) {
         console.error(error);
@@ -229,7 +229,7 @@ function initializeStadiumMap(stadiumMapData) {
     `);
 }
 
-function setupUserControls(stadiumId, username, userVisited, userWishlist) {
+function setupUserControls(stadiumId, userVisited, userWishlist) {
     const hasLogged = userVisited.some(activity => activity.visited_on !== null);
     let isWishlist = userWishlist.length > 0;
     let isVisited = userVisited.length > 0;
@@ -250,13 +250,13 @@ function setupUserControls(stadiumId, username, userVisited, userWishlist) {
     } else {
         elements.stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
         elements.userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
-        setupVisitedClickHandler(stadiumId, username, isVisited, isWishlist);
+        setupVisitedClickHandler(stadiumId, isVisited, isWishlist);
     }
 
-    setupWishlistClickHandler(stadiumId, username, isWishlist);
+    setupWishlistClickHandler(stadiumId, isWishlist);
 
     elements.stadiumLogButton.addEventListener('click', () => {
-        if (username === "") {
+        if (!isLoggedIn()) {
             toggleMenu(createAccountMenu, true, overlay);
         } else {
             toggleMenu(elements.addStadiumMenu, true, overlay);
@@ -264,7 +264,7 @@ function setupUserControls(stadiumId, username, userVisited, userWishlist) {
     });
 
     elements.stadiumActivityButton.addEventListener('click', (e) => {
-        if (username === "") {
+        if (!isLoggedIn()) {
             e.preventDefault();
             toggleMenu(createAccountMenu, true, overlay);
         }
@@ -273,12 +273,12 @@ function setupUserControls(stadiumId, username, userVisited, userWishlist) {
     elements.stadiumActivityButton.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
 }
 
-function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initialIsWishlist) {
+function setupVisitedClickHandler(stadiumId, initialIsVisited, initialIsWishlist) {
     let isVisited = initialIsVisited;
     let isWishlist = initialIsWishlist;
 
     elements.stadiumUserControlVisited.addEventListener('click', async () => {
-        if (!username) {
+        if (!isLoggedIn()) {
             toggleMenu(createAccountMenu, true, overlay);
             return;
         }
@@ -302,7 +302,7 @@ function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initial
                     elements.stadiumUserControlWishlist.classList.remove('animating');
                 }, 400);
 
-                updateAPI.updateUserWishlist(stadiumId, username, true)
+                updateAPI.updateUserWishlist(stadiumId, true)
                     .catch(error => {
                         console.error(error);
                         shakeOrReplace(error.message || 'Failed to update wishlist. Please try again.');
@@ -316,7 +316,7 @@ function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initial
         }, 400);
 
         try {
-            await updateAPI.updateUserStadium(stadiumId, username, isVisited);
+            await updateAPI.updateUserStadium(stadiumId, isVisited);
             isVisited = newIsVisited;
         } catch (error) {
             console.error(error);
@@ -325,11 +325,11 @@ function setupVisitedClickHandler(stadiumId, username, initialIsVisited, initial
     });
 }
 
-function setupWishlistClickHandler(stadiumId, username, initialIsWishlist) {
+function setupWishlistClickHandler(stadiumId, initialIsWishlist) {
     let isWishlist = initialIsWishlist;
 
     elements.stadiumUserControlWishlist.addEventListener('click', async () => {
-        if (!username) {
+        if (!isLoggedIn()) {
             toggleMenu(createAccountMenu, true, overlay);
             return;
         }
@@ -347,7 +347,7 @@ function setupWishlistClickHandler(stadiumId, username, initialIsWishlist) {
         }, 400);
 
         try {
-            await updateAPI.updateUserWishlist(stadiumId, username, isWishlist);
+            await updateAPI.updateUserWishlist(stadiumId, isWishlist);
             isWishlist = newIsWishlist;
         } catch (error) {
             console.error(error);
@@ -368,10 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.onload = async () => {
-    const username = getUsername();
-    
     if (isLoggedIn()) {
-        showLoggedInUI(username);
+        showLoggedInUI();
     } else {
         showLoggedOutUI();
     }
@@ -379,5 +377,5 @@ window.onload = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
     
-    loadFullStadiumPage(id, username);
+    loadFullStadiumPage(id);
 };

@@ -1,5 +1,5 @@
 /*  Imports  */
-import { clearUsername, createToast, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
+import { createToast, logOut, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
 import { getHeaderElements, PROFILE_PIC_PATH } from "./constants.js";
 import { authAPI } from "./api/auth.js";
 
@@ -15,10 +15,7 @@ async function handleLogin() {
 
     try {
         const result = await authAPI.login(username, password);
-        
-        localStorage.setItem('username', result.username);
-        localStorage.setItem('email', result.email)
-        localStorage.setItem('profilePic', PROFILE_PIC_PATH + result.profile_pic || 'images/profile-pics/default.png');
+        localStorage.setItem('token', result.token);
         window.location.replace('user-home.html');
     } catch (error) {
         console.error(error);
@@ -39,11 +36,8 @@ async function handleSignup() {
     }
 
     try {
-        await authAPI.signup(email, username, password);
-        
-        localStorage.setItem('username', username);
-        localStorage.setItem('email', email);
-        localStorage.setItem('profilePic', 'images/profile-pics/default.png');
+        const result = await authAPI.signup(email, username, password);
+        localStorage.setItem('token', result.token);
         window.location.replace('user-home.html');
     } catch (error) {
         console.error(error);
@@ -180,12 +174,12 @@ export function registerLogOutEvents() {
     const { logOutButton, sidebarLogOutButton } = getHeaderElements();
 
     logOutButton?.addEventListener('click', () => {
-        clearUsername();
+        logOut();
         window.location.reload();
     });
 
     sidebarLogOutButton?.addEventListener('click', () => {
-        clearUsername();
+        logOut();
         window.location.reload();
     });
 }
@@ -194,11 +188,11 @@ export function registerUserLogOutEvents() {
     const { logOutButton, sidebarLogOutButton } = getHeaderElements();
 
     logOutButton?.addEventListener('click', () => {
-        clearUsername();
+        logOut();
         window.location.replace('index.html');
     });
     sidebarLogOutButton?.addEventListener('click', () => {
-        clearUsername();
+        logOut();
         window.location.replace('index.html');
     });
 }

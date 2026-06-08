@@ -1,6 +1,6 @@
 /*  Imports  */
-import { ICON_IMAGE_PATH, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createEllipsis, createNavigationButton, createPageButton, createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getUsername, getPageFromURL, initializeCustomSelects, renderPageNumbers, renderWithoutTransition, renderWithTransition, setPageInURL, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
+import { ICON_IMAGE_PATH, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
+import { createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getPageFromURL, initializeCustomSelects, isLoggedIn, renderPageNumbers, renderWithoutTransition, renderWithTransition, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
@@ -14,7 +14,7 @@ let allStadiums = [];
 let currentData = null;
 
 /*  Async Functions  */
-async function loadAchievementsTab(username, tab) {
+async function loadAchievementsTab(tab) {
     const elements = {
         achievementsFilter: document.getElementById('achievements-filter'),
         sortFilter: document.getElementById('achievements-sort-filter'),
@@ -36,10 +36,10 @@ async function loadAchievementsTab(username, tab) {
     document.getElementById('user-home-achievements-tab-container').style.display = 'flex';
 
     await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserAchievements(username, achievement, sort);
+    const result = await userAPI.loadUserAchievements(achievement, sort);
     const achievements = result.userAchievements;
 
-    renderAchievementsTab(achievements, elements, username);
+    renderAchievementsTab(achievements, elements);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -49,7 +49,7 @@ async function loadAchievementsTab(username, tab) {
     document.getElementById('user-home-achievements-filters-container').style.display = 'block';
 }
 
-async function loadActivityTab(username, tab) {
+async function loadActivityTab(tab) {
     const elements = {
         activityFilter: document.getElementById('activity-filter'),
         sortFilter: document.getElementById('activity-sort-filter'),
@@ -84,10 +84,10 @@ async function loadActivityTab(username, tab) {
     document.getElementById('user-home-activity-tab-container').style.display = 'flex';
 
     await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserActivity(username, activity, '', sort);
+    const result = await userAPI.loadUserActivity(activity, '', sort);
     const stadiums = result.userActivity;
 
-    renderActivityTab(stadiums, elements, username);
+    renderActivityTab(stadiums, elements);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -97,7 +97,7 @@ async function loadActivityTab(username, tab) {
     document.getElementById('user-home-activity-filters-container').style.display = 'block';
 }
 
-async function loadEventsTab(username, tab) {
+async function loadEventsTab(tab) {
     const elements = {
         eventFilter: document.getElementById('event-filter'),
         sortFilter: document.getElementById('event-sort-filter'),
@@ -119,10 +119,10 @@ async function loadEventsTab(username, tab) {
     document.getElementById('user-home-events-tab-container').style.display = 'flex';
 
     await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await loadAPI.loadUserEvents(username, event, sort);
+    const result = await loadAPI.loadUserEvents(event, sort);
     const events = result.stadiums;
 
-    renderEventsTab(events, elements, username);
+    renderEventsTab(events, elements);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -132,13 +132,13 @@ async function loadEventsTab(username, tab) {
     document.getElementById('user-home-events-filters-container').style.display = 'block';
 }
 
-async function loadHomeTab(username) {
+async function loadHomeTab() {
     document.getElementById('user-home-home-tab-container').style.display = 'flex';
 
     const [result, activity, mapData] = await Promise.all([
-        userAPI.loadUserInfo(username),
-        userAPI.loadUserActivity(username, 'all', '', 'added-desc', 5),
-        userAPI.loadUserHomeMap(username),
+        userAPI.loadUserInfo(),
+        userAPI.loadUserActivity('all', '', 'added-desc', 5),
+        userAPI.loadUserHomeMap(),
         new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
     ]);
     window.userHomeMapData = {
@@ -184,7 +184,7 @@ async function loadHomeTab(username) {
     document.getElementById('user-home-stadium-map').style.display = 'block';
 }
 
-async function loadStadiumsTab(username, tab) {
+async function loadStadiumsTab(tab) {
     const elements = {
         leagueFilter: document.getElementById('stadiums-league-filter'),
         countryFilter: document.getElementById('stadiums-country-filter'),
@@ -222,7 +222,7 @@ async function loadStadiumsTab(username, tab) {
     document.getElementById('user-home-stadiums-tab-container').style.display = 'flex';
 
     await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserStadiums(username, league, country, sort);
+    const result = await userAPI.loadUserStadiums(league, country, sort);
     const stadiums = result.userStadiums;
 
     allStadiums = stadiums;
@@ -243,40 +243,42 @@ async function loadStadiumsTab(username, tab) {
     document.getElementById('user-home-stadiums-filters-container').style.display = 'block';
 }
 
-async function loadTab(tab, username) {
+async function loadTab(tab) {
     switch (tab) {
         case "home":
-            await loadHomeTab(username);
+            await loadHomeTab();
             break;
         case "stadiums":
-            await loadStadiumsTab(username, tab);
+            await loadStadiumsTab(tab);
             break;
         case "visits":
-            await loadVisitsTab(username, tab);
+            await loadVisitsTab(tab);
             break;
         case "events":
-            await loadEventsTab(username, tab);
+            await loadEventsTab(tab);
             break;
         case "wishlist":
-            await loadWishlistTab(username, tab);
+            await loadWishlistTab(tab);
             break;
         case "activity":
-            await loadActivityTab(username, tab);
+            await loadActivityTab(tab);
             break;
         case "achievements":
-            await loadAchievementsTab(username, tab);
+            await loadAchievementsTab(tab);
             break;
         default:
-            await loadHomeTab(username);
+            await loadHomeTab();
             break;
     }
 }
 
-async function loadUserHeader(username) {
+async function loadUserHeader() {
     try {
-        const result = await userAPI.loadUserInfo(username);
+        const result = await userAPI.loadUserInfo();
 
-        const profilePic = localStorage.getItem('profilePic');
+        const token = localStorage.getItem('token');
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const profilePic = payload.profilePic;
         const numStadiums = result.numStadiumsVisited;
         const numCountries = result.numCountriesVisited;
         const numEvents = result.numEventsAttended;
@@ -293,8 +295,8 @@ async function loadUserHeader(username) {
             };
         }
 
-        document.getElementById('user-home-profile-pic').src = profilePic;
-        document.getElementById('user-home-username').textContent = username;
+        document.getElementById('user-home-profile-pic').src = PROFILE_PIC_PATH + profilePic;
+        document.getElementById('user-home-username').textContent = payload.username;
         document.getElementById('num-stadiums').textContent = numStadiums;
         document.getElementById('num-events').textContent = numEvents;
         document.getElementById('num-countries').textContent = numCountries;
@@ -304,7 +306,7 @@ async function loadUserHeader(username) {
     }
 }
 
-async function loadVisitsTab(username, tab) {
+async function loadVisitsTab(tab) {
     const elements = {
         leagueFilter: document.getElementById('visits-league-filter'),
         countryFilter: document.getElementById('visits-country-filter'),
@@ -342,11 +344,11 @@ async function loadVisitsTab(username, tab) {
     document.getElementById('user-home-visits-tab-container').style.display = 'flex';
 
     await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserVisits(username, league, country, sort);
+    const result = await userAPI.loadUserVisits(league, country, sort);
     const stadiums = result.userVisits;
 
     const loggedStadiums = stadiums.filter(stadium => stadium.visited_on);
-    renderVisitsTab(loggedStadiums, elements, username);
+    renderVisitsTab(loggedStadiums, elements);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -356,7 +358,7 @@ async function loadVisitsTab(username, tab) {
     document.getElementById('user-home-visits-filters-container').style.display = 'block';
 }
 
-async function loadWishlistTab(username, tab) {
+async function loadWishlistTab(tab) {
     const elements = {
         leagueFilter: document.getElementById('wishlist-league-filter'),
         countryFilter: document.getElementById('wishlist-country-filter'),
@@ -394,7 +396,7 @@ async function loadWishlistTab(username, tab) {
     document.getElementById('user-home-wishlist-tab-container').style.display = 'flex';
 
     await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserWishlist(username, league, country, sort);
+    const result = await userAPI.loadUserWishlist(league, country, sort);
     const stadiums = result.userWishlist;
 
     allStadiums = stadiums;
@@ -458,7 +460,7 @@ async function renderHomeTabMap() {
 }
 
 /*  Functions  */
-function renderAchievementsTab(achievements, elements, username) {
+function renderAchievementsTab(achievements, elements) {
     if (achievements.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -563,7 +565,7 @@ function renderAchievementsTab(achievements, elements, username) {
     }
 }
 
-function renderActivityTab(stadiums, elements, username) {
+function renderActivityTab(stadiums, elements) {
     if (stadiums.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -663,7 +665,7 @@ function renderActivityTab(stadiums, elements, username) {
                     userHomeLogActivityEditLogButton.textContent = 'Edit Log';
 
                     userHomeLogActivityEditLogButton.addEventListener('click', () => {
-                        currentData = { visit_id: stadium.visit_id, username };
+                        currentData = { visit_id: stadium.visit_id };
                         elements.editLogName.textContent = stadium.stadium_name;
                         elements.editLogLocation.textContent = stadium.city + ', ' + stadium.state;
                         elements.editLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
@@ -680,7 +682,7 @@ function renderActivityTab(stadiums, elements, username) {
                     userHomeLogActivityRemoveButton.textContent = 'Remove';
 
                     userHomeLogActivityRemoveButton.addEventListener('click', () => {
-                        currentData = { visit_id: stadium.visit_id, username };
+                        currentData = { visit_id: stadium.visit_id };
                         toggleMenu(elements.deleteLogMenu, true, overlay);
                     });
 
@@ -748,7 +750,7 @@ function renderActivityTab(stadiums, elements, username) {
     }
 }
 
-function renderEventsTab(events, elements, username) {
+function renderEventsTab(events, elements) {
     if (events.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -1010,7 +1012,7 @@ function renderHomeTabWishlist(stadiums) {
     });
 }
 
-function renderVisitsTab(stadiums, elements, username) {
+function renderVisitsTab(stadiums, elements) {
     if (stadiums.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -1095,7 +1097,7 @@ function renderVisitsTab(stadiums, elements, username) {
             userHomeVisitEditLogButton.appendChild(editImage);
 
             userHomeVisitEditLogButton.addEventListener('click', () => {
-                currentData = { visit_id: stadium.visit_id, username };
+                currentData = { visit_id: stadium.visit_id };
                 elements.editLogName.textContent = stadium.stadium_name;
                 elements.editLogLocation.textContent = stadium.city + ', ' + stadium.state;
                 elements.editLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
@@ -1114,7 +1116,7 @@ function renderVisitsTab(stadiums, elements, username) {
             userHomeVisitRemoveButton.appendChild(removeImage);
 
             userHomeVisitRemoveButton.addEventListener('click', () => {
-                currentData = { visit_id: stadium.visit_id, username };
+                currentData = { visit_id: stadium.visit_id };
                 toggleMenu(elements.deleteLogMenu, true, overlay);
             });
 
@@ -1336,9 +1338,13 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.onload = async () => {
-    const username = getUsername();
-    showLoggedInUI(username);
-    loadUserHeader(username);
+    if (!isLoggedIn()) {
+        window.location.replace('index.html');
+        return;
+    }
+
+    showLoggedInUI();
+    loadUserHeader();
     
     const params = new URLSearchParams(window.location.search);
     const tab = params.get('tab') || 'home';
@@ -1348,7 +1354,7 @@ window.onload = async () => {
         createToast(type, message);
         sessionStorage.removeItem('toast');
     }
-    loadTab(tab, username);
+    loadTab(tab);
 };
 
 Array.from(document.getElementsByClassName('user-home-nav-bar-tab')).forEach(tab => {

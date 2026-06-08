@@ -2,33 +2,33 @@ import { API_BASE_URL, ROUTES } from '../constants.js';
 import { fetchAPI, fetchFormData } from '../utils.js';
 
 export const userAPI = {
-    addStadium: (stadiumId, username, dateVisited, note) =>
-        fetchAPI(ROUTES.ADD_STADIUM, { stadiumId, username, dateVisited, note }),
+    addStadium: (stadiumId, dateVisited, note) =>
+        fetchAPI(ROUTES.ADD_STADIUM, { stadiumId, dateVisited, note }),
 
-    loadFavoriteStadiums: (username) =>
-        fetchAPI(ROUTES.LOAD_FAVORITE_STADIUMS, { username }),
+    loadFavoriteStadiums: () =>
+        fetchAPI(ROUTES.LOAD_FAVORITE_STADIUMS),
 
-    loadUserAchievements: (username, earned, sortBy) =>
-        fetchAPI(ROUTES.LOAD_USER_ACHIEVEMENTS, { username, earned, sortBy }),
+    loadUserAchievements: (earned, sortBy) =>
+        fetchAPI(ROUTES.LOAD_USER_ACHIEVEMENTS, { earned, sortBy }),
 
-    loadUserActivity: (username, activity, id, sortBy, limit = 18, offset = 0) =>
-        fetchAPI(ROUTES.LOAD_USER_ACTIVITY, { username, activity, id, sortBy, limit, offset }),
+    loadUserActivity: (activity, id, sortBy, limit = 18, offset = 0) =>
+        fetchAPI(ROUTES.LOAD_USER_ACTIVITY, { activity, id, sortBy, limit, offset }),
 
-    loadUserHomeMap: (username) =>
-        fetchAPI(ROUTES.LOAD_USER_HOME_MAP, { username }),
+    loadUserHomeMap: () =>
+        fetchAPI(ROUTES.LOAD_USER_HOME_MAP),
 
-    loadUserInfo: (username) =>
-        fetchAPI(ROUTES.LOAD_USER_INFO, { username }),
+    loadUserInfo: () =>
+        fetchAPI(ROUTES.LOAD_USER_INFO),
 
-    loadUserStadiums: (username, league, country, sortBy) =>
-        fetchAPI(ROUTES.LOAD_USER_STADIUMS, { username, league, country, sortBy }),
+    loadUserStadiums: (league, country, sortBy) =>
+        fetchAPI(ROUTES.LOAD_USER_STADIUMS, { league, country, sortBy }),
 
-    loadUserVisits: (username, league, country, sortBy) => 
-        fetchAPI(ROUTES.LOAD_USER_VISITS, { username, league, country, sortBy }),
+    loadUserVisits: (league, country, sortBy) => 
+        fetchAPI(ROUTES.LOAD_USER_VISITS, { league, country, sortBy }),
 
-    loadUserWishlist: (username, league, country, sortBy) =>
-        fetchAPI(ROUTES.LOAD_USER_WISHLIST, { username, league, country, sortBy }),
+    loadUserWishlist: (league, country, sortBy) =>
+        fetchAPI(ROUTES.LOAD_USER_WISHLIST, { league, country, sortBy }),
 
-    saveFavoriteStadiums: (username, stadiumNames) =>
-        fetchAPI(ROUTES.SAVE_FAVORITE_STADIUMS, { username, stadiumNames }),
+    saveFavoriteStadiums: (stadiumNames) =>
+        fetchAPI(ROUTES.SAVE_FAVORITE_STADIUMS, { stadiumNames }),
 };

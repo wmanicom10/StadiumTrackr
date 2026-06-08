@@ -16,13 +16,18 @@ A web application for tracking stadium visits as you explore sports venues in th
 ## Tech Stack
 
 ### Frontend
-- **HTML/CSS**
-- **JavaScript**
-- **Leaflet.js**
+- HTML/CSS
+- JavaScript
+- Leaflet.js
+- Vite
 
 ### Backend
-- **Node.js**
-- **Express.js**
-- **Vite**
-- **MySQL**
-- **Ticketmaster API**
+- Node.js
+- Express.js
+- MySQL
+
+### Authentication
+- JSON Web Tokens (JWT)
+
+### External APIs
+- Ticketmaster Discovery API

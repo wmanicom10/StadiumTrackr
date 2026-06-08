@@ -1,13 +1,5 @@
 const db = require('./connection.js');
 
-const getUserId = async (username) => {
-    const [[user]] = await db.execute(
-        'SELECT user_id FROM users WHERE username = ?',
-        [username]
-    );
-    return user?.user_id;
-};
-
 const getStadiumId = async (stadiumName) => {
     const [[stadium]] = await db.execute(
         'SELECT stadium_id FROM stadiums WHERE stadium_name = ?',
@@ -92,7 +84,6 @@ const buildSortOrder = (sortBy, tablePrefix = '', isGrouped = false, isUnion = f
 };
 
 module.exports = {
-    getUserId,
     getStadiumId,
     buildCountryFilter,
     buildLeagueFilter,

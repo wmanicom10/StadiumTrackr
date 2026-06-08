@@ -17,17 +17,17 @@ export const loadAPI = {
     loadStadiumEvents: (id) => 
         fetchAPI(ROUTES.LOAD_STADIUMS_EVENTS, { id }),
 
-    loadStadiumInfo: (id, username) =>
-        fetchAPI(ROUTES.LOAD_STADIUM_INFO, { id, username }),
+    loadStadiumInfo: (id) =>
+        fetchAPI(ROUTES.LOAD_STADIUM_INFO, { id }),
 
     loadStadiumMap: (id) =>
         fetchAPI(ROUTES.LOAD_STADIUM_MAP, { id }),
 
-    loadStadiums: (league, country, sortBy, username) =>
-        fetchAPI(ROUTES.LOAD_STADIUMS, { league, country, sortBy, username }),
+    loadStadiums: (league, country, sortBy) =>
+        fetchAPI(ROUTES.LOAD_STADIUMS, { league, country, sortBy }),
 
-    loadUserEvents: (username, event, sort) =>
-        fetchAPI(ROUTES.LOAD_USER_EVENTS, { username, event, sort }),
+    loadUserEvents: (event, sort) =>
+        fetchAPI(ROUTES.LOAD_USER_EVENTS, { event, sort }),
 
     searchStadiums: (name) =>
         fetchAPI(ROUTES.SEARCH_STADIUMS, { name }),

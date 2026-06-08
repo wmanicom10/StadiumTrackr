@@ -14,11 +14,17 @@
         <script>
             const params = new URLSearchParams(window.location.search);
             const stadiumId = params.get('id') || null;
-            if (stadiumId && localStorage.getItem('username')) {
-                document.documentElement.classList.add('logged-in');
-            } else if (localStorage.getItem('username')) {
-                document.documentElement.classList.add('logged-in');
-                document.documentElement.classList.add('logged-in-events');
+            const token = localStorage.getItem('token');
+            if (token) {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                if (stadiumId && payload.username) {
+                    document.documentElement.classList.add('logged-in');
+                } else if (payload.username) {
+                    document.documentElement.classList.add('logged-in');
+                    document.documentElement.classList.add('logged-in-events');
+                } else {
+                    document.documentElement.classList.add('logged-out');
+                }
             } else {
                 document.documentElement.classList.add('logged-out');
             }
@@ -129,10 +135,13 @@
                                 <span id="logged-in-header-username"></span>
                                 <script>
                                     (function() {
-                                        const u = localStorage.getItem('username') || '';
+                                        const token = localStorage.getItem('token');
+                                        if (!token) return;
+                                        const payload = JSON.parse(atob(token.split('.')[1]));
+                                        const u = payload.username || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
-                                        document.getElementById('logged-in-header-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
+                                        document.getElementById('logged-in-header-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
                                     })();
                                 </script>
                                 <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -186,10 +195,13 @@
                                 <span id="sidebar-username"></span>
                                 <script>
                                     (function() {
-                                        const u = localStorage.getItem('username') || '';
+                                        const token = localStorage.getItem('token');
+                                        if (!token) return;
+                                        const payload = JSON.parse(atob(token.split('.')[1]));
+                                        const u = payload.username || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
-                                        document.getElementById('sidebar-user-profile-pic').src = localStorage.getItem('profilePic') || 'images/profile-pics/default.png';
+                                        document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
                                     })();
                                 </script>
                             </div>

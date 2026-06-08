@@ -1,6 +1,6 @@
 /*  Imports  */
-import { getAuthElements, getHeaderElements, MIN_LOADING_TIME } from "../constants.js";
-import { createToast, filterAndRank, getUsername, initializeCustomSelects, isLoggedIn, renderWithoutTransition, setupFilterHandlers, setupSearch, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI, syncSelectFromURL, truncateUsername } from "../utils.js";
+import { getAuthElements, MIN_LOADING_TIME } from "../constants.js";
+import { createToast, filterAndRank, initializeCustomSelects, isLoggedIn, renderWithoutTransition, setupFilterHandlers, setupSearch, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI, syncSelectFromURL } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -30,7 +30,7 @@ const elements = {
 let allStadiums = [];
 
 /*  Async Functions  */
-async function setView(username) {
+async function setView() {
     setupFilterHandlers(elements);
     setupSearch(() => allStadiums, elements);
 
@@ -44,7 +44,7 @@ async function setView(username) {
     syncSelectFromURL('sort-filter', sort);
 
     await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await loadAPI.loadStadiums(league, country, sort, username);
+    const result = await loadAPI.loadStadiums(league, country, sort);
     const stadiums = result.stadiums;
 
     allStadiums = stadiums;
@@ -76,9 +76,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.onload = async () => {
-    const username = getUsername();
     if (isLoggedIn()) {
-        showLoggedInUI(username);
+        showLoggedInUI();
     } else {
         showLoggedOutUI();
     }
@@ -88,5 +87,5 @@ window.onload = async () => {
         createToast(type, message);
         sessionStorage.removeItem('toast');
     }
-    setView(username);
+    setView();
 };

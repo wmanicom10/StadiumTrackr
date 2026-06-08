@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements, MIN_LOADING_TIME, STADIUM_IMAGE_PATH } from "../constants.js";
-import { calculatePageButtons, createEllipsis, createNavigationButton, createPageButton, formatEventDate, formatEventTime, getEventIcon, getPageFromURL, getUsername, initializeCustomSelects, isLoggedIn, setPageInURL, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
+import { calculatePageButtons, createEllipsis, createNavigationButton, createPageButton, formatEventDate, formatEventTime, getEventIcon, getPageFromURL, initializeCustomSelects, isLoggedIn, setPageInURL, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -236,7 +236,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.onload = async () => {
-    const username = getUsername();
     const params = new URLSearchParams(window.location.search);
     const stadiumId = params.get('id') || null;
     

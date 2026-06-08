@@ -8,8 +8,10 @@ const currentYear = new Date().getFullYear();
 document.getElementById('copyright').innerHTML = `&copy;2025-${currentYear} StadiumTrackr. All rights reserved.`;
 
 const footerHomeLink = document.getElementById('footer-home-link');
-if (localStorage.getItem('username')){
-    footerHomeLink.href = 'user-home.html';
+const token = localStorage.getItem('token');
+if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    footerHomeLink.href = payload.username ? 'user-home.html' : 'index.html';
 } else {
     footerHomeLink.href = 'index.html';
 }
@@ -100,7 +102,7 @@ function createStadiumCard(stadium, elements) {
     link.appendChild(textDiv);
     card.appendChild(link);
 
-    if (getUsername() === '') {
+    if (!isLoggedIn()) {
         return card;
     }
 
@@ -136,13 +138,12 @@ function createStadiumCard(stadium, elements) {
     wishlistBtn.appendChild(wishlistTooltip);
 
     visitedBtn.addEventListener('click', async () => {
-        const username = getUsername();
-        if (!username) return;
+        if (!isLoggedIn()) return;
 
         const newIsVisited = !isVisited;
 
         try {
-            const result = await updateAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
+            const result = await updateAPI.updateUserStadium(stadium.stadium_id, isVisited);
 
             if (result.locked) {
                 shakeOrReplace('Cannot remove a stadium with logged visits. Delete your logs first.')
@@ -165,7 +166,7 @@ function createStadiumCard(stadium, elements) {
                         wishlistTooltip.textContent = 'Add to Wishlist';
                     }, 200);
                     setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
-                    updateAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
+                    updateAPI.updateUserWishlist(stadium.stadium_id, currentWishlist)
                         .catch(err => {
                             console.error(err);
                             shakeOrReplace(err.message || 'Failed to update wishlist. Please try again.')
@@ -181,8 +182,7 @@ function createStadiumCard(stadium, elements) {
     });
 
     wishlistBtn.addEventListener('click', async () => {
-        const username = getUsername();
-        if (!username) return;
+        if (!isLoggedIn()) return;
 
         const newIsWishlist = !isWishlist;
         wishlistBtn.classList.add('animating');
@@ -195,7 +195,7 @@ function createStadiumCard(stadium, elements) {
         setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
 
         try {
-            await updateAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist)
+            await updateAPI.updateUserWishlist(stadium.stadium_id, isWishlist);
             isWishlist = newIsWishlist;
         } catch (err) {
             console.error(err);
@@ -208,7 +208,7 @@ function createStadiumCard(stadium, elements) {
 
     controls.appendChild(createCornerButton('Log Visit', 'images/icons/log.png', 'btn-log', (btn, e) => {
         e.preventDefault();
-        setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, stadium.city, stadium.state, getUsername(), stadium.image, elements);
+        setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, stadium.city, stadium.state, stadium.image, elements);
         toggleMenu(elements.addStadiumMenu, true, overlay);
     }));
 
@@ -271,24 +271,51 @@ function showResults(elements) {
 export async function fetchAPI(endpoint, body) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: JSON.stringify(body)
     });
 
-    const result = await response.json();
+    if (response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.replace('index.html');
+        throw new Error('Not authenticated');
+    }
 
+    const newToken = response.headers.get('X-New-Token');
+    if (newToken) {
+        localStorage.setItem('token', newToken);
+    }
+
+    const result = await response.json();
     if (!response.ok) {
         throw new Error(result.error || 'Unknown error');
     }
-
     return result;
 }
 
 export async function fetchFormData(endpoint, formData) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
         body: formData
     });
+
+    if (response.status === 401) {
+        localStorage.removeItem('token');
+        window.location.replace('index.html');
+        throw new Error('Not authenticated');
+    }
+
+    const newToken = response.headers.get('X-New-Token');
+    if (newToken) {
+        localStorage.setItem('token', newToken);
+    }
+    
     if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Unknown error');
@@ -317,10 +344,8 @@ export function calculatePageButtons(current, total) {
     return [1, '...', current - 1, current, current + 1, '...', total];
 }
 
-export function clearUsername() {
-    localStorage.setItem('username', '');
-    localStorage.removeItem('email');
-    localStorage.removeItem('profilePic');
+export function logOut() {
+    localStorage.removeItem('token');
 }
 
 export function createElement(tag, className = null, attributes = {}) {
@@ -483,13 +508,12 @@ export function createUserStadiumElement(stadium, elements) {
     wishlistBtn.appendChild(wishlistTooltip);
 
     visitedBtn.addEventListener('click', async () => {
-        const username = getUsername();
-        if (!username) return;
+        if (!isLoggedIn()) return;
 
         const newIsVisited = !isVisited;
 
         try {
-            const result = await updateAPI.updateUserStadium(stadium.stadium_id, username, isVisited);
+            const result = await updateAPI.updateUserStadium(stadium.stadium_id, isVisited);
 
             if (result.locked) {
                 shakeOrReplace('Cannot remove a stadium with logged visits. Delete your logs first.');
@@ -512,7 +536,7 @@ export function createUserStadiumElement(stadium, elements) {
                         wishlistTooltip.textContent = 'Add to Wishlist';
                     }, 200);
                     setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
-                    updateAPI.updateUserWishlist(stadium.stadium_id, username, currentWishlist)
+                    updateAPI.updateUserWishlist(stadium.stadium_id, currentWishlist)
                         .catch(err => {
                             console.error(err);
                             shakeOrReplace(err.message || 'Failed to update wishlist. Please try again.');
@@ -528,8 +552,7 @@ export function createUserStadiumElement(stadium, elements) {
     });
 
     wishlistBtn.addEventListener('click', async () => {
-        const username = getUsername();
-        if (!username) return;
+        if (!isLoggedIn()) return;
 
         const newIsWishlist = !isWishlist;
         wishlistBtn.classList.add('animating');
@@ -542,7 +565,7 @@ export function createUserStadiumElement(stadium, elements) {
         setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
 
         try {
-            await updateAPI.updateUserWishlist(stadium.stadium_id, username, isWishlist);
+            await updateAPI.updateUserWishlist(stadium.stadium_id, isWishlist);
             isWishlist = newIsWishlist;
         } catch (err) {
             console.error(err);
@@ -556,7 +579,7 @@ export function createUserStadiumElement(stadium, elements) {
     controls.appendChild(createCornerButton('Log Visit', 'images/icons/log.png', 'btn-log', (btn, e) => {
         e.preventDefault();
         if (elements) {
-            setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, stadium.city, stadium.state, getUsername(), stadium.image, elements);
+            setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, stadium.city, stadium.state, stadium.image, elements);
             toggleMenu(elements.addStadiumMenu, true, document.getElementById('overlay'));
         }
     }));
@@ -659,7 +682,10 @@ export function getPageFromURL() {
 }
 
 export function getUsername() {
-    return localStorage.getItem('username') || '';
+    const token = localStorage.getItem('token');
+    if (!token) return '';
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.username || '';
 }
 
 export function initializeCustomSelects() {
@@ -691,8 +717,14 @@ export function initializeCustomSelects() {
 }
 
 export function isLoggedIn() {
-    const username = getUsername();
-    return username !== '' && username !== null;
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.exp * 1000 > Date.now();
+    } catch {
+        return false;
+    }
 }
 
 export function renderPageNumbers(elements, currentPage, pageCount) {
@@ -748,7 +780,7 @@ export function setPageInURL(page) {
     window.location.search = params.toString();
 }
 
-export function setupAddStadiumModal(stadiumId, stadiumName, city, state, username, stadiumImage, elements) {
+export function setupAddStadiumModal(stadiumId, stadiumName, city, state, stadiumImage, elements) {
     elements.addStadiumName.textContent = stadiumName;
     elements.addStadiumLocation.textContent = city + ', ' + state;
     elements.addStadiumImage.src = STADIUM_IMAGE_PATH + stadiumImage;
@@ -762,7 +794,7 @@ export function setupAddStadiumModal(stadiumId, stadiumName, city, state, userna
         const note = elements.addStadiumNote.value.trim() || null;
 
         try {
-            await userAPI.addStadium(stadiumId, username, dateVisited, note);
+            await userAPI.addStadium(stadiumId, dateVisited, note);
             sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Stadium added successfully.' }));
             window.location.reload();
         } catch (error) {
@@ -916,9 +948,9 @@ export function shakeOrReplace(message) {
     }
 }
 
-export function showLoggedInUI(username) {
+export function showLoggedInUI() {
     const { loggedInHeaderUsername, sidebarUsername } = getHeaderElements();
-    const displayName = truncateUsername(username);
+    const displayName = truncateUsername(getUsername());
     loggedInHeaderUsername.textContent = displayName;
     sidebarUsername.textContent = displayName;
     document.documentElement.classList.remove('logged-out');

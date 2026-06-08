@@ -1,5 +1,5 @@
 const db = require('../database/connection.js');
-const { getUserId, buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
+const { buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
 
 const eventCache = new Map();
 const CACHE_TTL_MS = 60 * 60 * 1000;
@@ -230,15 +230,14 @@ const handleLoadStadiumEvents = async (req, res) => {
 
 /*  loadStadiumInfo  */
 const handleLoadStadiumInfo = async (req, res) => {
-    const { id, username } = req.body;
+    const { id } = req.body;
+    const userId = req.user?.userId || null;
 
     if (!id) {
         return res.status(400).json({ error: 'Stadium id is required' });
     }
 
     try {
-        const userId = username ? await getUserId(username) : null;
-
         const [stadium] = await db.execute('SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.capacity, s.opened_date, s.construction_cost, t.team_name, l.league_name FROM stadiums s JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id WHERE s.stadium_id = ?', [id]);
 
         const [visits] = await db.execute('SELECT COUNT(DISTINCT user_id) as visits FROM user_stadiums WHERE stadium_id = ?', [id]);
@@ -300,7 +299,8 @@ const handleLoadStadiumMap = async (req, res) => {
 
 /*  loadStadiums  */
 const handleLoadStadiums = async (req, res) => {
-    const { league, country, sortBy, username } = req.body;
+    const { league, country, sortBy } = req.body;
+    const userId = req.user?.userId || null;
         
     try {
         let query = `
@@ -314,7 +314,7 @@ const handleLoadStadiums = async (req, res) => {
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id
-                ${username ? `,
+                ${userId ? `,
                 CASE WHEN v.stadium_id IS NOT NULL THEN 1 ELSE 0 END AS visited,
                 CASE WHEN w.stadium_id IS NOT NULL THEN 1 ELSE 0 END AS wishlist` : ''},
                 COUNT(DISTINCT us.user_id) + COUNT(DISTINCT uw.user_id) AS popularity
@@ -324,15 +324,15 @@ const handleLoadStadiums = async (req, res) => {
             JOIN countries ON stadiums.country_id = countries.country_id
             LEFT JOIN user_stadiums us ON us.stadium_id = stadiums.stadium_id
             LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = stadiums.stadium_id
-            ${username ? `
-                LEFT JOIN users u ON u.username = ?
+            ${userId ? `
+                LEFT JOIN users u ON u.user_id = ?
                 LEFT JOIN user_stadiums v ON v.stadium_id = stadiums.stadium_id AND v.user_id = u.user_id
                 LEFT JOIN user_wishlist_stadiums w ON w.stadium_id = stadiums.stadium_id AND w.user_id = u.user_id` : ''}
             WHERE 1=1
         `;
         
         const params = [];
-        if (username) params.push(username);
+        if (userId) params.push(userId);
 
         const leagueFilter = buildLeagueFilter(league);
         query += leagueFilter.sql;
@@ -343,7 +343,7 @@ const handleLoadStadiums = async (req, res) => {
         params.push(...countryFilter.params);
 
         query += ` GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, stadiums.city, stadiums.state, stadiums.country_id, stadiums.opened_date, stadiums.construction_cost, stadiums.capacity`;
-        if (username) query += `, CASE WHEN v.stadium_id IS NOT NULL THEN 1 ELSE 0 END, CASE WHEN w.stadium_id IS NOT NULL THEN 1 ELSE 0 END`;
+        if (userId) query += `, CASE WHEN v.stadium_id IS NOT NULL THEN 1 ELSE 0 END, CASE WHEN w.stadium_id IS NOT NULL THEN 1 ELSE 0 END`;
 
         query += buildSortOrder(sortBy, 'stadiums');
 
@@ -357,10 +357,10 @@ const handleLoadStadiums = async (req, res) => {
 
 /*  loadUserEvents  */
 const handleLoadUserEvents = async (req, res) => {
-    const { username, event, sort } = req.body;
-    try {
-        const userId = await getUserId(username);
+    const { event, sort } = req.body;
+    const userId = req.user.userId;
 
+    try {
         let userEventStadiums;
 
         if (event === 'favorite') {
