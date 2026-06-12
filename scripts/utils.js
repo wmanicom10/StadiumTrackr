@@ -10,7 +10,8 @@ document.getElementById('copyright').innerHTML = `&copy;2025-${currentYear} Stad
 const footerHomeLink = document.getElementById('footer-home-link');
 const token = localStorage.getItem('token');
 if (token) {
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
     footerHomeLink.href = payload.username ? 'user-home.html' : 'index.html';
 } else {
     footerHomeLink.href = 'index.html';
@@ -684,7 +685,8 @@ export function getPageFromURL() {
 export function getUsername() {
     const token = localStorage.getItem('token');
     if (!token) return '';
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
     return payload.username || '';
 }
 
@@ -720,7 +722,8 @@ export function isLoggedIn() {
     const token = localStorage.getItem('token');
     if (!token) return false;
     try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(atob(base64));
         return payload.exp * 1000 > Date.now();
     } catch {
         return false;

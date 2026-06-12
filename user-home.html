@@ -108,7 +108,8 @@
                                     (function() {
                                         const token = localStorage.getItem('token');
                                         if (!token) return;
-                                        const payload = JSON.parse(atob(token.split('.')[1]));
+                                        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
                                         const u = payload.username || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
@@ -168,7 +169,8 @@
                                     (function() {
                                         const token = localStorage.getItem('token');
                                         if (!token) return;
-                                        const payload = JSON.parse(atob(token.split('.')[1]));
+                                        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
                                         const u = payload.username || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
