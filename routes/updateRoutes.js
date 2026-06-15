@@ -13,5 +13,6 @@ router.post('/updateProfilePic', authMiddleware, updateController.upload.single(
 router.post('/updateUsername', authMiddleware, updateController.handleUpdateUsername);
 router.post('/updateUserStadium', authMiddleware, updateController.handleUpdateUserStadium);
 router.post('/updateUserWishlist', authMiddleware, updateController.handleUpdateUserWishlist);
+router.post('/resetPassword', updateController.handleResetPassword);
 
 module.exports = router;

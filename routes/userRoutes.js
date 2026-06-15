@@ -5,6 +5,16 @@ const { authMiddleware } = require('../middleware');
 
 const userController = require('../controllers/userController');
 
+const rateLimit = require('express-rate-limit');
+
+const resetLimiter = rateLimit({
+    windowMs: 900000,
+    max: 5,
+    message: { error: 'Too many password reset requests. Please try again later.' },
+    standardHeaders: true,
+    legacyHeaders: false
+});
+
 router.post('/addStadium', authMiddleware, userController.handleAddStadium);
 router.post('/loadFavoriteStadiums', authMiddleware, userController.handleLoadFavoriteStadiums);
 router.post('/loadUserAchievements', authMiddleware, userController.handleLoadUserAchievements);
@@ -15,5 +25,6 @@ router.post('/loadUserStadiums', authMiddleware, userController.handleLoadUserSt
 router.post('/loadUserVisits', authMiddleware, userController.handleLoadUserVisits);
 router.post('/loadUserWishlist', authMiddleware, userController.handleLoadUserWishlist);
 router.post('/saveFavoriteStadiums', authMiddleware, userController.handleSaveFavoriteStadiums);
+router.post('/sendPasswordReset', resetLimiter, userController.handleSendPasswordReset);
 
 module.exports = router;

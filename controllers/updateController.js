@@ -486,4 +486,29 @@ const handleUpdateUserWishlist = async (req, res) => {
     }
 };
 
-module.exports = { handleDeleteLog, handleEditLog, handleUpdateAchievementProgress, handleUpdateEmail, handleUpdatePassword, upload, handleUpdateProfilePic, handleUpdateUsername, handleUpdateUserStadium, handleUpdateUserWishlist };
+/*  resetPassword  */
+const handleResetPassword = async (req, res) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        const [rows] = await db.query('SELECT user_id FROM password_resets WHERE token = ? AND expires_at > NOW()', [token]);
+
+        if (rows.length === 0) {
+            return res.status(400).json({ message: 'Invalid or expired token.' });
+        }
+
+        const userId = rows[0].user_id;
+        const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+        const [result] = await db.query('UPDATE users SET password = ? WHERE user_id = ?', [hashedPassword, userId]);
+
+        await db.query('DELETE FROM password_resets WHERE token = ?', [token]);
+
+        res.json({ result });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+module.exports = { handleDeleteLog, handleEditLog, handleUpdateAchievementProgress, handleUpdateEmail, handleUpdatePassword, upload, handleUpdateProfilePic, handleUpdateUsername, handleUpdateUserStadium, handleUpdateUserWishlist, handleResetPassword };

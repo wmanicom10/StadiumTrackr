@@ -1,4 +1,6 @@
 const db = require('../database/connection.js');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const { getStadiumId, buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
 const { handleUpdateAchievementProgress } = require('./updateController.js');
 
@@ -499,4 +501,75 @@ const handleSaveFavoriteStadiums = async (req, res) => {
     }
 };
 
-module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserStadiums, handleLoadUserVisits, handleLoadUserWishlist, handleSaveFavoriteStadiums };
+/*  sendPasswordReset  */
+let transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    secure: process.env.SMTP_SECURE === 'true',
+    auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+    }
+});
+
+async function sendPasswordResetEmail(email, token, username) {
+    const resetUrl = `${process.env.APP_URL}/reset-password.html?token=${token}`;
+    const htmlContent = `
+        <div style="font-family: Arial, sans-serif; line-height: 1.5;">
+            <h2>Password Reset Request</h2>
+            <p>Hello ${username},</p>
+            <p>You (or someone else) requested a password reset for your account.</p>
+            <p>Click the button below to reset your password. This link will expire in 1 hour.</p>
+            <p style="text-align: center;">
+                <a href="${resetUrl}" 
+                style="background-color: #007BFF; color: white; padding: 12px 20px; 
+                        text-decoration: none; border-radius: 5px; display: inline-block;">
+                Reset Password
+                </a>
+            </p>
+            <p>If the button above doesn’t work, copy and paste this URL into your browser:</p>
+            <p><a href="${resetUrl}">${resetUrl}</a></p>
+            <hr>
+            <p style="font-size: 12px; color: #666;">If you did not request a password reset, you can safely ignore this email.</p>
+        </div>
+    `;
+
+    await transporter.sendMail({
+        from: process.env.EMAIL_FROM,
+        to: email,
+        subject: `Password Reset for ${username}`,
+        text: `Hello ${username}, you requested a password reset. Visit this link: ${resetUrl}`,
+        html: htmlContent
+    });
+}
+
+const handleSendPasswordReset = async (req, res) => {
+    const { email } = req.body;
+
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    try {
+        const [rows] = await db.query('SELECT user_id, username FROM users WHERE email = ?', [email]);
+
+        if (rows.length === 0) {
+            return res.status(200).json({
+                message: 'If the email exists, you will receive an email to reset the password.'
+            });
+        }
+
+        const { user_id: userId, username } = rows[0];
+
+        const token = crypto.randomBytes(32).toString('hex');
+
+        await db.query('INSERT INTO password_resets (user_id, token, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))', [userId, token]);
+
+        await sendPasswordResetEmail(email, token, username);
+
+        res.json({message: 'If the email exists, you will receive an email to reset the password.'});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserStadiums, handleLoadUserVisits, handleLoadUserWishlist, handleSaveFavoriteStadiums, handleSendPasswordReset };

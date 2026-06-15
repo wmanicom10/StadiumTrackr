@@ -58,6 +58,7 @@ export const ROUTES = {
     UPDATE_USERNAME: '/update/updateUsername',
     UPDATE_USER_STADIUMS: '/update/updateUserStadium',
     UPDATE_USER_WISHLIST: '/update/updateUserWishlist',
+    RESET_PASSWORD: '/update/resetPassword',
 
     /* USER */
     ADD_STADIUM: '/user/addStadium',
@@ -69,7 +70,8 @@ export const ROUTES = {
     LOAD_USER_STADIUMS: '/user/loadUserStadiums',
     LOAD_USER_VISITS: '/user/loadUserVisits',
     LOAD_USER_WISHLIST: '/user/loadUserWishlist',
-    SAVE_FAVORITE_STADIUMS: '/user/saveFavoriteStadiums'
+    SAVE_FAVORITE_STADIUMS: '/user/saveFavoriteStadiums',
+    SEND_PASSWORD_RESET: '/user/sendPasswordReset'
 };
 export const sidebarLogInButton = getElement('sidebar-log-in');
 export const sidebarLogOutButton = getElement('sidebar-log-out');

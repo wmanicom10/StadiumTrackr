@@ -31,4 +31,7 @@ export const userAPI = {
 
     saveFavoriteStadiums: (stadiumNames) =>
         fetchAPI(ROUTES.SAVE_FAVORITE_STADIUMS, { stadiumNames }),
+
+    sendPasswordReset: (email) =>
+        fetchAPI(ROUTES.SEND_PASSWORD_RESET, { email })
 };

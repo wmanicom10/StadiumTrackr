@@ -24,5 +24,8 @@ export const updateAPI = {
         fetchAPI(ROUTES.UPDATE_USER_STADIUMS, { stadiumId, isVisited }),
 
     updateUserWishlist: (stadiumId, isWishlist) =>
-        fetchAPI(ROUTES.UPDATE_USER_WISHLIST, { stadiumId, isWishlist })
+        fetchAPI(ROUTES.UPDATE_USER_WISHLIST, { stadiumId, isWishlist }),
+
+    resetPassword: (token, newPassword) => 
+        fetchAPI(ROUTES.RESET_PASSWORD, { token, newPassword })
 };

@@ -5,16 +5,19 @@ import { updateAPI } from './api/update.js';
 import { userAPI } from './api/user.js';
 
 const currentYear = new Date().getFullYear();
-document.getElementById('copyright').innerHTML = `&copy;2025-${currentYear} StadiumTrackr. All rights reserved.`;
+const copyright = document.getElementById('copyright');
+if (copyright) copyright.innerHTML = `&copy;2025-${currentYear} StadiumTrackr. All rights reserved.`;
 
 const footerHomeLink = document.getElementById('footer-home-link');
-const token = localStorage.getItem('token');
-if (token) {
-    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    const payload = JSON.parse(atob(base64));
-    footerHomeLink.href = payload.username ? 'user-home.html' : 'index.html';
-} else {
-    footerHomeLink.href = 'index.html';
+if (footerHomeLink) {
+    const token = localStorage.getItem('token');
+    if (token) {
+        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(atob(base64));
+        footerHomeLink.href = payload.username ? 'user-home.html' : 'index.html';
+    } else {
+        footerHomeLink.href = 'index.html';
+    }
 }
 
 /*  Functions  */
