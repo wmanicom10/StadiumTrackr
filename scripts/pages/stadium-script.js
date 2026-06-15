@@ -51,6 +51,7 @@ async function loadFullStadiumPage(id) {
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
 
+        if (isLoggedIn()) document.getElementById('upcoming-events-stadium-link').style.display = 'block';
         document.getElementById('stadium-skeleton').style.display = 'none';
         document.getElementById('stadium-content').style.display = 'block';
         document.getElementById('upcoming-events-skeleton').style.display = 'none';

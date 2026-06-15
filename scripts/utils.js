@@ -609,25 +609,58 @@ export function debounce(func, wait) {
     };
 }
 
+const STATE_MAPPING = {
+    'alabama': 'AL', 'alaska': 'AK', 'arizona': 'AZ', 'arkansas': 'AR',
+    'california': 'CA', 'colorado': 'CO', 'connecticut': 'CT', 'delaware': 'DE',
+    'florida': 'FL', 'georgia': 'GA', 'hawaii': 'HI', 'idaho': 'ID',
+    'illinois': 'IL', 'indiana': 'IN', 'iowa': 'IA', 'kansas': 'KS',
+    'kentucky': 'KY', 'louisiana': 'LA', 'maine': 'ME', 'maryland': 'MD',
+    'massachusetts': 'MA', 'michigan': 'MI', 'minnesota': 'MN', 'mississippi': 'MS',
+    'missouri': 'MO', 'montana': 'MT', 'nebraska': 'NE', 'nevada': 'NV',
+    'new hampshire': 'NH', 'new jersey': 'NJ', 'new mexico': 'NM', 'new york': 'NY',
+    'north carolina': 'NC', 'north dakota': 'ND', 'ohio': 'OH', 'oklahoma': 'OK',
+    'oregon': 'OR', 'pennsylvania': 'PA', 'rhode island': 'RI', 'south carolina': 'SC',
+    'south dakota': 'SD', 'tennessee': 'TN', 'texas': 'TX', 'utah': 'UT',
+    'vermont': 'VT', 'virginia': 'VA', 'washington': 'WA', 'west virginia': 'WV',
+    'wisconsin': 'WI', 'wyoming': 'WY',
+    'ontario': 'ON', 'quebec': 'QC', 'british columbia': 'BC', 'alberta': 'AB',
+    'manitoba': 'MB', 'saskatchewan': 'SK'
+};
+
 export function filterAndRank(allStadiums, query) {
     if (!query) return allStadiums;
+
     const lower = query.toLowerCase();
+    const matchedState = Object.keys(STATE_MAPPING).find(s => s.startsWith(lower));
+    const stateAbbrev = matchedState ? STATE_MAPPING[matchedState] : null;
+
     return allStadiums
         .filter(s => {
             const name = s.stadium_name.toLowerCase();
             const city = s.city.toLowerCase();
             const state = s.state.toLowerCase();
-            return name.includes(lower) || city.includes(lower) || state.includes(lower);
+            const teams = (s.team_names || '').toLowerCase();
+            return (
+                name.includes(lower) ||
+                city.includes(lower) ||
+                state.includes(lower) ||
+                teams.includes(lower) ||
+                (stateAbbrev && s.state === stateAbbrev)
+            );
         })
         .map(s => {
             const name = s.stadium_name.toLowerCase();
             const city = s.city.toLowerCase();
+            const teams = (s.team_names || '').toLowerCase();
             let rank;
-            if (name === lower)           rank = 1;
-            else if (city === lower)       rank = 2;
-            else if (name.includes(lower)) rank = 3;
-            else if (city.includes(lower)) rank = 4;
-            else                           rank = 5;
+            if (name === lower)                          rank = 1;
+            else if (city === lower)                     rank = 2;
+            else if (teams.includes(lower) && teams.split(', ').some(t => t === lower)) rank = 3;
+            else if (stateAbbrev && s.state === stateAbbrev) rank = 3;
+            else if (name.includes(lower))               rank = 4;
+            else if (city.includes(lower))               rank = 5;
+            else if (teams.includes(lower))              rank = 6;
+            else                                         rank = 7;
             return { ...s, rank };
         })
         .sort((a, b) => a.rank - b.rank || a.stadium_name.localeCompare(b.stadium_name));
@@ -892,18 +925,43 @@ export function setupFilterHandlers(elements) {
 export function setupSearch(getAllStadiums, elements) {
     const searchInput = document.getElementById('home-search-field');
 
+    const searchValue = sessionStorage.getItem('stadiumSearch');
+    if (searchValue) searchInput.value = searchValue;
+
     searchInput.addEventListener('input', () => {
-        const filtered = filterAndRank(getAllStadiums(), searchInput.value.trim());
+        const val = searchInput.value.trim();
+        if (val) {
+            sessionStorage.setItem('stadiumSearch', val);
+        } else {
+            sessionStorage.removeItem('stadiumSearch');
+        }
+
+        const filtered = filterAndRank(getAllStadiums(), val);
+
+        const url = new URL(window.location.href);
+        const totalPages = Math.max(1, Math.ceil(filtered.length / 18));
+        const currentPage = parseInt(url.searchParams.get('page')) || 1;
+        if (currentPage > totalPages) {
+            url.searchParams.set('page', totalPages);
+            history.replaceState(null, '', url.toString());
+        }
+
         const plural = filtered.length === 1 ? 'stadium' : 'stadiums';
         elements.stadiumCount.textContent = `Showing ${filtered.length} ${plural}`;
         renderWithTransition(elements, filtered);
     });
 
     [elements.leagueFilter, elements.countryFilter, elements.sortFilter].forEach(el => {
-        el.addEventListener('change', () => { searchInput.value = ''; });
+        el.addEventListener('change', () => { 
+            searchInput.value = '';
+            sessionStorage.removeItem('stadiumSearch');
+        });
     });
 
-    elements.clearFiltersButton.addEventListener('click', () => { searchInput.value = ''; });
+    elements.clearFiltersButton.addEventListener('click', () => { 
+        searchInput.value = '';
+        sessionStorage.removeItem('stadiumSearch');
+    });
     document.getElementById('search-stadiums')?.addEventListener('submit', e => e.preventDefault());
 }
 

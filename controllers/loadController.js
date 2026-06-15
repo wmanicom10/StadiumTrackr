@@ -313,7 +313,8 @@ const handleLoadStadiums = async (req, res) => {
                 stadiums.capacity,
                 stadiums.city, 
                 stadiums.state,
-                stadiums.country_id
+                stadiums.country_id,
+                GROUP_CONCAT(DISTINCT teams.team_name SEPARATOR ', ') AS team_names
                 ${userId ? `,
                 CASE WHEN v.stadium_id IS NOT NULL THEN 1 ELSE 0 END AS visited,
                 CASE WHEN w.stadium_id IS NOT NULL THEN 1 ELSE 0 END AS wishlist` : ''},

@@ -31,13 +31,17 @@ let allStadiums = [];
 
 /*  Async Functions  */
 async function setView() {
-    setupFilterHandlers(elements);
-    setupSearch(() => allStadiums, elements);
-
     const params = new URLSearchParams(window.location.search);
     const league = params.get('league') || 'all';
     const country = params.get('country') || 'all';
     const sort = params.get('sort') || 'name-asc';
+
+    if (!params.has('page')) {
+        sessionStorage.removeItem('stadiumSearch');
+    }
+
+    setupFilterHandlers(elements);
+    setupSearch(() => allStadiums, elements);
     
     syncSelectFromURL('league-filter', league);
     syncSelectFromURL('country-filter', country);
@@ -49,7 +53,7 @@ async function setView() {
 
     allStadiums = stadiums;
 
-    const query = document.getElementById('home-search-field').value.toLowerCase().trim();
+    const query = sessionStorage.getItem('stadiumSearch') || '';
     const filtered = query ? filterAndRank(allStadiums, query) : stadiums;
 
     const plural = filtered.length === 1 ? 'stadium' : 'stadiums';

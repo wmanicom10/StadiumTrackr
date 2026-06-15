@@ -3,6 +3,23 @@ import { createToast, logOut, shakeOrReplace, toggleMenu, validateEmail, validat
 import { getHeaderElements, PROFILE_PIC_PATH } from "./constants.js";
 import { authAPI } from "./api/auth.js";
 
+/*  Variables  */
+let scrollY = 0;
+
+const lockScroll = () => {
+    scrollY = window.scrollY;
+    document.body.style.position = 'fixed';
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = '100%';
+};
+
+const unlockScroll = () => {
+    document.body.style.position = '';
+    document.body.style.top = '';
+    document.body.style.width = '';
+    window.scrollTo(0, scrollY);
+};
+
 /*  Async Functions  */
 async function handleLogin() {
     const username = document.getElementById('username')?.value.trim() || '';
@@ -94,6 +111,7 @@ export function registerCommonEvents() {
         sidebarToggles.forEach(toggle => {
             if (toggle?.checked) {
                 toggle.checked = false;
+                unlockScroll();
             }
         });
     });
@@ -113,7 +131,9 @@ export function registerEventListeners({
     sidebarSignUpButton,
     signUpLink,
     signInLink,
-    createAccountButtons
+    createAccountButtons,
+    sidebarToggle,
+    sidebarToggleLoggedIn
 }) {
     createAccountForm?.addEventListener('submit', (e) => e.preventDefault());
     logInForm?.addEventListener('submit', (e) => e.preventDefault());
@@ -168,6 +188,40 @@ export function registerEventListeners({
     signInLink?.addEventListener('click', () => 
         handleMenuSwitch(createAccountMenu, logInMenu, overlay)
     );
+
+    const sidebarOverlayLoggedIn = document.getElementById('sidebar-overlay-logged-in');
+    const closeSidebarBtnLoggedIn = document.querySelector('#sidebar-active-logged-in ~ .links-container .close-sidebar-button');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const closeSidebarBtn = document.querySelector('#sidebar-active ~ .links-container .close-sidebar-button');
+
+    let scrollY = 0;
+
+    const lockScroll = () => {
+        scrollY = window.scrollY;
+        document.body.style.position = 'fixed';
+        document.body.style.top = `-${scrollY}px`;
+        document.body.style.width = '100%';
+    };
+
+    const unlockScroll = () => {
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        window.scrollTo(0, scrollY);
+    };
+
+    sidebarToggleLoggedIn?.addEventListener('change', () => {
+        sidebarToggleLoggedIn.checked ? lockScroll() : unlockScroll();
+    });
+
+    sidebarToggle?.addEventListener('change', () => {
+        sidebarToggle.checked ? lockScroll() : unlockScroll();
+    });
+
+    sidebarOverlay?.addEventListener('click', unlockScroll);
+    closeSidebarBtn?.addEventListener('click', unlockScroll);
+    sidebarOverlayLoggedIn?.addEventListener('click', unlockScroll);
+    closeSidebarBtnLoggedIn?.addEventListener('click', unlockScroll);
 }
 
 export function registerLogOutEvents() {

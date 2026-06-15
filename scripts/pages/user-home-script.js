@@ -1,7 +1,7 @@
 /*  Imports  */
-import { ICON_IMAGE_PATH, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
+import { getAuthElements, ICON_IMAGE_PATH, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
 import { createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getPageFromURL, initializeCustomSelects, isLoggedIn, renderPageNumbers, renderWithoutTransition, renderWithTransition, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
-import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
+import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
 import { updateAPI } from "../api/update.js";
@@ -15,6 +15,12 @@ let currentData = null;
 
 /*  Async Functions  */
 async function loadAchievementsTab(tab) {
+    const token = localStorage.getItem('token');
+    if (!token) return
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const username = payload.username || '';
+    document.title = username + "'s Achievements - StadiumTrackr";
+
     const elements = {
         achievementsFilter: document.getElementById('achievements-filter'),
         sortFilter: document.getElementById('achievements-sort-filter'),
@@ -50,6 +56,12 @@ async function loadAchievementsTab(tab) {
 }
 
 async function loadActivityTab(tab) {
+    const token = localStorage.getItem('token');
+    if (!token) return
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const username = payload.username || '';
+    document.title = username + "'s Activity - StadiumTrackr";
+
     const elements = {
         activityFilter: document.getElementById('activity-filter'),
         sortFilter: document.getElementById('activity-sort-filter'),
@@ -98,6 +110,12 @@ async function loadActivityTab(tab) {
 }
 
 async function loadEventsTab(tab) {
+    const token = localStorage.getItem('token');
+    if (!token) return
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const username = payload.username || '';
+    document.title = username + "'s Events - StadiumTrackr";
+    
     const elements = {
         eventFilter: document.getElementById('event-filter'),
         sortFilter: document.getElementById('event-sort-filter'),
@@ -133,6 +151,8 @@ async function loadEventsTab(tab) {
 }
 
 async function loadHomeTab() {
+    document.title = 'Home - StadiumTrackr';
+
     document.getElementById('user-home-home-tab-container').style.display = 'flex';
 
     const [result, activity, mapData] = await Promise.all([
@@ -185,6 +205,12 @@ async function loadHomeTab() {
 }
 
 async function loadStadiumsTab(tab) {
+    const token = localStorage.getItem('token');
+    if (!token) return
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const username = payload.username || '';
+    document.title = username + "'s Stadiums - StadiumTrackr";
+
     const elements = {
         leagueFilter: document.getElementById('stadiums-league-filter'),
         countryFilter: document.getElementById('stadiums-country-filter'),
@@ -207,13 +233,17 @@ async function loadStadiumsTab(tab) {
         addStadiumCancelButton: document.getElementById('add-stadium-cancel-button')
     }
 
-    setupFilterHandlers(elements, tab);
-    setupSearch(() => allStadiums, elements);
-
     const params = new URLSearchParams(window.location.search);
     const league = params.get('league') || 'all';
     const country = params.get('country') || 'all';
     const sort = params.get('sort') || 'added-desc';
+
+    if (!params.has('page')) {
+        sessionStorage.removeItem('userStadiumSearch');
+    }
+
+    setupFilterHandlers(elements, tab);
+    setupSearch(() => allStadiums, elements, 'userStadiumsSearch');
     
     syncSelectFromURL('stadiums-league-filter', league);
     syncSelectFromURL('stadiums-country-filter', country);
@@ -307,6 +337,12 @@ async function loadUserHeader() {
 }
 
 async function loadVisitsTab(tab) {
+    const token = localStorage.getItem('token');
+    if (!token) return
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const username = payload.username || '';
+    document.title = username + "'s Visits - StadiumTrackr";
+
     const elements = {
         leagueFilter: document.getElementById('visits-league-filter'),
         countryFilter: document.getElementById('visits-country-filter'),
@@ -359,6 +395,12 @@ async function loadVisitsTab(tab) {
 }
 
 async function loadWishlistTab(tab) {
+    const token = localStorage.getItem('token');
+    if (!token) return
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const username = payload.username || '';
+    document.title = username + "'s Wishlist - StadiumTrackr";
+
     const elements = {
         leagueFilter: document.getElementById('wishlist-league-filter'),
         countryFilter: document.getElementById('wishlist-country-filter'),
@@ -381,13 +423,17 @@ async function loadWishlistTab(tab) {
         addStadiumCancelButton: document.getElementById('add-stadium-cancel-button')
     }
 
-    setupFilterHandlers(elements, tab);
-    setupSearch(() => allStadiums, elements);
-
     const params = new URLSearchParams(window.location.search);
     const league = params.get('league') || 'all';
     const country = params.get('country') || 'all';
     const sort = params.get('sort') || 'added-desc';
+
+    if (!params.has('page')) {
+        sessionStorage.removeItem('userWishlistSearch');
+    }
+
+    setupFilterHandlers(elements, tab);
+    setupSearch(() => allStadiums, elements, 'userWishlistSearch');
 
     syncSelectFromURL('wishlist-league-filter', league);
     syncSelectFromURL('wishlist-country-filter', country);
@@ -1312,25 +1358,51 @@ function setupFilterHandlers(elements, tab) {
     });
 }
 
-function setupSearch(getAllStadiums, elements) {
+function setupSearch(getAllStadiums, elements, searchKey) {
+    const searchValue = sessionStorage.getItem(searchKey);
+    if (searchValue) elements.searchInput.value = searchValue;
+
     elements.searchInput.addEventListener('input', () => {
-        const filtered = filterAndRank(getAllStadiums(), elements.searchInput.value.trim());
+        const val = elements.searchInput.value.trim();
+        if (val) {
+            sessionStorage.setItem(searchKey, val);
+        } else {
+            sessionStorage.removeItem(searchKey);
+        }
+
+        const filtered = filterAndRank(getAllStadiums(), val);
+
+        const url = new URL(window.location.href);
+        const totalPages = Math.max(1, Math.ceil(filtered.length / 18));
+        const currentPage = parseInt(url.searchParams.get('page')) || 1;
+        if (currentPage > totalPages) {
+            url.searchParams.set('page', totalPages);
+            history.replaceState(null, '', url.toString());
+        }
+
         const plural = filtered.length === 1 ? 'stadium' : 'stadiums';
         elements.stadiumCount.textContent = `Showing ${filtered.length} ${plural}`;
         renderWithTransition(elements, filtered);
     });
 
     [elements.leagueFilter, elements.countryFilter, elements.sortFilter].forEach(el => {
-        el.addEventListener('change', () => { elements.searchInput.value = ''; });
+        el.addEventListener('change', () => { 
+            elements.searchInput.value = '';
+            sessionStorage.removeItem(searchKey);
+        });
     });
 
-    elements.clearFiltersButton.addEventListener('click', () => { elements.searchInput.value = ''; });
+    elements.clearFiltersButton.addEventListener('click', () => { 
+        elements.searchInput.value = '';
+        sessionStorage.removeItem(searchKey);
+    });
     elements.searchStadiums?.addEventListener('submit', e => e.preventDefault());
 }
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
+    registerEventListeners(getAuthElements());
     registerUserLogOutEvents();
     initializeCustomSelects();
     setupSearchAutocomplete('logged-in-nav-search', 'logged-in-search-field-nav', 'logged-in-nav-autocomplete-list');

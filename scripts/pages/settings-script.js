@@ -1,7 +1,7 @@
 /*  Imports  */
-import { DEBOUNCE_TIME, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
+import { DEBOUNCE_TIME, getAuthElements, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
 import { createToast, debounce, isLoggedIn, setupSearchAutocomplete, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "../utils.js";
-import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
+import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { authAPI } from "../api/auth.js";
 import { loadAPI } from "../api/load.js";
 import { updateAPI } from "../api/update.js";
@@ -331,6 +331,7 @@ function setupFavoriteSearchAutocomplete() {
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerCommonEvents();
+    registerEventListeners(getAuthElements());
     registerUserLogOutEvents();
     setupSearchAutocomplete('logged-in-nav-search', 'logged-in-search-field-nav', 'logged-in-nav-autocomplete-list');
     setupSearchAutocomplete('logged-in-sidebar-nav-search', 'logged-in-sidebar-search-field-nav', 'logged-in-sidebar-nav-autocomplete-list');
