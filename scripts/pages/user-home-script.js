@@ -17,7 +17,8 @@ let currentData = null;
 async function loadAchievementsTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Achievements - StadiumTrackr";
 
@@ -58,7 +59,8 @@ async function loadAchievementsTab(tab) {
 async function loadActivityTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Activity - StadiumTrackr";
 
@@ -112,7 +114,8 @@ async function loadActivityTab(tab) {
 async function loadEventsTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Events - StadiumTrackr";
     
@@ -207,7 +210,8 @@ async function loadHomeTab() {
 async function loadStadiumsTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Stadiums - StadiumTrackr";
 
@@ -307,7 +311,8 @@ async function loadUserHeader() {
         const result = await userAPI.loadUserInfo();
 
         const token = localStorage.getItem('token');
-        const payload = JSON.parse(atob(token.split('.')[1]));
+        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
         const profilePic = payload.profilePic;
         const numStadiums = result.numStadiumsVisited;
         const numCountries = result.numCountriesVisited;
@@ -339,7 +344,8 @@ async function loadUserHeader() {
 async function loadVisitsTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Visits - StadiumTrackr";
 
@@ -397,7 +403,8 @@ async function loadVisitsTab(tab) {
 async function loadWishlistTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Wishlist - StadiumTrackr";
 

@@ -80,7 +80,8 @@
                                     (function() {
                                         const token = localStorage.getItem('token');
                                         if (!token) return;
-                                        const payload = JSON.parse(atob(token.split('.')[1]));
+                                        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
                                         const u = payload.username || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
@@ -137,13 +138,16 @@
                                 <img id="sidebar-user-profile-pic">
                                 <span id="sidebar-username"></span>
                                 <script>
-                                    const token = localStorage.getItem('token');
-                                    if (!token) return;
-                                    const payload = JSON.parse(atob(token.split('.')[1]));
-                                    const u = payload.username || '';
-                                    const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
-                                    document.getElementById('sidebar-username').textContent = d;
-                                    document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                    (function() {
+                                        const token = localStorage.getItem('token');
+                                        if (!token) return;
+                                        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
+                                        const u = payload.username || '';
+                                        const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
+                                        document.getElementById('sidebar-username').textContent = d;
+                                        document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                    })();
                                 </script>
                             </div>
                             <div id="sidebar-user-links">

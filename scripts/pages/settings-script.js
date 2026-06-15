@@ -351,7 +351,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const token = localStorage.getItem('token');
-    const payload = JSON.parse(atob(token.split('.')[1]));
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
 
     document.getElementById('current-username').textContent = 'Current: ' + (payload.username || '');
     document.getElementById('current-email').textContent = 'Current: ' + (payload.email || '');
