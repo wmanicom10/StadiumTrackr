@@ -1,6 +1,6 @@
 /*  Imports  */
 import { createAccountMenu, getAuthElements, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, isLoggedIn, setupAddStadiumModal, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI, toggleMenu } from "../utils.js";
+import { createToast, formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, initializeCreateAccountCaptcha, isLoggedIn, setupAddStadiumModal, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 import { updateAPI } from "../api/update.js";
@@ -362,6 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerLogOutEvents();
+    initializeCreateAccountCaptcha();
     setupSearchAutocomplete('logged-out-nav-search', 'logged-out-search-field-nav', 'logged-out-nav-autocomplete-list');
     setupSearchAutocomplete('logged-out-sidebar-nav-search', 'logged-out-sidebar-search-field-nav', 'logged-out-sidebar-nav-autocomplete-list');
     setupSearchAutocomplete('logged-in-nav-search', 'logged-in-search-field-nav', 'logged-in-nav-autocomplete-list');

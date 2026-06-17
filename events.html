@@ -11,6 +11,7 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
+        <script src="https://captcha.stadiumtrackr.com/assets/widget.js"></script>
         <script>
             const params = new URLSearchParams(window.location.search);
             const stadiumId = params.get('id') || null;
@@ -67,6 +68,7 @@
                     <input type="checkbox" id="terms-and-conditions">
                     <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a></label>
                 </div>
+                <cap-widget id="create-account-captcha"></cap-widget>
                 <input type="submit" id="sign-up-button" value="Sign Up"><br>
             </form>
             <h3>Already have an account? <span id="sign-in-link">Log in here</span></h3>

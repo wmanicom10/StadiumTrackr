@@ -1,6 +1,6 @@
 /*  Imports  */
 import { DEBOUNCE_TIME, getAuthElements, MIN_LOADING_TIME, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, debounce, setupSearchAutocomplete, searchStadiums, shakeOrReplace, initializeCreateAccountCaptcha } from "../utils.js";
+import { createToast, debounce, initializeCreateAccountCaptcha, setupSearchAutocomplete, searchStadiums, shakeOrReplace } from "../utils.js";
 import { registerCommonEvents, registerEventListeners } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
