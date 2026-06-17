@@ -6069,6 +6069,57 @@ footer {
     font-family: "Inter", sans-serif;
 }
 
+/*  Contact  */
+#contact-container {
+    width: 985px;
+    margin: 40px auto 0;
+    min-height: 40.5vh;
+}
+
+#contact-header {
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 0 0 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
+#contact-description {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+}
+
+#contact-description a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#contact-description a:hover {
+    color: var(--color-blue);
+}
+
+#contact-links {
+    margin-top: 25px;
+}
+
+.contact-link {
+    margin: 10px 0;
+    color: var(--color-text-muted);
+}
+
+.contact-link a {
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+}
+
+.contact-link a:hover {
+    color: var(--color-blue);
+}
+
 /*  Skeleton Loading  */
 .skeleton-card {
     width: 348px;
@@ -7349,7 +7400,7 @@ footer {
     #add-stadium-note, #edit-log-note {
         height: auto !important;
     }
-    #settings-container {
+    #settings-container, #contact-container {
         width: 85% !important;
     }
     #username-settings-skeleton {
@@ -7524,7 +7575,7 @@ footer {
     .stadium-info, .stadium-info-skeleton {
         width: 100%;
     }
-    #settings-container {
+    #settings-container, #contact-container {
         width: 93%;
     }
     #settings-content-container {
