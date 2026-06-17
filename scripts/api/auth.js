@@ -8,6 +8,6 @@ export const authAPI = {
     login: (username, password) =>
         fetchAPI(ROUTES.AUTH_LOGIN, { username, password }),
 
-    signup: (email, username, password) => 
-        fetchAPI(ROUTES.AUTH_SIGNUP, { email, username, password })
+    signup: (email, username, password, captchaToken) => 
+        fetchAPI(ROUTES.AUTH_SIGNUP, { email, username, password, captchaToken })
 };

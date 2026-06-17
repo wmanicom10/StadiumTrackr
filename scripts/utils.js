@@ -4,6 +4,9 @@ import { loadAPI } from './api/load.js';
 import { updateAPI } from './api/update.js';
 import { userAPI } from './api/user.js';
 
+/*  Variables  */
+let captchaToken = null;
+
 const currentYear = new Date().getFullYear();
 const copyright = document.getElementById('copyright');
 if (copyright) copyright.innerHTML = `&copy;2025-${currentYear} StadiumTrackr. All rights reserved.`;
@@ -327,6 +330,23 @@ export async function fetchFormData(endpoint, formData) {
     return response.json();
 }
 
+export async function initializeCreateAccountCaptcha() {
+    const widget = document.getElementById('create-account-captcha');
+    if (!widget) return;
+    if (widget.getAttribute('data-cap-api-endpoint')) return;
+
+    try {
+        const config = await loadAPI.loadCaptchaConfig();
+        widget.setAttribute('data-cap-api-endpoint', config.apiEndpoint);
+        widget.addEventListener('solve', (e) => {
+            captchaToken = e.detail.token;
+        });
+    } catch (error) {
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to initialize captcha.');
+    }
+}
+
 export async function searchStadiums(name, suggestionsContainer, searchValue) {
     try {
         const result = await loadAPI.searchStadiums(name);
@@ -348,9 +368,6 @@ export function calculatePageButtons(current, total) {
     return [1, '...', current - 1, current, current + 1, '...', total];
 }
 
-export function logOut() {
-    localStorage.removeItem('token');
-}
 
 export function createElement(tag, className = null, attributes = {}) {
     const element = document.createElement(tag);
@@ -701,6 +718,10 @@ export function formatLocation(city, state) {
     return `${city}, ${state}`;
 }
 
+export function getCaptchaToken() {
+    return captchaToken;
+}
+
 export function getEventIcon(genre) {
     const icons = {
         'Football': 'images/icons/football.png',
@@ -764,6 +785,10 @@ export function isLoggedIn() {
     } catch {
         return false;
     }
+}
+
+export function logOut() {
+    localStorage.removeItem('token');
 }
 
 export function renderPageNumbers(elements, currentPage, pageCount) {

@@ -1,5 +1,5 @@
 /*  Imports  */
-import { createToast, logOut, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
+import { createToast, getCaptchaToken, logOut, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
 import { getHeaderElements, PROFILE_PIC_PATH } from "./constants.js";
 import { authAPI } from "./api/auth.js";
 
@@ -45,15 +45,16 @@ async function handleSignup() {
     const username = document.getElementById('new-username')?.value.trim() || '';
     const password = document.getElementById('new-password')?.value.trim() || '';
     const termsAccepted = document.getElementById('terms-and-conditions')?.checked || false;
+    const captchaToken = getCaptchaToken();
     
-    const signupErrors = validateSignupForm(email, username, password, termsAccepted);
+    const signupErrors = validateSignupForm(email, username, password, termsAccepted, captchaToken);
     if (signupErrors.length > 0) {
         shakeOrReplace(signupErrors[0]);
         return;
     }
 
     try {
-        const result = await authAPI.signup(email, username, password);
+        const result = await authAPI.signup(email, username, password, captchaToken);
         localStorage.setItem('token', result.token);
         window.location.replace('user-home.html');
     } catch (error) {
@@ -70,7 +71,7 @@ function handleMenuSwitch(fromMenu, toMenu, overlay) {
     }, 200);
 }
 
-function validateSignupForm(email, username, password, termsAccepted) {
+function validateSignupForm(email, username, password, termsAccepted, captchaToken) {
     const errors = [];
 
     if (!email || !username || !password) {
@@ -80,6 +81,11 @@ function validateSignupForm(email, username, password, termsAccepted) {
 
     if (!termsAccepted) {
         errors.push('Please accept the Terms and Conditions');
+        return errors;
+    }
+
+    if (!captchaToken) {
+        errors.push('Please complete the captcha verification.');
         return errors;
     }
 

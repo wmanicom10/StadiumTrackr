@@ -6,6 +6,7 @@ const { authMiddleware, optionalAuth } = require('../middleware');
 const loadController = require('../controllers/loadController');
 
 router.post('/loadAboutInfo', loadController.handleLoadAboutInfo);
+router.post('/loadCaptchaConfig', loadController.handleLoadCaptchaConfig);
 router.post('/loadFeaturedEvents', loadController.handleLoadFeaturedEvents);
 router.post('/loadMapStadiums', loadController.handleLoadMapStadiums);
 router.post('/loadPopularStadiums', loadController.handleLoadPopularStadiums);

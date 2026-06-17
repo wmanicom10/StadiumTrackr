@@ -28,6 +28,7 @@ A web application for tracking stadium visits as you explore sports venues in th
 
 ### Authentication
 - JSON Web Tokens (JWT)
+- Cap CAPTCHA
 
 ### External APIs
 - Ticketmaster Discovery API

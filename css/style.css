@@ -194,8 +194,38 @@ body {
 }
 
 #terms-and-conditions {
-    width: 25px;
-    height: 25px;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-primary-20);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+#terms-and-conditions:checked {
+    background: var(--color-primary-20);
+    border-color: var(--color-primary-30);
+}
+
+#terms-and-conditions:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
+}
+
+#terms-and-conditions:checked::after {
+    content: '✓';
+    position: absolute;
+    color: var(--color-blue);
+    font-size: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #terms-and-conditions-container {
@@ -232,6 +262,22 @@ body {
 
 .overlay-fade-out {
     animation: overlayFadeOut 0.2s ease-in forwards;
+}
+
+cap-widget {
+    --cap-background: #202432;
+    --cap-border-color: rgba(79, 172, 254, 0.2);
+    --cap-border-radius: 10px;
+    --cap-color: #e4e6eb;
+    --cap-checkbox-background: rgba(255, 255, 255, 0.05);
+    --cap-checkbox-border: 1px solid rgba(79, 172, 254, 0.3);
+    --cap-spinner-color: #4facfe;
+    --cap-spinner-background-color: rgba(79, 172, 254, 0.1);
+    --cap-widget-width: 100%;
+    --cap-widget-padding: 0 10px 0 20px;
+    --cap-gap: 15px;
+    display: block;
+    margin-bottom: 20px;
 }
 
 /*  Add Stadium Menu  */

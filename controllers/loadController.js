@@ -147,6 +147,20 @@ const handleLoadAboutInfo = async (req, res) => {
     }
 };
 
+/*  loadCaptchaConfig  */
+const handleLoadCaptchaConfig = async (req, res) => {
+    try {
+        const siteKey = process.env.CAP_KEY_ID;
+        const baseUrl = process.env.CAP_API_BASE_URL;
+        const appUrl = process.env.APP_URL;
+
+        res.json({ siteKey, apiEndpoint: `${baseUrl}/${siteKey}/`, appUrl });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 /*  loadFeaturedEvents  */
 const handleLoadFeaturedEvents = async (req, res) => {
     try {
@@ -481,4 +495,4 @@ const handleSearchStadiums = async (req, res) => {
     }
 };
 
-module.exports = { handleLoadAboutInfo, handleLoadFeaturedEvents, handleLoadMapStadiums, handleLoadPopularStadiums, handleLoadStadiumEvents, handleLoadStadiumInfo, handleLoadStadiumMap, handleLoadStadiums, handleLoadUserEvents, handleSearchStadiums };
+module.exports = { handleLoadAboutInfo, handleLoadCaptchaConfig, handleLoadFeaturedEvents, handleLoadMapStadiums, handleLoadPopularStadiums, handleLoadStadiumEvents, handleLoadStadiumInfo, handleLoadStadiumMap, handleLoadStadiums, handleLoadUserEvents, handleSearchStadiums };

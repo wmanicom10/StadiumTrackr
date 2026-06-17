@@ -1,10 +1,23 @@
 /*  Imports  */
 import { DEBOUNCE_TIME, getAuthElements, MIN_LOADING_TIME, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, debounce, setupSearchAutocomplete, searchStadiums } from "../utils.js";
+import { createToast, debounce, setupSearchAutocomplete, searchStadiums, shakeOrReplace, initializeCreateAccountCaptcha } from "../utils.js";
 import { registerCommonEvents, registerEventListeners } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
+/*  Variables  */
+
 /*  Async Functions  */
+async function loadMapStadiums() {
+    try {
+        const result = await loadAPI.loadMapStadiums();
+        const stadiums = result.rows;
+
+        initializeMap(stadiums);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
 async function loadPopularStadiums() {
     try {
         const result = await loadAPI.loadPopularStadiums();
@@ -41,17 +54,6 @@ async function loadPopularStadiums() {
 
         });
 
-    } catch (error) {
-        console.error(error);
-    }
-}
-
-async function loadMapStadiums() {
-    try {
-        const result = await loadAPI.loadMapStadiums();
-        const stadiums = result.rows;
-
-        initializeMap(stadiums);
     } catch (error) {
         console.error(error);
     }
@@ -109,6 +111,7 @@ function initializeMap(stadiums) {
 document.addEventListener('DOMContentLoaded', () => {
     registerEventListeners(getAuthElements());
     registerCommonEvents();
+    initializeCreateAccountCaptcha();
     setupSearchAutocomplete('home-search-stadiums', 'search-field-home', 'home-autocomplete-list');
     setupSearchAutocomplete('logged-out-nav-search', 'logged-out-search-field-nav', 'logged-out-nav-autocomplete-list');
     setupSearchAutocomplete('logged-out-sidebar-nav-search', 'logged-out-sidebar-search-field-nav', 'logged-out-sidebar-nav-autocomplete-list');

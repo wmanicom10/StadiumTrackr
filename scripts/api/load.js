@@ -5,6 +5,9 @@ export const loadAPI = {
     loadAboutInfo: () => 
         fetchAPI(ROUTES.LOAD_ABOUT_INFO),
 
+    loadCaptchaConfig: () =>
+        fetchAPI(ROUTES.LOAD_CAPTCHA_CONFIG),
+
     loadFeaturedEvents: () => 
         fetchAPI(ROUTES.LOAD_FEATURED_EVENTS),
 
