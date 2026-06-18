@@ -25,6 +25,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     font-family: "Inter", sans-serif;
     color: var(--color-text);
@@ -6120,6 +6124,99 @@ footer {
     color: var(--color-blue);
 }
 
+/*  FAQs  */
+#faqs-container {
+    width: 985px;
+    margin: 40px auto 0;
+    min-height: 40.5vh;
+}
+
+#faqs-header {
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 0 0 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
+#faqs-content-container {
+    display: flex;
+}
+
+#faqs-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    margin-right: 100px;
+    width: 170px;
+    position: sticky;
+    top: 110px;
+    align-self: flex-start;
+}
+
+.faq-nav-item {
+    margin: 0;
+    font-weight: normal;
+    transition: color 0.3s ease;
+    cursor: pointer;
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.faq-nav-item:hover {
+    color: var(--color-blue);
+}
+
+#faqs {
+    width: 715px;
+}
+
+.faq {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.faq-section-header, .faq-question, .faq-answer {
+    margin: 0;
+    font-weight: normal;
+}
+
+.faq-section-header {
+    scroll-margin-top: 110px;
+}
+
+.faq-section-header:not(:first-of-type) {
+    margin-top: 30px;
+}
+
+.faq-answer {
+    color: var(--color-text-muted);
+    line-height: 1.4;
+}
+
+.faq-answer a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.faq-answer a:hover {
+    color: var(--color-blue);
+}
+
+#faq-leagues {
+    margin: 0;
+}
+
+#faq-leagues li {
+    color: var(--color-text-muted);
+    margin: 10px 0;
+}
+
 /*  Skeleton Loading  */
 .skeleton-card {
     width: 348px;
@@ -7400,8 +7497,23 @@ footer {
     #add-stadium-note, #edit-log-note {
         height: auto !important;
     }
-    #settings-container, #contact-container {
+    #settings-container, #contact-container, #faqs-container {
         width: 85% !important;
+    }
+    #faqs-content-container {
+        flex-direction: column;
+    }
+    #faqs-nav {
+        margin: 0;
+        flex-direction: row;
+        flex-wrap: wrap;
+        width: 100%;
+        position: relative;
+        top: 0;
+    }
+    #faqs {
+        margin-top: 30px;
+        width: 100%;
     }
     #username-settings-skeleton {
         height: 305px;
@@ -7575,7 +7687,7 @@ footer {
     .stadium-info, .stadium-info-skeleton {
         width: 100%;
     }
-    #settings-container, #contact-container {
+    #settings-container, #contact-container, #faqs-container {
         width: 93%;
     }
     #settings-content-container {

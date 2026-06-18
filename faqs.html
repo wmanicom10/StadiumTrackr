@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>FAQs - StadiumTrackr</title>
+        <link rel="stylesheet" href="css/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
+        <script src="https://captcha.stadiumtrackr.com/assets/widget.js"></script>
+        <script>
+            const token = localStorage.getItem('token');
+            if (token) {
+                const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                const payload = JSON.parse(atob(base64));
+                if (payload.username) {
+                    document.documentElement.classList.add('logged-in');
+                } else {
+                    document.documentElement.classList.add('logged-out');
+                }
+            } else {
+                document.documentElement.classList.add('logged-out');
+            }
+        </script>
+    </head>
+
+    <body>
+
+        <div id="overlay"></div>
+
+        <!-- Login Menu -->
+        <div id="log-in-menu" class="menu">
+            <div id="log-in-menu-header">
+                <h2></h2>
+                <h2>Login</h2>
+                <h2 id="close-log-in-menu">×</h2>
+            </div>
+            <form id="log-in-form">
+                <input type="text" id="username" class="input-field" placeholder="Username"><br>
+                <input type="password" id="password" class="input-field" placeholder="Password"><br>
+                <input type="submit" id="log-in-button" value="Log In">
+            </form>
+            <h3>Don't have an account? <span id="sign-up-link">Sign up here</span></h3>
+            <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+        </div>
+
+        <!-- Create Account Menu -->
+        <div id="create-account-menu" class="menu">
+            <div id="create-account-menu-header">
+                <h2></h2>
+                <h2>Sign Up</h2>
+                <h2 id="close-create-account-menu">×</h2>
+            </div>
+            <form id="create-account-form">
+                <input type="text" id="new-username" class="input-field" placeholder="Username"><br>
+                <input type="text" id="new-email" class="input-field" placeholder="Email address"><br>
+                <input type="password" id="new-password" class="input-field" placeholder="Password"><br>
+                <div id="terms-and-conditions-container">
+                    <input type="checkbox" id="terms-and-conditions">
+                    <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a></label>
+                </div>
+                <cap-widget id="create-account-captcha"></cap-widget>
+                <input type="submit" id="sign-up-button" value="Sign Up"><br>
+            </form>
+            <h3>Already have an account? <span id="sign-in-link">Log in here</span></h3>
+        </div>
+
+        <!-- Main Content -->
+         <div id="content-wrapper">
+
+            <!-- Header -->
+            <header id="site-header">
+                <h1>StadiumTrackr</h1>
+
+                <!-- Logged Out Nav -->
+                <ul id="logged-out-nav">
+                    <li class="nav-item"><a href="./index.html">Home</a></li>
+                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
+                    <li class="nav-item"><a href="events.html">Events</a></li>
+                    <li class="nav-item"><a href="about.html">About</a></li>
+                    <li class="nav-item button" id="log-in">Log In</li>
+                    <li class="nav-item button" id="create-account">Sign Up</li>
+                    <li class="nav-item" id="logged-out-nav-search-container">
+                        <form id="logged-out-nav-search" autocomplete="off">
+                            <div id="logged-out-nav-search-wrapper">
+                                <input type="text" placeholder="Search stadiums..." id="logged-out-search-field-nav" spellcheck="false">
+                                <div id="logged-out-nav-autocomplete-list"></div>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="nav-item toggle">
+                        <input type="checkbox" id="sidebar-active">
+                        <label for="sidebar-active" class="open-sidebar-button">
+                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
+                        </label>
+                        <label id="sidebar-overlay" for="sidebar-active"></label>
+                        <div class="links-container">
+                            <label for="sidebar-active" class="close-sidebar-button">
+                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
+                            </label>
+                            <div class="sidebar-links">
+                                <a class="home-link" href="./index.html">Home</a>
+                                <a href="./stadiums.html">Stadiums</a>
+                                <a href="events.html">Events</a>
+                                <a href="about.html">About</a>
+                            </div>
+                            <div class="account-buttons">
+                                <span id="sidebar-log-in">Log In</span>
+                                <span id="sidebar-sign-up">Sign Up</span>
+                            </div>
+                            <div id="logged-out-sidebar-search-container">
+                                <form id="logged-out-sidebar-nav-search" autocomplete="off">
+                                    <div id="logged-out-sidebar-nav-search-wrapper">
+                                        <input type="text" placeholder="Search stadiums..." id="logged-out-sidebar-search-field-nav" spellcheck="false">
+                                        <div id="logged-out-sidebar-nav-autocomplete-list"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+
+                <!-- Logged In Nav -->
+                <ul id="logged-in-nav">
+                    <li class="nav-item">
+                        <div id="user-dropdown-wrapper">
+                            <div id="logged-in-header-user-container">
+                                <img id="logged-in-header-user-profile-pic">
+                                <span id="logged-in-header-username"></span>
+                                <script>
+                                    (function() {
+                                        const token = localStorage.getItem('token');
+                                        if (!token) return;
+                                        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
+                                        const u = payload.username || '';
+                                        const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
+                                        document.getElementById('logged-in-header-username').textContent = d;
+                                        document.getElementById('logged-in-header-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                    })();
+                                </script>
+                                <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div id="logged-in-header-user-container-hidden">
+                                <a href="user-home.html">Home</a>
+                                <a href="user-home.html?tab=stadiums">Stadiums</a>
+                                <a href="user-home.html?tab=visits">Visits</a>
+                                <a href="user-home.html?tab=events">Events</a>
+                                <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=activity">Activity</a>
+                                <a href="user-home.html?tab=achievements">Achievements</a>
+                                <a href="settings.html">Settings</a>
+                                <a id="log-out">Log Out</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
+                    <li class="nav-item"><a href="events.html">Events</a></li>
+                    <li class="nav-item"><a href="about.html">About</a></li>
+                    <li class="nav-item" id="logged-in-nav-search-container">
+                        <form id="logged-in-nav-search" autocomplete="off">
+                            <div id="logged-in-nav-search-wrapper">
+                                <input type="text" placeholder="Search stadiums..." id="logged-in-search-field-nav" spellcheck="false">
+                                <div id="logged-in-nav-autocomplete-list"></div>
+                            </div>
+                        </form>
+                    </li>
+                    <li class="nav-item toggle">
+                        <input type="checkbox" id="sidebar-active-logged-in">
+                        <label for="sidebar-active-logged-in" class="open-sidebar-button">
+                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
+                        </label>
+                        <label id="sidebar-overlay-logged-in" for="sidebar-active-logged-in"></label>
+                        <div class="links-container">
+                            <label for="sidebar-active-logged-in" class="close-sidebar-button">
+                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
+                            </label>
+                            <div id="logged-in-sidebar-search-container">
+                                <form id="logged-in-sidebar-nav-search" autocomplete="off">
+                                    <div id="logged-in-sidebar-nav-search-wrapper">
+                                        <input type="text" placeholder="Search stadiums..." id="logged-in-sidebar-search-field-nav" spellcheck="false">
+                                        <div id="logged-in-sidebar-nav-autocomplete-list"></div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="sidebar-user-info">
+                                <img id="sidebar-user-profile-pic">
+                                <span id="sidebar-username"></span>
+                                <script>
+                                    (function() {
+                                        const token = localStorage.getItem('token');
+                                        if (!token) return;
+                                        const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                                        const payload = JSON.parse(atob(base64));
+                                        const u = payload.username || '';
+                                        const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
+                                        document.getElementById('sidebar-username').textContent = d;
+                                        document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                    })();
+                                </script>
+                            </div>
+                            <div id="sidebar-user-links">
+                                <a href="user-home.html">Home</a>
+                                <a href="user-home.html?tab=stadiums">Stadiums</a>
+                                <a href="user-home.html?tab=visits">Visits</a>
+                                <a href="user-home.html?tab=events">Events</a>
+                                <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=activity">Activity</a>
+                                <a href="user-home.html?tab=achievements">Achievements</a>
+                                <a href="settings.html">Settings</a>
+                                <a id="sidebar-log-out">Log Out</a>
+                            </div>
+                            <div class="sidebar-links">
+                                <a href="./stadiums.html">Stadiums</a>
+                                <a href="events.html">Events</a>
+                                <a href="about.html">About</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </header>
+
+            <main>
+
+                <div id="faqs-container">
+                    <h2 id="faqs-header">FAQs</h2>
+
+                    <div id="faqs-content-container">
+                        <div id="faqs-nav">
+                            <a class="faq-nav-item" href="#general">General</a>
+                            <a class="faq-nav-item" href="#account">Account</a>
+                            <a class="faq-nav-item" href="#using-stadiumtrackr">Using StadiumTrackr</a>
+                            <a class="faq-nav-item" href="#events">Events</a>
+                            <a class="faq-nav-item" href="#data">Data</a>
+                            <a class="faq-nav-item" href="#achievements">Achievements</a>
+                        </div>
+                        <div id="faqs">
+                            <h2 class="faq-section-header" id="general">General</h2>
+                            <div class="faq">
+                                <h3 class="faq-question">What is StadiumTrackr?</h3>
+                                <h3 class="faq-answer">StadiumTrackr is a platform for keeping track of the stadiums you've visited and discovering new ones to explore. Log your visits with notes and dates, add stadiums you want to visit to your wishlist, earn achievements as you reach milestones, and see upcoming events at each stadium.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">Is it free?</h3>
+                                <h3 class="faq-answer">Yes, StadiumTrackr is free to use, but some features are only available to Pro members. See the <a href="pro.html">Pro</a> page for more details on upgrading.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">Do I need an account to use the site?</h3>
+                                <h3 class="faq-answer">No, you can browse stadiums without an account, but you'll need an account to track your visits.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">How do I use StadiumTrackr?</h3>
+                                <h3 class="faq-answer">For a more comprehensive guide on how to use StadiumTrackr, visit our <a href="about.html">About</a> page. This covers the most common ways to navigate the site and get the most out of your experience.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">Do you have a mobile app?</h3>
+                                <h3 class="faq-answer">Our mobile app is currently in development, stay tuned for updates.</h3>
+                            </div>
+                            <h2 class="faq-section-header" id="account">Account</h2>
+                            <div class="faq">
+                                <h3 class="faq-question">How do I delete my account?</h3>
+                                <h3 class="faq-answer">To delete your account, visit the Settings page, navigate to the Delete Account tab, and click the Delete Account Button. Once you do this, you'll be asked to enter your password to confirm. After this is done, your account and all of your data will be permanently deleted.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">Can I change my username/password/email/profile picture?</h3>
+                                <h3 class="faq-answer">Yes, you can change your username, password, email, and profile picture, all on the Settings page.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">What happens if I forgot my password?</h3>
+                                <h3 class="faq-answer">No worries, just visit our <a href="forgot-password.html">Forgot Password</a> page where you'll enter your email to get a link to reset your password.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">Why should I upgrade my account?</h3>
+                                <h3 class="faq-answer">StadiumTrackr relies on membership fees as our main source of income, so if you like StadiumTrackr and want to help us out, feel free to support us by upgrading. For a full list of benefits to upgrading your account, visit the <a href="pro.html">Pro</a> page.</h3>
+                            </div>
+                            <h2 class="faq-section-header" id="using-stadiumtrackr">Using StadiumTrackr</h2>
+                            <div class="faq">
+                                <h3 class="faq-question">What's the difference between marking a stadium as visited and logging a stadium?</h3>
+                                <h3 class="faq-answer">Marking a stadium as visited just says that you've been to that stadium at some point, without specifying a date. Logging a stadium visit lets you specify the date you visited the stadium, and lets you add notes to remember your visit. All logged visits show up on your Visits page so you can see your visits over time.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">How do I unmark a stadium as visited?</h3>
+                                <h3 class="faq-answer">To unmark a stadium as visited, you can toggle the visit icon on a stadium card when hovering on it, or visit the stadium page and unmark it as visited. Before unmarking as visited however, you'll need to delete any visit logs for that stadium first.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">Can I log a stadium visit and change the date and/or note later?</h3>
+                                <h3 class="faq-answer">Yes, you can edit a stadium visit by clicking on the edit button on either the Visits or Activity Page.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">How do I add a stadium to my wishlist?</h3>
+                                <h3 class="faq-answer">To add a stadium to your wishlist, you can either hover on a stadium card and toggle the wishlist icon, or visit a stadium page and use the wishlist button.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">What are favorite stadiums?</h3>
+                                <h3 class="faq-answer">You can add up to 4 favorite stadiums, and they can be stadiums you visit the most, stadiums for your favorite teams, or anything you want. By setting a stadium as one of your favorites, it lets you see upcoming events for that stadium on your Events page.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">How do I see other users' accounts?</h3>
+                                <h3 class="faq-answer">Currently, there is no way to see other users' accounts, but we plan on adding this feature in the future.</h3>
+                            </div>
+                            <h2 class="faq-section-header" id="events">Events</h2>
+                            <div class="faq">
+                                <h3 class="faq-question">How do I see upcoming events at the stadiums I want?</h3>
+                                <h3 class="faq-answer">By setting stadiums as one of your favorites, or adding stadiums to your wishlist, you can see the next 3 events at those stadiums on your Events page.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">Where do you get event data for each stadium?</h3>
+                                <h3 class="faq-answer">All of the event data on StadiumTrackr comes from Ticketmaster, so it is always up-to-date.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">Why should I buy tickets through StadiumTrackr?</h3>
+                                <h3 class="faq-answer">When you purchase tickets through our Ticketmaster link, we earn a small commission at no extra cost to you. It's a simple way to support us while buying tickets you were already going to buy.</h3>
+                            </div>
+                            <h2 class="faq-section-header" id="data">Data</h2>
+                            <div class="faq">
+                                <h3 class="faq-question">Where does StadiumTrackr get its data?</h3>
+                                <h3 class="faq-answer">All stadium data on StadiumTrackr is manually collected, and we are always working to add more stadiums. If you notice any issues with stadium information or would like to request a stadium to be added, please contact data@stadiumtrackr.com.</h3>
+                            </div>
+                            <div class="faq">
+                                <h3 class="faq-question">What leagues does StadiumTrackr cover?</h3>
+                                <h3 class="faq-answer">Right now, StadiumTrackr has every stadium from the following leagues:</h3>
+                                <ul id="faq-leagues">
+                                    <li>NFL</li>
+                                    <li>NBA</li>
+                                    <li>MLB</li>
+                                    <li>NHL</li>
+                                    <li>MLS</li>
+                                    <li>WNBA</li>
+                                    <li>NCAAF</li>
+                                </ul>
+                                <h3 class="faq-answer">We are always adding more stadiums and leagues, so stay tuned if you don't see the stadium you're looking for.</h3>
+                            </div>
+                            <h2 class="faq-section-header" id="achievements">Achievements</h2>
+                            <div class="faq">
+                                <h3 class="faq-question">How do I earn achievements?</h3>
+                                <h3 class="faq-answer">Achievements are unlocked automatically as you reach different milestones. Both marking a stadium as visited and logging a stadium visit contributes to achievement progress, but some achievements rely on date-specific logs.</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- Footer -->
+            <footer>
+                <div id="footer-items">
+                    <div class="footer-item">
+                        <h4>StadiumTrackr</h4>
+                        <h5>Track the sports venues you've visited and discover new ones to explore</h5>
+                    </div>
+                    <div class="footer-item footer-links">
+                        <h4>Quick Links</h4>
+                        <a href="" id="footer-home-link"><h5>Home</h5></a><br>
+                        <a href="stadiums.html"><h5>Stadiums</h5></a><br>
+                        <a href="events.html"><h5>Events</h5></a><br>
+                        <a href="about.html"><h5>About</h5></a><br>
+                    </div>
+                    <div class="footer-item footer-links">
+                        <h4>Help</h4>
+                        <a href="contact.html"><h5>Contact</h5></a><br>
+                        <a href="faqs.html"><h5>FAQs</h5></a><br>
+                        <a href="terms-and-conditions.html"><h5>Terms and Conditions</h5></a><br>
+                        <a href="privacy-policy.html"><h5>Privacy Policy</h5></a>
+                    </div>
+                    <div class="footer-item">
+                        <h4>Newsletter</h4>
+                        <h5>Subscribe for updates and news</h5>
+                        <form id="newsletter-email">
+                            <input type="text" placeholder="Enter your email" id="email-field">
+                            <input type="submit" value="Subscribe" id="subscribe-button">
+                        </form>
+                    </div>
+                </div>
+                <h5 id="copyright"></h5>
+            </footer>
+
+        </div>
+
+        <!-- Scripts -->
+        <script type="module" src="scripts/pages/faqs-script.js"></script>
+        
+    </body>
+</html>
