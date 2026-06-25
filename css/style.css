@@ -32,9 +32,14 @@ html {
 body {
     font-family: "Inter", sans-serif;
     color: var(--color-text);
-    margin: 0;
+    margin: 0 auto;
     overflow-x: hidden;
     background: var(--color-bg);
+}
+
+main {
+    max-width: 2000px;
+    margin: 0 auto;
 }
 
 #overlay {
@@ -1072,6 +1077,7 @@ label img:hover {
 /*  Welcome Text  */
 #home-image {
     width: 100%;
+    max-width: 2000px;
     height: 670px;
     object-fit: cover;
     opacity: 0.6;
@@ -1956,6 +1962,22 @@ footer {
     display: block;
 }
 
+.img-placeholder {
+    width: 100%;
+    height: 188px;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
+    border: 1px solid var(--color-primary-15);
+    border-bottom: none;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    gap: 8px;
+}
+
 .stadiums-list-stadium-text {
     width: 100%;
     background: #272B38;
@@ -2142,6 +2164,7 @@ footer {
 
 #stadium-image {
     width: 100%;
+    max-width: 2000px;
     height: 670px;
     object-fit: cover;
     opacity: 0;
@@ -2404,6 +2427,7 @@ footer {
 #user-home-image {
     background: var(--color-bg);
     width: 100%;
+    max-width: 2000px;
     height: 670px;
     object-fit: cover;
     opacity: 0;
@@ -6217,6 +6241,179 @@ footer {
     margin: 10px 0;
 }
 
+/*  Photo Credits  */
+#photo-credits-container {
+    width: 985px;
+    margin: 40px auto 0;
+}
+
+#photo-credits-header {
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 0 0 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
+#photo-credits-content-container p {
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    font-size: 1.1rem;
+}
+
+#photo-credits-content-container p a {
+    color: var(--color-text);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+#photo-credits-content-container p a:hover {
+    color: var(--color-blue);
+}
+
+#photo-credits-table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 30px;
+}
+
+#photo-credits-table thead {
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
+#photo-credits-table th {
+    font-weight: normal;
+    text-align: left;
+    padding-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+#photo-credits-table td {
+    padding: 15px 15px 15px 0;
+    cursor: default;
+}
+
+#photo-credits-table th:nth-child(1) { 
+    width: 30%; 
+}
+#photo-credits-table th:nth-child(2) { 
+    width: 25%; 
+}
+#photo-credits-table th:nth-child(3) { 
+    width: 25%; 
+}
+#photo-credits-table th:nth-child(4) { 
+    width: 20%; 
+}
+
+#photo-credits-table td a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+#photo-credits-table td a:hover {
+    color: var(--color-blue);
+}
+
+#photo-credits-table td span {
+    line-height: 1.4;
+}
+
+#photo-credits-table-body tr:not(.photo-credits-table-skeleton) {
+    display: none;
+}
+/*  Error Pages  */
+#error-404-image, #error-500-image {
+    width: 100%;
+    max-width: 2000px;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.5;
+    position: absolute;
+    z-index: -10000;
+    mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
+    -webkit-mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
+}
+
+#error-404-image {
+    object-position: top;
+}
+
+#error-500-image {
+    object-position: right;
+}
+
+#error-header {
+    margin: 0 auto;
+    padding-top: 100px;
+    font-weight: normal;
+    text-align: center;
+    font-size: 2rem;
+    width: 95%;
+}
+
+#error-description {
+    text-align: center;
+    font-size: 1.1rem;
+    margin: 0 auto;
+    margin-top: 25px;
+    width: 95%;
+}
+
+#error-description a {
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#error-description a:hover {
+    color: var(--color-blue);
+}
+
+#error-photo-credit {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    margin: 0 auto;
+    margin-top: 25px;
+    width: 95%;
+}
+
+#error-photo-credit a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+#error-photo-credit a:hover {
+    color: var(--color-text);
+}
+
+#go-back-button {
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    padding: 7px 22px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    color: var(--color-blue);
+    font-size: 1rem;
+    text-decoration: none;
+    display: block;
+    width: fit-content;
+    margin: 25px auto;
+    cursor: pointer;
+}
+
+#go-back-button:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px);
+}
+
 /*  Skeleton Loading  */
 .skeleton-card {
     width: 348px;
@@ -6740,6 +6937,18 @@ footer {
     background-size: 400% 100%;
     animation: loading 1.2s ease-in-out infinite;
     box-shadow: var(--shadow-default);
+}
+
+.photo-credits-table-skeleton td {
+    padding: 15px 0 !important;
+}
+
+.skeleton-cell {
+    height: 20px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
 }
 
 /*  Media Queries  */
@@ -7497,7 +7706,7 @@ footer {
     #add-stadium-note, #edit-log-note {
         height: auto !important;
     }
-    #settings-container, #contact-container, #faqs-container {
+    #settings-container, #contact-container, #faqs-container, #photo-credits-container {
         width: 85% !important;
     }
     #faqs-content-container {
@@ -7514,6 +7723,27 @@ footer {
     #faqs {
         margin-top: 30px;
         width: 100%;
+    }
+    #photo-credits-table thead { 
+        display: none; 
+    }
+    #photo-credits-table tr { 
+        display: block; 
+        margin-bottom: 16px; 
+        border-bottom: 1px solid #444; 
+    }
+    #photo-credits-table td { 
+        display: block; 
+        padding: 8px 0;
+    }
+    #photo-credits-table td::before {
+        content: attr(data-label);
+        text-decoration: underline;
+        display: block;
+        margin-bottom: 5px;
+    }
+    #photo-credits-table {
+        margin-top: 0;
     }
     #username-settings-skeleton {
         height: 305px;
@@ -7687,7 +7917,7 @@ footer {
     .stadium-info, .stadium-info-skeleton {
         width: 100%;
     }
-    #settings-container, #contact-container, #faqs-container {
+    #settings-container, #contact-container, #faqs-container, #photo-credits-container {
         width: 93%;
     }
     #settings-content-container {

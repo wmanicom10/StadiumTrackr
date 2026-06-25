@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <title>StadiumTrackr - Server Error</title>
+        <link rel="stylesheet" href="css/style.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
+        <script src="https://captcha.stadiumtrackr.com/assets/widget.js"></script>
+        <script>
+            const token = localStorage.getItem('token');
+            if (token) {
+                const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                const payload = JSON.parse(atob(base64));
+                if (payload.username) {
+                    document.documentElement.classList.add('logged-in');
+                } else {
+                    document.documentElement.classList.add('logged-out');
+                }
+            } else {
+                document.documentElement.classList.add('logged-out');
+            }
+        </script>
+    </head>
+
+    <body>
+
+        <div id="overlay"></div>
+
+        <!-- Main Content -->
+         <div id="content-wrapper">
+
+            <main>
+
+                <div id="server-error-container">
+                    <img src="images/error/jeter-error.jpg" id="error-500-image">
+                    <h2 id="error-header">500 - Server Error</h2>
+                    <p id="error-description">Something went wrong with our servers, please try again in a few minutes. If the problem persists, contact us at <a href="mailto:help@stadiumtrackr.com">support@stadiumtrackr.com</a>.</p>
+                    <p id="error-photo-credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:JeterError.jpg" target="_blank">Keith Allison</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0/deed.en" target="_blank">CC BY-SA 2.0</a></p>
+                    <a id="go-back-button">Go Home</a>
+                </div>
+
+            </main>
+
+        </div>
+
+        <!-- Scripts -->
+        <script>
+            document.getElementById('go-back-button').href = document.documentElement.classList.contains('logged-in') ? 'user-home.html' : 'index.html';
+        </script>
+        
+    </body>
+</html>
