@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <title>StadiumTrackr - Server Error</title>
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="/css/style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +38,7 @@
             <main>
 
                 <div id="server-error-container">
-                    <img src="images/error/jeter-error.jpg" id="error-500-image">
+                    <img src="/images/error/jeter-error.jpg" id="error-500-image">
                     <h2 id="error-header">500 - Server Error</h2>
                     <p id="error-description">Something went wrong with our servers, please try again in a few minutes. If the problem persists, contact us at <a href="mailto:help@stadiumtrackr.com">support@stadiumtrackr.com</a>.</p>
                     <p id="error-photo-credit">Photo: <a href="https://commons.wikimedia.org/wiki/File:JeterError.jpg" target="_blank">Keith Allison</a>, <a href="https://creativecommons.org/licenses/by-sa/2.0/deed.en" target="_blank">CC BY-SA 2.0</a></p>
@@ -51,7 +51,7 @@
 
         <!-- Scripts -->
         <script>
-            document.getElementById('go-back-button').href = document.documentElement.classList.contains('logged-in') ? 'user-home.html' : 'index.html';
+            document.getElementById('go-back-button').href = document.documentElement.classList.contains('logged-in') ? 'user-home.html' : '/';
         </script>
         
     </body>

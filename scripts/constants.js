@@ -42,6 +42,7 @@ export const ROUTES = {
     LOAD_CAPTCHA_CONFIG: '/load/loadCaptchaConfig',
     LOAD_FEATURED_EVENTS: '/load/loadFeaturedEvents',
     LOAD_MAP_STADIUMS: '/load/loadMapStadiums',
+    LOAD_PHOTO_CREDITS: '/load/loadPhotoCredits',
     LOAD_POPULAR_STADIUMS: '/load/loadPopularStadiums',
     LOAD_STADIUMS_EVENTS: '/load/loadStadiumEvents',
     LOAD_STADIUM_INFO: '/load/loadStadiumInfo',

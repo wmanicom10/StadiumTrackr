@@ -197,6 +197,18 @@ const handleLoadMapStadiums = async (req, res) => {
     }
 };
 
+/*  loadPhotoCredits  */
+const handleLoadPhotoCredits = async (req, res) => {
+    try {
+        const [photoCredits] = await db.execute('SELECT pc.id, pc.stadium_id, s.stadium_name, pc.photographer, pc.source, pc.source_url, pc.license, pc.license_url, pc.notes, pc.modifications FROM photo_credits pc JOIN stadiums s ON pc.stadium_id = s.stadium_id ORDER BY s.stadium_name ASC');
+
+        res.json({ photoCredits });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 /*  loadPopularStadiums  */
 const handleLoadPopularStadiums = async (req, res) => {
     try {
@@ -495,4 +507,4 @@ const handleSearchStadiums = async (req, res) => {
     }
 };
 
-module.exports = { handleLoadAboutInfo, handleLoadCaptchaConfig, handleLoadFeaturedEvents, handleLoadMapStadiums, handleLoadPopularStadiums, handleLoadStadiumEvents, handleLoadStadiumInfo, handleLoadStadiumMap, handleLoadStadiums, handleLoadUserEvents, handleSearchStadiums };
+module.exports = { handleLoadAboutInfo, handleLoadCaptchaConfig, handleLoadFeaturedEvents, handleLoadMapStadiums, handleLoadPhotoCredits, handleLoadPopularStadiums, handleLoadStadiumEvents, handleLoadStadiumInfo, handleLoadStadiumMap, handleLoadStadiums, handleLoadUserEvents, handleSearchStadiums };

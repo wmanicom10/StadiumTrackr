@@ -90,9 +90,17 @@ function createStadiumCard(stadium, elements) {
     const link = document.createElement('a');
     link.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
-    const img = document.createElement('img');
-    img.src = STADIUM_IMAGE_PATH + stadium.image;
-    img.alt = stadium.stadium_name;
+    let img;
+    if (stadium.image) {
+        img = document.createElement('img');
+        img.src = STADIUM_IMAGE_PATH + stadium.image;
+        img.alt = stadium.stadium_name;
+    } else {
+        img = document.createElement('div');
+        img.classList.add('img-placeholder');
+        img.textContent = 'No image available';
+    }
+
 
     const textDiv = document.createElement('div');
     textDiv.classList.add('stadiums-list-stadium-text');

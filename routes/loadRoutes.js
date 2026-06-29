@@ -9,6 +9,7 @@ router.post('/loadAboutInfo', loadController.handleLoadAboutInfo);
 router.post('/loadCaptchaConfig', loadController.handleLoadCaptchaConfig);
 router.post('/loadFeaturedEvents', loadController.handleLoadFeaturedEvents);
 router.post('/loadMapStadiums', loadController.handleLoadMapStadiums);
+router.post('/loadPhotoCredits', loadController.handleLoadPhotoCredits);
 router.post('/loadPopularStadiums', loadController.handleLoadPopularStadiums);
 router.post('/loadStadiumEvents', loadController.handleLoadStadiumEvents);
 router.post('/loadStadiumInfo', optionalAuth, loadController.handleLoadStadiumInfo);

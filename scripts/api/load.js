@@ -14,6 +14,9 @@ export const loadAPI = {
     loadMapStadiums: () =>
         fetchAPI(ROUTES.LOAD_MAP_STADIUMS),
 
+    loadPhotoCredits: () =>
+        fetchAPI(ROUTES.LOAD_PHOTO_CREDITS),
+
     loadPopularStadiums: () =>
         fetchAPI(ROUTES.LOAD_POPULAR_STADIUMS),
 

@@ -6257,7 +6257,7 @@ footer {
 
 #photo-credits-content-container p {
     color: var(--color-text-muted);
-    line-height: 1.4;
+    line-height: 1.6;
     font-size: 1.1rem;
 }
 
@@ -6295,16 +6295,16 @@ footer {
 }
 
 #photo-credits-table th:nth-child(1) { 
-    width: 30%; 
+    width: 28%; 
 }
 #photo-credits-table th:nth-child(2) { 
-    width: 25%; 
+    width: 24%; 
 }
 #photo-credits-table th:nth-child(3) { 
-    width: 25%; 
+    width: 30%; 
 }
 #photo-credits-table th:nth-child(4) { 
-    width: 20%; 
+    width: 18%;
 }
 
 #photo-credits-table td a {
