@@ -4,12 +4,17 @@ const cors = require('cors');
 
 const app = express();
 
+const paymentController = require('./controllers/paymentController');
+
+app.post('/payment/webhook', express.raw({ type: 'application/json' }), paymentController.handleStripeWebhook);
+
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/auth', require('./routes/authRoutes'));
 app.use('/load', require('./routes/loadRoutes'));
+app.use('/payment', require('./routes/paymentRoutes'));
 app.use('/update', require('./routes/updateRoutes'));
 app.use('/user', require('./routes/userRoutes'));
 

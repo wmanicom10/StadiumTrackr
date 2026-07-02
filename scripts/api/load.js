@@ -20,6 +20,9 @@ export const loadAPI = {
     loadPopularStadiums: () =>
         fetchAPI(ROUTES.LOAD_POPULAR_STADIUMS),
 
+    loadProPricing: () => 
+        fetchAPI(ROUTES.LOAD_PRO_PRICING),
+
     loadStadiumEvents: (id) => 
         fetchAPI(ROUTES.LOAD_STADIUMS_EVENTS, { id }),
 

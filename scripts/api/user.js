@@ -29,6 +29,9 @@ export const userAPI = {
     loadUserWishlist: (league, country, sortBy) =>
         fetchAPI(ROUTES.LOAD_USER_WISHLIST, { league, country, sortBy }),
 
+    refreshToken: () => 
+        fetchAPI(ROUTES.REFRESH_TOKEN),
+
     saveFavoriteStadiums: (stadiumNames) =>
         fetchAPI(ROUTES.SAVE_FAVORITE_STADIUMS, { stadiumNames }),
 

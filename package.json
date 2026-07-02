@@ -11,11 +11,12 @@
     "multer": "^2.1.1",
     "mysql2": "^3.13.0",
     "nodemailer": "^9.0.0",
-    "sharp": "^0.34.5"
+    "sharp": "^0.34.5",
+    "stripe": "^22.3.0"
   },
   "scripts": {
     "start": "node --no-deprecation server.js",
-    "dev": "concurrently \"npm start\" \"vite --open\"",
+    "dev": "concurrently \"npm start\" \"vite --open\" \"stripe listen --forward-to localhost:3000/payment/webhook\"",
     "build": "vite build",
     "preview": "vite preview"
   },

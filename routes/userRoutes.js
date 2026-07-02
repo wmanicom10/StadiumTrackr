@@ -24,6 +24,7 @@ router.post('/loadUserInfo', authMiddleware, userController.handleLoadUserInfo);
 router.post('/loadUserStadiums', authMiddleware, userController.handleLoadUserStadiums);
 router.post('/loadUserVisits', authMiddleware, userController.handleLoadUserVisits);
 router.post('/loadUserWishlist', authMiddleware, userController.handleLoadUserWishlist);
+router.post('/refreshToken', authMiddleware, userController.handleRefreshToken);
 router.post('/saveFavoriteStadiums', authMiddleware, userController.handleSaveFavoriteStadiums);
 router.post('/sendPasswordReset', resetLimiter, userController.handleSendPasswordReset);
 

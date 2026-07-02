@@ -1078,9 +1078,10 @@ label img:hover {
 #home-image {
     width: 100%;
     max-width: 2000px;
-    height: 670px;
+    height: 700px;
     object-fit: cover;
-    opacity: 0.6;
+    object-position: bottom;
+    opacity: 0.5;
     position: absolute;
     z-index: -10000;
     mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
@@ -2165,8 +2166,9 @@ footer {
 #stadium-image {
     width: 100%;
     max-width: 2000px;
-    height: 670px;
+    height: 700px;
     object-fit: cover;
+    object-position: bottom;
     opacity: 0;
     transition: opacity 0.4s ease;
     position: absolute;
@@ -2428,8 +2430,9 @@ footer {
     background: var(--color-bg);
     width: 100%;
     max-width: 2000px;
-    height: 670px;
+    height: 700px;
     object-fit: cover;
+    object-position: bottom;
     opacity: 0;
     transition: opacity 0.4s ease;
     position: absolute;
@@ -2439,7 +2442,7 @@ footer {
 }
 
 #user-home-image.loaded {
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 #user-home-content {
@@ -6414,6 +6417,327 @@ footer {
     transform: translateY(-3px);
 }
 
+/*  Pro  */
+#pro-image {
+    width: 100%;
+    max-width: 2000px;
+    height: 700px;
+    object-fit: cover;
+    object-position: top;
+    opacity: 0.5;
+    position: absolute;
+    z-index: -10000;
+    mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
+    -webkit-mask-image: linear-gradient(to bottom,black 0%,black 0%,transparent 95%);
+}
+
+#pro-text {
+    width: 90%;
+    margin: 0 auto;
+    padding-top: 40px;
+    text-align: center;
+}
+
+#pro-text h2 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+#pro-text p {
+    font-size: 1.2rem;
+    margin: 20px 0;
+}
+
+#pro-text button {
+    background: #222C40;
+    border: 1px solid var(--color-primary-30);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    padding: 15px 30px;
+    border-radius: 10px;
+    margin: 10px 10px;
+    transition: all 0.3s ease;
+    color: var(--color-blue);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+#pro-text button:hover {
+    background: #273A56;
+    transform: translateY(-3px);
+}
+
+#pro-price-plans {
+    display: none;
+    align-items: flex-start;
+    margin: 40px auto;
+    justify-content: center;
+    gap: 14px;
+}
+
+.pro-price-plan {
+    width: 262px;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+#pro-price-plan-monthly {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+}
+
+#pro-price-plan-annual {
+    background: #273147;
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.pro-price-plan h3 {
+    font-weight: normal;
+    margin: 0;
+    font-size: 1rem;
+}
+
+.pro-price-plan h2 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    gap: 5px;
+}
+
+.pro-price-plan h2 span {
+    font-size: 1rem;
+    -webkit-text-fill-color: var(--color-text);
+    background: none;
+}
+
+.pro-price-plan h4 {
+    font-weight: normal;
+    margin: 0;
+    margin-top: 8px;
+    color: var(--color-text-muted);
+}
+
+.pro-price-plan button {
+    background: #2D374D;
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
+    font-weight: normal;
+    font-size: 1rem;
+    border-radius: 10px;
+    padding: 10px 22px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    margin-top: 20px;
+}
+
+.pro-price-plan button:hover {
+    background: #314460;
+    transform: translateY(-3px);
+}
+
+#already-pro-member {
+    display: none;
+    text-align: center;
+    margin: 40px auto 0;
+    width: 90%;
+}
+
+#already-pro-member h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--color-text);
+    font-weight: normal;
+}
+
+#already-pro-member p {
+    margin: 15px auto 0;
+    line-height: 1.6;
+}
+
+#manage-subscription-button {
+    background: #2D374D;
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
+    font-weight: normal;
+    font-size: 1rem;
+    border-radius: 10px;
+    padding: 10px 22px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    margin-top: 20px;
+}
+
+.setting #manage-subscription-button {
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
+    font-weight: normal;
+    font-size: 1rem;
+    border-radius: 10px;
+    width: 190px;
+    padding: 8px 0;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#manage-subscription-button:hover {
+    background: #314460;
+    transform: translateY(-3px);
+}
+
+#pro-features-container {
+    width: 1090px;
+    margin: 60px auto;
+}
+
+#pro-features-container h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--color-text);
+    font-weight: normal;
+}
+
+#pro-features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 20px;
+}
+
+.pro-feature {
+    box-shadow: var(--shadow-default);
+    background: #272B38;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-primary-15);
+    width: 262px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.pro-feature div {
+    margin: 30px auto 20px;
+    height: 60px;
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pro-feature img {
+    height: 40px;
+    object-fit: cover;
+}
+
+.pro-feature:first-child img, .pro-feature:nth-child(5) img {
+    height: 30px;
+}
+
+.pro-feature:nth-child(7) img {
+    height: 45px;
+}
+
+.pro-feature h3, .pro-feature h4 {
+    font-weight: normal;
+}
+
+.pro-feature h3 {
+    font-size: 1.1rem;
+    margin: 10px;
+}
+
+.pro-feature h4 {
+    margin: 10px 22px 30px;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+}
+
+#pro-thanks-container {
+    width: 1090px;
+    margin: 50px auto 0;
+    text-align: center;
+}
+
+#pro-thanks-container h2 {
+    margin: 0;
+    font-size: 1.4rem;
+    color: var(--color-text);
+    font-weight: normal;
+}
+
+#pro-thanks-container p {
+    margin: 15px auto 0;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    width: 78%;
+}
+
+#pro-success-main {
+    min-height: 27.5vh;
+}
+
+#pro-success-container {
+    width: 90%;
+    margin: 60px auto;
+    text-align: center;
+}
+
+#pro-success-container h2 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+#pro-success-container p {
+    margin: 20px 0;
+    font-size: 1.4rem;
+    color: var(--color-text);
+    font-weight: normal;
+}
+
+#pro-success-container a {
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    padding: 7px 22px;
+    border-radius: 10px;
+    margin: 25px auto;
+    transition: all 0.3s ease;
+    color: var(--color-blue);
+    font-size: 1rem;
+    text-decoration: none;
+    display: block;
+    width: 117px;
+}
+
 /*  Skeleton Loading  */
 .skeleton-card {
     width: 348px;
@@ -6951,10 +7275,25 @@ footer {
     animation: loading 1.2s ease-in-out infinite;
 }
 
+#pro-price-plans-skeleton {
+    margin: 40px auto;
+    width: 538px;
+    height: 216px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
 /*  Media Queries  */
 @media screen and (max-width: 355px) {
     #upload-profile-pic-button img {
         width: 18px;
+    }
+    .pro-price-plan h2 {
+        flex-direction: column;
     }
 }
 
@@ -7141,7 +7480,7 @@ footer {
         font-size: 2rem;
         padding-top: 50px;
     }
-    #welcome-text, #popular-stadiums-container, #stadium-trackr-container, #home-stadium-map-container {
+    #welcome-text, #popular-stadiums-container, #stadium-trackr-container, #home-stadium-map-container, #pro-features-container, #pro-thanks-container {
         width: 90% !important;
     }
     .leaflet-popup-content-wrapper {
@@ -7348,8 +7687,11 @@ footer {
 }
 
 @media screen and (max-width: 566px) {
-    .stadium-trackr-info {
+    .stadium-trackr-info, .pro-feature {
         width: 100%;
+    }
+    #pro-price-plans, #pro-price-plans-skeleton {
+        width: 90%;
     }
 }
 
@@ -7981,10 +8323,10 @@ footer {
         width: 100%;
         margin-top: 30px;
     }
-    #popular-stadiums-container, #stadium-trackr-container, #home-stadium-map-container {
+    #popular-stadiums-container, #stadium-trackr-container, #home-stadium-map-container, #pro-features-container, #pro-thanks-container {
         width: 95%;
     }
-    #popular-stadiums, #stadium-trackr-infos, #popular-stadiums-skeleton {
+    #popular-stadiums, #stadium-trackr-infos, #popular-stadiums-skeleton, #pro-features {
         justify-content: start;
     }
     #user-home-content {

@@ -221,6 +221,14 @@ const handleLoadPopularStadiums = async (req, res) => {
     }
 };
 
+/*  loadProPricing  */
+const handleLoadProPricing = async (req, res) => {
+    res.json({
+        monthlyPriceId: process.env.STRIPE_PRICE_ID_MONTHLY,
+        annualPriceId: process.env.STRIPE_PRICE_ID_ANNUAL
+    });
+};
+
 /*  loadStadiumEvents  */
 const handleLoadStadiumEvents = async (req, res) => {
     const { id } = req.body;
@@ -507,4 +515,4 @@ const handleSearchStadiums = async (req, res) => {
     }
 };
 
-module.exports = { handleLoadAboutInfo, handleLoadCaptchaConfig, handleLoadFeaturedEvents, handleLoadMapStadiums, handleLoadPhotoCredits, handleLoadPopularStadiums, handleLoadStadiumEvents, handleLoadStadiumInfo, handleLoadStadiumMap, handleLoadStadiums, handleLoadUserEvents, handleSearchStadiums };
+module.exports = { handleLoadAboutInfo, handleLoadCaptchaConfig, handleLoadFeaturedEvents, handleLoadMapStadiums, handleLoadPhotoCredits, handleLoadPopularStadiums, handleLoadProPricing, handleLoadStadiumEvents, handleLoadStadiumInfo, handleLoadStadiumMap, handleLoadStadiums, handleLoadUserEvents, handleSearchStadiums };

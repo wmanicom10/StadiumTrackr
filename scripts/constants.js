@@ -44,12 +44,17 @@ export const ROUTES = {
     LOAD_MAP_STADIUMS: '/load/loadMapStadiums',
     LOAD_PHOTO_CREDITS: '/load/loadPhotoCredits',
     LOAD_POPULAR_STADIUMS: '/load/loadPopularStadiums',
+    LOAD_PRO_PRICING: '/load/loadProPricing',
     LOAD_STADIUMS_EVENTS: '/load/loadStadiumEvents',
     LOAD_STADIUM_INFO: '/load/loadStadiumInfo',
     LOAD_STADIUM_MAP: '/load/loadStadiumMap',
     LOAD_STADIUMS: '/load/loadStadiums',
     LOAD_USER_EVENTS: '/load/loadUserEvents',
     SEARCH_STADIUMS: '/load/searchStadiums',
+
+    /* PAYMENT */
+    CREATE_CHECKOUT_SESSION: '/payment/createCheckoutSession',
+    CREATE_PORTAL_SESSION: '/payment/createPortalSession',
 
     /* UPDATE */
     DELETE_LOG: '/update/deleteLog',
@@ -72,6 +77,7 @@ export const ROUTES = {
     LOAD_USER_STADIUMS: '/user/loadUserStadiums',
     LOAD_USER_VISITS: '/user/loadUserVisits',
     LOAD_USER_WISHLIST: '/user/loadUserWishlist',
+    REFRESH_TOKEN: '/user/refreshToken',
     SAVE_FAVORITE_STADIUMS: '/user/saveFavoriteStadiums',
     SEND_PASSWORD_RESET: '/user/sendPasswordReset'
 };

@@ -1,5 +1,6 @@
 const db = require('../database/connection.js');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const { getStadiumId, buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
 const { handleUpdateAchievementProgress } = require('./updateController.js');
@@ -464,6 +465,31 @@ const handleLoadUserWishlist = async (req, res) => {
     }
 };
 
+/*  refreshToken  */
+const handleRefreshToken = async (req, res) => {
+    const { userId } = req.user;
+
+    try {
+        const [[user]] = await db.execute(
+            'SELECT user_id, username, email, profile_pic, is_pro FROM users WHERE user_id = ?',
+            [userId]
+        );
+
+        if (!user) return res.status(404).json({ error: 'User not found' });
+
+        const token = jwt.sign(
+            { userId: user.user_id, username: user.username, email: user.email, profilePic: user.profile_pic, isPro: user.is_pro },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+
+        res.json({ token });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 /*  saveFavoriteStadiums  */
 const handleSaveFavoriteStadiums = async (req, res) => {
     const { stadiumNames } = req.body;
@@ -572,4 +598,4 @@ const handleSendPasswordReset = async (req, res) => {
     }
 };
 
-module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserStadiums, handleLoadUserVisits, handleLoadUserWishlist, handleSaveFavoriteStadiums, handleSendPasswordReset };
+module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserStadiums, handleLoadUserVisits, handleLoadUserWishlist, handleRefreshToken, handleSaveFavoriteStadiums, handleSendPasswordReset };

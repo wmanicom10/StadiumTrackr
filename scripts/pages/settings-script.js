@@ -4,6 +4,7 @@ import { createToast, debounce, isLoggedIn, setupSearchAutocomplete, shakeOrRepl
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { authAPI } from "../api/auth.js";
 import { loadAPI } from "../api/load.js";
+import { paymentAPI } from "../api/payment.js";
 import { updateAPI } from "../api/update.js";
 import { userAPI } from "../api/user.js";
 
@@ -571,6 +572,15 @@ document.getElementById('favorite-stadiums-save-button').addEventListener('click
 });
 
 window.onload = async () => {
+    try {
+        const result = await userAPI.refreshToken();
+        if (result.token) {
+            localStorage.setItem('token', result.token);
+        }
+    } catch (err) {
+        console.error(err);
+    }
+    
     if (!isLoggedIn()) {
         window.location.replace('index.html');
         return;
@@ -606,3 +616,21 @@ window.onload = async () => {
         sessionStorage.removeItem('toast');
     }
 };
+
+const token = localStorage.getItem('token');
+if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')));
+    if (payload.isPro) {
+        document.getElementById('manage-subscription-button').style.display = 'block';
+    }
+}
+
+document.getElementById('manage-subscription-button').addEventListener('click', async () => {
+    try {
+        const result = await paymentAPI.createPortalSession();
+        window.location.href = result.url;
+    } catch (err) {
+        console.error(err);
+        shakeOrReplace(err.message || 'Failed to open subscription portal.');
+    }
+});

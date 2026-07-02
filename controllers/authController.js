@@ -46,7 +46,7 @@ const handleLogin = async (req, res) => {
 
     try {
         const [[user]] = await db.execute(
-            'SELECT user_id, username, password, email, profile_pic FROM users WHERE username = ?',
+            'SELECT user_id, username, password, email, profile_pic, is_pro FROM users WHERE username = ?',
             [username]
         );
 
@@ -60,7 +60,7 @@ const handleLogin = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: user.user_id, username: user.username, email: user.email, profilePic: user.profile_pic },
+            { userId: user.user_id, username: user.username, email: user.email, profilePic: user.profile_pic, isPro: user.is_pro },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );
@@ -164,7 +164,7 @@ const handleSignup = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: result.insertId, username, email, profilePic: 'default.png' },
+            { userId: result.insertId, username, email, profilePic: 'default.png', isPro: false },
             process.env.JWT_SECRET,
             { expiresIn: '7d' }
         );

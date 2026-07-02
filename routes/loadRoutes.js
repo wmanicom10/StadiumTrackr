@@ -11,6 +11,7 @@ router.post('/loadFeaturedEvents', loadController.handleLoadFeaturedEvents);
 router.post('/loadMapStadiums', loadController.handleLoadMapStadiums);
 router.post('/loadPhotoCredits', loadController.handleLoadPhotoCredits);
 router.post('/loadPopularStadiums', loadController.handleLoadPopularStadiums);
+router.post('/loadProPricing', loadController.handleLoadProPricing);
 router.post('/loadStadiumEvents', loadController.handleLoadStadiumEvents);
 router.post('/loadStadiumInfo', optionalAuth, loadController.handleLoadStadiumInfo);
 router.post('/loadStadiumMap', loadController.handleLoadStadiumMap);
