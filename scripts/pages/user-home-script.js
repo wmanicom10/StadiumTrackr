@@ -60,7 +60,7 @@ async function loadActivityTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-                                        const payload = JSON.parse(atob(base64));
+    const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Activity - StadiumTrackr";
 
@@ -207,11 +207,50 @@ async function loadHomeTab() {
     document.getElementById('user-home-stadium-map').style.display = 'block';
 }
 
+async function loadListsTab(tab) {
+    const token = localStorage.getItem('token');
+    if (!token) return
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
+    const username = payload.username || '';
+    document.title = username + "'s Lists - StadiumTrackr";
+
+    const elements = {
+        sortFilter: document.getElementById('lists-sort-filter'),
+        clearFiltersButton: document.getElementById('lists-clear-filters'),
+        stadiumsList: document.getElementById('user-home-lists'),
+        stadiumsPageSelector: document.getElementById('lists-page-selector'),
+        noStadiumsContainer: document.getElementById('user-home-no-lists-container'),
+    }
+
+    setupListsFilterHandlers(elements, tab);
+
+    const params = new URLSearchParams(window.location.search);
+    const sort = params.get('sort') || 'updated-desc';
+
+    syncSelectFromURL('lists-sort-filter', sort);
+
+    document.getElementById('user-home-lists-tab-container').style.display = 'flex';
+
+    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
+    const result = await userAPI.loadUserLists(sort);
+    const lists = result.userLists;
+
+    renderListsTab(lists, elements);
+
+    userHomeHeaderSkeleton.style.display = 'none';
+    userHomeHeader.style.display = 'flex';
+    document.getElementById('user-home-lists-skeleton').style.display = 'none';
+    if (lists.length > 0) document.getElementById('user-home-lists').style.display = 'flex';
+    document.getElementById('user-home-lists-filters-container-skeleton').style.display = 'none';
+    document.getElementById('user-home-lists-filters-container').style.display = 'block';
+}
+
 async function loadStadiumsTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-                                        const payload = JSON.parse(atob(base64));
+    const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Stadiums - StadiumTrackr";
 
@@ -293,6 +332,9 @@ async function loadTab(tab) {
             break;
         case "wishlist":
             await loadWishlistTab(tab);
+            break;
+        case "lists":
+            await loadListsTab(tab);
             break;
         case "activity":
             await loadActivityTab(tab);
@@ -1065,6 +1107,100 @@ function renderHomeTabWishlist(stadiums) {
     });
 }
 
+function renderListsTab(lists, elements) {
+    if (lists.length === 0) {
+        elements.stadiumsList.style.display = 'none';
+        elements.stadiumsPageSelector.style.display = 'none';
+        elements.noStadiumsContainer.style.display = 'block';
+    } else {
+        elements.stadiumsList.style.display = 'flex';
+        elements.stadiumsPageSelector.style.display = 'flex';
+        elements.noStadiumsContainer.style.display = 'none';
+
+        const perPage = 18;
+        const pageCount = Math.ceil(lists.length / perPage);
+        let currentPage = Math.min(getPageFromURL(), pageCount);
+
+        function renderPage(page) {
+            elements.stadiumsList.innerHTML = '';
+            const start = (page - 1) * perPage;
+            const end = start + perPage;
+            lists.slice(start, end).forEach(list => {
+                const userHomeList = document.createElement('div');
+                userHomeList.classList.add('user-home-list');
+
+                const userHomeListHeader = document.createElement('div');
+                userHomeListHeader.classList.add('user-home-list-header');
+
+                const userHomeListHeaderName = document.createElement('a');
+                userHomeListHeaderName.classList.add('user-home-list-header-name');
+                userHomeListHeaderName.href = `list.html?mode=view&id=${list.list_id}`;
+                userHomeListHeaderName.textContent = list.list_name;
+
+                const userHomeListHeaderCount = document.createElement('span');
+                userHomeListHeaderCount.classList.add('user-home-list-header-count');
+                userHomeListHeaderCount.textContent = list.stadium_count + ' Stadiums'
+
+                userHomeListHeader.appendChild(userHomeListHeaderName);
+                userHomeListHeader.appendChild(userHomeListHeaderCount)
+
+                userHomeList.appendChild(userHomeListHeader);
+
+                const userHomeListStadiumsContainer = document.createElement('div');
+                userHomeListStadiumsContainer.classList.add('user-home-list-stadiums-container');
+
+                const userHomeListLink = document.createElement('a');
+                userHomeListLink.href = `list.html?mode=view&id=${list.list_id}`;
+
+                const userHomeListImages = document.createElement('div');
+                userHomeListImages.classList.add('user-home-list-images');
+
+                const totalSlots = 5;
+                const imagesToShow = list.images.slice(0, 5);
+
+                imagesToShow.forEach((image, index) => {
+                    const userHomeListImage = document.createElement('img');
+                    userHomeListImage.classList.add('user-home-list-image');
+                    userHomeListImage.src = STADIUM_IMAGE_PATH + image;
+                    userHomeListImage.style.zIndex = totalSlots - index;
+                    userHomeListImage.style.position = 'relative';
+                    userHomeListImages.appendChild(userHomeListImage);
+                });
+
+                for (let i = 0; i < totalSlots - imagesToShow.length; i++) {
+                    const userHomeListImageEmpty = document.createElement('div');
+                    userHomeListImageEmpty.classList.add('user-home-list-image-empty');
+                    userHomeListImageEmpty.style.zIndex = totalSlots - imagesToShow.length - i;
+                    userHomeListImageEmpty.style.position = 'relative';
+                    userHomeListImages.appendChild(userHomeListImageEmpty);
+                }
+
+                userHomeListLink.appendChild(userHomeListImages)
+
+                const userHomeListEditListButton = document.createElement('a');
+                userHomeListEditListButton.classList.add('user-home-list-edit-list-button');
+                userHomeListEditListButton.href = `list.html?mode=edit&id=${list.list_id}`;
+
+                const editImg = document.createElement('img');
+                editImg.src = ICON_IMAGE_PATH + 'edit.png';
+
+                userHomeListEditListButton.appendChild(editImg);
+
+                userHomeListStadiumsContainer.appendChild(userHomeListLink);
+                userHomeListStadiumsContainer.appendChild(userHomeListEditListButton);
+
+                userHomeList.appendChild(userHomeListStadiumsContainer);
+
+                elements.stadiumsList.appendChild(userHomeList);
+
+            });
+        }
+
+        renderPage(currentPage);
+        renderPageNumbers(elements, currentPage, pageCount);
+    }
+}
+
 function renderVisitsTab(stadiums, elements) {
     if (stadiums.length === 0) {
         elements.stadiumsList.style.display = 'none';
@@ -1089,7 +1225,7 @@ function renderVisitsTab(stadiums, elements) {
         ).map(([year, stadiums]) => ({ year, stadiums }))
         .sort((a, b) => sort === 'visited-asc' ? a.year - b.year : b.year - a.year);
 
-        const perPage = 18;
+        const perPage = 10;
         const pageCount = Math.ceil(stadiums.length / perPage);
         let currentPage = Math.min(getPageFromURL(), pageCount);
 
@@ -1359,6 +1495,30 @@ function setupFilterHandlers(elements, tab) {
         else {
             elements.sortFilter.value = 'added-desc';
         }
+        const params = new URLSearchParams();
+        params.set('tab', tab);
+        window.location.search = params.toString();
+    });
+}
+
+function setupListsFilterHandlers(elements, tab) {
+    const getFilters = () => ({
+        sort: elements.sortFilter.value
+    });
+
+    function applyFilter() {
+        const { sort } = getFilters();
+        const params = new URLSearchParams();
+        params.set('tab', tab);
+        params.set('page', '1');
+        params.set('sort', sort);
+        window.location.search = params.toString();
+    }
+
+    elements.sortFilter.addEventListener('change', applyFilter);
+    
+    elements.clearFiltersButton.addEventListener('click', () => {
+        elements.sortFilter.value = 'updated-desc';
         const params = new URLSearchParams();
         params.set('tab', tab);
         window.location.search = params.toString();

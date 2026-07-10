@@ -125,6 +125,7 @@
                                 <a href="user-home.html?tab=visits">Visits</a>
                                 <a href="user-home.html?tab=events">Events</a>
                                 <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=lists">Lists</a>
                                 <a href="user-home.html?tab=activity">Activity</a>
                                 <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="settings.html">Settings</a>
@@ -183,6 +184,7 @@
                                 <a href="user-home.html?tab=visits">Visits</a>
                                 <a href="user-home.html?tab=events">Events</a>
                                 <a href="user-home.html?tab=wishlist">Wishlist</a>
+                                <a href="user-home.html?tab=lists">Lists</a>
                                 <a href="user-home.html?tab=activity">Activity</a>
                                 <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="settings.html">Settings</a>
@@ -229,6 +231,7 @@
                             <h3 class="user-home-nav-bar-tab" data-tab="visits">Visits</h3>
                             <h3 class="user-home-nav-bar-tab" data-tab="events">Events</h3>
                             <h3 class="user-home-nav-bar-tab" data-tab="wishlist">Wishlist</h3>
+                            <h3 class="user-home-nav-bar-tab" data-tab="lists">Lists</h3>
                             <h3 class="user-home-nav-bar-tab" data-tab="activity">Activity</h3>
                             <h3 class="user-home-nav-bar-tab" data-tab="achievements">Achievements</h3>
                         </div>
@@ -747,6 +750,60 @@
                             </div>
                         </div>
                         <div id="user-home-wishlist-page-selector"></div>
+                    </div>
+
+                    <div class="user-home-tab-container" id="user-home-lists-tab-container">
+                        <div id="user-home-lists-skeleton">
+                            <div class="user-home-list-skeleton"></div>
+                            <div class="user-home-list-skeleton"></div>
+                            <div class="user-home-list-skeleton"></div>
+                            <div class="user-home-list-skeleton"></div>
+                            <div class="user-home-list-skeleton"></div>
+                            <div class="user-home-list-skeleton"></div>
+                        </div>
+                        <div id="user-home-lists"></div>
+                        <div id="user-home-no-lists-container">
+                            <h3>No Lists Found</h3>
+                            <p>You don't have any lists.</p>
+                        </div>
+                        <div id="user-home-lists-filters-container-skeleton"></div>
+                        <div id="user-home-lists-filters-container">
+                            <h3>Filters</h3>
+                            <div id="user-home-lists-filters">
+                                <div class="filter-group">
+                                    <label class="filter-label">Sort By:</label>
+                                    <div class="custom-select-wrapper">
+                                        <div class="custom-select-trigger" data-select="sort">
+                                            <span class="custom-select-value">Updated (Newest)</span>
+                                            <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                            </svg>
+                                        </div>
+                                        <div class="custom-select-dropdown">
+                                            <div class="custom-select-option selected" data-value="updated-desc">Updated (Newest)</div>
+                                            <div class="custom-select-option" data-value="updated-asc">Updated (Earliest)</div>
+                                            <div class="custom-select-option" data-value="created-desc">Created (Newest)</div>
+                                            <div class="custom-select-option" data-value="created-asc">Created (Earliest)</div>
+                                            <div class="custom-select-option" data-value="name-asc">List Name (A-Z)</div>
+                                            <div class="custom-select-option" data-value="name-desc">List Name (Z-A)</div>
+                                        </div>
+                                        <select class="filter-select" id="lists-sort-filter">
+                                            <option value="updated-desc">Updated (Newest)</option>
+                                            <option value="updated-asc">Updated (Earliest)</option>
+                                            <option value="created-desc">Created (Newest)</option>
+                                            <option value="created-asc">Created (Earliest)</option>
+                                            <option value="name-asc">List Name (A-Z)</option>
+                                            <option value="name-desc">List Name (Z-A)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <button class="clear-filters" id="lists-clear-filters">Clear Filters</button>
+                                </div>
+                                <a href="list.html?mode=create" id="user-home-create-list-button">Create a new list</a>
+                            </div>
+                        </div>
+                        <div id="lists-page-selector"></div>
                     </div>
 
                     <div class="user-home-tab-container" id="user-home-activity-tab-container">

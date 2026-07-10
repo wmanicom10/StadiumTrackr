@@ -76,7 +76,7 @@ async function setView() {
     document.getElementById('activity-skeleton').style.display = 'none';
     document.getElementById('activity-list').style.display = 'flex';
     document.getElementById('user-activity-welcome-text-skeleton').style.display = 'none';
-    document.getElementById('user-activity-welcome-text').style.display = 'block';
+    document.getElementById('user-activity-welcome-text').style.display = 'inline';
     document.getElementById('activity-filter-bar-skeleton').style.display = 'none';
     document.getElementById('activity-filter-bar').style.display = 'block';
 }

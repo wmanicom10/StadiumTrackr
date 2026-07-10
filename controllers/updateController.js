@@ -7,6 +7,36 @@ const PROFILE_PIC_DIR = process.env.PROFILE_PIC_DIR;
 const bcrypt = require('bcryptjs');
 const sharp = require('sharp');
 
+/*  createUserList  */
+const handleCreateUserList = async (req, res) => {
+    const { listName, listDescription, isRanked, stadiums } = req.body;
+    const { userId } = req.user;
+
+    if (!userId || !listName) return res.status(400).json({ error: 'User id and list name are required' });
+
+    const connection = await db.getConnection();
+    try {
+        await connection.beginTransaction();
+
+        const [result] = await connection.execute('INSERT INTO user_lists (user_id, list_name, list_description, is_ranked) VALUES (?, ?, ?, ?)', [userId, listName, listDescription || null, isRanked]);
+
+        const listId = result.insertId;
+
+        for (const stadium of stadiums) {
+            await connection.execute('INSERT INTO user_list_stadiums (list_id, stadium_id, order_index, note) VALUES (?, ?, ?, ?)', [listId, stadium.stadiumId, stadium.orderIndex, stadium.note || null]);
+        }
+
+        await connection.commit();
+        res.json({ listId });
+    } catch (err) {
+        await connection.rollback();
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        connection.release();
+    }
+};
+
 /*  deleteLog  */
 const handleDeleteLog = async (req, res) => {
     const { visitId } = req.body;
@@ -24,6 +54,28 @@ const handleDeleteLog = async (req, res) => {
         res.json({ rows });
     } catch (err) {
         console.error('Error in handleDeleteLog:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  deleteUserList  */
+const handleDeleteUserList = async (req, res) => {
+    const { listId } = req.body;
+    const { userId } = req.user;
+
+    if (!listId || !userId) {
+        return res.status(400).json({ error: 'List id and user id are required' });
+    }
+
+    try {
+        const [[list]] = await db.execute('SELECT list_id FROM user_lists WHERE list_id = ? AND user_id = ?', [listId, userId]);
+        if (!list) return res.status(403).json({ error: 'Unauthorized' });
+
+        await db.execute('DELETE FROM user_lists WHERE list_id = ?', [listId]);
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Error in handleDeleteUserList:', err);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
@@ -380,6 +432,48 @@ const handleUpdateProfilePic = async (req, res) => {
     }
 };
 
+/*  updateUserList  */
+const handleUpdateUserList = async (req, res) => {
+    const { listId, listName, listDescription, isRanked, stadiums } = req.body;
+    const { userId } = req.user;
+
+    if (!listId || !userId) {
+        return res.status(400).json({ error: 'List id and user id are required' });
+    }
+
+    const connection = await db.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        const [[list]] = await connection.execute('SELECT list_id FROM user_lists WHERE list_id = ? AND user_id = ?', [listId, userId]);
+        if (!list) {
+            connection.release();
+            return res.status(403).json({ error: 'Unauthorized' });
+        }
+
+        await connection.execute('UPDATE user_lists SET list_name = ?, list_description = ?, is_ranked = ?, updated_at = NOW() WHERE list_id = ?', [listName, listDescription, isRanked, listId]);
+
+        await connection.execute('DELETE FROM user_list_stadiums WHERE list_id = ?', [listId]);
+
+        for (const stadium of stadiums) {
+            await connection.execute(
+                'INSERT INTO user_list_stadiums (list_id, stadium_id, order_index, note) VALUES (?, ?, ?, ?)',
+                [listId, stadium.stadiumId, stadium.orderIndex, stadium.note || null]
+            );
+        }
+
+        await connection.commit();
+        res.json({ success: true });
+    } catch (err) {
+        await connection.rollback();
+        console.error('Error in handleUpdateUserList:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    } finally {
+        connection.release();
+    }
+};
+
 /*  updateUsername  */
 const handleUpdateUsername = async (req, res) => {
     const { newUsername } = req.body;
@@ -425,10 +519,6 @@ const handleUpdateUserStadium = async (req, res) => {
     }
 
     try {
-        if (!userId || !stadiumId) {
-            return res.status(404).json({ error: 'User or stadium not found' });
-        }
-
         if (!isVisited) {
             const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on) VALUES (?, ?, NOW())', [stadiumId, userId]);
 
@@ -511,4 +601,4 @@ const handleResetPassword = async (req, res) => {
     }
 };
 
-module.exports = { handleDeleteLog, handleEditLog, handleUpdateAchievementProgress, handleUpdateEmail, handleUpdatePassword, upload, handleUpdateProfilePic, handleUpdateUsername, handleUpdateUserStadium, handleUpdateUserWishlist, handleResetPassword };
+module.exports = { handleCreateUserList, handleDeleteLog, handleDeleteUserList, handleEditLog, handleUpdateAchievementProgress, handleUpdateEmail, handleUpdatePassword, upload, handleUpdateProfilePic, handleUpdateUserList, handleUpdateUsername, handleUpdateUserStadium, handleUpdateUserWishlist, handleResetPassword };

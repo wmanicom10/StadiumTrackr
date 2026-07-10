@@ -109,6 +109,7 @@ async function loadStadiumInfo(id) {
 
     } catch (error) {
         console.error(error);
+        shakeOrReplace(error.message || 'Failed to load stadium info.')
     }
 }
 

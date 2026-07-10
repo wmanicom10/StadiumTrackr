@@ -2045,7 +2045,7 @@ footer {
     animation: iconSwap 0.4s ease;
 }
 
-#stadiums-page-selector, #user-home-stadiums-page-selector, #visits-page-selector, #user-home-events-page-selector, #user-home-wishlist-page-selector, #activity-page-selector, #achievements-page-selector {
+#stadiums-page-selector, #user-home-stadiums-page-selector, #visits-page-selector, #user-home-events-page-selector, #user-home-wishlist-page-selector, #activity-page-selector, #achievements-page-selector, #lists-page-selector, #view-list-page-selector {
     display: flex;
     width: 65%;
     justify-content: center;
@@ -2148,6 +2148,7 @@ footer {
 }
 
 #stadium-name {
+    display: inline;
     font-size: 2rem;
     font-weight: normal;
     line-height: 1.4;
@@ -2607,7 +2608,7 @@ footer {
     align-content: flex-start;
 }
 
-#user-home-no-stadiums-container, #no-visits-container, #user-home-no-wishlist-container, #user-home-no-activity-container, #user-home-no-achievements-container, #user-home-no-events-container, #no-activity-container {
+#user-home-no-stadiums-container, #no-visits-container, #user-home-no-wishlist-container, #user-home-no-activity-container, #user-home-no-achievements-container, #user-home-no-events-container, #no-activity-container, #user-home-no-lists-container, #view-list-no-stadiums-container, #edit-list-no-stadiums, #create-list-no-stadiums {
     display: none;
     width: 65%;
     text-align: center;
@@ -2618,14 +2619,14 @@ footer {
     margin-top: 25px;
 }
 
-#user-home-no-stadiums-container h3, #no-visits-container h3, #user-home-no-wishlist-container h3, #user-home-no-activity-container h3, #user-home-no-achievements-container h3, #user-home-no-events-container h3, #no-activity-container h3 {
+#user-home-no-stadiums-container h3, #no-visits-container h3, #user-home-no-wishlist-container h3, #user-home-no-activity-container h3, #user-home-no-achievements-container h3, #user-home-no-events-container h3, #no-activity-container h3, #user-home-no-lists-container h3, #view-list-no-stadiums-container h3, #edit-list-no-stadiums h3, #create-list-no-stadiums h3 {
     font-size: 1.4rem;
     font-weight: 400;
     margin: 0 0 15px;
     color: var(--color-text);
 }
 
-#user-home-no-stadiums-container p, #no-visits-container p, #user-home-no-wishlist-container p, #user-home-no-activity-container p, #user-home-no-achievements-container p, #user-home-no-events-container p, #no-activity-container p {
+#user-home-no-stadiums-container p, #no-visits-container p, #user-home-no-wishlist-container p, #user-home-no-activity-container p, #user-home-no-achievements-container p, #user-home-no-events-container p, #no-activity-container p, #user-home-no-lists-container p, #view-list-no-stadiums-container p, #edit-list-no-stadiums p, #create-list-no-stadiums p {
     font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0 0 30px;
@@ -2905,8 +2906,6 @@ footer {
 .user-home-event-header {
     display: flex;
     align-items: center;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--color-primary-20);
 }
 
 .user-home-event-header-name {
@@ -3036,6 +3035,192 @@ footer {
     width: 100%;
     height: 38px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-lists-tab-container {
+    width: 100%;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#user-home-lists {
+    display: none;
+    width: 65%;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.user-home-list {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+}
+
+.user-home-list-header-name {
+    margin: 0;
+    font-weight: normal;
+    margin-right: 10px;
+    font-size: 1.1rem;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    line-height: 1.4;
+}
+
+.user-home-list-header-name:hover {
+    color: var(--color-blue);
+}
+
+.user-home-list-header-count {
+    color: var(--color-text-muted);
+}
+
+.user-home-list-stadiums-container {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.user-home-list-images {
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: border-color 0.3s ease;
+    flex-wrap: wrap;
+}
+
+.user-home-list-images:hover {
+    border-color: var(--color-blue);
+}
+
+.user-home-list-image {
+    width: 178px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 15px;
+    flex-shrink: 0;
+    margin-left: -71px;
+    position: relative;
+}
+
+.user-home-list-image:first-child {
+    margin-left: 0;
+}
+
+.user-home-list-image-empty {
+    background: #272B38;
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 15px;
+    width: 178px;
+    height: 100px;
+    margin-left: -71px;
+    position: relative;
+}
+
+.user-home-list-image-empty:first-child {
+    margin-left: 0;
+}
+
+.user-home-list-edit-list-button {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 10px;
+    color: #4facfe;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    width: 40px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 25px;
+}
+
+.user-home-list-edit-list-button:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px) translateZ(0);
+}
+
+.user-home-list-edit-list-button img {
+    height: 15px;
+}
+
+#user-home-lists-filters-container {
+    display: none;
+    width: 30%;
+}
+
+#user-home-lists-filters-container h3 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.3rem;
+}
+
+#user-home-lists-filters {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#user-home-lists-filters .filter-group {
+    justify-content: space-between;
+}
+
+#user-home-lists-filters .filter-label {
+    width: 20%;
+    margin: 0;
+    color: var(--color-text);
+}
+
+#user-home-lists-filters .custom-select-wrapper {
+    width: 72%;
+}
+
+#user-home-lists-filters .custom-select-trigger {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-lists-filters #lists-clear-filters {
+    margin-right: 15px;
+    width: 100%;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#user-home-create-list-button {
+    padding: 10px 20px 8px;
+    background: #222C40;
+    border: 1px solid var(--color-primary-30);
+    border-radius: 10px;
+    color: var(--color-blue);
+    font-size: 0.9rem;
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-right: 15px;
+    width: 100%;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+#user-home-create-list-button:hover {
+    background: #273A56;
+    transform: translateY(-3px) translateZ(0);
 }
 
 #user-home-activity-tab-container {
@@ -4068,6 +4253,10 @@ footer {
 }
 
 /*  User Activity  */
+#user-activity-welcome-text-container {
+    width: 100%;
+}
+
 #user-activity-welcome-text {
     display: none;
     text-align: left;
@@ -4079,7 +4268,6 @@ footer {
     -webkit-text-fill-color: transparent;
     background-clip: text;
     margin: 0;
-    width: 100%;
 }
 
 #activity-list-container {
@@ -6652,7 +6840,7 @@ footer {
     object-fit: cover;
 }
 
-.pro-feature:first-child img, .pro-feature:nth-child(5) img {
+.pro-feature:nth-child(5) img {
     height: 30px;
 }
 
@@ -6736,6 +6924,879 @@ footer {
     text-decoration: none;
     display: block;
     width: 117px;
+}
+
+/*  List Page  */
+#list-container {
+    width: 1100px;
+    margin: 0 auto;
+}
+
+#view-list-container, #edit-list-container, #create-list-container {
+    display: none;
+}
+
+#view-list-container {
+    padding-top: 200px;
+    display: none;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#list-name-container {
+    width: 65%;
+}
+
+#view-list-name {
+    display: inline;
+    font-size: 2rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+#view-list-description {
+    margin: 10px 0 0;
+}
+
+#view-list-stadiums {
+    margin-top: 25px;
+    width: 65%;
+    display: none;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 19px;
+    align-content: flex-start;
+}
+
+.user-stadium-rank {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+}
+
+#view-list-filters-container {
+    display: none;
+    width: 30%;
+    margin-top: 25px;
+}
+
+#view-list-filters-container h3 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1.3rem;
+}
+
+#view-list-filters {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#view-list-filters .filter-group {
+    justify-content: space-between;
+}
+
+#view-list-filters .filter-label {
+    width: 20%;
+    margin: 0;
+    color: var(--color-text);
+}
+
+#view-list-filters .custom-select-wrapper {
+    width: 72%;
+}
+
+#view-list-filters .custom-select-trigger {
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#list-view-grid, #list-view-grid img {
+    height: 24px;
+}
+
+#list-view-list, #list-view-list img {
+    height: 20px;
+}
+
+.list-view-button {
+    transition: transform 0.3s ease;
+}
+
+.list-view-button:hover {
+    transform: translateY(-2px);
+}
+
+#view-list-button-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#view-list-clear-filters {
+    width: 100%;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+#view-list-button-container img {
+    cursor: pointer;
+}
+
+#edit-list-button {
+    width: 100%;
+    height: 38px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    padding: 10px 20px;
+    text-align: center;
+    background: #222C40;
+    border: 1px solid var(--color-primary-30);
+    border-radius: 10px;
+    color: var(--color-blue);
+    font-size: 0.9rem;
+    text-decoration: none;
+    font-family: "Inter", sans-serif;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#edit-list-button:hover {
+    background: #273A56;
+    transform: translateY(-2px);  
+}
+
+.list-view-stadium {
+    display: flex;
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 15px;
+    padding: 16px 20px;
+    width: 100%;
+}
+
+.list-view-ranked-badge {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.list-view-stadium-image {
+    width: 178px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-right: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    flex-shrink: 0;
+}
+
+.list-view-stadium-info-header {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.list-view-stadium-name {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    width: fit-content;
+    margin: 0;
+    font-weight: normal;
+    margin-right: 10px;
+}
+
+.list-view-stadium-name:hover {
+    color: var(--color-blue);
+}
+
+.list-view-stadium-location, .list-view-stadium-note {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    width: fit-content;
+    margin: 0;
+    font-weight: normal;
+}
+
+.list-view-stadium-note {
+    margin-top: 20px;
+}
+
+#edit-list-header, #create-list-header {
+    font-size: 1.8rem;
+    font-weight: normal;
+    margin: 40px 0 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
+#create-list-content-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+#edit-list-content-container {
+    display: none;
+    justify-content: space-between;
+}
+
+#edit-list-stadiums, #create-list-stadiums {
+    width: 65%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 19px;
+    align-content: flex-start;
+}
+
+#create-list-stadiums {
+    display: none;
+}
+
+.edit-list-stadium, .create-list-stadium {
+    display: flex;
+    align-items: center;
+    background: #272B38;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 15px;
+    padding: 16px 20px;
+    width: 100%;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    cursor: grab;
+}
+
+.edit-list-stadium:active, .create-list-stadium:active {
+    cursor: grabbing;
+}
+
+.edit-list-rank-badge, .create-list-rank-badge {
+    margin-right: 20px;
+}
+
+.edit-list-stadium-image, .create-list-stadium-image {
+    width: 178px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 15px;
+    margin-right: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    flex-shrink: 0;
+}
+
+.edit-list-stadium-info-container, .create-list-stadium-info-container {
+    width: 400px;
+    margin-right: 25px;
+}
+
+.edit-list-stadium-info-header, .create-list-stadium-info-header {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    gap: 8px;
+}
+
+.edit-list-stadium-name, .create-list-stadium-name {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    width: fit-content;
+    margin: 0;
+    font-weight: normal;
+}
+
+.edit-list-stadium-name:hover, .create-list-stadium-name:hover {
+    color: var(--color-blue);
+}
+
+.edit-list-stadium-location, .create-list-stadium-location {
+    color: var(--color-text-muted);
+    font-size: 1rem;
+    width: fit-content;
+    margin: 0;
+    font-weight: normal;
+}
+
+.edit-list-stadium-note, .create-list-stadium-note {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.edit-list-note-button, .create-list-note-button {
+    margin-top: 20px;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 10px;
+    color: #4facfe;
+    height: 38px;
+    width: 130px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.edit-list-note-button:hover, .create-list-note-button:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px) translateZ(0);
+}
+
+.edit-list-delete-button, .create-list-delete-button {
+    min-width: 40px;
+    height: 38px;
+    border-radius: 10px;
+    background: rgba(255, 79, 79, 0.2);
+    border: 1px solid rgba(255, 79, 79, 0.4);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    padding-top: 4px;
+}
+
+.edit-list-delete-button img, .create-list-delete-button img {
+    height: 15px;
+}
+
+.edit-list-delete-button:hover, .create-list-delete-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#edit-list-info, #create-list-info {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+#edit-list-info label, #create-list-info label {
+    font-size: 0.9rem;
+}
+
+#edit-list-name, #edit-list-description, #create-list-name, #create-list-description {
+    width: 100%;
+    height: 40px;
+    font-size: 0.9rem;
+    padding-left: 15px;
+    border-radius: 10px;
+    background: #272B38;
+    color: var(--color-text);
+    z-index: 10;
+    box-shadow: var(--shadow-default);
+    border: 1px solid var(--color-primary-20);
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+#edit-list-name::placeholder, #edit-list-description::placeholder,
+#create-list-name::placeholder, #create-list-description::placeholder {
+    color: var(--color-text-muted);
+}
+
+#edit-list-name:focus, #edit-list-description:focus,
+#create-list-name:focus, #create-list-description:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
+}
+
+#edit-list-description, #create-list-description {
+    height: 121px;
+    padding: 15px;
+    resize: none;
+    font-family: "Inter", sans-serif;
+    scrollbar-width: none;
+}
+
+#edit-list-ranked-container, #create-list-ranked-container {
+    display: flex;
+    align-items: center;
+}
+
+#edit-list-ranked, #create-list-ranked {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-primary-20);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+    margin-right: 15px;
+}
+
+#edit-list-ranked:checked, #create-list-ranked:checked {
+    background: var(--color-primary-20);
+    border-color: var(--color-primary-30);
+}
+
+#edit-list-ranked:focus, #create-list-ranked:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
+}
+
+#edit-list-ranked:checked::after, #create-list-ranked:checked::after {
+    content: '✓';
+    position: absolute;
+    color: var(--color-blue);
+    font-size: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#edit-list-search-field, #create-list-search-field {
+    height: 38px;
+    border-radius: 10px;
+    padding-left: 15px;
+    z-index: 10;
+    width: 100%;
+    box-shadow: var(--shadow-default);
+    background: #272B38;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-primary-20);
+    color: var(--color-text);
+    font-size: 0.9rem;
+    margin-top: 20px;
+}
+
+#edit-list-search-field:focus, #create-list-search-field:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
+}
+
+#edit-list-search-field::placeholder, #create-list-search-field::placeholder {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+#edit-list-search-wrapper, #create-list-search-wrapper {
+    position: relative;
+}
+
+#edit-list-autocomplete-list, #create-list-autocomplete-list {
+    width: 100%;
+    background: #272B38;
+    border: 1px solid var(--color-primary-30);
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    margin: 8px auto 0;
+    z-index: 1001;
+    padding: 0 !important;
+    text-align: left;
+    position: absolute;
+    top: 100%;
+    max-height: 275px;
+    overflow-y: auto;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-30) transparent;
+}
+
+#edit-list-autocomplete-list.active, #create-list-autocomplete-list.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+#edit-list-autocomplete-list::-webkit-scrollbar,
+#create-list-autocomplete-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+#edit-list-autocomplete-list::-webkit-scrollbar-track,
+#create-list-autocomplete-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#edit-list-autocomplete-list::-webkit-scrollbar-thumb,
+#create-list-autocomplete-list::-webkit-scrollbar-thumb {
+    background: var(--color-primary-30);
+    border-radius: 4px;
+}
+
+#edit-list-autocomplete-list .autocomplete-item,
+#create-list-autocomplete-list .autocomplete-item {
+    padding: 15px 20px;
+    font-size: 0.9rem;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#edit-list-autocomplete-list .autocomplete-item:hover,
+#create-list-autocomplete-list .autocomplete-item:hover {
+    background: var(--color-primary-15);
+    color: var(--color-blue);
+}
+
+#edit-list-autocomplete-list .autocomplete-item.no-results:hover,
+#create-list-autocomplete-list .autocomplete-item.no-results:hover {
+    background: transparent;
+    color: var(--color-text);
+}
+
+#edit-list-save-button, #create-list-save-button {
+    margin-top: 20px;
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 10px;
+    color: #4facfe;
+    height: 38px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+#edit-list-save-button:hover, #create-list-save-button:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#edit-list-save-button:disabled, #create-list-save-button:disabled {
+    opacity: 0.5;
+    cursor: default;
+    transform: none !important;
+}
+
+#edit-list-delete-button {
+    margin-top: 10px;
+    background: rgba(255, 79, 79, 0.2);
+    border: 1px solid rgba(255, 79, 79, 0.4);
+    border-radius: 10px;
+    color: #ff4f4f;
+    height: 38px;
+    width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+#edit-list-delete-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#edit-list-no-stadiums, #create-list-no-stadiums {
+    width: 65%;
+}
+
+#create-list-no-stadiums {
+    display: block;
+}
+
+#edit-list-stadium-menu, #create-list-stadium-menu {
+    position: fixed;
+    display: none;
+    width: 1000px;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-bg);
+    border: 1px solid var(--color-primary-30);
+    border-radius: 15px;
+    z-index: 10002;
+}
+
+#edit-list-stadium-menu-header, #create-list-stadium-menu-header {
+    width: 92%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 0 20px;
+    border-bottom: 1px solid var(--color-primary-20);
+}
+
+#edit-list-stadium-menu-header h2, #create-list-stadium-menu-header h2 {
+    font-size: 1.3rem;
+    font-weight: normal;
+    margin: 0;
+}
+
+#edit-list-stadium-menu-header h2:first-of-type,
+#create-list-stadium-menu-header h2:first-of-type {
+    visibility: hidden;
+}
+
+#edit-list-stadium-menu-header h2:nth-of-type(2),
+#create-list-stadium-menu-header h2:nth-of-type(2) {
+    color: var(--color-blue);
+}
+
+#close-edit-list-stadium-menu, #close-create-list-stadium-menu {
+    color: var(--color-text);
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    font-size: 1.5rem !important;
+}
+
+#close-edit-list-stadium-menu:hover, #close-create-list-stadium-menu:hover {
+    color: var(--color-blue);
+}
+
+#edit-list-stadium-name, #create-list-stadium-name {
+    width: 92%;
+    margin: 25px auto 0;
+    font-weight: normal;
+    font-size: 1.4rem;
+}
+
+#edit-list-stadium-location, #create-list-stadium-location {
+    color: var(--color-text-muted);
+    width: 92%;
+    margin: 10px auto 0;
+    font-weight: normal;
+    font-size: 1.1rem;
+}
+
+#edit-list-stadium-container, #create-list-stadium-container {
+    justify-content: space-between;
+    display: flex;
+    width: 92%;
+    margin: 30px auto;
+}
+
+#edit-list-stadium-image, #create-list-stadium-image {
+    width: 48%;
+    aspect-ratio: 16/9;
+    height: auto;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#edit-list-stadium-form, #create-list-stadium-form {
+    width: 48%;
+}
+
+#edit-list-stadium-note-text, #create-list-stadium-note-text {
+    font-weight: normal;
+    font-size: 1rem;
+    margin: 0;
+    color: var(--color-text-muted);
+}
+
+#edit-list-stadium-note, #create-list-stadium-note {
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--color-primary-20);
+    width: 100%;
+    height: 244px;
+    padding: 20px;
+    resize: none;
+    color: var(--color-text);
+    font-size: 1rem;
+    font-family: "Inter", sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    scrollbar-width: none;
+}
+
+#edit-list-stadium-note:focus, #create-list-stadium-note:focus {
+    outline: none;
+    border-color: rgba(79, 172, 254, 0.6);
+    box-shadow: 0 0 0 3px var(--color-primary-10);
+}
+
+#edit-list-stadium-note::placeholder, #create-list-stadium-note::placeholder {
+    color: var(--color-text-muted);
+    font-family: "Inter", sans-serif;
+}
+
+#edit-list-stadium-buttons, #create-list-stadium-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 37%;
+    margin: 0 auto 30px;
+}
+
+#edit-list-stadium-save-button, #edit-list-stadium-cancel-button,
+#create-list-stadium-save-button, #create-list-stadium-cancel-button {
+    font-weight: normal;
+    font-size: 1rem;
+    border-radius: 10px;
+    margin: 0 auto;
+    width: 160px;
+    padding: 8px 0;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#edit-list-stadium-save-button, #create-list-stadium-save-button {
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
+}
+
+#edit-list-stadium-save-button:hover, #create-list-stadium-save-button:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#edit-list-stadium-cancel-button, #create-list-stadium-cancel-button {
+    background: var(--color-danger-20);
+    border: 1px solid var(--color-danger-40);
+    color: var(--color-danger);
+}
+
+#edit-list-stadium-cancel-button:hover, #create-list-stadium-cancel-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#delete-list-menu {
+    position: fixed;
+    display: none;
+    width: 490px;
+    height: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--gradient-bg);
+    border: 1px solid var(--color-primary-30);
+    border-radius: 15px;
+    z-index: 10002;
+    text-align: center;
+    padding: 25px 0;
+}
+
+#delete-list-menu-header {
+    width: 88%;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--color-primary-20);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0 20px;
+}
+
+#delete-list-menu h2 {
+    font-size: 1.3rem;
+    font-weight: normal;
+    margin: 0;
+}
+
+#delete-list-menu h2:first-of-type {
+    width: 15px;
+}
+
+#delete-list-menu h2:nth-of-type(2) {
+    color: var(--color-blue);
+}
+
+#close-delete-list-menu {
+    color: var(--color-text);
+    cursor: pointer;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    font-size: 1.5rem !important;
+}
+
+#close-delete-list-menu:hover {
+    color: var(--color-blue);
+}
+
+#delete-list-menu p {
+    color: var(--color-text);
+    width: 75%;
+    margin: 25px auto;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.7;
+}
+
+#delete-list-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 74%;
+    margin: 25px auto 0;
+}
+
+#delete-list-cancel-button, #delete-list-delete-button {
+    font-weight: normal;
+    font-size: 1rem;
+    border-radius: 10px;
+    margin: 0 auto;
+    width: 160px;
+    padding: 8px 0;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#delete-list-cancel-button {
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
+}
+
+#delete-list-cancel-button:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#delete-list-delete-button {
+    background: var(--color-danger-20);
+    border: 1px solid var(--color-danger-40);
+    color: var(--color-danger);
+}
+
+#delete-list-delete-button:hover {
+    background: rgba(255, 79, 79, 0.25);
+    transform: translateY(-3px) translateZ(0);
 }
 
 /*  Skeleton Loading  */
@@ -6926,7 +7987,7 @@ footer {
     gap: 19px;
 }
 
-#user-home-stadiums-skeleton, #user-home-wishlist-skeleton, #user-home-achievements-skeleton {
+#user-home-stadiums-skeleton, #user-home-wishlist-skeleton, #user-home-achievements-skeleton, #view-list-stadiums-skeleton {
     width: 65%;
     display: flex;
     justify-content: start;
@@ -6934,7 +7995,11 @@ footer {
     gap: 19px;
 }
 
-#user-home-stadiums-filters-container-skeleton, #user-home-wishlist-filters-container-skeleton {
+#view-list-stadiums-skeleton {
+    margin-top: 25px;
+}
+
+#user-home-stadiums-filters-container-skeleton, #user-home-wishlist-filters-container-skeleton, #view-list-filters-container-skeleton {
     width: 330px;
     height: 302px;
     border-radius: 15px;
@@ -6945,7 +8010,12 @@ footer {
     box-shadow: var(--shadow-default);
 }
 
-#user-home-visits-skeleton, #user-home-activity-skeleton, #user-home-events-skeleton, #activity-skeleton {
+#view-list-filters-container-skeleton {
+    margin-top: 25px;
+    height: 370px;
+}
+
+#user-home-visits-skeleton, #user-home-activity-skeleton, #user-home-events-skeleton, #activity-skeleton, #user-home-lists-skeleton {
     width: 65%;
 }
 
@@ -6965,7 +8035,7 @@ footer {
     box-shadow: var(--shadow-default);
 }
 
-.user-home-visit-skeleton, .user-home-activity-skeleton, .user-home-event-skeleton, .activity-skeleton-card {
+.user-home-visit-skeleton, .user-home-activity-skeleton, .user-home-event-skeleton, .activity-skeleton-card, .user-home-list-skeleton {
     width: 715px;
     height: 270px;
     margin-bottom: 15px;
@@ -6983,6 +8053,10 @@ footer {
 
 .user-home-event-skeleton {
     height: 191px;
+}
+
+.user-home-list-skeleton {
+    height: 183px;
 }
 
 .user-home-achievement-skeleton {
@@ -7007,7 +8081,7 @@ footer {
     box-shadow: var(--shadow-default);
 }
 
-#user-home-activity-filters-container-skeleton, #user-home-achievements-filters-container-skeleton, #user-home-events-filters-container-skeleton, #activity-filter-bar-skeleton {
+#user-home-activity-filters-container-skeleton, #user-home-achievements-filters-container-skeleton, #user-home-events-filters-container-skeleton, #activity-filter-bar-skeleton, #user-home-lists-filters-container-skeleton {
     width: 330px;
     height: 189px;
     border-radius: 15px;
@@ -7020,6 +8094,10 @@ footer {
 
 #activity-filter-bar-skeleton {
     margin-top: 25px;
+}
+
+#user-home-lists-filters-container-skeleton {
+    height: 187px;
 }
 
 .user-stadium-skeleton {
@@ -7177,6 +8255,8 @@ footer {
     margin: 0 auto;
 }
 
+
+
 .setting-skeleton {
     background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
     background-size: 400% 100%;
@@ -7287,7 +8367,58 @@ footer {
     box-shadow: var(--shadow-default);
 }
 
+#list-skeleton {
+    display: flex;
+    padding-top: 241px;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+#edit-list-skeleton {
+    display: flex;
+    justify-content: space-between;
+}
+
+#edit-list-stadiums-skeleton {
+    width: 65%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 19px;
+    align-content: flex-start;
+}
+
+.edit-list-stadium-skeleton {
+    width: 715px;
+    height: 134px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
+#edit-list-info-skeleton {
+    width: 330px;
+    height: 465px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
 /*  Media Queries  */
+@media screen and (max-width: 329px) {
+    .user-home-list-images > :nth-child(3) {
+        display: none;
+    }
+}
+
 @media screen and (max-width: 355px) {
     #upload-profile-pic-button img {
         width: 18px;
@@ -7367,7 +8498,7 @@ footer {
     .event-info {
         margin-top: 20px !important;
     }
-    #filter-bar .custom-select-wrapper, #user-home-stadiums-filters .custom-select-wrapper, #user-home-visits-filters .custom-select-wrapper, #user-home-wishlist-filters .custom-select-wrapper, #user-home-activity-filters .custom-select-wrapper, #user-home-achievements-filters .custom-select-wrapper, #activity-filter-controls .custom-select-wrapper {
+    #filter-bar .custom-select-wrapper, #user-home-stadiums-filters .custom-select-wrapper, #user-home-visits-filters .custom-select-wrapper, #user-home-wishlist-filters .custom-select-wrapper, #user-home-activity-filters .custom-select-wrapper, #user-home-achievements-filters .custom-select-wrapper, #activity-filter-controls .custom-select-wrapper, #user-home-lists-filters .custom-select-wrapper, #view-list-filters .custom-select-wrapper {
         width: 65% !important;
         min-width: 0;
     }
@@ -7382,10 +8513,10 @@ footer {
         display: block;
         margin-top: 15px !important;
     }
-    #stadiums-list, #stadiums-container-skeleton, #user-home-stadiums, #user-home-stadiums-skeleton, #user-home-wishlist, #user-home-wishlist-skeleton, #user-home-achievements, #user-home-achievements-skeleton {
+    #stadiums-list, #stadiums-container-skeleton, #user-home-stadiums, #user-home-stadiums-skeleton, #user-home-wishlist, #user-home-wishlist-skeleton, #user-home-achievements, #user-home-achievements-skeleton, #view-list-stadiums, #view-list-stadiums-skeleton {
         width: 100% !important;
     }
-    #filter-bar-skeleton, #user-home-stadiums-filters-container-skeleton, #user-home-wishlist-filters-container-skeleton {
+    #filter-bar-skeleton, #user-home-stadiums-filters-container-skeleton, #user-home-wishlist-filters-container-skeleton, #view-list-filters-container-skeleton {
         height: 337px;
     }
     .user-home-achievement {
@@ -7401,6 +8532,12 @@ footer {
     .user-home-achievement-progress {
         text-align: left;
         margin-top: 15px;
+    }
+}
+
+@media screen and (max-width: 395px) {
+    .user-home-list-images > :nth-child(4) {
+        display: none;
     }
 }
 
@@ -7559,6 +8696,12 @@ footer {
     }
 }
 
+@media screen and (max-width: 462px) {
+    .user-home-list-images > :nth-child(5) {
+        display: none;
+    }
+}
+
 @media screen and (max-width: 489px) {
     .event-info {
         margin-top: 20px !important;
@@ -7650,7 +8793,6 @@ footer {
         text-align: left;
         margin-top: 10px;
     }
-    
     .achievements-skeleton-card {
         width: 100%;
         max-width: 100%;
@@ -7669,6 +8811,24 @@ footer {
     #about-numbers {
         flex-direction: column;
     }
+    .edit-list-stadium, .create-list-stadium {
+        flex-direction: column;
+        align-items: start;
+    }
+    .edit-list-stadium-info-container, .create-list-stadium-info-container {
+        margin: 0;
+        margin-top: 10px;
+        width: 100% !important;
+    }
+    .edit-list-delete-button, .create-list-delete-button {
+        margin-top: 20px;
+    }
+    .edit-list-stadium-image, .create-list-stadium-image {
+        margin: 0;
+    }
+    .edit-list-stadium-skeleton {
+        height: 291px;
+    }
 }
 
 @media screen and (max-width: 525px) {
@@ -7683,6 +8843,12 @@ footer {
     }
     #delete-account-buttons {
         width: 369px;
+    }
+}
+
+@media screen and (max-width: 528px) {
+    .user-home-list-edit-list-button {
+        display: none;
     }
 }
 
@@ -7959,34 +9125,34 @@ footer {
 }
 
 @media screen and (max-width: 763px) {
-    #user-home-stadiums-container, #user-home-wishlist-container, #user-home-visits-tab-container, #user-home-activity-tab-container, #user-home-achievements-tab-container, #user-home-events-tab-container, #activity-list-container {
+    #user-home-stadiums-container, #user-home-wishlist-container, #user-home-visits-tab-container, #user-home-activity-tab-container, #user-home-achievements-tab-container, #user-home-events-tab-container, #activity-list-container, #user-home-lists-tab-container {
         width: 100% !important;
     }
     #stadiums-list-container, #user-home-stadiums-tab-container, #user-home-wishlist-tab-container, #user-home-achievements-tab-container {
         flex-direction: column;
     }
-    #stadiums-list, #stadiums-container-skeleton, #user-home-stadiums, #user-home-stadiums-skeleton, #user-home-wishlist, #user-home-wishlist-skeleton, #user-home-achievements, #user-home-achievements-skeleton {
+    #stadiums-list, #stadiums-container-skeleton, #user-home-stadiums, #user-home-stadiums-skeleton, #user-home-wishlist, #user-home-wishlist-skeleton, #user-home-achievements, #user-home-achievements-skeleton, #view-list-stadiums, #view-list-stadiums-skeleton {
         order: 2;
         margin-top: 40px;
     }
-    #filter-bar, #filter-bar-skeleton, #user-home-stadiums-filters-container, #user-home-stadiums-filters-container-skeleton, #user-home-wishlist-filters-container, #user-home-wishlist-filters-container-skeleton, #user-home-visits-filters-container, #user-home-visits-filters-container-skeleton, #user-home-activity-filters-container, #user-home-activity-filters-container-skeleton, #user-home-achievements-filters-container, #user-home-achievements-filters-container-skeleton, #user-home-events-filters-container, #user-home-events-filters-container-skeleton, #activity-filter-bar-skeleton, #activity-filter-bar {
+    #filter-bar, #filter-bar-skeleton, #user-home-stadiums-filters-container, #user-home-stadiums-filters-container-skeleton, #user-home-wishlist-filters-container, #user-home-wishlist-filters-container-skeleton, #user-home-visits-filters-container, #user-home-visits-filters-container-skeleton, #user-home-activity-filters-container, #user-home-activity-filters-container-skeleton, #user-home-achievements-filters-container, #user-home-achievements-filters-container-skeleton, #user-home-events-filters-container, #user-home-events-filters-container-skeleton, #activity-filter-bar-skeleton, #activity-filter-bar, #user-home-lists-filters-container, #user-home-lists-filters-container-skeleton, #view-list-filters-container, #view-list-filters-container-skeleton {
         order: 1;
         width: 100% !important;
     }
-    #filter-bar .filter-group, #user-home-stadiums-filters .filter-group, #user-home-wishlist-filters .filter-group, #user-home-achievements-filters .filter-group {
+    #filter-bar .filter-group, #user-home-stadiums-filters .filter-group, #user-home-wishlist-filters .filter-group, #user-home-achievements-filters .filter-group, #view-list-filters .filter-group {
         justify-content: space-between;
         gap: 0;
     }
-    #filter-bar .filter-label, #user-home-stadiums-filters .filter-label, #user-home-wishlist-filters .filter-label, #user-home-achievements-filters .filter-label {
+    #filter-bar .filter-label, #user-home-stadiums-filters .filter-label, #user-home-wishlist-filters .filter-label, #user-home-achievements-filters .filter-label, #view-list-filters .filter-label {
         width: 100px;
     }
-    #filter-bar .custom-select-wrapper, #user-home-stadiums-filters .custom-select-wrapper, #user-home-wishlist-filters .custom-select-wrapper, #user-home-achievements-filters .custom-select-wrapper {
+    #filter-bar .custom-select-wrapper, #user-home-stadiums-filters .custom-select-wrapper, #user-home-wishlist-filters .custom-select-wrapper, #user-home-achievements-filters .custom-select-wrapper, #view-list-filters .custom-select-wrapper {
         width: 85%;
     }
-    #stadiums-page-selector, #user-home-stadiums-page-selector, #user-home-wishlist-page-selector, #achievements-page-selector {
+    #stadiums-page-selector, #user-home-stadiums-page-selector, #user-home-wishlist-page-selector, #achievements-page-selector, #view-list-page-selector {
         order: 3;
     }
-    #user-home-visits, #user-home-visits-skeleton, #user-home-activity, #user-home-activity-skeleton, #user-home-events, #user-home-events-skeleton, #activity-skeleton, #activity-list {
+    #user-home-visits, #user-home-visits-skeleton, #user-home-activity, #user-home-activity-skeleton, #user-home-events, #user-home-events-skeleton, #activity-skeleton, #activity-list, #user-home-lists, #user-home-lists-skeleton {
         width: 100% !important;
     }
     .user-home-visit {
@@ -8030,12 +9196,31 @@ footer {
         width: 100%;
         height: 470px;
     }
+    .user-home-list-skeleton {
+        width: 100%;
+        height: 146px;
+    }
     .user-home-event-link {
         width: 100px;
         flex-shrink: 0;
     }
     .user-home-event-skeleton {
         width: 100%;
+    }
+    .user-home-list-image,
+    .user-home-list-image-empty {
+        width: 110px;
+        height: 62px;
+        margin-left: -44px;
+    }
+    #edit-list-content-container, #create-list-content-container, #edit-list-stadiums, #create-list-stadiums, #edit-list-info, #create-list-info, #edit-list-skeleton, #edit-list-stadiums-skeleton, #edit-list-info-skeleton, #create-list-no-stadiums {
+        width: 100% !important;
+    }
+    .edit-list-stadium-info-container, .create-list-stadium-info-container {
+        width: 60%;
+    }
+    .edit-list-stadium, .create-list-stadium {
+        justify-content: space-between;
     }
 }
 
@@ -8283,8 +9468,11 @@ footer {
     #delete-control {
         width: 198px;
     }
-    #stadium-content, #stadium-skeleton, #events-stadium, #activity-list-container {
+    #stadium-content, #stadium-skeleton, #events-stadium, #activity-list-container, #view-list-container {
         padding-top: 30px !important;
+    }
+    #list-skeleton {
+        padding-top: 71px !important;
     }
 }
 
@@ -8318,7 +9506,7 @@ footer {
 }
 
 @media screen and (max-width: 1150px) {
-    #user-home-no-stadiums-container, #no-visits-container, #user-home-no-wishlist-container, #user-home-no-activity-container, #user-home-no-achievements-container, #user-home-no-events-container, #no-activity-container {
+    #user-home-no-stadiums-container, #no-visits-container, #user-home-no-wishlist-container, #user-home-no-activity-container, #user-home-no-achievements-container, #user-home-no-events-container, #no-activity-container, #user-home-no-lists-container, #view-list-no-stadiums-container {
         order: 2;
         width: 100%;
         margin-top: 30px;
@@ -8366,40 +9554,56 @@ footer {
         width: 99%;
         padding: 200px 20px 0;
     }
-    #filter-bar, #user-home-stadiums-filters-container, #user-home-wishlist-filters-container, #user-home-achievements-filters-container {
+    #filter-bar, #user-home-stadiums-filters-container, #user-home-wishlist-filters-container, #user-home-achievements-filters-container, #view-list-filters-container {
         width: 330px;
     }
-    #stadiums-list, #stadiums-container-skeleton, #user-home-stadiums, #user-home-stadiums-skeleton, #user-home-wishlist, #user-home-wishlist-skeleton, #user-home-achievements, #user-home-achievements-skeleton {
+    #stadiums-list, #stadiums-container-skeleton, #user-home-stadiums, #user-home-stadiums-skeleton, #user-home-wishlist, #user-home-wishlist-skeleton, #user-home-achievements, #user-home-achievements-skeleton, #view-list-stadiums, #view-list-stadiums-skeleton {
         width: 348px;
     }
-    #stadiums-page-selector, #user-home-stadiums-page-selector, #user-home-wishlist-page-selector, #achievements-page-selector {
+    #stadiums-page-selector, #user-home-stadiums-page-selector, #user-home-wishlist-page-selector, #achievements-page-selector, #view-list-page-selector {
         width: 100%;
     }
-    #user-home-visits-tab-container, #user-home-activity-tab-container, #user-home-events-tab-container, #activity-list-container {
+    #user-home-visits-tab-container, #user-home-activity-tab-container, #user-home-events-tab-container, #activity-list-container, #user-home-lists-tab-container, #edit-list-content-container, #create-list-content-container, #edit-list-skeleton {
         flex-direction: column;
     }
-    #user-home-visits, #user-home-visits-skeleton, #user-home-activity, #user-home-activity-skeleton, #user-home-events, #user-home-events-skeleton, #activity-skeleton, #activity-list {
+    #user-home-visits, #user-home-visits-skeleton, #user-home-activity, #user-home-activity-skeleton, #user-home-events, #user-home-events-skeleton, #activity-skeleton, #activity-list, #user-home-lists, #user-home-lists-skeleton {
         order: 2;
         margin-top: 40px;
         width: 715px;
     }
-    #user-home-visits-filters-container, #user-home-visits-filters-container-skeleton, #user-home-activity-filters-container, #user-home-activity-filters-container-skeleton, #user-home-events-filters-container, #user-home-events-filters-container-skeleton, #activity-filter-bar-skeleton, #activity-filter-bar {
+    #user-home-visits-filters-container, #user-home-visits-filters-container-skeleton, #user-home-activity-filters-container, #user-home-activity-filters-container-skeleton, #user-home-events-filters-container, #user-home-events-filters-container-skeleton, #activity-filter-bar-skeleton, #activity-filter-bar, #user-home-lists-filters-container, #user-home-lists-filters-container-skeleton {
         order: 1;
         width: 715px;
     }
-    #user-home-visits-filters .filter-group, #user-home-activity-filters .filter-group, #user-home-events-filters .filter-group, #activity-filter-controls .filter-group {
+    #user-home-visits-filters .filter-group, #user-home-activity-filters .filter-group, #user-home-events-filters .filter-group, #activity-filter-controls .filter-group, #user-home-lists-filters .filter-group {
         justify-content: space-between;
         gap: 0;
     }
-    #user-home-visits-filters .filter-label, #user-home-activity-filters .filter-label, #user-home-events-filters .filter-label, #activity-filter-controls .filter-label {
+    #user-home-visits-filters .filter-label, #user-home-activity-filters .filter-label, #user-home-events-filters .filter-label, #activity-filter-controls .filter-label, #user-home-lists-filters .filter-label {
         width: 100px;
     }
-    #user-home-visits-filters .custom-select-wrapper, #user-home-activity-filters .custom-select-wrapper, #user-home-events-filters .custom-select-wrapper, #activity-filter-controls .custom-select-wrapper {
+    #user-home-visits-filters .custom-select-wrapper, #user-home-activity-filters .custom-select-wrapper, #user-home-events-filters .custom-select-wrapper, #activity-filter-controls .custom-select-wrapper, #user-home-lists-filters .custom-select-wrapper {
         width: 85%;
     }
-    #visits-page-selector, #activity-page-selector, #user-home-events-page-selector {
+    #visits-page-selector, #activity-page-selector, #user-home-events-page-selector, #lists-page-selector {
         order: 3;
         width: 100%;
+    }
+    #list-name-container {
+        width: 100%;
+    }
+    #list-container {
+        width: 99%;
+        padding: 0 20px;
+    }
+    #edit-list-info, #create-list-info, #edit-list-info-skeleton {
+        order: 1;
+        width: 715px;
+    }
+    #edit-list-stadiums, #create-list-stadiums, #edit-list-no-stadiums,  #create-list-no-stadiums, #edit-list-stadiums-skeleton {
+        order: 2;
+        margin-top: 40px;
+        width: 715px;
     }
 }
 

@@ -57,11 +57,14 @@ export const ROUTES = {
     CREATE_PORTAL_SESSION: '/payment/createPortalSession',
 
     /* UPDATE */
+    CREATE_USER_LIST: '/update/createUserList',
     DELETE_LOG: '/update/deleteLog',
+    DELETE_USER_LIST: '/update/deleteUserList',
     EDIT_LOG: '/update/editLog',
     UPDATE_EMAIL: '/update/updateEmail',
     UPDATE_PASSWORD: '/update/updatePassword',
     UPDATE_PROFILE_PIC: '/update/updateProfilePic',
+    UPDATE_USER_LIST: '/update/updateUserList',
     UPDATE_USERNAME: '/update/updateUsername',
     UPDATE_USER_STADIUMS: '/update/updateUserStadium',
     UPDATE_USER_WISHLIST: '/update/updateUserWishlist',
@@ -74,6 +77,8 @@ export const ROUTES = {
     LOAD_USER_ACTIVITY: '/user/loadUserActivity',
     LOAD_USER_HOME_MAP: '/user/loadUserHomeMap',
     LOAD_USER_INFO: '/user/loadUserInfo',
+    LOAD_USER_LIST: '/user/loadUserList',
+    LOAD_USER_LISTS: '/user/loadUserLists',
     LOAD_USER_STADIUMS: '/user/loadUserStadiums',
     LOAD_USER_VISITS: '/user/loadUserVisits',
     LOAD_USER_WISHLIST: '/user/loadUserWishlist',

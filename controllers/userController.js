@@ -293,6 +293,186 @@ const handleLoadUserInfo = async (req, res) => {
     }
 };
 
+/*  loadUserList  */
+const handleLoadUserList = async (req, res) => {
+    const { listId, show, league, country, sortBy } = req.body;
+    const { userId } = req.user;
+
+    if (!userId) return res.status(404).json({ error: 'User not found' });
+
+    try {
+        const leagueFilter = buildLeagueFilter(league);
+        const countryFilter = buildCountryFilter(country);
+
+        let query = `
+            SELECT 
+                stadiums.stadium_id,
+                stadiums.stadium_name, 
+                stadiums.image,
+                stadiums.opened_date,
+                stadiums.construction_cost,
+                stadiums.capacity,
+                stadiums.city, 
+                stadiums.state,
+                stadiums.country_id,
+                user_list_stadiums.order_index,
+                user_list_stadiums.note,
+                MAX(user_list_stadiums.added_on) AS added_on,
+                CASE WHEN MAX(us.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited,
+                CASE WHEN MAX(w.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist,
+                COUNT(DISTINCT us2.user_id) + COUNT(DISTINCT uw2.user_id) AS popularity
+            FROM user_list_stadiums
+            JOIN stadiums ON user_list_stadiums.stadium_id = stadiums.stadium_id
+            JOIN teams ON stadiums.stadium_id = teams.stadium_id
+            JOIN leagues ON teams.league_id = leagues.league_id
+            JOIN countries ON stadiums.country_id = countries.country_id
+            LEFT JOIN user_stadiums us ON us.stadium_id = stadiums.stadium_id AND us.user_id = ?
+            LEFT JOIN user_wishlist_stadiums w ON w.stadium_id = stadiums.stadium_id AND w.user_id = ?
+            LEFT JOIN user_stadiums us2 ON us2.stadium_id = stadiums.stadium_id
+            LEFT JOIN user_wishlist_stadiums uw2 ON uw2.stadium_id = stadiums.stadium_id
+            WHERE user_list_stadiums.list_id = ?
+            ${leagueFilter.sql}
+            ${countryFilter.sql}
+        `;
+
+        if (show === 'visited') {
+            query += ` AND us.stadium_id IS NOT NULL`;
+        } else if (show === 'not-visited') {
+            query += ` AND us.stadium_id IS NULL`;
+        }
+
+        query += ` GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, 
+                   stadiums.opened_date, stadiums.construction_cost, stadiums.capacity, 
+                   stadiums.city, stadiums.state, stadiums.country_id, user_list_stadiums.order_index, user_list_stadiums.note`;
+
+        switch (sortBy) {
+            case 'visited-asc':
+                query += ` ORDER BY MAX(us.visited_on) IS NULL, MAX(us.visited_on) ASC`;
+                break;
+            case 'visited-desc':
+                query += ` ORDER BY MAX(us.visited_on) IS NULL, MAX(us.visited_on) DESC`;
+                break;
+            case 'added-asc':
+                query += ` ORDER BY MAX(user_list_stadiums.added_on) ASC`;
+                break;
+            case 'added-desc':
+                query += ` ORDER BY MAX(user_list_stadiums.added_on) DESC`;
+                break;
+            case 'name-asc':
+                query += ` ORDER BY stadiums.stadium_name ASC`;
+                break;
+            case 'name-desc':
+                query += ` ORDER BY stadiums.stadium_name DESC`;
+                break;
+            case 'popularity':
+                query += ` ORDER BY popularity DESC, stadiums.stadium_name ASC`;
+                break;
+            case 'opened-asc':
+                query += ` ORDER BY stadiums.opened_date IS NULL, stadiums.opened_date ASC`;
+                break;
+            case 'opened-desc':
+                query += ` ORDER BY stadiums.opened_date IS NULL, stadiums.opened_date DESC`;
+                break;
+            case 'cost-asc':
+                query += ` ORDER BY stadiums.construction_cost IS NULL, stadiums.construction_cost ASC`;
+                break;
+            case 'cost-desc':
+                query += ` ORDER BY stadiums.construction_cost IS NULL, stadiums.construction_cost DESC`;
+                break;
+            case 'capacity-asc':
+                query += ` ORDER BY stadiums.capacity IS NULL, stadiums.capacity ASC`;
+                break;
+            case 'capacity-desc':
+                query += ` ORDER BY stadiums.capacity IS NULL, stadiums.capacity DESC`;
+                break;
+            default:
+                query += ` ORDER BY user_list_stadiums.order_index ASC`;
+        }
+
+        const params = [userId, userId, listId, ...leagueFilter.params, ...countryFilter.params];
+        const [listStadiums] = await db.query(query, params);
+
+        const [[newestStadium]] = await db.query(`
+            SELECT s.image 
+            FROM user_list_stadiums uls
+            JOIN stadiums s ON uls.stadium_id = s.stadium_id
+            WHERE uls.list_id = ?
+            ORDER BY uls.order_index ASC
+            LIMIT 1
+        `, [listId]);
+
+        const backdropImage = newestStadium?.image || null;
+
+        const [[listInfo]] = await db.query(`
+            SELECT list_name, list_description, is_ranked
+            FROM user_lists 
+            WHERE list_id = ?
+        `, [listId]);
+
+        res.json({ listStadiums, backdropImage, listName: listInfo?.list_name, listDescription: listInfo?.list_description, isRanked: listInfo?.is_ranked });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  loadUserLists  */
+const handleLoadUserLists = async (req, res) => {
+    const { sortBy, limit } = req.body;
+    const { userId } = req.user;
+
+    if (!userId) return res.status(404).json({ error: 'User not found' });
+
+    try {
+        let query = `
+            SELECT 
+                ul.list_id,
+                ul.list_name,
+                ul.created_at,
+                ul.updated_at,
+                COUNT(DISTINCT ls.stadium_id) AS stadium_count,
+                GROUP_CONCAT(DISTINCT s.image ORDER BY ls.order_index ASC SEPARATOR ',') AS images
+            FROM user_lists ul
+            LEFT JOIN user_list_stadiums ls ON ul.list_id = ls.list_id
+            LEFT JOIN stadiums s ON ls.stadium_id = s.stadium_id
+            WHERE ul.user_id = ?
+            GROUP BY ul.list_id, ul.list_name, ul.list_description, ul.created_at, ul.updated_at
+        `;
+
+        switch (sortBy) {
+            case 'updated-asc':
+                query += ` ORDER BY ul.updated_at ASC`;
+                break;
+            case 'created-desc':
+                query += ` ORDER BY ul.created_at DESC`;
+                break;
+            case 'created-asc':
+                query += ` ORDER BY ul.created_at ASC`;
+                break;
+            case 'name-asc':
+                query += ` ORDER BY ul.list_name ASC`;
+                break;
+            case 'name-desc':
+                query += ` ORDER BY ul.list_name DESC`;
+                break;
+            default:
+                query += ` ORDER BY ul.updated_at DESC`;
+        }
+
+        const [userLists] = await db.query(query, [userId]);
+
+        const formattedLists = userLists.map(list => ({
+            ...list,
+            images: list.images ? list.images.split(',') : []
+        }));
+
+        res.json({ userLists: formattedLists });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 /*  loadUserStadiums  */
 const handleLoadUserStadiums = async (req, res) => {
     const { league, country, sortBy } = req.body;
@@ -553,7 +733,7 @@ async function sendPasswordResetEmail(email, token, username) {
                 Reset Password
                 </a>
             </p>
-            <p>If the button above doesn’t work, copy and paste this URL into your browser:</p>
+            <p>If the button above doesn't work, copy and paste this URL into your browser:</p>
             <p><a href="${resetUrl}">${resetUrl}</a></p>
             <hr>
             <p style="font-size: 12px; color: #666;">If you did not request a password reset, you can safely ignore this email.</p>
@@ -598,4 +778,4 @@ const handleSendPasswordReset = async (req, res) => {
     }
 };
 
-module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserStadiums, handleLoadUserVisits, handleLoadUserWishlist, handleRefreshToken, handleSaveFavoriteStadiums, handleSendPasswordReset };
+module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserList, handleLoadUserLists, handleLoadUserStadiums, handleLoadUserVisits, handleLoadUserWishlist, handleRefreshToken, handleSaveFavoriteStadiums, handleSendPasswordReset };

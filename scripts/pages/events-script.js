@@ -133,7 +133,7 @@ async function showStadiumUI(stadiumId) {
 
         document.getElementById('events-stadium-name-skeleton').style.display = 'none';
         document.getElementById('stadium-events-skeleton').style.display = 'none';
-        document.getElementById('events-stadium-name').style.display = 'block';
+        document.getElementById('events-stadium-name').style.display = 'inline';
         document.getElementById('stadium-events').style.display = 'block';
         
     } catch (error) {

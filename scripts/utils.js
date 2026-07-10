@@ -55,7 +55,7 @@ function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
     return btn;
 }
 
-function createPagination(elements, stadiums, perPage = 18) {
+function createPagination(elements, stadiums, perPage = 18, isRanked) {
     const pageCount = Math.ceil(stadiums.length / perPage);
     let currentPage = Math.min(getPageFromURL(), pageCount);
 
@@ -63,8 +63,9 @@ function createPagination(elements, stadiums, perPage = 18) {
         elements.stadiumsList.innerHTML = '';
         const start = (page - 1) * perPage;
         const end = start + perPage;
-        stadiums.slice(start, end).forEach(stadium => {
-            elements.stadiumsList.appendChild(createStadiumCard(stadium, elements));
+        stadiums.slice(start, end).forEach((stadium, index) => {
+            const rankNumber = isRanked ? start + index + 1 : null;
+            elements.stadiumsList.appendChild(createStadiumCard(stadium, elements, rankNumber));
         });
     }
 
@@ -83,7 +84,7 @@ function createSearchResultElement(text, isLink = false) {
     return searchResult;
 }
 
-function createStadiumCard(stadium, elements) {
+function createStadiumCard(stadium, elements, rankNumber = null) {
     const card = document.createElement('div');
     card.classList.add('stadiums-list-stadium');
 
@@ -236,6 +237,13 @@ function createStadiumCard(stadium, elements) {
     ));
 
     card.appendChild(controls);
+
+    if (rankNumber !== null) {
+        const rankBadge = document.createElement('div');
+        rankBadge.classList.add('user-stadium-rank');
+        rankBadge.textContent = rankNumber;
+        card.appendChild(rankBadge);
+    }
 
     return card;
 }
@@ -814,12 +822,12 @@ export function renderPageNumbers(elements, currentPage, pageCount) {
     elements.stadiumsPageSelector.appendChild(nextBtn);
 }
 
-export function renderWithoutTransition(elements, stadiums) {
+export function renderWithoutTransition(elements, stadiums, isRanked = false) {
     if (stadiums.length === 0) {
         showNoResults(elements);
     } else {
         showResults(elements);
-        createPagination(elements, stadiums);
+        createPagination(elements, stadiums, 18, isRanked);
     }
 }
 
