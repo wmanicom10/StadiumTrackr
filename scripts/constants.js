@@ -80,6 +80,7 @@ export const ROUTES = {
     LOAD_USER_LIST: '/user/loadUserList',
     LOAD_USER_LISTS: '/user/loadUserLists',
     LOAD_USER_STADIUMS: '/user/loadUserStadiums',
+    LOAD_USER_STATS: '/user/loadUserStats',
     LOAD_USER_VISITS: '/user/loadUserVisits',
     LOAD_USER_WISHLIST: '/user/loadUserWishlist',
     REFRESH_TOKEN: '/user/refreshToken',

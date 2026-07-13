@@ -29,6 +29,9 @@ export const userAPI = {
     loadUserStadiums: (league, country, sortBy) =>
         fetchAPI(ROUTES.LOAD_USER_STADIUMS, { league, country, sortBy }),
 
+    loadUserStats: () => 
+        fetchAPI(ROUTES.LOAD_USER_STATS),
+
     loadUserVisits: (league, country, sortBy) => 
         fetchAPI(ROUTES.LOAD_USER_VISITS, { league, country, sortBy }),
 

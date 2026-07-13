@@ -24,6 +24,7 @@ router.post('/loadUserInfo', authMiddleware, userController.handleLoadUserInfo);
 router.post('/loadUserList', authMiddleware, userController.handleLoadUserList);
 router.post('/loadUserLists', authMiddleware, userController.handleLoadUserLists);
 router.post('/loadUserStadiums', authMiddleware, userController.handleLoadUserStadiums);
+router.post('/loadUserStats', authMiddleware, userController.handleLoadUserStats);
 router.post('/loadUserVisits', authMiddleware, userController.handleLoadUserVisits);
 router.post('/loadUserWishlist', authMiddleware, userController.handleLoadUserWishlist);
 router.post('/refreshToken', authMiddleware, userController.handleRefreshToken);

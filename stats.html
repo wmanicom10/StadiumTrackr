@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-    
+
     <head>
         <meta charset="utf-8">
-        <title>Events - StadiumTrackr</title>
+        <title>Stats - StadiumTrackr</title>
         <link rel="stylesheet" href="css/style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,19 +11,15 @@
         <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=menu" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
-        <script src="https://captcha.stadiumtrackr.com/assets/widget.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
         <script>
-            const params = new URLSearchParams(window.location.search);
-            const stadiumId = params.get('id') || null;
             const token = localStorage.getItem('token');
             if (token) {
                 const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
                 const payload = JSON.parse(atob(base64));
-                if (stadiumId && payload.username) {
+                if (payload.username) {
                     document.documentElement.classList.add('logged-in');
-                } else if (payload.username) {
-                    document.documentElement.classList.add('logged-in');
-                    document.documentElement.classList.add('logged-in-events');
                 } else {
                     document.documentElement.classList.add('logged-out');
                 }
@@ -37,97 +33,40 @@
 
         <div id="overlay"></div>
 
-        <!-- Login Menu -->
-        <div id="log-in-menu" class="menu">
-            <div id="log-in-menu-header">
+        <!-- Add Stadium Menu -->
+        <div id="add-stadium-menu" class="menu">
+            <div id="add-stadium-menu-header">
                 <h2></h2>
-                <h2>Login</h2>
-                <h2 id="close-log-in-menu">×</h2>
+                <h2>Log Your Visit</h2>
+                <h2 id="close-add-stadium-menu">×</h2>
             </div>
-            <form id="log-in-form">
-                <input type="text" id="username" class="input-field" placeholder="Username"><br>
-                <input type="password" id="password" class="input-field" placeholder="Password"><br>
-                <input type="submit" id="log-in-button" value="Log In">
-            </form>
-            <h3>Don't have an account? <span id="sign-up-link">Sign up here</span></h3>
-            <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
-        </div>
-
-        <!-- Create Account Menu -->
-        <div id="create-account-menu" class="menu">
-            <div id="create-account-menu-header">
-                <h2></h2>
-                <h2>Sign Up</h2>
-                <h2 id="close-create-account-menu">×</h2>
+            <h2 id="add-stadium-name"></h2>
+            <h3 id="add-stadium-location"></h3>
+            <div id="add-stadium-container">
+                <img src="" id="add-stadium-image">
+                <form id="add-stadium-form">
+                    <div id="add-stadium-date-visited-container">
+                        <h3 id="add-stadium-date-visited-text">Date Visited</h3>
+                        <input type="date" id="add-stadium-date-visited">
+                    </div>
+                    <div id="add-stadium-note-container">
+                        <h3 id="add-stadium-note-text">Note</h3>
+                        <textarea id="add-stadium-note" placeholder="Add a note..."></textarea>
+                    </div>
+                </form>
             </div>
-            <form id="create-account-form">
-                <input type="text" id="new-username" class="input-field" placeholder="Username"><br>
-                <input type="text" id="new-email" class="input-field" placeholder="Email address"><br>
-                <input type="password" id="new-password" class="input-field" placeholder="Password"><br>
-                <div id="terms-and-conditions-container">
-                    <input type="checkbox" id="terms-and-conditions">
-                    <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a></label>
-                </div>
-                <cap-widget id="create-account-captcha"></cap-widget>
-                <input type="submit" id="sign-up-button" value="Sign Up"><br>
-            </form>
-            <h3>Already have an account? <span id="sign-in-link">Log in here</span></h3>
+            <div id="add-stadium-buttons">
+                <h3 id="add-stadium-log-button">Log Visit</h3>
+                <h3 id="add-stadium-cancel-button">Cancel</h3>
+            </div>
         </div>
 
         <!-- Main Content -->
-        <div id="content-wrapper">
+         <div id="content-wrapper">
 
             <!-- Header -->
             <header id="site-header">
                 <h1>StadiumTrackr</h1>
-
-                <!-- Logged Out Nav -->
-                <ul id="logged-out-nav">
-                    <li class="nav-item"><a href="/">Home</a></li>
-                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="events.html">Events</a></li>
-                    <li class="nav-item"><a href="about.html">About</a></li>
-                    <li class="nav-item button" id="log-in">Log In</li>
-                    <li class="nav-item button" id="create-account">Sign Up</li>
-                    <li class="nav-item" id="logged-out-nav-search-container">
-                        <form id="logged-out-nav-search" autocomplete="off">
-                            <div id="logged-out-nav-search-wrapper">
-                                <input type="text" placeholder="Search stadiums..." id="logged-out-search-field-nav" spellcheck="false">
-                                <div id="logged-out-nav-autocomplete-list"></div>
-                            </div>
-                        </form>
-                    </li>
-                    <li class="nav-item toggle">
-                        <input type="checkbox" id="sidebar-active">
-                        <label for="sidebar-active" class="open-sidebar-button">
-                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
-                        </label>
-                        <label id="sidebar-overlay" for="sidebar-active"></label>
-                        <div class="links-container">
-                            <label for="sidebar-active" class="close-sidebar-button">
-                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
-                            </label>
-                            <div class="sidebar-links">
-                                <a class="home-link" href="/">Home</a>
-                                <a href="./stadiums.html">Stadiums</a>
-                                <a href="events.html">Events</a>
-                                <a href="about.html">About</a>
-                            </div>
-                            <div class="account-buttons">
-                                <span id="sidebar-log-in">Log In</span>
-                                <span id="sidebar-sign-up">Sign Up</span>
-                            </div>
-                            <div id="logged-out-sidebar-search-container">
-                                <form id="logged-out-sidebar-nav-search" autocomplete="off">
-                                    <div id="logged-out-sidebar-nav-search-wrapper">
-                                        <input type="text" placeholder="Search stadiums..." id="logged-out-sidebar-search-field-nav" spellcheck="false">
-                                        <div id="logged-out-sidebar-nav-autocomplete-list"></div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
 
                 <!-- Logged In Nav -->
                 <ul id="logged-in-nav">
@@ -235,75 +174,126 @@
                 </ul>
             </header>
 
-            <main id="events-page">
-                <!-- Events UI -->
-                <div id="events-container">
-                    <div class="events-text">
-                        <h2>Events</h2>
+            <main>
+
+                <div id="stats-text">
+                    <h2>Your Stadium Journey</h2>
+                </div>
+
+                <div id="stats-container">
+                    <div id="stats-hero">
+                        <div class="stats-hero-stat">
+                            <h3 id="stats-hero-stadiums-number"></h3>
+                            <p>Stadiums</p>
+                        </div>
+                        <div class="stats-hero-stat">
+                            <h3 id="stats-hero-visits-number"></h3>
+                            <p>Visits</p>
+                        </div>
+                        <div class="stats-hero-stat">
+                            <h3 id="stats-hero-cities-number"></h3>
+                            <p>Cities</p>
+                        </div>
+                        <div class="stats-hero-stat">
+                            <h3 id="stats-hero-countries-number"></h3>
+                            <p>Countries</p>
+                        </div>
+                        <div class="stats-hero-stat">
+                            <h3 id="stats-hero-stadiums-percent-number">0%</h3>
+                            <p>of All Stadiums</p>
+                        </div>
                     </div>
-                    <h3>Never miss an event at your favorite stadiums and stadiums you want to visit.</h3>
-                    <p id="events-hero-p">Set your favorite stadiums and add stadiums to your wishlist and we'll show you upcoming events, all in one place.</p>
-                    <div id="events-info">
-                        <div class="event-info-card">
-                            <img src="images/icons/heart.png" alt="Heart">
-                            <h4>Personalized For You</h4>
-                            <p>See upcoming events at your favorite stadiums and stadiums in your wishlist.</p>
-                        </div>
-                        <div class="event-info-card">
-                            <img src="images/icons/calendar.png" alt="Calendar">
-                            <h4>Always Up To Date</h4>
-                            <p>Events are pulled directly from Ticketmaster so you always see the latest schedule.</p>
-                        </div>
-                        <div class="event-info-card">
-                            <img src="images/icons/ticket.png" alt="Ticket">
-                            <h4>Buy Tickets</h4>
-                            <p>Each event links directly to Ticketmaster so you can buy tickets easily.</p>
-                        </div>
+                    <div id="stats-hero-skeleton"></div>
+                    <div class="stats-container" id="league-completion">
+                        <h2 class="stats-container-header">League Completion</h2>
+                        <div id="league-completion-container"></div>
+                        <div id="league-completion-container-skeleton"></div>
                     </div>
-                    <div id="featured-events-container">
-                        <div id="featured-events-header">
-                            <h2>Featured Events</h2>
+                    <div class="stats-container" id="visit-history">
+                        <h2 class="stats-container-header">Visit History</h2>
+                        <div id="visit-history-container">
+                            <div id="visit-history-bars"></div>
+                            <div id="visit-history-years"></div>
+                            <div id="visit-history-visits">
+                                <div id="visit-history-first-visit">
+                                    <h4 class="visit-history-title">First Visit</h4>
+                                </div>
+                                <div id="visit-history-latest-visit">
+                                    <h4 class="visit-history-title">Latest Visit</h4>
+                                </div>
+                            </div>
+                            <div id="visit-history-stats">
+                                <div class="visit-history-stat">
+                                    <h3 id="visit-history-favorite-month"></h3>
+                                    <p>Favorite Month</p>
+                                </div>
+                                <div class="visit-history-stat">
+                                    <h3 id="visit-history-longest-streak"></h3>
+                                    <p>Longest Streak</p>
+                                </div>
+                                <div class="visit-history-stat">
+                                    <h3 id="visit-history-avg-visits"></h3>
+                                    <p>Avg vists/year</p>
+                                </div>
+                            </div>
                         </div>
-                        <div id="featured-events"></div>
-                        <div id="no-featured-events">
-                            <h3>No Events Found</h3>
-                            <p>There aren't any featured events right now, check again later...</p>
+                        <div id="visit-history-container-skeleton"></div>
+                    </div>
+                    <div class="stats-container" id="most-visited-stadiums">
+                        <h2 class="stats-container-header">Most Visited Stadiums</h2>
+                        <div id="most-visited-stadiums-container"></div>
+                        <div id="most-visited-stadiums-container-skeleton"></div>
+                    </div>
+                    <div class="stats-container" id="stadium-records">
+                        <h2 class="stats-container-header">Stadium Records</h2>
+                        <div id="stadium-records-container">
+                            <div class="stadium-record" id="oldest-stadium">
+                                <span class="stadium-record-text">Oldest</span>
+                            </div>
+                            <div class="stadium-record" id="newest-stadium">
+                                <span class="stadium-record-text">Newest</span>
+                            </div>
+                            <div class="stadium-record" id="highest-capacity-stadium">
+                                <span class="stadium-record-text">Highest Capacity</span>
+                            </div>
+                            <div class="stadium-record" id="lowest-capacity-stadium">
+                                <span class="stadium-record-text">Lowest Capacity</span>
+                            </div>
+                            <div class="stadium-record" id="highest-construction-cost-stadium">
+                                <span class="stadium-record-text">Highest Construction Cost</span>
+                            </div>
+                            <div class="stadium-record" id="lowest-construction-cost-stadium">
+                                <span class="stadium-record-text">Lowest Construction Cost</span>
+                            </div>
+                            <div class="stadium-record" id="most-popular-stadium">
+                                <span class="stadium-record-text">Most Popular</span>
+                            </div>
+                            <div class="stadium-record" id="least-popular-stadium">
+                                <span class="stadium-record-text">Least Popular</span>
+                            </div>
                         </div>
-                        <div id="featured-events-skeleton">
-                            <div class="featured-event-skeleton"></div>
-                            <div class="featured-event-skeleton"></div>
-                            <div class="featured-event-skeleton"></div>
+                        <div id="stadium-records-container-skeleton"></div>
+                    </div>
+                    <div class="stats-container" id="geographic-breakdown">
+                        <h2 class="stats-container-header">Geographic Breakdown</h2>
+                        <div id="geographic-breakdown-container">
+                            <div id="geographic-breakdown-stats">
+                                <div id="geographic-breakdown-top-countries">
+                                    <h4 class="geographic-breakdown-header">Top Countries</h4>
+                                </div>
+                                <div id="geographic-breakdown-top-cities">
+                                    <h4 class="geographic-breakdown-header">Top Cities</h4>
+                                </div>
+                            </div>
+                            <div id="geographic-breakdown-stadiums-map-container">
+                                <h4 class="geographic-breakdown-header">Stadiums Map</h4>
+                                <div id="geographic-breakdown-stadiums-map"></div>
+                            </div>
                         </div>
+                        <div id="geographic-breakdown-container-skeleton"></div>
                     </div>
                 </div>
 
-                <!-- Individual Stadium UI -->
-                <div id="events-stadium">
-                    <div class="events-text">
-                        <h2 id="events-stadium-name"></h2>
-                        <div id="events-stadium-name-skeleton"></div>
-                    </div>
-                    <div id="stadium-events-container">
-                        <div id="stadium-events"></div>
-                        <div id="no-stadium-events-container">
-                            <h3>No Events Found</h3>
-                            <p>We couldn't find any events for this stadium.</p>
-                        </div>
-                        <div id="stadium-events-skeleton">
-                            <div class="stadium-event-skeleton"></div>
-                            <div class="stadium-event-skeleton"></div>
-                            <div class="stadium-event-skeleton"></div>
-                            <div class="stadium-event-skeleton"></div>
-                            <div class="stadium-event-skeleton"></div>
-                            <div class="stadium-event-skeleton"></div>
-                            <div class="stadium-event-skeleton"></div>
-                            <div class="stadium-event-skeleton"></div>
-                            <div class="stadium-event-skeleton"></div>
-                            <div class="stadium-event-skeleton"></div>
-                        </div>
-                        <div class="events-page-selector"></div>
-                    </div>
-                </div>
             </main>
 
             <!-- Footer -->
@@ -343,9 +333,10 @@
 
         </div>
 
+        <div id="visit-history-tooltip"></div>
+
         <!-- Scripts -->
-        <script type="module" src="scripts/pages/events-script.js"></script>
+        <script type="module" src="scripts/pages/stats-script.js"></script>
         
     </body>
-
 </html>

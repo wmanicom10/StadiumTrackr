@@ -6054,7 +6054,7 @@ footer {
 }
 
 .about-number p {
-    color: var(--color-text-muted);
+    color: var(--color-text);
     font-size: 1.2rem;
     line-height: 1.6;
 }
@@ -7799,6 +7799,304 @@ footer {
     transform: translateY(-3px) translateZ(0);
 }
 
+/*  Stats  */
+#stats-text {
+    width: 60%;
+    margin: 40px auto;
+    text-align: center;
+}
+
+#stats-text h2 {
+    font-size: 2.3rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+#stats-container {
+    width: 1100px;
+    margin: 0 auto;
+}
+
+#stats-hero {
+    text-align: center;
+    display: none;
+    justify-content: center;
+    margin: 0 auto;
+    flex-wrap: wrap;
+    gap: 30px 0;
+}
+
+.stats-hero-stat {
+    margin: 0 30px;
+}
+
+.stats-hero-stat h3 {
+    font-size: 2rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.stats-hero-stat p {
+    margin: 0;
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+.stats-container {
+    margin-top: 55px;
+}
+
+.stats-container-header {
+    font-weight: normal;
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+#league-completion-container {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: 25px;
+    gap: 35px;
+}
+
+.league-completion-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 48%;
+}
+
+.league-completion-name {
+    font-weight: normal;
+    margin: 0;
+    font-size: 1rem;
+    width: 65px;
+}
+
+.league-completion-progress-bar-container {
+    display: flex;
+}
+
+.league-completion-progress-bar-blue {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
+    height: 25px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.league-completion-progress-bar {
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(79, 172, 254, 0.15);
+    border-radius: 5px;
+    height: 25px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.league-completion-progress, .league-completion-progress-percent {
+    color: var(--color-text-muted);
+}
+
+#visit-history-container {
+    margin-top: 25px;
+    display: none;
+}
+
+#visit-history-bars {
+    display: flex;
+    align-items: flex-end;
+    height: 200px;
+    width: 100%;
+}
+
+.visit-history-bar {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    flex: 1;
+    min-width: 0;
+}
+
+#visit-history-years {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
+
+#visit-history-tooltip {
+    position: fixed;
+    display: none;
+    background: #272B38;
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    border-radius: 10px;
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    color: var(--color-text);
+    pointer-events: none;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+}
+
+#visit-history-visits {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 55px;
+}
+
+#visit-history-first-visit, #visit-history-latest-visit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.visit-history-title {
+    text-align: center;
+    font-weight: normal;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+#visit-history-stats {
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 55px auto;
+    gap: 30px 0;
+}
+
+.visit-history-stat {
+    margin: 0 30px;
+}
+
+.visit-history-stat h3 {
+    font-size: 2rem;
+    font-weight: normal;
+    line-height: 1.4;
+    background: var(--gradient-text);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+}
+
+.visit-history-stat p {
+    margin: 0;
+    margin-top: 10px;
+    font-size: 1.1rem;
+}
+
+#most-visited-stadiums-container {
+    margin-top: 25px;
+    display: none;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 19px;
+    align-content: flex-start;
+}
+
+.most-visited-stadium-number {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+}
+
+#stadium-records-container {
+    margin-top: 25px;
+    display: none;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.stadium-record-text {
+    display: block;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#geographic-breakdown-container {
+    margin-top: 25px;
+    display: none;
+}
+
+#geographic-breakdown-stats {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 35px;
+}
+
+.geographic-breakdown-header {
+    font-weight: normal;
+    margin: 0;
+    margin-bottom: 25px;
+}
+
+#geographic-breakdown-top-countries, #geographic-breakdown-top-cities {
+    width: 48%;
+}
+
+.geographic-breakdown-country, .geographic-breakdown-city {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 15px;
+}
+
+.geographic-breakdown-country-name, .geographic-breakdown-country-stadium-count, .geographic-breakdown-city-name, .geographic-breakdown-city-stadium-count {
+    font-weight: normal;
+    margin: 0;
+    font-size: 1rem;
+    color: var(--color-text-muted);
+}
+
+.geographic-breakdown-country-name, .geographic-breakdown-city-name {
+    width: 145px;
+}
+
+.geographic-breakdown-country-progress-bar, .geographic-breakdown-city-progress-bar {
+    background: rgba(79, 172, 254, 0.1);
+    border: 1px solid rgba(79, 172, 254, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    border-radius: 5px;
+    height: 25px;
+}
+
+#geographic-breakdown-stadiums-map-container {
+    margin-top: 25px;
+}
+
+#geographic-breakdown-stadiums-map {
+    display: none;
+    width: 100%;
+    margin: 25px auto 0;
+    height: 500px;
+    border-radius: 15px;
+    box-shadow: var(--shadow-default);
+    background: var(--color-secondary);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--color-primary-15);
+}
+
 /*  Skeleton Loading  */
 .skeleton-card {
     width: 348px;
@@ -8412,6 +8710,77 @@ footer {
     box-shadow: var(--shadow-default);
 }
 
+#stats-hero-skeleton {
+    width: 100%;
+    height: 75px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
+#league-completion-container-skeleton {
+    width: 100%;
+    height: 205px;
+    margin-top: 25px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
+#visit-history-container-skeleton {
+    width: 100%;
+    height: 745px;
+    margin-top: 25px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
+#most-visited-stadiums-container-skeleton {
+    width: 100%;
+    height: 325px;
+    margin-top: 25px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
+#stadium-records-container-skeleton {
+    width: 100%;
+    height: 1411px;
+    margin-top: 25px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
+#geographic-breakdown-container-skeleton {
+    width: 100%;
+    height: 815px;
+    margin-top: 25px;
+    border-radius: 15px;
+    background: linear-gradient(90deg, var(--color-secondary) 0%, rgba(255, 255, 255, 0.06) 50%, var(--color-secondary) 100%);
+    border: 1px solid var(--color-primary-15);
+    background-size: 400% 100%;
+    animation: loading 1.2s ease-in-out infinite;
+    box-shadow: var(--shadow-default);
+}
+
 /*  Media Queries  */
 @media screen and (max-width: 329px) {
     .user-home-list-images > :nth-child(3) {
@@ -8861,6 +9230,14 @@ footer {
     }
 }
 
+@media screen and (max-width: 550px) {
+    .league-completion-item, .geographic-breakdown-country, .geographic-breakdown-city {
+        flex-direction: column;
+        align-items: start;
+        width: 100% !important;
+    }
+}
+
 @media screen and (max-width: 575px) {
     #user-stadiums-header-container, #user-stadiums-header-container-skeleton {
         flex-direction: column;
@@ -9112,6 +9489,9 @@ footer {
         width: 290px;
         height: 175px;
         margin: 50px auto 0;
+    }
+    #visit-history-visits {
+        flex-direction: column;
     }
 }
 
@@ -9604,6 +9984,16 @@ footer {
         order: 2;
         margin-top: 40px;
         width: 715px;
+    }
+    #stats-container {
+        width: 99%;
+        padding: 0 20px;
+    }
+    #league-completion-container, #geographic-breakdown-stats {
+        flex-direction: column;
+    }
+    .league-completion-item, #geographic-breakdown-top-countries, #geographic-breakdown-top-cities {
+        width: 528px;
     }
 }
 
