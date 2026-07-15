@@ -3,6 +3,10 @@ const path = require('path');
 
 function cleanup() {
     const dir = process.env.VISIT_PHOTO_DIR;
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+        console.log(`Created directory: ${dir}`);
+    }
     const maxAge = 60 * 60 * 1000;
 
     try {

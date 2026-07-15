@@ -505,6 +505,9 @@ cap-widget {
 
 .visit-photo-preview-img {
     width: 130px;
+    aspect-ratio: 16/9;
+    height: auto;
+    object-fit: cover;
     border-radius: 10px;
     margin-top: 15px;
     transition: transform 0.2s ease;

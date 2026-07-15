@@ -963,6 +963,7 @@ const handleUploadTempVisitPhoto = async (req, res) => {
         const newPath = path.join(process.env.VISIT_PHOTO_DIR, newFilename);
 
         await sharp(tempPath)
+            .rotate()
             .resize(1200, 800, { fit: 'inside', withoutEnlargement: true })
             .jpeg({ quality: 85 })
             .toFile(newPath);

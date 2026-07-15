@@ -58,6 +58,7 @@ function addPhotoPreview(filename, tempPhotos, photosPreview, photosCount) {
     const img = document.createElement('img');
     img.src = `/images/visit-photos/${filename}`;
     img.classList.add('visit-photo-preview-img');
+    img.addEventListener('click', () => openLightbox(img.src));
 
     const deleteBtn = document.createElement('button');
     deleteBtn.classList.add('visit-photo-preview-delete');
