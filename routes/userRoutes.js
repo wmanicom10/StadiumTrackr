@@ -30,5 +30,6 @@ router.post('/loadUserWishlist', authMiddleware, userController.handleLoadUserWi
 router.post('/refreshToken', authMiddleware, userController.handleRefreshToken);
 router.post('/saveFavoriteStadiums', authMiddleware, userController.handleSaveFavoriteStadiums);
 router.post('/sendPasswordReset', resetLimiter, userController.handleSendPasswordReset);
+router.post('/uploadTempVisitPhoto', authMiddleware, userController.uploadTempVisitPhoto.single('photo'), userController.handleUploadTempVisitPhoto);
 
 module.exports = router;

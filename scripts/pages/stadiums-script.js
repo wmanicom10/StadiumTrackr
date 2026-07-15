@@ -23,6 +23,9 @@ const elements = {
     addStadiumName: document.getElementById('add-stadium-name'),
     addStadiumLocation: document.getElementById('add-stadium-location'),
     addStadiumImage: document.getElementById('add-stadium-image'),
+    addStadiumPhotosInput: document.getElementById('add-stadium-photos-input'),
+    addStadiumPhotosPreview: document.getElementById('add-stadium-photos-preview'),
+    addStadiumPhotosCount: document.getElementById('add-stadium-photos-count'),
     addStadiumLogButton: document.getElementById('add-stadium-log-button'),
     addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
 };

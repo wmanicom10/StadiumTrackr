@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements, MIN_LOADING_TIME } from "../constants.js";
-import { createUserStadiumElement, isLoggedIn, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
+import { createToast, createUserStadiumElement, isLoggedIn, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 
@@ -13,6 +13,9 @@ const elements = {
     addStadiumName: document.getElementById('add-stadium-name'),
     addStadiumLocation: document.getElementById('add-stadium-location'),
     addStadiumImage: document.getElementById('add-stadium-image'),
+    addStadiumPhotosInput: document.getElementById('add-stadium-photos-input'),
+    addStadiumPhotosPreview: document.getElementById('add-stadium-photos-preview'),
+    addStadiumPhotosCount: document.getElementById('add-stadium-photos-count'),
     addStadiumLogButton: document.getElementById('add-stadium-log-button'),
     addStadiumCancelButton: document.getElementById('add-stadium-cancel-button')
 }
@@ -365,6 +368,13 @@ window.onload = async () => {
     if (!isLoggedIn()) {
         window.location.replace('index.html');
         return;
+    }
+
+    const pending = sessionStorage.getItem('toast');
+    if (pending) {
+        const { type, message } = JSON.parse(pending);
+        createToast(type, message);
+        sessionStorage.removeItem('toast');
     }
 
     await loadStatsInfo();

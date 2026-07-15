@@ -40,6 +40,18 @@
                         <textarea id="edit-log-note" placeholder="Add a note..."></textarea>
                     </div>
                 </form>
+                <div id="edit-log-photos-container">
+                    <h3 id="edit-log-photos-text">Photos</h3>
+                    <div id="edit-log-photos-upload-area">
+                        <input type="file" id="edit-log-photos-input" accept="image/*" multiple>
+                        <label for="edit-log-photos-input" id="edit-log-photos-upload-label">
+                            <img src="/images/icons/upload.png" alt="Upload">
+                            <span>Upload Photos</span>
+                        </label>
+                        <span id="edit-log-photos-count">0/5</span>
+                    </div>
+                    <div id="edit-log-photos-preview"></div>
+                </div>
             </div>
             <div id="edit-log-buttons">
                 <h3 id="edit-log-save-button">Save</h3>
@@ -60,6 +72,12 @@
                 <h3 id="delete-log-cancel-button">Cancel</h3>
                 <h3 id="delete-log-delete-button">Delete Log</h3>
             </div>
+        </div>
+
+        <!-- Photo Lightbox -->
+        <div id="photo-lightbox">
+            <span id="photo-lightbox-close">×</span>
+            <img id="photo-lightbox-img">
         </div>
 
         <!-- Main Content -->

@@ -361,6 +361,7 @@ cap-widget {
 #add-stadium-container {
     justify-content: space-between;
     display: flex;
+    flex-wrap: wrap;
     width: 92%;
     margin: 30px auto;
 }
@@ -368,7 +369,7 @@ cap-widget {
 #add-stadium-image {
     width: 48%;
     aspect-ratio: 16/9;
-    height: auto;
+    height: 248px;
     object-fit: cover;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -378,7 +379,7 @@ cap-widget {
     width: 48%;
 }
 
-#add-stadium-date-visited-text, #add-stadium-note-text {
+#add-stadium-date-visited-text, #add-stadium-note-text, #add-stadium-photos-text {
     font-weight: normal;
     font-size: 1rem;
     margin: 0;
@@ -409,7 +410,7 @@ cap-widget {
     -webkit-appearance: none;
 }
 
-#add-stadium-note-container {
+#add-stadium-note-container, #add-stadium-photos-container {
     margin-top: 20px;
 }
 
@@ -438,6 +439,104 @@ cap-widget {
 #add-stadium-note::placeholder {
     color: var(--color-text-muted);
     font-family: "Inter", sans-serif;
+}
+
+#add-stadium-photos-container {
+    width: 100%;
+}
+
+#add-stadium-photos-input, #edit-log-photos-input {
+    display: none;
+}
+
+#add-stadium-photos-upload-area {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+#add-stadium-photos-upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
+    font-weight: normal;
+    font-size: 1rem;
+    border-radius: 10px;
+    padding: 8px 0;
+    width: 180px;
+    margin-right: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#add-stadium-photos-upload-label:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#add-stadium-photos-upload-label img {
+    height: 18px;
+    margin-right: 10px;
+}
+
+#add-stadium-photos-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.visit-photo-preview {
+    position: relative;
+    display: inline-block;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.visit-photo-preview.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.visit-photo-preview-img {
+    width: 130px;
+    border-radius: 10px;
+    margin-top: 15px;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.visit-photo-preview-img:hover {
+    transform: scale(1.05);
+}
+
+.visit-photo-preview-delete {
+    position: absolute;
+    top: 14px;
+    left: -1px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #273147;
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    transition: all 0.3s ease;
+}
+
+.visit-photo-preview-delete:hover {
+    background: #2A3F5B;
+    transform: translateY(-2px) translateZ(0);
 }
 
 #add-stadium-buttons {
@@ -480,6 +579,44 @@ cap-widget {
 #add-stadium-cancel-button:hover {
     background: rgba(255, 79, 79, 0.25);
     transform: translateY(-3px) translateZ(0);
+}
+
+#photo-lightbox {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 10003;
+    justify-content: center;
+    align-items: center;
+}
+
+#photo-lightbox.active {
+    display: flex;
+}
+
+#photo-lightbox-img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+#photo-lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 2.5rem;
+    color: white;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+#photo-lightbox-close:hover {
+    color: var(--color-blue);
 }
 
 /*  Header  */
@@ -3290,6 +3427,7 @@ footer {
 .user-home-log-activity-info-container {
     margin-top: 20px;
     display: flex;
+    flex-wrap: wrap;
     gap: 25px;
 }
 
@@ -3300,10 +3438,6 @@ footer {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(79, 172, 254, 0.15);
     flex-shrink: 0;
-}
-
-.user-home-log-activity-info {
-    width: 100%;
 }
 
 .user-home-log-activity-details {
@@ -3326,6 +3460,35 @@ footer {
     margin: 0;
     font-weight: normal;
     font-size: 1rem;
+}
+
+.activity-photos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.activity-photo {
+    width: 126px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1px solid var(--color-primary-15);
+    box-shadow: var(--shadow-default);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.activity-photo:hover {
+    transform: scale(1.05);
+}
+
+.photos-container-header {
+    color: var(--color-text-muted);
+    margin: 0;
+    font-weight: normal;
+    font-size: 0.9rem;
+    width: 100%;
 }
 
 .user-home-log-activity-buttons {
@@ -4516,6 +4679,7 @@ footer {
 #edit-log-container {
     justify-content: space-between;
     display: flex;
+    flex-wrap: wrap;
     width: 92%;
     margin: 30px auto;
 }
@@ -4523,7 +4687,7 @@ footer {
 #edit-log-image {
     width: 48%;
     aspect-ratio: 16/9;
-    height: auto;
+    height: 248px;
     object-fit: cover;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -4533,7 +4697,7 @@ footer {
     width: 48%;
 }
 
-#edit-log-date-visited-text, #edit-log-note-text {
+#edit-log-date-visited-text, #edit-log-note-text, #edit-log-photos-text {
     font-weight: normal;
     font-size: 1rem;
     margin: 0;
@@ -4564,7 +4728,7 @@ footer {
     -webkit-appearance: none;
 }
 
-#edit-log-note-container {
+#edit-log-note-container, #edit-log-photos-container {
     margin-top: 20px;
 }
 
@@ -4593,6 +4757,52 @@ footer {
 #edit-log-note::placeholder {
     color: var(--color-text-muted);
     font-family: "Inter", sans-serif;
+}
+
+#edit-log-photos-container {
+    width: 100%;
+}
+
+#edit-log-photos-upload-area {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+#edit-log-photos-upload-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-primary-10);
+    border: 1px solid var(--color-primary-30);
+    color: var(--color-blue);
+    font-weight: normal;
+    font-size: 1rem;
+    border-radius: 10px;
+    padding: 8px 0;
+    width: 180px;
+    margin-right: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+#edit-log-photos-upload-label:hover {
+    background: var(--color-primary-20);
+    transform: translateY(-3px) translateZ(0);
+}
+
+#edit-log-photos-upload-label img {
+    height: 18px;
+    margin-right: 10px;
+}
+
+#edit-log-photos-preview {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 #edit-log-buttons {

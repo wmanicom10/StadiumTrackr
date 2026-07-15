@@ -2,12 +2,16 @@ const db = require('../database/connection.js');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const sharp = require('sharp');
 const { getStadiumId, buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
 const { handleUpdateAchievementProgress } = require('./updateController.js');
 
 /*  addStadium  */
 const handleAddStadium = async (req, res) => {
-    const { stadiumId, dateVisited, note } = req.body;
+    const { stadiumId, dateVisited, note, tempPhotos } = req.body;
     const { userId } = req.user;
 
     if (!userId || !stadiumId) {
@@ -17,8 +21,26 @@ const handleAddStadium = async (req, res) => {
     try {
         const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on, visited_on, user_note) SELECT s.stadium_id, u.user_id, NOW(), ?, ? FROM stadiums s, users u WHERE s.stadium_id = ? AND u.user_id = ?', [dateVisited, note, stadiumId, userId]);
 
-        await handleUpdateAchievementProgress(userId);
+        const visitId = rows.insertId;
 
+        if (tempPhotos && tempPhotos.length > 0) {
+            const photoLimit = Math.min(tempPhotos.length, 5);
+            for (let i = 0; i < photoLimit; i++) {
+                const tempFilename = tempPhotos[i];
+                const tempPath = path.join(process.env.VISIT_PHOTO_DIR, tempFilename);
+
+                if (!fs.existsSync(tempPath)) continue;
+
+                const newFilename = `visit_${visitId}_${Date.now()}_${i}.jpg`;
+                const newPath = path.join(process.env.VISIT_PHOTO_DIR, newFilename);
+
+                fs.renameSync(tempPath, newPath);
+
+                await db.execute('INSERT INTO visit_photos (visit_id, user_id, filename) VALUES (?, ?, ?)', [visitId, userId, newFilename]);
+            }
+        }
+
+        await handleUpdateAchievementProgress(userId);
         await db.execute('DELETE FROM user_wishlist_stadiums WHERE stadium_id = ? AND user_id = ?', [stadiumId, userId]);
 
         res.json({ rows });
@@ -202,6 +224,28 @@ const handleLoadUserActivity = async (req, res) => {
         }
 
         const [userActivity] = await db.query(query, params);
+        const visitIds = userActivity
+            .filter(a => a.visit_id !== null)
+            .map(a => a.visit_id);
+
+        if (visitIds.length > 0) {
+            const [photos] = await db.query(`SELECT photo_id, visit_id, filename FROM visit_photos WHERE visit_id IN (?)`, [visitIds]);
+
+            const photosByVisitId = {};
+            photos.forEach(photo => {
+                if (!photosByVisitId[photo.visit_id]) photosByVisitId[photo.visit_id] = [];
+                photosByVisitId[photo.visit_id].push({ photo_id: photo.photo_id, filename: photo.filename });
+            });
+
+            userActivity.forEach(activity => {
+                activity.photos = photosByVisitId[activity.visit_id] || [];
+            });
+        } else {
+            userActivity.forEach(activity => {
+                activity.photos = [];
+            });
+        }
+
         res.json({ userActivity });
     } catch (err) {
         console.error(err);
@@ -665,6 +709,29 @@ const handleLoadUserVisits = async (req, res) => {
         ];
 
         const [userVisits] = await db.query(query, params);
+
+        const visitIds = userVisits
+            .filter(v => v.visit_id !== null)
+            .map(v => v.visit_id);
+
+        if (visitIds.length > 0) {
+            const [photos] = await db.query(`SELECT photo_id, visit_id, filename FROM visit_photos WHERE visit_id IN (?)`, [visitIds]);
+
+            const photosByVisitId = {};
+            photos.forEach(photo => {
+                if (!photosByVisitId[photo.visit_id]) photosByVisitId[photo.visit_id] = [];
+                photosByVisitId[photo.visit_id].push({ photo_id: photo.photo_id, filename: photo.filename });
+            });
+
+            userVisits.forEach(visit => {
+                visit.photos = photosByVisitId[visit.visit_id] || [];
+            });
+        } else {
+            userVisits.forEach(visit => {
+                visit.photos = [];
+            });
+        }
+
         res.json({ userVisits });
     } catch (err) {
         console.error(err);
@@ -861,4 +928,54 @@ const handleSendPasswordReset = async (req, res) => {
     }
 };
 
-module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserList, handleLoadUserLists, handleLoadUserStadiums, handleLoadUserStats, handleLoadUserVisits, handleLoadUserWishlist, handleRefreshToken, handleSaveFavoriteStadiums, handleSendPasswordReset };
+/*  uploadTempVisitPhoto  */
+const tempVisitPhotoStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, process.env.VISIT_PHOTO_DIR);
+    },
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname);
+        const unique = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+        cb(null, `temp_${req.user.userId}_${unique}${ext}`);
+    }
+});
+
+const uploadTempVisitPhoto = multer({
+    storage: tempVisitPhotoStorage,
+    limits: { fileSize: 10 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        const allowed = ['.jpg', '.jpeg', '.png', '.webp'];
+        const ext = path.extname(file.originalname).toLowerCase();
+        if (allowed.includes(ext)) {
+            cb(null, true);
+        } else {
+            cb(new Error('Invalid file type'));
+        }
+    }
+});
+
+const handleUploadTempVisitPhoto = async (req, res) => {
+    const { userId } = req.user;
+
+    try {
+        const newFilename = `temp_${userId}_${Date.now()}.jpg`;
+        const tempPath = path.join(process.env.VISIT_PHOTO_DIR, req.file.filename);
+        const newPath = path.join(process.env.VISIT_PHOTO_DIR, newFilename);
+
+        await sharp(tempPath)
+            .resize(1200, 800, { fit: 'inside', withoutEnlargement: true })
+            .jpeg({ quality: 85 })
+            .toFile(newPath);
+
+        fs.unlinkSync(tempPath);
+
+        res.json({ filename: newFilename });
+
+    } catch (err) {
+        if (req.file && fs.existsSync(req.file.path)) fs.unlinkSync(req.file.path);
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserList, handleLoadUserLists, handleLoadUserStadiums, handleLoadUserStats, handleLoadUserVisits, handleLoadUserWishlist, handleRefreshToken, handleSaveFavoriteStadiums, handleSendPasswordReset, handleUploadTempVisitPhoto, uploadTempVisitPhoto };

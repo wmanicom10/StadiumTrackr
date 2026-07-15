@@ -1,6 +1,6 @@
 /*  Imports  */
 import { MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { formatDate, getPageFromURL, initializeCustomSelects, isLoggedIn, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
+import { addExistingPhotoPreview, formatDate, getPageFromURL, initializeCustomSelects, isLoggedIn, openLightbox, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
@@ -23,6 +23,9 @@ const elements = {
     editLogImage: document.getElementById('edit-log-image'),
     editLogDateVisited: document.getElementById('edit-log-date-visited'),
     editLogNote: document.getElementById('edit-log-note'),
+    editLogPhotosInput: document.getElementById('edit-log-photos-input'),
+    editLogPhotosPreview: document.getElementById('edit-log-photos-preview'),
+    editLogPhotosCount: document.getElementById('edit-log-photos-count'),
     deleteLogMenu: document.getElementById('delete-log-menu'),
     closeDeleteLogMenu: document.getElementById('close-delete-log-menu'),
     deleteLogCancelButton: document.getElementById('delete-log-cancel-button'),
@@ -191,6 +194,15 @@ function renderActivity(stadiums, elements) {
                         const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
                         elements.editLogDateVisited.setAttribute('max', today);
                         elements.editLogNote.value = stadium.user_note || '';
+
+                        elements.editLogPhotosPreview.innerHTML = '';
+                        if (stadium.photos && stadium.photos.length > 0) {
+                            stadium.photos.forEach(photo => {
+                                addExistingPhotoPreview(photo, elements);
+                            });
+                        }
+                        updateEditLogPhotoCount(elements);
+
                         toggleMenu(elements.editLogMenu, true, overlay);
                     });
 
@@ -211,6 +223,28 @@ function renderActivity(stadiums, elements) {
 
                     userHomeLogActivityInfoContainer.appendChild(userHomeActivityLogImage);
                     userHomeLogActivityInfoContainer.appendChild(userHomeLogActivityInfo);
+
+                    if (stadium.photos && stadium.photos.length > 0) {
+                        const photosContainer = document.createElement('div');
+                        photosContainer.classList.add('activity-photos-container');
+
+                        const photosContainerHeader = document.createElement('h5');
+                        photosContainerHeader.classList.add('photos-container-header');
+                        photosContainerHeader.textContent = 'Photos';
+
+                        photosContainer.appendChild(photosContainerHeader);
+
+                        stadium.photos.forEach(photo => {
+                            const img = document.createElement('img');
+                            img.src = `/images/visit-photos/${photo.filename}`;
+                            img.classList.add('activity-photo');
+                            img.addEventListener('click', () => openLightbox(img.src));
+                            img.style.cursor = 'pointer';
+                            photosContainer.appendChild(img);
+                        });
+
+                        userHomeLogActivityInfoContainer.appendChild(photosContainer);
+                    }
 
                     userHomeLogActivity.appendChild(userHomeLogActivityHeader);
                     userHomeLogActivity.appendChild(userHomeLogActivityInfoContainer);

@@ -8,6 +8,8 @@ const updateController = require('../controllers/updateController');
 router.post('/createUserList', authMiddleware, updateController.handleCreateUserList);
 router.post('/deleteLog', authMiddleware, updateController.handleDeleteLog);
 router.post('/deleteUserList', authMiddleware, updateController.handleDeleteUserList);
+router.post('/deleteTempVisitPhoto', authMiddleware, updateController.handleDeleteTempVisitPhoto);
+router.post('/deleteVisitPhoto', authMiddleware, updateController.handleDeleteVisitPhoto);
 router.post('/editLog', authMiddleware, updateController.handleEditLog);
 router.post('/updateEmail', authMiddleware, updateController.handleUpdateEmail);
 router.post('/updatePassword', authMiddleware, updateController.handleUpdatePassword);

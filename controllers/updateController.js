@@ -47,6 +47,16 @@ const handleDeleteLog = async (req, res) => {
 
     try {
         const [[{ user_id }]] = await db.execute('SELECT user_id FROM user_stadiums WHERE visit_id = ?', [visitId]);
+
+        const [photos] = await db.execute('SELECT filename FROM visit_photos WHERE visit_id = ?', [visitId]);
+
+        for (const photo of photos) {
+            const photoPath = path.join(process.env.VISIT_PHOTO_DIR, photo.filename);
+            if (fs.existsSync(photoPath)) {
+                fs.unlinkSync(photoPath);
+            }
+        }
+
         const [rows] = await db.execute('DELETE FROM user_stadiums WHERE visit_id = ?', [visitId]);
 
         await handleUpdateAchievementProgress(user_id);
@@ -54,6 +64,29 @@ const handleDeleteLog = async (req, res) => {
         res.json({ rows });
     } catch (err) {
         console.error('Error in handleDeleteLog:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  handleDeleteTempVisitPhoto  */
+const handleDeleteTempVisitPhoto = async (req, res) => {
+    const { filename } = req.body;
+    const { userId } = req.user;
+
+    if (!filename) return res.status(400).json({ error: 'Filename is required' });
+
+    if (!filename.startsWith(`temp_${userId}_`)) {
+        return res.status(403).json({ error: 'Unauthorized' });
+    }
+
+    try {
+        const filePath = path.join(process.env.VISIT_PHOTO_DIR, filename);
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+        res.json({ success: true });
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ error: 'Internal server error' });
     }
 };
@@ -80,9 +113,40 @@ const handleDeleteUserList = async (req, res) => {
     }
 };
 
+/*  deleteVisitPhoto  */
+const handleDeleteVisitPhoto = async (req, res) => {
+    const { photoId } = req.body;
+    const { userId } = req.user;
+
+    if (!photoId) {
+        return res.status(400).json({ error: 'Photo ID is required' });
+    }
+
+    try {
+        const [[photo]] = await db.execute('SELECT * FROM visit_photos WHERE photo_id = ? AND user_id = ?', [photoId, userId]);
+
+        if (!photo) {
+            return res.status(404).json({ error: 'Photo not found' });
+        }
+
+        const photoPath = path.join(process.env.VISIT_PHOTO_DIR, photo.filename);
+        if (fs.existsSync(photoPath)) {
+            fs.unlinkSync(photoPath);
+        }
+
+        await db.execute('DELETE FROM visit_photos WHERE photo_id = ?', [photoId]);
+
+        res.json({ success: true });
+
+    } catch (err) {
+        console.error('Error in handleDeleteVisitPhoto:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 /*  editLog  */
 const handleEditLog = async (req, res) => {
-    const { visitId, editDateVisited, editNote } = req.body;
+    const { visitId, editDateVisited, editNote, tempPhotos } = req.body;
 
     if (!visitId) {
         return res.status(400).json({ error: 'Visit ID is required' });
@@ -90,7 +154,29 @@ const handleEditLog = async (req, res) => {
 
     try {
         const [[{ user_id }]] = await db.execute('SELECT user_id FROM user_stadiums WHERE visit_id = ?', [visitId]);
+
         const [rows] = await db.execute('UPDATE user_stadiums SET visited_on = ?, user_note = ? WHERE visit_id = ?', [editDateVisited, editNote, visitId]);
+
+        if (tempPhotos && tempPhotos.length > 0) {
+            const [[{ photoCount }]] = await db.execute('SELECT COUNT(*) as photoCount FROM visit_photos WHERE visit_id = ?', [visitId]);
+
+            const remaining = 5 - photoCount;
+            const photoLimit = Math.min(tempPhotos.length, remaining);
+
+            for (let i = 0; i < photoLimit; i++) {
+                const tempFilename = tempPhotos[i];
+                const tempPath = path.join(process.env.VISIT_PHOTO_DIR, tempFilename);
+
+                if (!fs.existsSync(tempPath)) continue;
+
+                const newFilename = `visit_${visitId}_${Date.now()}_${i}.jpg`;
+                const newPath = path.join(process.env.VISIT_PHOTO_DIR, newFilename);
+
+                fs.renameSync(tempPath, newPath);
+
+                await db.execute('INSERT INTO visit_photos (visit_id, user_id, filename) VALUES (?, ?, ?)', [visitId, user_id, newFilename]);
+            }
+        }
 
         await handleUpdateAchievementProgress(user_id);
 
@@ -384,7 +470,8 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const ext = path.extname(file.originalname);
-        cb(null, `temp_${Date.now()}${ext}`);
+        const unique = `${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+        cb(null, `temp_${req.user.userId}_${unique}${ext}`);
     }
 });
 
@@ -601,4 +688,4 @@ const handleResetPassword = async (req, res) => {
     }
 };
 
-module.exports = { handleCreateUserList, handleDeleteLog, handleDeleteUserList, handleEditLog, handleUpdateAchievementProgress, handleUpdateEmail, handleUpdatePassword, upload, handleUpdateProfilePic, handleUpdateUserList, handleUpdateUsername, handleUpdateUserStadium, handleUpdateUserWishlist, handleResetPassword };
+module.exports = { handleCreateUserList, handleDeleteLog, handleDeleteTempVisitPhoto,  handleDeleteUserList, handleDeleteVisitPhoto, handleEditLog, handleUpdateAchievementProgress, handleUpdateEmail, handleUpdatePassword, upload, handleUpdateProfilePic, handleUpdateUserList, handleUpdateUsername, handleUpdateUserStadium, handleUpdateUserWishlist, handleResetPassword };

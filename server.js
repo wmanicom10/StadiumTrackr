@@ -6,6 +6,8 @@ const app = express();
 
 const paymentController = require('./controllers/paymentController');
 
+require('./cleanup');
+
 app.post('/payment/webhook', express.raw({ type: 'application/json' }), paymentController.handleStripeWebhook);
 
 app.use(cors());

@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements, ICON_IMAGE_PATH, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getPageFromURL, initializeCustomSelects, isLoggedIn, renderPageNumbers, renderWithoutTransition, renderWithTransition, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu } from "../utils.js";
+import { addExistingPhotoPreview, createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getPageFromURL, initializeCustomSelects, isLoggedIn, openLightbox, renderPageNumbers, renderWithoutTransition, renderWithTransition, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
@@ -80,6 +80,9 @@ async function loadActivityTab(tab) {
         editLogImage: document.getElementById('edit-log-image'),
         editLogDateVisited: document.getElementById('edit-log-date-visited'),
         editLogNote: document.getElementById('edit-log-note'),
+        editLogPhotosInput: document.getElementById('edit-log-photos-input'),
+        editLogPhotosPreview: document.getElementById('edit-log-photos-preview'),
+        editLogPhotosCount: document.getElementById('edit-log-photos-count'),
         deleteLogMenu: document.getElementById('delete-log-menu'),
         closeDeleteLogMenu: document.getElementById('close-delete-log-menu'),
         deleteLogCancelButton: document.getElementById('delete-log-cancel-button'),
@@ -268,6 +271,9 @@ async function loadStadiumsTab(tab) {
         addStadiumMenu: document.getElementById('add-stadium-menu'),
         addStadiumDateVisited: document.getElementById('add-stadium-date-visited'),
         addStadiumNote: document.getElementById('add-stadium-note'),
+        addStadiumPhotosInput: document.getElementById('add-stadium-photos-input'),
+        addStadiumPhotosPreview: document.getElementById('add-stadium-photos-preview'),
+        addStadiumPhotosCount: document.getElementById('add-stadium-photos-count'),
         closeAddStadiumMenu: document.getElementById('close-add-stadium-menu'),
         addStadiumName: document.getElementById('add-stadium-name'),
         addStadiumLocation: document.getElementById('add-stadium-location'),
@@ -387,7 +393,7 @@ async function loadVisitsTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-                                        const payload = JSON.parse(atob(base64));
+    const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Visits - StadiumTrackr";
 
@@ -408,6 +414,9 @@ async function loadVisitsTab(tab) {
         editLogImage: document.getElementById('edit-log-image'),
         editLogDateVisited: document.getElementById('edit-log-date-visited'),
         editLogNote: document.getElementById('edit-log-note'),
+        editLogPhotosInput: document.getElementById('edit-log-photos-input'),
+        editLogPhotosPreview: document.getElementById('edit-log-photos-preview'),
+        editLogPhotosCount: document.getElementById('edit-log-photos-count'),
         deleteLogMenu: document.getElementById('delete-log-menu'),
         closeDeleteLogMenu: document.getElementById('close-delete-log-menu'),
         deleteLogCancelButton: document.getElementById('delete-log-cancel-button'),
@@ -446,7 +455,7 @@ async function loadWishlistTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-                                        const payload = JSON.parse(atob(base64));
+    const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Wishlist - StadiumTrackr";
 
@@ -468,6 +477,9 @@ async function loadWishlistTab(tab) {
         addStadiumName: document.getElementById('add-stadium-name'),
         addStadiumLocation: document.getElementById('add-stadium-location'),
         addStadiumImage: document.getElementById('add-stadium-image'),
+        addStadiumPhotosInput: document.getElementById('add-stadium-photos-input'),
+        addStadiumPhotosPreview: document.getElementById('add-stadium-photos-preview'),
+        addStadiumPhotosCount: document.getElementById('add-stadium-photos-count'),
         addStadiumLogButton: document.getElementById('add-stadium-log-button'),
         addStadiumCancelButton: document.getElementById('add-stadium-cancel-button')
     }
@@ -759,7 +771,7 @@ function renderActivityTab(stadiums, elements) {
                     userHomeLogActivityEditLogButton.classList.add('user-home-log-activity-edit-log-button');
                     userHomeLogActivityEditLogButton.textContent = 'Edit Log';
 
-                    userHomeLogActivityEditLogButton.addEventListener('click', () => {
+                    userHomeLogActivityEditLogButton.addEventListener('click', async () => {
                         currentData = { visit_id: stadium.visit_id };
                         elements.editLogName.textContent = stadium.stadium_name;
                         elements.editLogLocation.textContent = stadium.city + ', ' + stadium.state;
@@ -769,6 +781,15 @@ function renderActivityTab(stadiums, elements) {
                         const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
                         elements.editLogDateVisited.setAttribute('max', today);
                         elements.editLogNote.value = stadium.user_note || '';
+
+                        elements.editLogPhotosPreview.innerHTML = '';
+                        if (stadium.photos && stadium.photos.length > 0) {
+                            stadium.photos.forEach(photo => {
+                                addExistingPhotoPreview(photo, elements);
+                            });
+                        }
+                        updateEditLogPhotoCount(elements);
+
                         toggleMenu(elements.editLogMenu, true, overlay);
                     });
 
@@ -789,6 +810,28 @@ function renderActivityTab(stadiums, elements) {
 
                     userHomeLogActivityInfoContainer.appendChild(userHomeActivityLogImage);
                     userHomeLogActivityInfoContainer.appendChild(userHomeLogActivityInfo);
+
+                    if (stadium.photos && stadium.photos.length > 0) {
+                        const photosContainer = document.createElement('div');
+                        photosContainer.classList.add('activity-photos-container');
+
+                        const photosContainerHeader = document.createElement('h5');
+                        photosContainerHeader.classList.add('photos-container-header');
+                        photosContainerHeader.textContent = 'Photos';
+
+                        photosContainer.appendChild(photosContainerHeader);
+
+                        stadium.photos.forEach(photo => {
+                            const img = document.createElement('img');
+                            img.src = `/images/visit-photos/${photo.filename}`;
+                            img.classList.add('activity-photo');
+                            img.addEventListener('click', () => openLightbox(img.src));
+                            img.style.cursor = 'pointer';
+                            photosContainer.appendChild(img);
+                        });
+
+                        userHomeLogActivityInfoContainer.appendChild(photosContainer);
+                    }
 
                     userHomeLogActivity.appendChild(userHomeLogActivityHeader);
                     userHomeLogActivity.appendChild(userHomeLogActivityInfoContainer);
@@ -1073,6 +1116,9 @@ function renderHomeTabUserStadiums(stadiums) {
         addStadiumName: document.getElementById('add-stadium-name'),
         addStadiumLocation: document.getElementById('add-stadium-location'),
         addStadiumImage: document.getElementById('add-stadium-image'),
+        addStadiumPhotosInput: document.getElementById('add-stadium-photos-input'),
+        addStadiumPhotosPreview: document.getElementById('add-stadium-photos-preview'),
+        addStadiumPhotosCount: document.getElementById('add-stadium-photos-count'),
         addStadiumLogButton: document.getElementById('add-stadium-log-button'),
         addStadiumCancelButton: document.getElementById('add-stadium-cancel-button')
     }
@@ -1097,6 +1143,9 @@ function renderHomeTabWishlist(stadiums) {
         addStadiumName: document.getElementById('add-stadium-name'),
         addStadiumLocation: document.getElementById('add-stadium-location'),
         addStadiumImage: document.getElementById('add-stadium-image'),
+        addStadiumPhotosInput: document.getElementById('add-stadium-photos-input'),
+        addStadiumPhotosPreview: document.getElementById('add-stadium-photos-preview'),
+        addStadiumPhotosCount: document.getElementById('add-stadium-photos-count'),
         addStadiumLogButton: document.getElementById('add-stadium-log-button'),
         addStadiumCancelButton: document.getElementById('add-stadium-cancel-button')
     }
@@ -1295,6 +1344,15 @@ function renderVisitsTab(stadiums, elements) {
                 const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
                 elements.editLogDateVisited.setAttribute('max', today);
                 elements.editLogNote.value = stadium.user_note || '';
+
+                elements.editLogPhotosPreview.innerHTML = '';
+                if (stadium.photos && stadium.photos.length > 0) {
+                    stadium.photos.forEach(photo => {
+                        addExistingPhotoPreview(photo, elements);
+                    });
+                }
+                updateEditLogPhotoCount(elements);
+
                 toggleMenu(elements.editLogMenu, true, overlay);
             });
 

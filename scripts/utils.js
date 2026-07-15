@@ -24,6 +24,62 @@ if (footerHomeLink) {
 }
 
 /*  Functions  */
+function addEditLogPhotoPreview(filename, tempPhotos, photosPreview, photosCount) {
+    const container = document.createElement('div');
+    container.classList.add('visit-photo-preview');
+
+    const img = document.createElement('img');
+    img.src = `/images/visit-photos/${filename}`;
+    img.classList.add('visit-photo-preview-img');
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('visit-photo-preview-delete');
+    deleteBtn.textContent = '×';
+    deleteBtn.addEventListener('click', () => {
+        container.classList.remove('visible');
+        container.addEventListener('transitionend', () => {
+            updateAPI.deleteTempVisitPhoto(filename).catch(err => console.error(err));
+            tempPhotos.splice(tempPhotos.indexOf(filename), 1);
+            container.remove();
+        }, { once: true });
+    });
+
+    container.appendChild(img);
+    container.appendChild(deleteBtn);
+    photosPreview.appendChild(container);
+
+    requestAnimationFrame(() => container.classList.add('visible'));
+}
+
+function addPhotoPreview(filename, tempPhotos, photosPreview, photosCount) {
+    const container = document.createElement('div');
+    container.classList.add('visit-photo-preview');
+
+    const img = document.createElement('img');
+    img.src = `/images/visit-photos/${filename}`;
+    img.classList.add('visit-photo-preview-img');
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('visit-photo-preview-delete');
+    deleteBtn.textContent = '×';
+    deleteBtn.addEventListener('click', () => {
+        container.classList.remove('visible');
+        container.addEventListener('transitionend', () => {
+            updateAPI.deleteTempVisitPhoto(filename).catch(err => console.error(err));
+            tempPhotos.splice(tempPhotos.indexOf(filename), 1);
+            container.remove();
+            photosCount.textContent = `${tempPhotos.length}/5`;
+        }, { once: true });
+    });
+
+    container.appendChild(img);
+    container.appendChild(deleteBtn);
+    photosPreview.appendChild(container);
+    requestAnimationFrame(() => {
+        container.classList.add('visible');
+    });
+}
+
 function closeAllDropdowns(except = null) {
     document.querySelectorAll('.custom-select-dropdown.active').forEach(d => {
         if (d !== except) {
@@ -278,6 +334,24 @@ function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
     });
 }
 
+function resetEditLogPhotos(tempPhotos, elements) {
+    tempPhotos.forEach(filename => {
+        updateAPI.deleteTempVisitPhoto(filename).catch(err => console.error(err));
+    });
+    tempPhotos.length = 0;
+    elements.editLogPhotosPreview.innerHTML = '';
+    elements.editLogPhotosCount.textContent = '0/5';
+}
+
+function resetPhotoUpload(tempPhotos, photosPreview, photosCount) {
+    tempPhotos.forEach(filename => {
+        updateAPI.deleteTempVisitPhoto(filename).catch(err => console.error(err));
+    });
+    tempPhotos.length = 0;
+    photosPreview.innerHTML = '';
+    photosCount.textContent = '0/5';
+}
+
 function showNoResults(elements) {
     elements.stadiumsList.style.display = 'none';
     elements.stadiumsPageSelector.style.display = 'none';
@@ -377,6 +451,37 @@ export async function searchStadiums(name, suggestionsContainer, searchValue) {
 }
 
 /*  Exported Functions  */
+export function addExistingPhotoPreview(photo, elements) {
+    const container = document.createElement('div');
+    container.classList.add('visit-photo-preview', 'visible');
+
+    const img = document.createElement('img');
+    img.src = `/images/visit-photos/${photo.filename}`;
+    img.classList.add('visit-photo-preview-img');
+    img.addEventListener('click', () => openLightbox(img.src))
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.classList.add('visit-photo-preview-delete');
+    deleteBtn.textContent = '×';
+    deleteBtn.addEventListener('click', async () => {
+        try {
+            await updateAPI.deleteVisitPhoto(photo.photo_id);
+            container.classList.remove('visible');
+            container.addEventListener('transitionend', () => {
+                container.remove();
+                updateEditLogPhotoCount(elements);
+            }, { once: true });
+        } catch (err) {
+            console.error(err);
+            shakeOrReplace('Failed to delete photo.');
+        }
+    });
+
+    container.appendChild(img);
+    container.appendChild(deleteBtn);
+    elements.editLogPhotosPreview.appendChild(container);
+}
+
 export function calculatePageButtons(current, total) {
     if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
     if (current <= 3) return [1, 2, 3, 4, 5, '...', total];
@@ -807,6 +912,18 @@ export function logOut() {
     localStorage.removeItem('token');
 }
 
+export function openLightbox(src) {
+    const lightbox = document.getElementById('photo-lightbox');
+    const img = document.getElementById('photo-lightbox-img');
+    img.src = src;
+    lightbox.classList.add('active');
+
+    document.getElementById('photo-lightbox-close').onclick = () => lightbox.classList.remove('active');
+    lightbox.onclick = (e) => {
+        if (e.target === lightbox) lightbox.classList.remove('active');
+    };
+}
+
 export function renderPageNumbers(elements, currentPage, pageCount) {
     elements.stadiumsPageSelector.innerHTML = '';
     const prevBtn = createNavigationButton('←', currentPage === 1, () => {
@@ -869,12 +986,54 @@ export function setupAddStadiumModal(stadiumId, stadiumName, city, state, stadiu
     elements.addStadiumDateVisited.setAttribute('max', today);
     elements.addStadiumDateVisited.value = today;
 
+    const newLogButton = elements.addStadiumLogButton.cloneNode(true);
+    elements.addStadiumLogButton.parentNode.replaceChild(newLogButton, elements.addStadiumLogButton);
+    elements.addStadiumLogButton = newLogButton;
+
+    const newPhotosInput = elements.addStadiumPhotosInput.cloneNode(true);
+    elements.addStadiumPhotosInput.parentNode.replaceChild(newPhotosInput, elements.addStadiumPhotosInput);
+    elements.addStadiumPhotosInput = newPhotosInput;
+
+    let tempPhotos = [];
+
+    elements.addStadiumPhotosInput.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        const remaining = 5 - tempPhotos.length;
+        if (remaining === 0) {
+            shakeOrReplace('Maximum of 5 photos per visit.');
+            return;
+        }
+        const toUpload = files.slice(0, remaining);
+        if (files.length > remaining) {
+            shakeOrReplace(`Only ${remaining} photo${remaining !== 1 ? 's' : ''} remaining. Some photos were not uploaded.`);
+        }
+
+        for (const file of toUpload) {
+            const formData = new FormData();
+            formData.append('photo', file);
+
+            try {
+                const result = await userAPI.uploadTempVisitPhoto(formData);
+                tempPhotos.push(result.filename);
+                addPhotoPreview(result.filename, tempPhotos, elements.addStadiumPhotosPreview, elements.addStadiumPhotosCount);
+                elements.addStadiumPhotosCount.textContent = `${tempPhotos.length}/5`;
+            } catch (err) {
+                console.error(err);
+                shakeOrReplace('Failed to upload photo.');
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        elements.addStadiumPhotosInput.value = '';
+    });
+
     elements.addStadiumLogButton.addEventListener('click', async () => {
         const dateVisited = elements.addStadiumDateVisited.value;
         const note = elements.addStadiumNote.value.trim() || null;
 
         try {
-            await userAPI.addStadium(stadiumId, dateVisited, note);
+            await userAPI.addStadium(stadiumId, dateVisited, note, tempPhotos);
             sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Stadium added successfully.' }));
             window.location.reload();
         } catch (error) {
@@ -884,10 +1043,12 @@ export function setupAddStadiumModal(stadiumId, stadiumName, city, state, stadiu
     });
 
     elements.addStadiumCancelButton.addEventListener('click', () => {
+        resetPhotoUpload(tempPhotos, elements.addStadiumPhotosPreview, elements.addStadiumPhotosCount);
         toggleMenu(elements.addStadiumMenu, false, overlay);
     });
 
     elements.closeAddStadiumMenu.addEventListener('click', () => {
+        resetPhotoUpload(tempPhotos, elements.addStadiumPhotosPreview, elements.addStadiumPhotosCount);
         toggleMenu(elements.addStadiumMenu, false, overlay);
     });
 }
@@ -917,11 +1078,53 @@ export function setupDeleteLogHandlers(elements, getCurrentData) {
 }
 
 export function setupEditLogHandlers(elements, getCurrentData) {
+    let tempPhotos = [];
+
+    const newPhotosInput = elements.editLogPhotosInput.cloneNode(true);
+    elements.editLogPhotosInput.parentNode.replaceChild(newPhotosInput, elements.editLogPhotosInput);
+    elements.editLogPhotosInput = newPhotosInput;
+
+    elements.editLogPhotosInput.addEventListener('change', async (e) => {
+        const files = Array.from(e.target.files);
+        const currentData = getCurrentData();
+        const existingCount = elements.editLogPhotosPreview.querySelectorAll('.visit-photo-preview').length;
+        const remaining = 5 - existingCount - tempPhotos.length;
+
+        if (remaining === 0) {
+            shakeOrReplace('Maximum of 5 photos per visit.');
+            return;
+        }
+
+        const toUpload = files.slice(0, remaining);
+        if (files.length > remaining) {
+            shakeOrReplace(`Only ${remaining} photo${remaining !== 1 ? 's' : ''} remaining. Some photos were not uploaded.`);
+        }
+
+        for (const file of toUpload) {
+            const formData = new FormData();
+            formData.append('photo', file);
+
+            try {
+                const result = await userAPI.uploadTempVisitPhoto(formData);
+                tempPhotos.push(result.filename);
+                addEditLogPhotoPreview(result.filename, tempPhotos, elements.editLogPhotosPreview, elements.editLogPhotosCount);
+                updateEditLogPhotoCount(elements);
+            } catch (err) {
+                console.error(err);
+                shakeOrReplace('Failed to upload photo.');
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 50));
+        }
+
+        elements.editLogPhotosInput.value = '';
+    });
+
     elements.editLogSaveButton.addEventListener('click', async () => {
         let currentData = getCurrentData();
         if (!currentData) return;
         try {
-            await updateAPI.editLog(currentData.visit_id, elements.editLogDateVisited.value, elements.editLogNote.value);
+            await updateAPI.editLog(currentData.visit_id, elements.editLogDateVisited.value, elements.editLogNote.value, tempPhotos);
             toggleMenu(elements.editLogMenu, false, overlay);
             window.location.reload();
             currentData = null;
@@ -932,10 +1135,12 @@ export function setupEditLogHandlers(elements, getCurrentData) {
     });
 
     elements.editLogCancelButton.addEventListener('click', () => {
+        resetEditLogPhotos(tempPhotos, elements);
         toggleMenu(elements.editLogMenu, false, overlay);
     });
 
     elements.closeEditLogMenu.addEventListener('click', () => {
+        resetEditLogPhotos(tempPhotos, elements);
         toggleMenu(elements.editLogMenu, false, overlay);
     });
 }
@@ -1165,6 +1370,11 @@ export function truncateUsername(username, maxLength = 10) {
     return username.length > maxLength 
         ? username.slice(0, maxLength) + '...' 
         : username;
+}
+
+export function updateEditLogPhotoCount(elements) {
+    const total = elements.editLogPhotosPreview.querySelectorAll('.visit-photo-preview').length;
+    elements.editLogPhotosCount.textContent = `${total}/5`;
 }
 
 export function validateEmail(email) {

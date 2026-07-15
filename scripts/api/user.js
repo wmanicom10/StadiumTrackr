@@ -2,8 +2,8 @@ import { API_BASE_URL, ROUTES } from '../constants.js';
 import { fetchAPI, fetchFormData } from '../utils.js';
 
 export const userAPI = {
-    addStadium: (stadiumId, dateVisited, note) =>
-        fetchAPI(ROUTES.ADD_STADIUM, { stadiumId, dateVisited, note }),
+    addStadium: (stadiumId, dateVisited, note, tempPhotos) =>
+        fetchAPI(ROUTES.ADD_STADIUM, { stadiumId, dateVisited, note, tempPhotos }),
 
     loadFavoriteStadiums: () =>
         fetchAPI(ROUTES.LOAD_FAVORITE_STADIUMS),
@@ -45,5 +45,8 @@ export const userAPI = {
         fetchAPI(ROUTES.SAVE_FAVORITE_STADIUMS, { stadiumNames }),
 
     sendPasswordReset: (email) =>
-        fetchAPI(ROUTES.SEND_PASSWORD_RESET, { email })
+        fetchAPI(ROUTES.SEND_PASSWORD_RESET, { email }),
+
+    uploadTempVisitPhoto: (formData) =>
+        fetchFormData(ROUTES.UPLOAD_TEMP_VISIT_PHOTO, formData)
 };

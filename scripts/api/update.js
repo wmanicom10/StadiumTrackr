@@ -8,11 +8,17 @@ export const updateAPI = {
     deleteLog: (visitId) =>
         fetchAPI(ROUTES.DELETE_LOG, { visitId }),
 
+    deleteTempVisitPhoto: (filename) =>
+        fetchAPI(ROUTES.DELETE_TEMP_VISIT_PHOTO, { filename }),
+
     deleteUserList: (listId) => 
         fetchAPI(ROUTES.DELETE_USER_LIST, { listId }),
 
-    editLog: (visitId, editDateVisited, editNote) =>
-        fetchAPI(ROUTES.EDIT_LOG, { visitId, editDateVisited, editNote }),
+    deleteVisitPhoto: (photoId) => 
+        fetchAPI(ROUTES.DELETE_VISIT_PHOTO, { photoId }),
+
+    editLog: (visitId, editDateVisited, editNote, tempPhotos) =>
+        fetchAPI(ROUTES.EDIT_LOG, { visitId, editDateVisited, editNote, tempPhotos }),
 
     updateEmail: (newEmail) =>
         fetchAPI(ROUTES.UPDATE_EMAIL, { newEmail }),

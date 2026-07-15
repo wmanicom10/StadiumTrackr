@@ -59,7 +59,9 @@ export const ROUTES = {
     /* UPDATE */
     CREATE_USER_LIST: '/update/createUserList',
     DELETE_LOG: '/update/deleteLog',
+    DELETE_TEMP_VISIT_PHOTO: '/update/deleteTempVisitPhoto',
     DELETE_USER_LIST: '/update/deleteUserList',
+    DELETE_VISIT_PHOTO: '/update/deleteVisitPhoto',
     EDIT_LOG: '/update/editLog',
     UPDATE_EMAIL: '/update/updateEmail',
     UPDATE_PASSWORD: '/update/updatePassword',
@@ -85,7 +87,8 @@ export const ROUTES = {
     LOAD_USER_WISHLIST: '/user/loadUserWishlist',
     REFRESH_TOKEN: '/user/refreshToken',
     SAVE_FAVORITE_STADIUMS: '/user/saveFavoriteStadiums',
-    SEND_PASSWORD_RESET: '/user/sendPasswordReset'
+    SEND_PASSWORD_RESET: '/user/sendPasswordReset',
+    UPLOAD_TEMP_VISIT_PHOTO: '/user/uploadTempVisitPhoto'
 };
 export const sidebarLogInButton = getElement('sidebar-log-in');
 export const sidebarLogOutButton = getElement('sidebar-log-out');
@@ -101,6 +104,7 @@ export const USERNAME_CONSTRAINTS = {
     MIN_LENGTH: 6,
     MAX_LENGTH: 30
 };
+export const VISIT_PHOTO_DIR = '/images/visit-photos/';
 
 /*  Functions  */
 function getElement(id) {
