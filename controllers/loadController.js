@@ -175,8 +175,20 @@ const handleLoadFeaturedEvents = async (req, res) => {
 
 /*  loadMapStadiums  */
 const handleLoadMapStadiums = async (req, res) => {
+    const userId = req.user?.userId || null;
+
     try {
-        const [rows] = await db.execute('SELECT stadium_id, stadium_name, street_address, city, state, zip, latitude, longitude, image FROM stadiums order by stadium_id');
+        let query;
+        let params = [];
+
+        if (userId) {
+            query = `SELECT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.latitude, s.longitude, s.image, l.league_name, c.country_name, CASE WHEN MAX(us.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM stadiums s JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id JOIN countries c ON s.country_id = c.country_id LEFT JOIN user_stadiums us ON us.stadium_id = s.stadium_id AND us.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? GROUP BY s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.latitude, s.longitude, s.image, l.league_name, c.country_name ORDER BY s.stadium_id`;
+            params = [userId, userId];
+        } else {
+            query = `SELECT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.latitude, s.longitude, s.image, l.league_name, c.country_name FROM stadiums s JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id JOIN countries c ON s.country_id = c.country_id GROUP BY s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.latitude, s.longitude, s.image, l.league_name, c.country_name ORDER BY s.stadium_id`;
+        }
+
+        const [rows] = await db.execute(query, params);
 
         if (rows.length === 0) {
             return res.status(404).json({ error: 'Could not load stadiums' });
@@ -187,7 +199,11 @@ const handleLoadMapStadiums = async (req, res) => {
             stadium_name: row.stadium_name,
             address: `${row.street_address}, ${row.city}, ${row.state} ${row.zip}`,
             location: [row.latitude, row.longitude],
-            image: row.image
+            image: row.image,
+            league: row.league_name,
+            country: row.country_name,
+            visited: row.visited || 0,
+            wishlist: row.wishlist || 0
         }));
 
         res.json({ rows: formattedRows });

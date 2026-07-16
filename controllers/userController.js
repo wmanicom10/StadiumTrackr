@@ -260,14 +260,16 @@ const handleLoadUserHomeMap = async (req, res) => {
     if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
-        const [stadiums] = await db.execute('SELECT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude FROM stadiums s JOIN user_stadiums us ON s.stadium_id = us.stadium_id WHERE us.user_id = ?', [userId]);
+        const [stadiums] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude, l.league_name, c.country_name FROM stadiums s JOIN user_stadiums us ON s.stadium_id = us.stadium_id JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id JOIN countries c ON s.country_id = c.country_id WHERE us.user_id = ? GROUP BY s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude, l.league_name, c.country_name`, [userId]);
 
         const formattedRows = stadiums.map(row => ({
             stadium_id: row.stadium_id,
             stadium_name: row.stadium_name,
             address: `${row.street_address}, ${row.city}, ${row.state} ${row.zip}`,
             location: [row.latitude, row.longitude],
-            image: row.image
+            image: row.image,
+            league: row.league_name,
+            country: row.country_name
         }));
 
         res.json({ formattedRows });
@@ -637,7 +639,17 @@ const handleLoadUserStats = async (req, res) => {
 
         const [topCities] = await db.execute(`SELECT s.city, s.state, COUNT(DISTINCT us.stadium_id) AS stadiumCount FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id WHERE us.user_id = ? GROUP BY s.city, s.state ORDER BY stadiumCount DESC, s.city ASC LIMIT 5`, [userId]);
 
-        const [mapStadiums] = await db.execute(`SELECT DISTINCT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.latitude, s.longitude FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id WHERE us.user_id = ?`, [userId]);
+        const [mapStadiums] = await db.execute(`SELECT DISTINCT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude, l.league_name, c.country_name FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id JOIN countries c ON s.country_id = c.country_id WHERE us.user_id = ? GROUP BY s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude, l.league_name, c.country_name`, [userId]);
+
+        const formattedMapStadiums = mapStadiums.map(row => ({
+            stadium_id: row.stadium_id,
+            stadium_name: row.stadium_name,
+            address: `${row.street_address}, ${row.city}, ${row.state} ${row.zip}`,
+            location: [row.latitude, row.longitude],
+            image: row.image,
+            league_name: row.league_name,
+            country_name: row.country_name
+        }));
 
         res.json({
             heroStats: { ...heroStats, percentOfAll },
@@ -652,7 +664,7 @@ const handleLoadUserStats = async (req, res) => {
             stadiumRecords: { oldest, newest, highestCapacity, lowestCapacity, highestCost, lowestCost, mostPopular, leastPopular },
             topCountries,
             topCities,
-            mapStadiums
+            mapStadiums: formattedMapStadiums
         });
     } catch (err) {
         console.error('Error in handleLoadUserStats:', err);

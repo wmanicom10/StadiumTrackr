@@ -12,6 +12,7 @@ const userHomeHeaderSkeleton = document.getElementById('user-home-header-skeleto
 
 let allStadiums = [];
 let currentData = null;
+let allHomeMapStadiums = [];
 
 /*  Async Functions  */
 async function loadAchievementsTab(tab) {
@@ -167,9 +168,10 @@ async function loadHomeTab() {
         userAPI.loadUserHomeMap(),
         new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
     ]);
-    window.userHomeMapData = {
-        stadiums: mapData.formattedRows
-    };
+
+    allHomeMapStadiums = mapData.formattedRows;
+    window.userHomeMapData = { stadiums: mapData.formattedRows };
+    setupHomeMapFilterHandlers();
 
     const favoriteStadiums = result.userFavoriteStadiums;
     renderHomeTabFavoriteStadiums(favoriteStadiums);
@@ -206,6 +208,8 @@ async function loadHomeTab() {
     document.getElementById('user-achievements-skeleton').style.display = 'none';
     document.getElementById('user-achievements').style.display = 'flex';
     if (userAchievements.length > 0) document.getElementById('user-home-achievements-see-all-button').style.display = 'block';
+    document.getElementById('user-home-map-filters-skeleton').style.display = 'none';
+    document.getElementById('user-home-map-filters').style.display = 'flex';
     document.getElementById('user-home-stadium-map-skeleton').style.display = 'none';
     document.getElementById('user-home-stadium-map').style.display = 'block';
 }
@@ -524,9 +528,9 @@ async function loadWishlistTab(tab) {
     document.getElementById('user-home-wishlist-filters-container').style.display = 'block';
 }
 
-async function renderHomeTabMap() {
+async function renderHomeTabMap(stadiums = null) {
     await new Promise(resolve => setTimeout(resolve, 100));
-    const stadiums = window.userHomeMapData.stadiums;
+    const data = stadiums || window.userHomeMapData.stadiums;
     
     if (window.userHomeMap) {
         window.userHomeMap.remove();
@@ -547,7 +551,7 @@ async function renderHomeTabMap() {
         ext: 'jpg'
     }).addTo(window.userHomeMap);
     
-    stadiums.forEach(stadium => {
+    data.forEach(stadium => {
         L.marker(stadium.location, { icon: customIcon })
             .addTo(window.userHomeMap)
             .bindPopup(`
@@ -567,6 +571,19 @@ async function renderHomeTabMap() {
 }
 
 /*  Functions  */
+function filterHomeMapStadiums(stadiums) {
+    const league = document.getElementById('home-map-league-filter').value;
+    const country = document.getElementById('home-map-country-filter').value;
+    return stadiums.filter(s => {
+        if (league !== 'all' && s.league.toLowerCase() !== league) return false;
+        if (country !== 'all') {
+            const countryMap = { us: 'The United States of America', canada: 'Canada' };
+            if (s.country !== countryMap[country]) return false;
+        }
+        return true;
+    });
+}
+
 function renderAchievementsTab(achievements, elements) {
     if (achievements.length === 0) {
         elements.stadiumsList.style.display = 'none';
@@ -1556,6 +1573,26 @@ function setupFilterHandlers(elements, tab) {
         const params = new URLSearchParams();
         params.set('tab', tab);
         window.location.search = params.toString();
+    });
+}
+
+function setupHomeMapFilterHandlers() {
+    ['home-map-league-filter', 'home-map-country-filter'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+            const select = document.getElementById(id);
+            const wrapper = select.closest('.custom-select-wrapper');
+            const options = wrapper.querySelectorAll('.custom-select-option');
+            const valueDisplay = wrapper.querySelector('.custom-select-value');
+            options.forEach(o => {
+                o.classList.remove('selected');
+                if (o.dataset.value === select.value) o.classList.add('selected');
+            });
+            if (valueDisplay) {
+                const selectedOption = wrapper.querySelector(`.custom-select-option[data-value="${select.value}"]`);
+                if (selectedOption) valueDisplay.textContent = selectedOption.textContent;
+            }
+            renderHomeTabMap(filterHomeMapStadiums(allHomeMapStadiums));
+        });
     });
 }
 

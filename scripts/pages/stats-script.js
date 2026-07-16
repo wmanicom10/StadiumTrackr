@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements, MIN_LOADING_TIME } from "../constants.js";
-import { createToast, createUserStadiumElement, isLoggedIn, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
+import { createToast, createUserStadiumElement, initializeCustomSelects, isLoggedIn, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 
@@ -20,17 +20,19 @@ const elements = {
     addStadiumCancelButton: document.getElementById('add-stadium-cancel-button')
 }
 
+let allStatsMapStadiums = [];
+
 /*  Async Functions  */
 async function loadStatsInfo() {
     try {
-        const [userStats, mapData] = await Promise.all([
+        const [userStats] = await Promise.all([
             userAPI.loadUserStats(),
-            userAPI.loadUserHomeMap(),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
-        window.userStatsMapData = {
-            stadiums: mapData.formattedRows
-        };
+
+        allStatsMapStadiums = userStats.mapStadiums;
+        window.userStatsMapData = { stadiums: userStats.mapStadiums };
+        setupStatsMapFilterHandlers();
 
         renderStatsPage(userStats);
         if (window.userStatsMapData) {
@@ -50,16 +52,17 @@ async function loadStatsInfo() {
         document.getElementById('geographic-breakdown-container-skeleton').style.display = 'none';
         document.getElementById('geographic-breakdown-container').style.display = 'block';
         document.getElementById('geographic-breakdown-stadiums-map').style.display = 'block';
+        document.getElementById('stats-map-filters').style.display = 'flex';
     } catch (error) {
         console.error(error);
         shakeOrReplace(error.message || 'Failed to load user stats.');
     }
 }
 
-async function renderMap() {
+async function renderMap(stadiums = null) {
     if (window.userStatsMapData) {
         await new Promise(resolve => setTimeout(resolve, 100));
-        const stadiums = window.userStatsMapData.stadiums;
+        const data = stadiums || window.userStatsMapData.stadiums;
         
         if (window.userStatsMap) {
             window.userStatsMap.remove();
@@ -80,7 +83,7 @@ async function renderMap() {
             ext: 'jpg'
         }).addTo(window.userStatsMap);
         
-        stadiums.forEach(stadium => {
+        data.forEach(stadium => {
             L.marker(stadium.location, { icon: customIcon })
                 .addTo(window.userStatsMap)
                 .bindPopup(`
@@ -101,6 +104,19 @@ async function renderMap() {
 }
 
 /*  Functions  */
+function filterStatsMapStadiums(stadiums) {
+    const league = document.getElementById('stats-map-league-filter').value;
+    const country = document.getElementById('stats-map-country-filter').value;
+    return stadiums.filter(s => {
+        if (league !== 'all' && s.league_name.toLowerCase() !== league) return false;
+        if (country !== 'all') {
+            const countryMap = { us: 'The United States of America', canada: 'Canada' };
+            if (s.country_name !== countryMap[country]) return false;
+        }
+        return true;
+    });
+}
+
 function renderStatsPage(userStats) {
     // Hero
     document.getElementById('stats-hero-stadiums-number').textContent = userStats.heroStats.numStadiums;
@@ -355,11 +371,32 @@ function renderStatsPage(userStats) {
     });
 }
 
+function setupStatsMapFilterHandlers() {
+    ['stats-map-league-filter', 'stats-map-country-filter'].forEach(id => {
+        document.getElementById(id).addEventListener('change', () => {
+            const select = document.getElementById(id);
+            const wrapper = select.closest('.custom-select-wrapper');
+            const options = wrapper.querySelectorAll('.custom-select-option');
+            const valueDisplay = wrapper.querySelector('.custom-select-value');
+            options.forEach(o => {
+                o.classList.remove('selected');
+                if (o.dataset.value === select.value) o.classList.add('selected');
+            });
+            if (valueDisplay) {
+                const selectedOption = wrapper.querySelector(`.custom-select-option[data-value="${select.value}"]`);
+                if (selectedOption) valueDisplay.textContent = selectedOption.textContent;
+            }
+            renderMap(filterStatsMapStadiums(allStatsMapStadiums));
+        });
+    });
+}
+
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerUserLogOutEvents();
+    initializeCustomSelects();
     setupSearchAutocomplete('logged-in-nav-search', 'logged-in-search-field-nav', 'logged-in-nav-autocomplete-list');
     setupSearchAutocomplete('logged-in-sidebar-nav-search', 'logged-in-sidebar-search-field-nav', 'logged-in-sidebar-nav-autocomplete-list');
 });

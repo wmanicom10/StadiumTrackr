@@ -305,6 +305,62 @@
                             </div>
                             <div id="geographic-breakdown-stadiums-map-container">
                                 <h4 class="geographic-breakdown-header">Stadiums Map</h4>
+                                <div id="stats-map-filters">
+                                    <div class="filter-group">
+                                        <label class="filter-label">League:</label>
+                                        <div class="custom-select-wrapper">
+                                            <div class="custom-select-trigger" data-select="stats-map-league">
+                                                <span class="custom-select-value">All Leagues</span>
+                                                <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                                </svg>
+                                            </div>
+                                            <div class="custom-select-dropdown">
+                                                <div class="custom-select-option selected" data-value="all">All Leagues</div>
+                                                <div class="custom-select-option" data-value="nfl">NFL</div>
+                                                <div class="custom-select-option" data-value="nba">NBA</div>
+                                                <div class="custom-select-option" data-value="mlb">MLB</div>
+                                                <div class="custom-select-option" data-value="nhl">NHL</div>
+                                                <div class="custom-select-option" data-value="mls">MLS</div>
+                                                <div class="custom-select-option" data-value="wnba">WNBA</div>
+                                                <div class="custom-select-option" data-value="ncaaf">NCAAF</div>
+                                                <div class="custom-select-option" data-value="ncaab">NCAAB</div>
+                                            </div>
+                                            <select class="filter-select" id="stats-map-league-filter">
+                                                <option value="all">All Leagues</option>
+                                                <option value="nfl">NFL</option>
+                                                <option value="nba">NBA</option>
+                                                <option value="mlb">MLB</option>
+                                                <option value="nhl">NHL</option>
+                                                <option value="mls">MLS</option>
+                                                <option value="wnba">WNBA</option>
+                                                <option value="ncaaf">NCAAF</option>
+                                                <option value="ncaab">NCAAB</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="filter-group">
+                                        <label class="filter-label">Country:</label>
+                                        <div class="custom-select-wrapper">
+                                            <div class="custom-select-trigger" data-select="stats-map-country">
+                                                <span class="custom-select-value">All Countries</span>
+                                                <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                                    <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                                </svg>
+                                            </div>
+                                            <div class="custom-select-dropdown">
+                                                <div class="custom-select-option selected" data-value="all">All Countries</div>
+                                                <div class="custom-select-option" data-value="us">USA</div>
+                                                <div class="custom-select-option" data-value="canada">Canada</div>
+                                            </div>
+                                            <select class="filter-select" id="stats-map-country-filter">
+                                                <option value="all">All Countries</option>
+                                                <option value="us">USA</option>
+                                                <option value="canada">Canada</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div id="geographic-breakdown-stadiums-map"></div>
                             </div>
                         </div>

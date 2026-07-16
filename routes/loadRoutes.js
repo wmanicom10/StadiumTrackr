@@ -8,7 +8,7 @@ const loadController = require('../controllers/loadController');
 router.post('/loadAboutInfo', loadController.handleLoadAboutInfo);
 router.post('/loadCaptchaConfig', loadController.handleLoadCaptchaConfig);
 router.post('/loadFeaturedEvents', loadController.handleLoadFeaturedEvents);
-router.post('/loadMapStadiums', loadController.handleLoadMapStadiums);
+router.post('/loadMapStadiums', optionalAuth, loadController.handleLoadMapStadiums);
 router.post('/loadPhotoCredits', loadController.handleLoadPhotoCredits);
 router.post('/loadPopularStadiums', loadController.handleLoadPopularStadiums);
 router.post('/loadProPricing', loadController.handleLoadProPricing);
