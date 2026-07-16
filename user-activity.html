@@ -104,6 +104,9 @@
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
                                         document.getElementById('logged-in-header-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                        if (!payload.isPro) {
+                                            document.querySelectorAll('a[href="stats.html"]').forEach(el => el.remove());
+                                        }
                                     })();
                                 </script>
                                 <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -167,6 +170,9 @@
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
                                         document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                        if (!payload.isPro) {
+                                            document.querySelectorAll('a[href="stats.html"]').forEach(el => el.remove());
+                                        }
                                     })();
                                 </script>
                             </div>
@@ -290,7 +296,6 @@
                         <h4>Help</h4>
                         <a href="contact.html"><h5>Contact</h5></a><br>
                         <a href="faqs.html"><h5>FAQs</h5></a><br>
-                        <a href="https://stadiumtrackr.canny.io/feature-requests" target="_blank"><h5>Feedback</h5></a><br>
                         <a href="pro.html"><h5>Pro</h5></a><br>
                         <a href="photo-credits.html"><h5>Photo Credits</h5></a><br>
                         <a href="terms-and-conditions.html"><h5>Terms and Conditions</h5></a><br>

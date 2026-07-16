@@ -22,6 +22,11 @@
                 } else {
                     document.documentElement.classList.add('logged-out');
                 }
+                if (!payload.isPro) {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        document.querySelectorAll('a[href="stats.html"]').forEach(el => el.remove());
+                    });
+                }
             } else {
                 document.documentElement.classList.add('logged-out');
             }
@@ -279,6 +284,13 @@
                         </div>
                         <div class="pro-feature">
                             <div>
+                                <img src="images/icons/trophy.png" alt="Trophy">
+                            </div>
+                            <h3>Achievements</h3>
+                            <h4>Earn achievements as you visit more stadiums</h4>
+                        </div>
+                        <div class="pro-feature">
+                            <div>
                                 <img src="images/icons/upload.png" alt="Upload">
                             </div>
                             <h3>Upload Photos</h3>
@@ -304,13 +316,6 @@
                             </div>
                             <h3>Export Your Data</h3>
                             <h4>Download your complete visit history as a CSV file</h4>
-                        </div>
-                        <div class="pro-feature">
-                            <div>
-                                <img src="images/icons/lightbulb.png" alt="Lightbulb">
-                            </div>
-                            <h3>Suggest Features</h3>
-                            <h4>Have a direct say in what gets built next on StadiumTrackr</h4>
                         </div>
                         <div class="pro-feature">
                             <div>
@@ -347,7 +352,6 @@
                         <h4>Help</h4>
                         <a href="contact.html"><h5>Contact</h5></a><br>
                         <a href="faqs.html"><h5>FAQs</h5></a><br>
-                        <a href="https://stadiumtrackr.canny.io/feature-requests" target="_blank"><h5>Feedback</h5></a><br>
                         <a href="pro.html"><h5>Pro</h5></a><br>
                         <a href="photo-credits.html"><h5>Photo Credits</h5></a><br>
                         <a href="terms-and-conditions.html"><h5>Terms and Conditions</h5></a><br>

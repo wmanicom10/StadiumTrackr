@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements, MIN_LOADING_TIME } from "../constants.js";
-import { createToast, filterAndRank, initializeCreateAccountCaptcha, initializeCustomSelects, isLoggedIn, renderWithoutTransition, setupFilterHandlers, setupSearch, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI, syncSelectFromURL } from "../utils.js";
+import { createToast, filterAndRank, initializeCreateAccountCaptcha, initializeCustomSelects, isLoggedIn, isPro, renderWithoutTransition, setupFilterHandlers, setupSearch, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI, syncSelectFromURL } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -39,7 +39,6 @@ async function loadMapStadiums() {
     try {
         const result = await loadAPI.loadMapStadiums();
         allMapStadiums = result.rows;
-        console.log(allMapStadiums[0])
         renderMap(allMapStadiums);
     } catch (error) {
         console.error(error);
@@ -84,10 +83,16 @@ async function setView() {
     document.getElementById('filter-bar-skeleton').style.display = 'none';
     document.getElementById('filter-bar').style.display = 'block';
 
+    if (isLoggedIn()) {
+        if (isPro()) {
+            document.getElementById('stadiums-map-filters').style.display = 'flex';
+        } else {
+            document.getElementById('stadiums-map-upgrade').style.display = 'block';
+        }
+    }
+    document.getElementById('stadiums-map-filters-skeleton').style.display = 'none';
     document.getElementById('stadiums-stadium-map-skeleton').style.display = 'none';
     document.getElementById('stadiums-stadium-map').style.display = 'block';
-    if (isLoggedIn()) document.getElementById('stadiums-map-filters').style.display = 'flex';
-    document.getElementById('stadiums-map-filters-skeleton').style.display = 'none';
 }
 
 /*  Functions  */
@@ -280,8 +285,10 @@ document.addEventListener('DOMContentLoaded', () => {
 window.onload = async () => {
     if (isLoggedIn()) {
         showLoggedInUI();
-        setupMapShowFilter();
-        setupMapFilterHandlers();
+        if (isPro()) {
+            setupMapShowFilter();
+            setupMapFilterHandlers();
+        }
     } else {
         showLoggedOutUI();
     }

@@ -1,6 +1,6 @@
 /*  Imports  */
 import { MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { addExistingPhotoPreview, formatDate, getPageFromURL, initializeCustomSelects, isLoggedIn, openLightbox, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
+import { addExistingPhotoPreview, formatDate, getPageFromURL, initializeCustomSelects, isLoggedIn, isPro, openLightbox, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";

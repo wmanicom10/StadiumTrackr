@@ -920,6 +920,14 @@ export function isLoggedIn() {
     }
 }
 
+export function isPro() {
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
+    return payload.isPro || false;
+}
+
 export function logOut() {
     localStorage.removeItem('token');
 }
@@ -1002,43 +1010,47 @@ export function setupAddStadiumModal(stadiumId, stadiumName, city, state, stadiu
     elements.addStadiumLogButton.parentNode.replaceChild(newLogButton, elements.addStadiumLogButton);
     elements.addStadiumLogButton = newLogButton;
 
-    const newPhotosInput = elements.addStadiumPhotosInput.cloneNode(true);
-    elements.addStadiumPhotosInput.parentNode.replaceChild(newPhotosInput, elements.addStadiumPhotosInput);
-    elements.addStadiumPhotosInput = newPhotosInput;
-
     let tempPhotos = [];
 
-    elements.addStadiumPhotosInput.addEventListener('change', async (e) => {
-        const files = Array.from(e.target.files);
-        const remaining = 5 - tempPhotos.length;
-        if (remaining === 0) {
-            shakeOrReplace('Maximum of 5 photos per visit.');
-            return;
-        }
-        const toUpload = files.slice(0, remaining);
-        if (files.length > remaining) {
-            shakeOrReplace(`Only ${remaining} photo${remaining !== 1 ? 's' : ''} remaining. Some photos were not uploaded.`);
-        }
+    if (!isPro()) {
+        document.getElementById('add-stadium-photos-container').style.display = 'none';
+    } else {
+        const newPhotosInput = elements.addStadiumPhotosInput.cloneNode(true);
+        elements.addStadiumPhotosInput.parentNode.replaceChild(newPhotosInput, elements.addStadiumPhotosInput);
+        elements.addStadiumPhotosInput = newPhotosInput;
 
-        for (const file of toUpload) {
-            const formData = new FormData();
-            formData.append('photo', file);
-
-            try {
-                const result = await userAPI.uploadTempVisitPhoto(formData);
-                tempPhotos.push(result.filename);
-                addPhotoPreview(result.filename, tempPhotos, elements.addStadiumPhotosPreview, elements.addStadiumPhotosCount);
-                elements.addStadiumPhotosCount.textContent = `${tempPhotos.length}/5`;
-            } catch (err) {
-                console.error(err);
-                shakeOrReplace('Failed to upload photo.');
+        elements.addStadiumPhotosInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            const remaining = 5 - tempPhotos.length;
+            if (remaining === 0) {
+                shakeOrReplace('Maximum of 5 photos per visit.');
+                return;
+            }
+            const toUpload = files.slice(0, remaining);
+            if (files.length > remaining) {
+                shakeOrReplace(`Only ${remaining} photo${remaining !== 1 ? 's' : ''} remaining. Some photos were not uploaded.`);
             }
 
-            await new Promise(resolve => setTimeout(resolve, 50));
-        }
+            for (const file of toUpload) {
+                const formData = new FormData();
+                formData.append('photo', file);
 
-        elements.addStadiumPhotosInput.value = '';
-    });
+                try {
+                    const result = await userAPI.uploadTempVisitPhoto(formData);
+                    tempPhotos.push(result.filename);
+                    addPhotoPreview(result.filename, tempPhotos, elements.addStadiumPhotosPreview, elements.addStadiumPhotosCount);
+                    elements.addStadiumPhotosCount.textContent = `${tempPhotos.length}/5`;
+                } catch (err) {
+                    console.error(err);
+                    shakeOrReplace('Failed to upload photo.');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+
+            elements.addStadiumPhotosInput.value = '';
+        });
+    }
 
     elements.addStadiumLogButton.addEventListener('click', async () => {
         const dateVisited = elements.addStadiumDateVisited.value;
@@ -1055,12 +1067,12 @@ export function setupAddStadiumModal(stadiumId, stadiumName, city, state, stadiu
     });
 
     elements.addStadiumCancelButton.addEventListener('click', () => {
-        resetPhotoUpload(tempPhotos, elements.addStadiumPhotosPreview, elements.addStadiumPhotosCount);
+        if (tempPhotos.length > 0) resetPhotoUpload(tempPhotos, elements.addStadiumPhotosPreview, elements.addStadiumPhotosCount);
         toggleMenu(elements.addStadiumMenu, false, overlay);
     });
 
     elements.closeAddStadiumMenu.addEventListener('click', () => {
-        resetPhotoUpload(tempPhotos, elements.addStadiumPhotosPreview, elements.addStadiumPhotosCount);
+        if (tempPhotos.length > 0) resetPhotoUpload(tempPhotos, elements.addStadiumPhotosPreview, elements.addStadiumPhotosCount);
         toggleMenu(elements.addStadiumMenu, false, overlay);
     });
 }
@@ -1092,45 +1104,49 @@ export function setupDeleteLogHandlers(elements, getCurrentData) {
 export function setupEditLogHandlers(elements, getCurrentData) {
     let tempPhotos = [];
 
-    const newPhotosInput = elements.editLogPhotosInput.cloneNode(true);
-    elements.editLogPhotosInput.parentNode.replaceChild(newPhotosInput, elements.editLogPhotosInput);
-    elements.editLogPhotosInput = newPhotosInput;
+    if (!isPro()) {
+        document.getElementById('edit-log-photos-container').style.display = 'none';
+    } else {
+        const newPhotosInput = elements.editLogPhotosInput.cloneNode(true);
+        elements.editLogPhotosInput.parentNode.replaceChild(newPhotosInput, elements.editLogPhotosInput);
+        elements.editLogPhotosInput = newPhotosInput;
 
-    elements.editLogPhotosInput.addEventListener('change', async (e) => {
-        const files = Array.from(e.target.files);
-        const currentData = getCurrentData();
-        const existingCount = elements.editLogPhotosPreview.querySelectorAll('.visit-photo-preview').length;
-        const remaining = 5 - existingCount - tempPhotos.length;
+        elements.editLogPhotosInput.addEventListener('change', async (e) => {
+            const files = Array.from(e.target.files);
+            const currentData = getCurrentData();
+            const existingCount = elements.editLogPhotosPreview.querySelectorAll('.visit-photo-preview').length;
+            const remaining = 5 - existingCount - tempPhotos.length;
 
-        if (remaining === 0) {
-            shakeOrReplace('Maximum of 5 photos per visit.');
-            return;
-        }
-
-        const toUpload = files.slice(0, remaining);
-        if (files.length > remaining) {
-            shakeOrReplace(`Only ${remaining} photo${remaining !== 1 ? 's' : ''} remaining. Some photos were not uploaded.`);
-        }
-
-        for (const file of toUpload) {
-            const formData = new FormData();
-            formData.append('photo', file);
-
-            try {
-                const result = await userAPI.uploadTempVisitPhoto(formData);
-                tempPhotos.push(result.filename);
-                addEditLogPhotoPreview(result.filename, tempPhotos, elements.editLogPhotosPreview, elements.editLogPhotosCount);
-                updateEditLogPhotoCount(elements);
-            } catch (err) {
-                console.error(err);
-                shakeOrReplace('Failed to upload photo.');
+            if (remaining === 0) {
+                shakeOrReplace('Maximum of 5 photos per visit.');
+                return;
             }
 
-            await new Promise(resolve => setTimeout(resolve, 50));
-        }
+            const toUpload = files.slice(0, remaining);
+            if (files.length > remaining) {
+                shakeOrReplace(`Only ${remaining} photo${remaining !== 1 ? 's' : ''} remaining. Some photos were not uploaded.`);
+            }
 
-        elements.editLogPhotosInput.value = '';
-    });
+            for (const file of toUpload) {
+                const formData = new FormData();
+                formData.append('photo', file);
+
+                try {
+                    const result = await userAPI.uploadTempVisitPhoto(formData);
+                    tempPhotos.push(result.filename);
+                    addEditLogPhotoPreview(result.filename, tempPhotos, elements.editLogPhotosPreview, elements.editLogPhotosCount);
+                    updateEditLogPhotoCount(elements);
+                } catch (err) {
+                    console.error(err);
+                    shakeOrReplace('Failed to upload photo.');
+                }
+
+                await new Promise(resolve => setTimeout(resolve, 50));
+            }
+
+            elements.editLogPhotosInput.value = '';
+        });
+    }
 
     elements.editLogSaveButton.addEventListener('click', async () => {
         let currentData = getCurrentData();
@@ -1147,12 +1163,12 @@ export function setupEditLogHandlers(elements, getCurrentData) {
     });
 
     elements.editLogCancelButton.addEventListener('click', () => {
-        resetEditLogPhotos(tempPhotos, elements);
+        if (tempPhotos.length > 0) resetEditLogPhotos(tempPhotos, elements);
         toggleMenu(elements.editLogMenu, false, overlay);
     });
 
     elements.closeEditLogMenu.addEventListener('click', () => {
-        resetEditLogPhotos(tempPhotos, elements);
+        if (tempPhotos.length > 0) resetEditLogPhotos(tempPhotos, elements);
         toggleMenu(elements.editLogMenu, false, overlay);
     });
 }

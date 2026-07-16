@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements, MIN_LOADING_TIME } from "../constants.js";
-import { createToast, createUserStadiumElement, initializeCustomSelects, isLoggedIn, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
+import { createToast, createUserStadiumElement, initializeCustomSelects, isLoggedIn, isPro, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 
@@ -404,6 +404,11 @@ document.addEventListener('DOMContentLoaded', () => {
 window.onload = async () => {
     if (!isLoggedIn()) {
         window.location.replace('index.html');
+        return;
+    }
+
+    if (!isPro()) {
+        window.location.replace('pro.html');
         return;
     }
 

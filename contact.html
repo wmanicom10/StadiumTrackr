@@ -22,6 +22,11 @@
                 } else {
                     document.documentElement.classList.add('logged-out');
                 }
+                if (!payload.isPro) {
+                    document.addEventListener('DOMContentLoaded', () => {
+                        document.querySelectorAll('a[href="stats.html"]').forEach(el => el.remove());
+                    });
+                }
             } else {
                 document.documentElement.classList.add('logged-out');
             }
@@ -235,6 +240,7 @@
                 <div id="contact-container">
                     <h2 id="contact-header">Contact StadiumTrackr</h2>
                     <p id="contact-description">Have questions or feedback? You can find the most common questions on our <a href="faqs.html">FAQs</a> page, but if you still need help, reach out to us using the links below.</p>
+                    <p id="contact-feedback">Have a feature request or feedback? Submit it on our <a href="https://stadiumtrackr.canny.io/feature-requests" target="_blank">feedback board</a>.</p>
                     <ul id="contact-links">
                         <li class="contact-link"><a href="mailto:help@stadiumtrackr.com">General support</a></li>
                         <li class="contact-link"><a href="mailto:issues@stadiumtrackr.com">Bug reports</a></li>
@@ -263,7 +269,6 @@
                         <h4>Help</h4>
                         <a href="contact.html"><h5>Contact</h5></a><br>
                         <a href="faqs.html"><h5>FAQs</h5></a><br>
-                        <a href="https://stadiumtrackr.canny.io/feature-requests" target="_blank"><h5>Feedback</h5></a><br>
                         <a href="pro.html"><h5>Pro</h5></a><br>
                         <a href="photo-credits.html"><h5>Photo Credits</h5></a><br>
                         <a href="terms-and-conditions.html"><h5>Terms and Conditions</h5></a><br>

@@ -143,6 +143,9 @@
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
                                         document.getElementById('logged-in-header-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                        if (!payload.isPro) {
+                                            document.querySelectorAll('a[href="stats.html"]').forEach(el => el.remove());
+                                        }
                                     })();
                                 </script>
                                 <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -206,6 +209,9 @@
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
                                         document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                        if (!payload.isPro) {
+                                            document.querySelectorAll('a[href="stats.html"]').forEach(el => el.remove());
+                                        }
                                     })();
                                 </script>
                             </div>
@@ -406,6 +412,11 @@
                                 </div>
                             </div>
                             <div id="user-home-map-filters-skeleton"></div>
+                            <div id="user-home-map-upgrade">
+                                <h3>Map Filters is a Pro feature</h3>
+                                <p>Upgrade to Pro to filter your stadiums map by league and country.</p>
+                                <a href="pro.html" class="upgrade-pro-button">Upgrade to Pro</a>
+                            </div>
                             <div id="user-home-stadium-map"></div>
                             <div id="user-home-stadium-map-skeleton"></div>
                         </div>
@@ -855,6 +866,11 @@
                             <h3>No Lists Found</h3>
                             <p>You don't have any lists.</p>
                         </div>
+                        <div id="user-home-lists-upgrade">
+                            <h3>Lists is a Pro feature</h3>
+                            <p>Upgrade to Pro to create stadium lists.</p>
+                            <a href="pro.html" class="upgrade-pro-button">Upgrade to Pro</a>
+                        </div>
                         <div id="user-home-lists-filters-container-skeleton"></div>
                         <div id="user-home-lists-filters-container">
                             <h3>Filters</h3>
@@ -976,71 +992,15 @@
                             <div class="user-home-achievement-skeleton"></div>
                             <div class="user-home-achievement-skeleton"></div>
                         </div>
-                        <div id="user-home-achievements">
-                            <div class="user-home-achievement">
-                                <div class="user-home-achievement-header">
-                                    <h3 class="user-home-achievement-name">Achievement Name</h3>
-                                    <h3 class="user-home-achievement-percent">0%</h3>
-                                </div>
-                                <div class="user-home-achievement-info">
-                                    <img src="images/icons/stadium.png" class="user-home-achievement-image">
-                                    <p class="user-home-achievment-description">Achievement description</p>
-                                </div>
-                                <div class="user-home-achievement-progress-container">
-                                    <div class="user-home-achievement-progress-bar"></div>
-                                    <span class="user-home-achievement-progress">0/0</span>
-                                </div>
-                                <h4 class="user-home-achievement-unlocked-text">Not Yet Unlocked</h4>
-                            </div>
-                            <div class="user-home-achievement">
-                                <div class="user-home-achievement-header">
-                                    <h3 class="user-home-achievement-name">Achievement Name</h3>
-                                    <h3 class="user-home-achievement-percent">0%</h3>
-                                </div>
-                                <div class="user-home-achievement-info">
-                                    <img src="images/icons/stadium.png" class="user-home-achievement-image">
-                                    <p class="user-home-achievment-description">Achievement description</p>
-                                </div>
-                                <div class="user-home-achievement-progress-container">
-                                    <div class="user-home-achievement-progress-bar"></div>
-                                    <span class="user-home-achievement-progress">0/0</span>
-                                </div>
-                                <h4 class="user-home-achievement-unlocked-text">Not Yet Unlocked</h4>
-                            </div>
-                            <div class="user-home-achievement">
-                                <div class="user-home-achievement-header">
-                                    <h3 class="user-home-achievement-name">Achievement Name</h3>
-                                    <h3 class="user-home-achievement-percent">0%</h3>
-                                </div>
-                                <div class="user-home-achievement-info">
-                                    <img src="images/icons/stadium.png" class="user-home-achievement-image">
-                                    <p class="user-home-achievment-description">Achievement description</p>
-                                </div>
-                                <div class="user-home-achievement-progress-container">
-                                    <div class="user-home-achievement-progress-bar"></div>
-                                    <span class="user-home-achievement-progress">0/0</span>
-                                </div>
-                                <h4 class="user-home-achievement-unlocked-text">Not Yet Unlocked</h4>
-                            </div>
-                            <div class="user-home-achievement">
-                                <div class="user-home-achievement-header">
-                                    <h3 class="user-home-achievement-name">Achievement Name</h3>
-                                    <h3 class="user-home-achievement-percent">0%</h3>
-                                </div>
-                                <div class="user-home-achievement-info">
-                                    <img src="images/icons/stadium.png" class="user-home-achievement-image">
-                                    <p class="user-home-achievment-description">Achievement description</p>
-                                </div>
-                                <div class="user-home-achievement-progress-container">
-                                    <div class="user-home-achievement-progress-bar"></div>
-                                    <span class="user-home-achievement-progress">0/0</span>
-                                </div>
-                                <h4 class="user-home-achievement-unlocked-text">Not Yet Unlocked</h4>
-                            </div>
-                        </div>
+                        <div id="user-home-achievements"></div>
                         <div id="user-home-no-achievements-container">
                             <h3>No Achievements Found</h3>
                             <p>We couldn't find any achievements matching your current filters.</p>
+                        </div>
+                        <div id="user-home-achievements-upgrade">
+                            <h3>Achievements is a Pro feature</h3>
+                            <p>Upgrade to Pro to earn and track achievements.</p>
+                            <a href="pro.html" class="upgrade-pro-button">Upgrade to Pro</a>
                         </div>
                         <div id="user-home-achievements-filters-container-skeleton"></div>
                         <div id="user-home-achievements-filters-container">
@@ -1120,7 +1080,6 @@
                         <h4>Help</h4>
                         <a href="contact.html"><h5>Contact</h5></a><br>
                         <a href="faqs.html"><h5>FAQs</h5></a><br>
-                        <a href="https://stadiumtrackr.canny.io/feature-requests" target="_blank"><h5>Feedback</h5></a><br>
                         <a href="pro.html"><h5>Pro</h5></a><br>
                         <a href="photo-credits.html"><h5>Photo Credits</h5></a><br>
                         <a href="terms-and-conditions.html"><h5>Terms and Conditions</h5></a><br>

@@ -13,18 +13,16 @@ const { handleUpdateAchievementProgress } = require('./updateController.js');
 /*  addStadium  */
 const handleAddStadium = async (req, res) => {
     const { stadiumId, dateVisited, note, tempPhotos } = req.body;
-    const { userId } = req.user;
+    const { userId, isPro } = req.user;
 
-    if (!userId || !stadiumId) {
-        return res.status(400).json({ error: 'Stadium id and/or user id is required' });
-    }
+    if (!userId || !stadiumId) return res.status(400).json({ error: 'Stadium id and/or user id is required' });
 
     try {
         const [rows] = await db.execute('INSERT INTO user_stadiums (stadium_id, user_id, added_on, visited_on, user_note) SELECT s.stadium_id, u.user_id, NOW(), ?, ? FROM stadiums s, users u WHERE s.stadium_id = ? AND u.user_id = ?', [dateVisited, note, stadiumId, userId]);
 
         const visitId = rows.insertId;
 
-        if (tempPhotos && tempPhotos.length > 0) {
+        if (isPro && tempPhotos && tempPhotos.length > 0) {
             const photoLimit = Math.min(tempPhotos.length, 5);
             for (let i = 0; i < photoLimit; i++) {
                 const tempFilename = tempPhotos[i];
@@ -53,7 +51,9 @@ const handleAddStadium = async (req, res) => {
 
 /*  downloadUserData  */
 const handleDownloadUserData = async (req, res) => {
-    const { userId } = req.user;
+    const { userId, isPro } = req.user;
+    
+    if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
     if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
@@ -144,9 +144,10 @@ const handleLoadFavoriteStadiums = async (req, res) => {
 /*  loadUserAchievements  */
 const handleLoadUserAchievements = async (req, res) => {
     const { earned, sortBy } = req.body;
-    const { userId } = req.user;
+    const { userId, isPro } = req.user;
 
     if (!userId) return res.status(404).json({ error: 'User not found' });
+    if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
 
     try {
         let query = `
@@ -417,8 +418,9 @@ const handleLoadUserInfo = async (req, res) => {
 /*  loadUserList  */
 const handleLoadUserList = async (req, res) => {
     const { listId, show, league, country, sortBy } = req.body;
-    const { userId } = req.user;
+    const { userId, isPro } = req.user;
 
+    if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
     if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
@@ -540,8 +542,9 @@ const handleLoadUserList = async (req, res) => {
 /*  loadUserLists  */
 const handleLoadUserLists = async (req, res) => {
     const { sortBy, limit } = req.body;
-    const { userId } = req.user;
+    const { userId, isPro } = req.user;
 
+    if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
     if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
@@ -656,7 +659,9 @@ const handleLoadUserStadiums = async (req, res) => {
 
 /*  loadUserStats  */
 const handleLoadUserStats = async (req, res) => {
-    const { userId } = req.user;
+    const { userId, isPro } = req.user;
+
+    if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
     if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
@@ -1042,7 +1047,10 @@ const uploadTempVisitPhoto = multer({
 });
 
 const handleUploadTempVisitPhoto = async (req, res) => {
-    const { userId } = req.user;
+    const { userId, isPro } = req.user;
+    
+    if (!userId) return res.status(404).json({ error: 'User not found' });
+    if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
 
     try {
         const newFilename = `temp_${userId}_${Date.now()}.jpg`;

@@ -1,6 +1,6 @@
 /*  Imports  */
 import { getAuthElements, ICON_IMAGE_PATH, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
-import { addExistingPhotoPreview, createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getPageFromURL, initializeCustomSelects, isLoggedIn, openLightbox, renderPageNumbers, renderWithoutTransition, renderWithTransition, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
+import { addExistingPhotoPreview, createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getPageFromURL, initializeCustomSelects, isLoggedIn, isPro, openLightbox, renderPageNumbers, renderWithoutTransition, renderWithTransition, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
@@ -22,6 +22,17 @@ async function loadAchievementsTab(tab) {
     const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Achievements - StadiumTrackr";
+
+    if (!payload.isPro) {
+        await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
+        userHomeHeaderSkeleton.style.display = 'none';
+        userHomeHeader.style.display = 'flex';
+        document.getElementById('user-home-achievements-skeleton').style.display = 'none';
+        document.getElementById('user-home-achievements-filters-container-skeleton').style.display = 'none';
+        document.getElementById('user-home-achievements-upgrade').style.display = 'block';
+        document.getElementById('user-home-achievements-tab-container').style.display = 'flex';
+        return;
+    }
 
     const elements = {
         achievementsFilter: document.getElementById('achievements-filter'),
@@ -171,7 +182,7 @@ async function loadHomeTab() {
 
     allHomeMapStadiums = mapData.formattedRows;
     window.userHomeMapData = { stadiums: mapData.formattedRows };
-    setupHomeMapFilterHandlers();
+    if (isPro()) setupHomeMapFilterHandlers();
 
     const favoriteStadiums = result.userFavoriteStadiums;
     renderHomeTabFavoriteStadiums(favoriteStadiums);
@@ -208,8 +219,12 @@ async function loadHomeTab() {
     document.getElementById('user-achievements-skeleton').style.display = 'none';
     document.getElementById('user-achievements').style.display = 'flex';
     if (userAchievements.length > 0) document.getElementById('user-home-achievements-see-all-button').style.display = 'block';
+    if (isPro()) {
+        document.getElementById('user-home-map-filters').style.display = 'flex';
+    } else {
+        document.getElementById('user-home-map-upgrade').style.display = 'block';
+    }
     document.getElementById('user-home-map-filters-skeleton').style.display = 'none';
-    document.getElementById('user-home-map-filters').style.display = 'flex';
     document.getElementById('user-home-stadium-map-skeleton').style.display = 'none';
     document.getElementById('user-home-stadium-map').style.display = 'block';
 }
@@ -221,6 +236,17 @@ async function loadListsTab(tab) {
     const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Lists - StadiumTrackr";
+
+    if (!payload.isPro) {
+        await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
+        userHomeHeaderSkeleton.style.display = 'none';
+        userHomeHeader.style.display = 'flex';
+        document.getElementById('user-home-lists-skeleton').style.display = 'none';
+        document.getElementById('user-home-lists-filters-container-skeleton').style.display = 'none';
+        document.getElementById('user-home-lists-upgrade').style.display = 'block';
+        document.getElementById('user-home-lists-tab-container').style.display = 'flex';
+        return;
+    }
 
     const elements = {
         sortFilter: document.getElementById('lists-sort-filter'),
@@ -239,8 +265,10 @@ async function loadListsTab(tab) {
 
     document.getElementById('user-home-lists-tab-container').style.display = 'flex';
 
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserLists(sort);
+    const [result] = await Promise.all([
+        userAPI.loadUserLists(sort),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
     const lists = result.userLists;
 
     renderListsTab(lists, elements);
@@ -1669,6 +1697,13 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeCustomSelects();
     setupSearchAutocomplete('logged-in-nav-search', 'logged-in-search-field-nav', 'logged-in-nav-autocomplete-list');
     setupSearchAutocomplete('logged-in-sidebar-nav-search', 'logged-in-sidebar-search-field-nav', 'logged-in-sidebar-nav-autocomplete-list');
+
+    if (!isPro()) {
+        const advancedSortValues = ['opened-desc', 'opened-asc', 'cost-desc', 'cost-asc', 'capacity-desc', 'capacity-asc'];
+        advancedSortValues.forEach(value => {
+            document.querySelectorAll(`[data-value="${value}"], option[value="${value}"]`).forEach(el => el.remove());
+        });
+    }
 });
 
 window.onload = async () => {

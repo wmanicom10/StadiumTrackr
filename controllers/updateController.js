@@ -10,8 +10,9 @@ const sharp = require('sharp');
 /*  createUserList  */
 const handleCreateUserList = async (req, res) => {
     const { listName, listDescription, isRanked, stadiums } = req.body;
-    const { userId } = req.user;
-
+    const { userId, isPro } = req.user;
+    
+    if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
     if (!userId || !listName) return res.status(400).json({ error: 'User id and list name are required' });
 
     const connection = await db.getConnection();
@@ -94,11 +95,10 @@ const handleDeleteTempVisitPhoto = async (req, res) => {
 /*  deleteUserList  */
 const handleDeleteUserList = async (req, res) => {
     const { listId } = req.body;
-    const { userId } = req.user;
+    const { userId, isPro } = req.user;
 
-    if (!listId || !userId) {
-        return res.status(400).json({ error: 'List id and user id are required' });
-    }
+    if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
+    if (!listId || !userId) return res.status(400).json({ error: 'List id and user id are required' });
 
     try {
         const [[list]] = await db.execute('SELECT list_id FROM user_lists WHERE list_id = ? AND user_id = ?', [listId, userId]);
@@ -147,6 +147,9 @@ const handleDeleteVisitPhoto = async (req, res) => {
 /*  editLog  */
 const handleEditLog = async (req, res) => {
     const { visitId, editDateVisited, editNote, tempPhotos } = req.body;
+    const { userId, isPro } = req.user;
+
+    if (!userId) return res.status(400).json({ error: 'User not found' });
 
     if (!visitId) {
         return res.status(400).json({ error: 'Visit ID is required' });
@@ -157,7 +160,7 @@ const handleEditLog = async (req, res) => {
 
         const [rows] = await db.execute('UPDATE user_stadiums SET visited_on = ?, user_note = ? WHERE visit_id = ?', [editDateVisited, editNote, visitId]);
 
-        if (tempPhotos && tempPhotos.length > 0) {
+        if (isPro && tempPhotos && tempPhotos.length > 0) {
             const [[{ photoCount }]] = await db.execute('SELECT COUNT(*) as photoCount FROM visit_photos WHERE visit_id = ?', [visitId]);
 
             const remaining = 5 - photoCount;
@@ -522,11 +525,10 @@ const handleUpdateProfilePic = async (req, res) => {
 /*  updateUserList  */
 const handleUpdateUserList = async (req, res) => {
     const { listId, listName, listDescription, isRanked, stadiums } = req.body;
-    const { userId } = req.user;
-
-    if (!listId || !userId) {
-        return res.status(400).json({ error: 'List id and user id are required' });
-    }
+    const { userId, isPro } = req.user;
+    
+    if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
+    if (!listId || !userId) return res.status(400).json({ error: 'List id and user id are required' });
 
     const connection = await db.getConnection();
 
