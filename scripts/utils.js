@@ -394,6 +394,17 @@ export async function fetchAPI(endpoint, body) {
     return result;
 }
 
+export async function fetchBlob(endpoint) {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+    if (!response.ok) throw new Error('Failed to download data');
+    return response.blob();
+}
+
 export async function fetchFormData(endpoint, formData) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method: 'POST',

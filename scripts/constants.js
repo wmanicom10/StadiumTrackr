@@ -74,6 +74,7 @@ export const ROUTES = {
 
     /* USER */
     ADD_STADIUM: '/user/addStadium',
+    DOWNLOAD_USER_DATA: '/user/downloadUserData',
     LOAD_FAVORITE_STADIUMS: '/user/loadFavoriteStadiums',
     LOAD_USER_ACHIEVEMENTS: '/user/loadUserAchievements',
     LOAD_USER_ACTIVITY: '/user/loadUserActivity',

@@ -634,3 +634,18 @@ document.getElementById('manage-subscription-button').addEventListener('click', 
         shakeOrReplace(err.message || 'Failed to open subscription portal.');
     }
 });
+
+document.getElementById('download-data-button').addEventListener('click', async () => {
+    try {
+        const blob = await userAPI.downloadUserData();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'stadiumtrackr-data.zip';
+        a.click();
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error(error);
+        shakeOrReplace(error.message || 'Failed to download data. Please try again.');
+    }
+});

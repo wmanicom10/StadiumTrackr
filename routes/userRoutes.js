@@ -16,6 +16,7 @@ const resetLimiter = rateLimit({
 });
 
 router.post('/addStadium', authMiddleware, userController.handleAddStadium);
+router.post('/downloadUserData', authMiddleware, userController.handleDownloadUserData);
 router.post('/loadFavoriteStadiums', authMiddleware, userController.handleLoadFavoriteStadiums);
 router.post('/loadUserAchievements', authMiddleware, userController.handleLoadUserAchievements);
 router.post('/loadUserActivity', authMiddleware, userController.handleLoadUserActivity);

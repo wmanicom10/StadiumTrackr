@@ -6,6 +6,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
+const archiver = require('archiver');
 const { getStadiumId, buildCountryFilter, buildLeagueFilter, buildSortOrder } = require('../database/dbHelpers.js');
 const { handleUpdateAchievementProgress } = require('./updateController.js');
 
@@ -44,6 +45,80 @@ const handleAddStadium = async (req, res) => {
         await db.execute('DELETE FROM user_wishlist_stadiums WHERE stadium_id = ? AND user_id = ?', [stadiumId, userId]);
 
         res.json({ rows });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
+/*  downloadUserData  */
+const handleDownloadUserData = async (req, res) => {
+    const { userId } = req.user;
+    if (!userId) return res.status(404).json({ error: 'User not found' });
+
+    try {
+        const [stadiums] = await db.execute(`SELECT s.stadium_name, s.street_address, s.city, s.state, s.zip, c.country_name, s.latitude, s.longitude, DATE_FORMAT(s.opened_date, '%m-%d-%Y') AS opened_date, s.construction_cost, s.capacity, MAX(us.added_on) AS added_on FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id JOIN countries c ON s.country_id = c.country_id WHERE us.user_id = ? GROUP BY s.stadium_id ORDER BY s.stadium_name ASC`, [userId]);
+
+        const [visits] = await db.execute(`SELECT s.stadium_name, s.city, s.state, us.visited_on, us.user_note FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id WHERE us.user_id = ? AND us.visited_on IS NOT NULL ORDER BY us.visited_on DESC`, [userId]);
+
+        const [wishlist] = await db.execute(`SELECT s.stadium_name, s.street_address, s.city, s.state, s.zip, c.country_name, s.latitude, s.longitude, DATE_FORMAT(s.opened_date, '%m-%d-%Y') AS opened_date, s.construction_cost, s.capacity, uw.added_on FROM user_wishlist_stadiums uw JOIN stadiums s ON uw.stadium_id = s.stadium_id JOIN countries c ON s.country_id = c.country_id WHERE uw.user_id = ? ORDER BY s.stadium_name ASC`, [userId]);
+
+        const [achievements] = await db.execute(`SELECT a.achievement_name, a.achievement_description, a.progress_goal, COALESCE(ua.progress_value, 0) AS progress_value, COALESCE(ua.unlocked, 0) AS unlocked, ua.unlocked_on FROM achievements a LEFT JOIN user_achievements ua ON ua.achievement_id = a.achievement_id AND ua.user_id = ? ORDER BY a.achievement_name ASC`, [userId]);
+
+        const [lists] = await db.execute(`SELECT ul.list_id, ul.list_name, ul.list_description, ul.created_at, ul.updated_at FROM user_lists ul WHERE ul.user_id = ? ORDER BY ul.list_name ASC`, [userId]);
+
+        const listStadiums = {};
+        for (const list of lists) {
+            const [stadiumRows] = await db.execute(`SELECT s.stadium_name, s.city, s.state, uls.order_index, uls.note FROM user_list_stadiums uls JOIN stadiums s ON uls.stadium_id = s.stadium_id WHERE uls.list_id = ? ORDER BY uls.order_index ASC`, [list.list_id]);
+            listStadiums[list.list_id] = { name: list.list_name, stadiums: stadiumRows };
+        }
+
+        const escape = val => {
+            if (val === null || val === undefined) return '';
+            const str = String(val);
+            return str.includes(',') || str.includes('"') || str.includes('\n') ? `"${str.replace(/"/g, '""')}"` : str;
+        };
+
+        const toCSV = (headers, rows) => {
+            const lines = [headers.join(',')];
+            rows.forEach(row => {
+                lines.push(headers.map(h => escape(row[h])).join(','));
+            });
+            return lines.join('\n');
+        };
+
+        const stadiumsCSV = toCSV(['stadium_name', 'street_address', 'city', 'state', 'zip', 'country_name', 'latitude', 'longitude', 'opened_date', 'capacity', 'construction_cost', 'added_on'], stadiums);
+
+        const visitsCSV = toCSV(['stadium_name', 'city', 'state', 'visited_on', 'user_note'], visits);
+
+        const wishlistCSV = toCSV(['stadium_name', 'street_address', 'city', 'state', 'zip', 'country_name', 'latitude', 'longitude', 'opened_date', 'capacity', 'construction_cost', 'added_on'], wishlist);
+
+        const achievementsCSV = toCSV(['achievement_name', 'achievement_description', 'progress_value', 'progress_goal', 'unlocked', 'unlocked_on'], achievements);
+
+        res.setHeader('Content-Type', 'application/zip');
+        res.setHeader('Content-Disposition', 'attachment; filename="stadiumtrackr-data.zip"');
+
+        const archive = archiver('zip', { zlib: { level: 9 } });
+        archive.pipe(res);
+
+        archive.append(stadiumsCSV, { name: 'stadiums.csv' });
+        archive.append(visitsCSV, { name: 'visits.csv' });
+        archive.append(wishlistCSV, { name: 'wishlist.csv' });
+        archive.append(achievementsCSV, { name: 'achievements.csv' });
+
+        for (const listId of Object.keys(listStadiums)) {
+            const { name, stadiums: ls } = listStadiums[listId];
+            const list = lists.find(l => l.list_id == listId);
+            
+            const metaSection = `List Name,${escape(list.list_name)}\nDescription,${escape(list.list_description || '')}\nCreated,${escape(list.created_at)}\nUpdated,${escape(list.updated_at)}\n\n`;
+            const stadiumsSection = toCSV(['stadium_name', 'city', 'state', 'order_index', 'note'], ls);
+            
+            const safeName = name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            archive.append(metaSection + stadiumsSection, { name: `lists/${safeName}_${listId}.csv` });
+        }
+
+        await archive.finalize();
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -991,4 +1066,4 @@ const handleUploadTempVisitPhoto = async (req, res) => {
     }
 };
 
-module.exports = { handleAddStadium, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserList, handleLoadUserLists, handleLoadUserStadiums, handleLoadUserStats, handleLoadUserVisits, handleLoadUserWishlist, handleRefreshToken, handleSaveFavoriteStadiums, handleSendPasswordReset, handleUploadTempVisitPhoto, uploadTempVisitPhoto };
+module.exports = { handleAddStadium, handleDownloadUserData, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserList, handleLoadUserLists, handleLoadUserStadiums, handleLoadUserStats, handleLoadUserVisits, handleLoadUserWishlist, handleRefreshToken, handleSaveFavoriteStadiums, handleSendPasswordReset, handleUploadTempVisitPhoto, uploadTempVisitPhoto };

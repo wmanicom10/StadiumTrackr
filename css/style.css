@@ -7009,6 +7009,7 @@ footer {
 }
 
 #manage-subscription-button {
+    display: none;
     background: #2D374D;
     border: 1px solid var(--color-primary-30);
     color: var(--color-blue);
@@ -7041,6 +7042,10 @@ footer {
 #manage-subscription-button:hover {
     background: #314460;
     transform: translateY(-3px);
+}
+
+#download-data-button {
+    margin-top: 20px;
 }
 
 #pro-features-container {

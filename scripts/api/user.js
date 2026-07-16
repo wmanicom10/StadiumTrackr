@@ -1,9 +1,12 @@
 import { API_BASE_URL, ROUTES } from '../constants.js';
-import { fetchAPI, fetchFormData } from '../utils.js';
+import { fetchAPI, fetchBlob, fetchFormData } from '../utils.js';
 
 export const userAPI = {
     addStadium: (stadiumId, dateVisited, note, tempPhotos) =>
         fetchAPI(ROUTES.ADD_STADIUM, { stadiumId, dateVisited, note, tempPhotos }),
+
+    downloadUserData: () =>
+        fetchBlob(ROUTES.DOWNLOAD_USER_DATA),
 
     loadFavoriteStadiums: () =>
         fetchAPI(ROUTES.LOAD_FAVORITE_STADIUMS),
