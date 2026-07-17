@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async () => {
     if (!isLoggedIn()) {
-        window.location.replace('index.html');
+        window.location.replace('/');
         return;
     }
     

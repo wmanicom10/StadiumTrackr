@@ -33,7 +33,7 @@ async function handleLogin() {
     try {
         const result = await authAPI.login(username, password);
         localStorage.setItem('token', result.token);
-        window.location.replace('user-home.html');
+        window.location.replace('user-home');
     } catch (error) {
         console.error(error);
         shakeOrReplace(error.message || 'Login failed. Please try again.')
@@ -56,7 +56,7 @@ async function handleSignup() {
     try {
         const result = await authAPI.signup(email, username, password, captchaToken);
         localStorage.setItem('token', result.token);
-        window.location.replace('user-home.html');
+        window.location.replace('user-home');
     } catch (error) {
         console.error(error);
         shakeOrReplace(error.message || 'There was an error creating your account. Please try again.');
@@ -249,10 +249,10 @@ export function registerUserLogOutEvents() {
 
     logOutButton?.addEventListener('click', () => {
         logOut();
-        window.location.replace('index.html');
+        window.location.replace('/');
     });
     sidebarLogOutButton?.addEventListener('click', () => {
         logOut();
-        window.location.replace('index.html');
+        window.location.replace('/');
     });
 }

@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <title>Settings - StadiumTrackr</title>
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="/css/style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,9 +73,9 @@
                                         const u = payload.username || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
-                                        document.getElementById('logged-in-header-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                        document.getElementById('logged-in-header-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : '/images/profile-pics/default.png';
                                         if (!payload.isPro) {
-                                            document.querySelectorAll('a[href="stats.html"]').forEach(el => el.remove());
+                                            document.querySelectorAll('a[href="/stats"]').forEach(el => el.remove());
                                         }
                                     })();
                                 </script>
@@ -84,7 +84,7 @@
                                 </svg>
                             </div>
                             <div id="logged-in-header-user-container-hidden">
-                                <a href="user-home.html">Home</a>
+                                <a href="/user-home">Home</a>
                                 <a href="user-home.html?tab=stadiums">Stadiums</a>
                                 <a href="user-home.html?tab=visits">Visits</a>
                                 <a href="user-home.html?tab=events">Events</a>
@@ -92,15 +92,15 @@
                                 <a href="user-home.html?tab=lists">Lists</a>
                                 <a href="user-home.html?tab=activity">Activity</a>
                                 <a href="user-home.html?tab=achievements">Achievements</a>
-                                <a href="stats.html">Stats</a>
-                                <a href="settings.html">Settings</a>
+                                <a href="/stats">Stats</a>
+                                <a href="/settings">Settings</a>
                                 <a id="log-out">Log Out</a>
                             </div>
                         </div>
                     </li>
-                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="events.html">Events</a></li>
-                    <li class="nav-item"><a href="about.html">About</a></li>
+                    <li class="nav-item"><a href="/stadiums">Stadiums</a></li>
+                    <li class="nav-item"><a href="/events">Events</a></li>
+                    <li class="nav-item"><a href="/about">About</a></li>
                     <li class="nav-item" id="logged-in-nav-search-container">
                         <form id="logged-in-nav-search" autocomplete="off">
                             <div id="logged-in-nav-search-wrapper">
@@ -112,12 +112,12 @@
                     <li class="nav-item toggle">
                         <input type="checkbox" id="sidebar-active-logged-in">
                         <label for="sidebar-active-logged-in" class="open-sidebar-button">
-                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
+                            <img src="/images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
                         </label>
                         <label id="sidebar-overlay-logged-in" for="sidebar-active-logged-in"></label>
                         <div class="links-container">
                             <label for="sidebar-active-logged-in" class="close-sidebar-button">
-                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
+                                <img src="/images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
                             </label>
                             <div id="logged-in-sidebar-search-container">
                                 <form id="logged-in-sidebar-nav-search" autocomplete="off">
@@ -139,15 +139,15 @@
                                         const u = payload.username || '';
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
-                                        document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : 'images/profile-pics/default.png';
+                                        document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : '/images/profile-pics/default.png';
                                         if (!payload.isPro) {
-                                            document.querySelectorAll('a[href="stats.html"]').forEach(el => el.remove());
+                                            document.querySelectorAll('a[href="/stats"]').forEach(el => el.remove());
                                         }
                                     })();
                                 </script>
                             </div>
                             <div id="sidebar-user-links">
-                                <a href="user-home.html">Home</a>
+                                <a href="/user-home">Home</a>
                                 <a href="user-home.html?tab=stadiums">Stadiums</a>
                                 <a href="user-home.html?tab=visits">Visits</a>
                                 <a href="user-home.html?tab=events">Events</a>
@@ -155,14 +155,14 @@
                                 <a href="user-home.html?tab=lists">Lists</a>
                                 <a href="user-home.html?tab=activity">Activity</a>
                                 <a href="user-home.html?tab=achievements">Achievements</a>
-                                <a href="stats.html">Stats</a>
-                                <a href="settings.html">Settings</a>
+                                <a href="/stats">Stats</a>
+                                <a href="/settings">Settings</a>
                                 <a id="sidebar-log-out">Log Out</a>
                             </div>
                             <div class="sidebar-links">
-                                <a href="./stadiums.html">Stadiums</a>
-                                <a href="events.html">Events</a>
-                                <a href="about.html">About</a>
+                                <a href="/stadiums">Stadiums</a>
+                                <a href="/events">Events</a>
+                                <a href="/about">About</a>
                             </div>
                         </div>
                     </li>
@@ -178,16 +178,16 @@
                         <div id="settings-controls">
                             <div id="settings-controls-main">
                                 <div class="setting-control setting-active" id="profile-control">
-                                    <img src="images/icons/person.png" id="profile-control-image">
+                                    <img src="/images/icons/person.png" id="profile-control-image">
                                     <span>Profile</span>
                                 </div>
                                 <div class="setting-control" id="account-control">
-                                    <img src="images/icons/lock-white.png" id="account-control-image">
+                                    <img src="/images/icons/lock-white.png" id="account-control-image">
                                     <span>Account</span>
                                 </div>
                             </div>
                             <div class="setting-control" id="delete-control">
-                                <img src="images/icons/trash.png" id="delete-control-image">
+                                <img src="/images/icons/trash.png" id="delete-control-image">
                                 <span>Delete Account</span>
                             </div>
                         </div>
@@ -215,7 +215,7 @@
                                     <img id="new-profile-pic"></img>
                                     <input type="file" id="profile-pic-input" accept="image/*" style="display: none;">
                                     <button id="upload-profile-pic-button">
-                                        <img src="images/icons/upload.png">
+                                        <img src="/images/icons/upload.png">
                                         <span>Choose Photo</span>
                                     </button>
                                 </div>
@@ -312,19 +312,19 @@
                     </div>
                     <div class="footer-item footer-links">
                         <h4>Quick Links</h4>
-                        <a href="" id="footer-home-link"><h5>Home</h5></a><br>
-                        <a href="stadiums.html"><h5>Stadiums</h5></a><br>
-                        <a href="events.html"><h5>Events</h5></a><br>
-                        <a href="about.html"><h5>About</h5></a><br>
+                        <a href="/" id="footer-home-link"><h5>Home</h5></a><br>
+                        <a href="/stadiums"><h5>Stadiums</h5></a><br>
+                        <a href="/events"><h5>Events</h5></a><br>
+                        <a href="/about"><h5>About</h5></a><br>
                     </div>
                     <div class="footer-item footer-links">
                         <h4>Help</h4>
-                        <a href="contact.html"><h5>Contact</h5></a><br>
-                        <a href="faqs.html"><h5>FAQs</h5></a><br>
-                        <a href="pro.html"><h5>Pro</h5></a><br>
-                        <a href="photo-credits.html"><h5>Photo Credits</h5></a><br>
-                        <a href="terms-and-conditions.html"><h5>Terms and Conditions</h5></a><br>
-                        <a href="privacy-policy.html"><h5>Privacy Policy</h5></a>
+                        <a href="/contact"><h5>Contact</h5></a><br>
+                        <a href="/faqs"><h5>FAQs</h5></a><br>
+                        <a href="/pro"><h5>Pro</h5></a><br>
+                        <a href="/photo-credits"><h5>Photo Credits</h5></a><br>
+                        <a href="/terms-and-conditions"><h5>Terms and Conditions</h5></a><br>
+                        <a href="/privacy-policy"><h5>Privacy Policy</h5></a>
                     </div>
                     <div class="footer-item">
                         <h4>Newsletter</h4>
@@ -341,7 +341,7 @@
          </div>
 
         <!-- Scripts -->
-        <script type="module" src="scripts/pages/settings-script.js"></script>
+        <script type="module" src="/scripts/pages/settings-script.js"></script>
         
     </body>
 </html>

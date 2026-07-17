@@ -26,8 +26,8 @@ export const loadAPI = {
     loadStadiumEvents: (id) => 
         fetchAPI(ROUTES.LOAD_STADIUMS_EVENTS, { id }),
 
-    loadStadiumInfo: (id) =>
-        fetchAPI(ROUTES.LOAD_STADIUM_INFO, { id }),
+    loadStadiumInfo: (id, slug) =>
+        fetchAPI(ROUTES.LOAD_STADIUM_INFO, { id, slug }),
 
     loadStadiumMap: (id) =>
         fetchAPI(ROUTES.LOAD_STADIUM_MAP, { id }),

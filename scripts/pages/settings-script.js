@@ -15,8 +15,8 @@ const controls = [
         control: document.getElementById('profile-control'),
         image: document.getElementById('profile-control-image'),
         settings: document.getElementById('profile-settings'),
-        activeSrc: 'images/icons/person.png',
-        inactiveSrc: 'images/icons/person-white.png',
+        activeSrc: '/images/icons/person.png',
+        inactiveSrc: '/images/icons/person-white.png',
         activeClass: 'setting-active'
     },
     {
@@ -24,8 +24,8 @@ const controls = [
         control: document.getElementById('account-control'),
         image: document.getElementById('account-control-image'),
         settings: document.getElementById('account-settings'),
-        activeSrc: 'images/icons/lock.png',
-        inactiveSrc: 'images/icons/lock-white.png',
+        activeSrc: '/images/icons/lock.png',
+        inactiveSrc: '/images/icons/lock-white.png',
         activeClass: 'setting-active'
     },
     {
@@ -33,8 +33,8 @@ const controls = [
         control: document.getElementById('delete-control'),
         image: document.getElementById('delete-control-image'),
         settings: document.getElementById('delete-settings'),
-        activeSrc: 'images/icons/trash.png',
-        inactiveSrc: 'images/icons/trash.png',
+        activeSrc: '/images/icons/trash.png',
+        inactiveSrc: '/images/icons/trash.png',
         activeClass: 'delete-active'
     }
 ];
@@ -161,7 +161,7 @@ function createActiveSlot(stadium) {
     });
 
     const img = document.createElement('img');
-    img.src = 'images/icons/x.png';
+    img.src = '/images/icons/x.png';
     img.alt = 'Remove Favorite Stadium';
 
     button.appendChild(img);
@@ -182,7 +182,7 @@ function createEmptySlot() {
     slot.classList.add('favorite-stadiums-setting');
 
     const img = document.createElement('img');
-    img.src = 'images/icons/plus.png';
+    img.src = '/images/icons/plus.png';
     img.alt = 'Add Favorite Stadium';
     slot.appendChild(img);
 
@@ -542,7 +542,7 @@ document.getElementById('delete-account-delete-button').addEventListener('click'
         if (result.result.affectedRows === 1) {
             localStorage.clear();
             sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Account deleted successfully.' }));
-            window.location.replace('index.html');
+            window.location.replace('/');
         }
     } catch (error) {
         console.error(error);
@@ -582,7 +582,7 @@ window.onload = async () => {
     }
     
     if (!isLoggedIn()) {
-        window.location.replace('index.html');
+        window.location.replace('/');
         return;
     }
 

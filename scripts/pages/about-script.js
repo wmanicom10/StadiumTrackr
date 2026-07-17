@@ -27,17 +27,17 @@ async function loadAboutInfo() {
 function updateImageSource() {
     if (window.innerWidth <= 950) {
         visitImg.style.width = '360px';
-        visitImg.src = 'images/about/about-visit-mobile.png';
+        visitImg.src = '/images/about/about-visit-mobile.png';
     } else {
         visitImg.style.width = '';
-        visitImg.src = 'images/about/about-visit.png';
+        visitImg.src = '/images/about/about-visit.png';
     }
     if (window.innerWidth <= 860) {
         achievementsImg.style.width = '360px';
-        achievementsImg.src = 'images/about/about-achievements-mobile.png';
+        achievementsImg.src = '/images/about/about-achievements-mobile.png';
     } else {
         achievementsImg.style.width = '';
-        achievementsImg.src = 'images/about/about-achievements.png';
+        achievementsImg.src = '/images/about/about-achievements.png';
     }
 }
 

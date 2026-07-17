@@ -5,9 +5,9 @@ import { registerCommonEvents, registerEventListeners, registerLogOutEvents } fr
 import { loadAPI } from "../api/load.js";
 
 /*  Async Functions  */
-async function loadStadiumInfo(id) {
+async function loadStadiumInfo(id, slug) {
     try {
-        const result = await loadAPI.loadStadiumInfo(id);
+        const result = await loadAPI.loadStadiumInfo(id, slug);
         return result;
     } catch (error) {
         console.error(error);
@@ -102,8 +102,10 @@ async function showEventsUI() {
     }
 }
 
-async function showStadiumUI(stadiumId) {
-    const result = await loadStadiumInfo(stadiumId);
+async function showStadiumUI(stadiumId, slug) {
+    const result = await loadStadiumInfo(stadiumId, slug);
+    const id = result.stadiumInfo.stadium.id;
+
     document.title = `${result.stadiumInfo.stadium.name} Events - StadiumTrackr`;
     document.getElementById('events-stadium-name').textContent = `${result.stadiumInfo.stadium.name} Events`;
 
@@ -118,12 +120,12 @@ async function showStadiumUI(stadiumId) {
     document.getElementById('events-container').style.display = 'none';
 
     try {
-        const [result] = await Promise.all([
-            loadAPI.loadStadiumEvents(stadiumId),
+        const [eventsResult] = await Promise.all([
+            loadAPI.loadStadiumEvents(id),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
 
-        const events = result.events;
+        const events = eventsResult.events;
 
         if (events.length === 0) {
             document.getElementById('no-stadium-events-container').style.display = 'block';
@@ -238,10 +240,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async () => {
     const params = new URLSearchParams(window.location.search);
+    const isProd = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
+
+    const pathParts = window.location.pathname.split('/');
+    const slug = isProd && pathParts[1] === 'events' && pathParts[2] ? pathParts[2] : null;
     const stadiumId = params.get('id') || null;
-    
-    if (isLoggedIn() && stadiumId) {
-        showStadiumUI(stadiumId);
+
+    if (isLoggedIn() && slug) {
+        showStadiumUI(null, slug);
+    } else if (isLoggedIn() && stadiumId) {
+        showStadiumUI(stadiumId, null);
     } else {
         showEventsUI();
     }

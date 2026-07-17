@@ -72,7 +72,7 @@ async function renderMap(stadiums = null) {
         window.userStatsMap = L.map('geographic-breakdown-stadiums-map').setView([40.8283, -96.5795], 4);
         
         const customIcon = L.icon({
-            iconUrl: 'images/icons/pin-blue.png',
+            iconUrl: '/images/icons/pin-blue.png',
             iconSize: [25, 35],
             iconAnchor: [16, 40],
             popupAnchor: [-3, -40]
@@ -91,7 +91,7 @@ async function renderMap(stadiums = null) {
                         <h4>${stadium.stadium_name}</h4>
                         <p>${stadium.address}</p>
                         <a href="stadium.html?id=${encodeURIComponent(stadium.stadium_id)}">
-                            <img src="images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
+                            <img src="/images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
                         </a>
                     </div>
                 `);
@@ -403,12 +403,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async () => {
     if (!isLoggedIn()) {
-        window.location.replace('index.html');
+        window.location.replace('/');
         return;
     }
 
     if (!isPro()) {
-        window.location.replace('pro.html');
+        window.location.replace('pro');
         return;
     }
 

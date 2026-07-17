@@ -31,7 +31,7 @@ document.getElementById('reset-password-button').addEventListener('click', async
         const result = await updateAPI.resetPassword(token, newPassword);
         if (result.result.affectedRows === 1) {
             sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Password changed successfully.' }));
-            window.location.replace('index.html');
+            window.location.replace('/');
         }
     } catch (error) {
         console.error(error);

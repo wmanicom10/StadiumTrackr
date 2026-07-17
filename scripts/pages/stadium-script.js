@@ -105,7 +105,8 @@ async function loadStadiumInfo(id) {
         elements.stadiumCapacity.textContent = stadium.capacity ? stadium.capacity.toLocaleString() : 'Unknown';
         elements.stadiumConstructionCost.textContent = formatConstructionCost(stadium.constructionCost);
         elements.stadiumVisits.textContent = stadium.visits;
-        elements.upcomingEventsStadiumLink.href = `events.html?id=${stadium.id}`
+        const isProd = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
+        elements.upcomingEventsStadiumLink.href = isProd ? `/events/${stadium.slug}` : `events.html?id=${stadium.id}`;
 
         setupUserControls(id, userVisited, userWishlist);
         setupAddStadiumModal(id, stadium.name, stadium.city, stadium.state, stadium.image, elements);
@@ -209,7 +210,7 @@ function initializeStadiumMap(stadiumMapData) {
     const map = L.map('stadium-map').setView([stadiumMapData.latitude, stadiumMapData.longitude], 6);
 
     const customIcon = L.icon({
-        iconUrl: 'images/icons/pin-blue.png',
+        iconUrl: '/images/icons/pin-blue.png',
         iconSize: [25, 35],
         iconAnchor: [16, 40],
         popupAnchor: [-3, -40]
@@ -240,7 +241,7 @@ function setupUserControls(stadiumId, userVisited, userWishlist) {
     let isVisited = userVisited.length > 0;
 
     elements.stadiumUserControlWishlistText.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
-    elements.userWishlistImage.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+    elements.userWishlistImage.src = isWishlist ? '/images/icons/heart-check.png' : '/images/icons/heart-plus.png';
     
     if (hasLogged) {
         const visitLink = document.createElement('a');
@@ -248,13 +249,13 @@ function setupUserControls(stadiumId, userVisited, userWishlist) {
         visitLink.className = 'stadium-user-control';
         visitLink.id = 'stadium-user-control-visited';
         visitLink.innerHTML = `
-            <img src="images/icons/check.png" alt="Check icon" id="user-visited-image">
+            <img src="/images/icons/check.png" alt="Check icon" id="user-visited-image">
             <h3 id="stadium-user-control-visited-text">Logged</h3>
         `;
         elements.stadiumUserControlVisited.parentNode.replaceChild(visitLink, elements.stadiumUserControlVisited);
     } else {
         elements.stadiumUserControlVisitedText.textContent = isVisited ? 'Visited' : 'Visit';
-        elements.userVisitedImage.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+        elements.userVisitedImage.src = isVisited ? '/images/icons/check.png' : '/images/icons/plus.png';
         setupVisitedClickHandler(stadiumId, isVisited, isWishlist);
     }
 
@@ -293,14 +294,14 @@ function setupVisitedClickHandler(stadiumId, initialIsVisited, initialIsWishlist
 
         setTimeout(() => {
             elements.stadiumUserControlVisitedText.textContent = newIsVisited ? 'Visited' : 'Visit';
-            elements.userVisitedImage.src = newIsVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+            elements.userVisitedImage.src = newIsVisited ? '/images/icons/check.png' : '/images/icons/plus.png';
             
             if (newIsVisited && isWishlist) {
                 elements.stadiumUserControlWishlist.classList.add('animating');
     
                 setTimeout(() => {
                     elements.stadiumUserControlWishlistText.textContent = 'Add to Wishlist';
-                    elements.userWishlistImage.src = 'images/icons/heart-plus.png';
+                    elements.userWishlistImage.src = '/images/icons/heart-plus.png';
                 }, 200);
                 
                 setTimeout(() => {
@@ -344,7 +345,7 @@ function setupWishlistClickHandler(stadiumId, initialIsWishlist) {
 
         setTimeout(() => {
             elements.stadiumUserControlWishlistText.textContent = newIsWishlist ? 'In Wishlist' : 'Add to Wishlist';
-            elements.userWishlistImage.src = newIsWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+            elements.userWishlistImage.src = newIsWishlist ? '/images/icons/heart-check.png' : '/images/icons/heart-plus.png';
         }, 200);
 
         setTimeout(() => {

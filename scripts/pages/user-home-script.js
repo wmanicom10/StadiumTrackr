@@ -566,7 +566,7 @@ async function renderHomeTabMap(stadiums = null) {
     window.userHomeMap = L.map('user-home-stadium-map').setView([40.8283, -96.5795], 4);
     
     const customIcon = L.icon({
-        iconUrl: 'images/icons/pin-blue.png',
+        iconUrl: '/images/icons/pin-blue.png',
         iconSize: [25, 35],
         iconAnchor: [16, 40],
         popupAnchor: [-3, -40]
@@ -585,7 +585,7 @@ async function renderHomeTabMap(stadiums = null) {
                     <h4>${stadium.stadium_name}</h4>
                     <p>${stadium.address}</p>
                     <a href="stadium.html?id=${encodeURIComponent(stadium.stadium_id)}">
-                        <img src="images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
+                        <img src="/images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
                     </a>
                 </div>
             `);
@@ -1032,7 +1032,7 @@ function renderHomeTabAchievements(achievements) {
         upgradeDescription.textContent = 'Upgrade to Pro to earn and track achievements.';
 
         const upgradeButton = document.createElement('a');
-        upgradeButton.href = 'pro.html';
+        upgradeButton.href = 'pro';
         upgradeButton.className = 'upgrade-pro-button';
         upgradeButton.textContent = 'Upgrade';
 
@@ -1394,7 +1394,7 @@ function renderVisitsTab(stadiums, elements) {
             const userHomeVisitEditLogButton = document.createElement('button');
             userHomeVisitEditLogButton.classList.add('user-home-visit-edit-log-button');
             const editImage = document.createElement('img');
-            editImage.src = 'images/icons/edit.png';
+            editImage.src = '/images/icons/edit.png';
             userHomeVisitEditLogButton.appendChild(editImage);
 
             userHomeVisitEditLogButton.addEventListener('click', () => {
@@ -1422,7 +1422,7 @@ function renderVisitsTab(stadiums, elements) {
             const userHomeVisitRemoveButton = document.createElement('button');
             userHomeVisitRemoveButton.classList.add('user-home-visit-remove-button');
             const removeImage = document.createElement('img');
-            removeImage.src = 'images/icons/trash.png';
+            removeImage.src = '/images/icons/trash.png';
             userHomeVisitRemoveButton.appendChild(removeImage);
 
             userHomeVisitRemoveButton.addEventListener('click', () => {
@@ -1726,7 +1726,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async () => {
     if (!isLoggedIn()) {
-        window.location.replace('index.html');
+        window.location.replace('/');
         return;
     }
 

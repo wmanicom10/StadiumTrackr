@@ -17,9 +17,9 @@ if (footerHomeLink) {
     if (token) {
         const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
         const payload = JSON.parse(atob(base64));
-        footerHomeLink.href = payload.username ? 'user-home.html' : 'index.html';
+        footerHomeLink.href = payload.username ? 'user-home' : '/';
     } else {
-        footerHomeLink.href = 'index.html';
+        footerHomeLink.href = '/';
     }
 }
 
@@ -187,7 +187,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
     visitedBtn.classList.add('user-stadium-icon-btn', 'btn-visited');
 
     const visitedImg = document.createElement('img');
-    visitedImg.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+    visitedImg.src = isVisited ? '/images/icons/check.png' : '/images/icons/plus.png';
     visitedImg.alt = 'Mark as Visited';
     visitedBtn.appendChild(visitedImg);
 
@@ -201,7 +201,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
     wishlistBtn.classList.add('user-stadium-icon-btn', 'btn-wishlist');
 
     const wishlistImg = document.createElement('img');
-    wishlistImg.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+    wishlistImg.src = isWishlist ? '/images/icons/heart-check.png' : '/images/icons/heart-plus.png';
     wishlistImg.alt = 'Add to Wishlist';
     wishlistBtn.appendChild(wishlistImg);
 
@@ -227,7 +227,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
 
             visitedBtn.classList.add('animating');
             setTimeout(() => {
-                visitedImg.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+                visitedImg.src = isVisited ? '/images/icons/check.png' : '/images/icons/plus.png';
                 visitedTooltip.textContent = isVisited ? 'Visited' : 'Mark as Visited';
 
                 if (isVisited && isWishlist) {
@@ -235,7 +235,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
                     isWishlist = false;
                     wishlistBtn.classList.add('animating');
                     setTimeout(() => {
-                        wishlistImg.src = 'images/icons/heart-plus.png';
+                        wishlistImg.src = '/images/icons/heart-plus.png';
                         wishlistTooltip.textContent = 'Add to Wishlist';
                     }, 200);
                     setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
@@ -261,7 +261,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
         wishlistBtn.classList.add('animating');
 
         setTimeout(() => {
-            wishlistImg.src = newIsWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+            wishlistImg.src = newIsWishlist ? '/images/icons/heart-check.png' : '/images/icons/heart-plus.png';
             wishlistTooltip.textContent = newIsWishlist ? 'In Wishlist' : 'Add to Wishlist';
         }, 200);
 
@@ -279,7 +279,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
     controls.appendChild(visitedBtn);
     controls.appendChild(wishlistBtn);
 
-    controls.appendChild(createCornerButton('Log Visit', 'images/icons/log.png', 'btn-log', (btn, e) => {
+    controls.appendChild(createCornerButton('Log Visit', '/images/icons/log.png', 'btn-log', (btn, e) => {
         e.preventDefault();
         setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, stadium.city, stadium.state, stadium.image, elements);
         toggleMenu(elements.addStadiumMenu, true, overlay);
@@ -287,7 +287,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
 
     controls.appendChild(createCornerButton(
         'Show Activity',
-        'images/icons/clock.png',
+        '/images/icons/clock.png',
         'btn-activity',
         (btn, e) => {},
         `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
@@ -378,7 +378,7 @@ export async function fetchAPI(endpoint, body) {
 
     if (response.status === 401) {
         localStorage.removeItem('token');
-        window.location.replace('index.html');
+        window.location.replace('/');
         throw new Error('Not authenticated');
     }
 
@@ -416,7 +416,7 @@ export async function fetchFormData(endpoint, formData) {
 
     if (response.status === 401) {
         localStorage.removeItem('token');
-        window.location.replace('index.html');
+        window.location.replace('/');
         throw new Error('Not authenticated');
     }
 
@@ -638,7 +638,7 @@ export function createUserStadiumElement(stadium, elements) {
     visitedBtn.classList.add('user-stadium-icon-btn', 'btn-visited');
 
     const visitedImg = document.createElement('img');
-    visitedImg.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+    visitedImg.src = isVisited ? '/images/icons/check.png' : '/images/icons/plus.png';
     visitedImg.alt = 'Mark as Visited';
     visitedBtn.appendChild(visitedImg);
 
@@ -652,7 +652,7 @@ export function createUserStadiumElement(stadium, elements) {
     wishlistBtn.classList.add('user-stadium-icon-btn', 'btn-wishlist');
 
     const wishlistImg = document.createElement('img');
-    wishlistImg.src = isWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+    wishlistImg.src = isWishlist ? '/images/icons/heart-check.png' : '/images/icons/heart-plus.png';
     wishlistImg.alt = 'Add to Wishlist';
     wishlistBtn.appendChild(wishlistImg);
 
@@ -678,7 +678,7 @@ export function createUserStadiumElement(stadium, elements) {
 
             visitedBtn.classList.add('animating');
             setTimeout(() => {
-                visitedImg.src = isVisited ? 'images/icons/check.png' : 'images/icons/plus.png';
+                visitedImg.src = isVisited ? '/images/icons/check.png' : '/images/icons/plus.png';
                 visitedTooltip.textContent = isVisited ? 'Visited' : 'Mark as Visited';
 
                 if (isVisited && isWishlist) {
@@ -686,7 +686,7 @@ export function createUserStadiumElement(stadium, elements) {
                     isWishlist = false;
                     wishlistBtn.classList.add('animating');
                     setTimeout(() => {
-                        wishlistImg.src = 'images/icons/heart-plus.png';
+                        wishlistImg.src = '/images/icons/heart-plus.png';
                         wishlistTooltip.textContent = 'Add to Wishlist';
                     }, 200);
                     setTimeout(() => wishlistBtn.classList.remove('animating'), 400);
@@ -712,7 +712,7 @@ export function createUserStadiumElement(stadium, elements) {
         wishlistBtn.classList.add('animating');
 
         setTimeout(() => {
-            wishlistImg.src = newIsWishlist ? 'images/icons/heart-check.png' : 'images/icons/heart-plus.png';
+            wishlistImg.src = newIsWishlist ? '/images/icons/heart-check.png' : '/images/icons/heart-plus.png';
             wishlistTooltip.textContent = newIsWishlist ? 'In Wishlist' : 'Add to Wishlist';
         }, 200);
 
@@ -730,7 +730,7 @@ export function createUserStadiumElement(stadium, elements) {
     controls.appendChild(visitedBtn);
     controls.appendChild(wishlistBtn);
 
-    controls.appendChild(createCornerButton('Log Visit', 'images/icons/log.png', 'btn-log', (btn, e) => {
+    controls.appendChild(createCornerButton('Log Visit', '/images/icons/log.png', 'btn-log', (btn, e) => {
         e.preventDefault();
         if (elements) {
             setupAddStadiumModal(stadium.stadium_id, stadium.stadium_name, stadium.city, stadium.state, stadium.image, elements);
@@ -740,7 +740,7 @@ export function createUserStadiumElement(stadium, elements) {
 
     controls.appendChild(createCornerButton(
         'Show Activity',
-        'images/icons/clock.png',
+        '/images/icons/clock.png',
         'btn-activity',
         (btn, e) => {},
         `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
@@ -857,13 +857,13 @@ export function getCaptchaToken() {
 
 export function getEventIcon(genre) {
     const icons = {
-        'Football': 'images/icons/football.png',
-        'Basketball': 'images/icons/basketball.png',
-        'Baseball': 'images/icons/baseball.png',
-        'Hockey': 'images/icons/hockey.png',
-        'Soccer': 'images/icons/soccer.png'
+        'Football': '/images/icons/football.png',
+        'Basketball': '/images/icons/basketball.png',
+        'Baseball': '/images/icons/baseball.png',
+        'Hockey': '/images/icons/hockey.png',
+        'Soccer': '/images/icons/soccer.png'
     };
-    return icons[genre] || 'images/icons/ticket.png';
+    return icons[genre] || '/images/icons/ticket.png';
 }
 
 export function getPageFromURL() {

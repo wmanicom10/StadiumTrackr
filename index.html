@@ -9,7 +9,7 @@
                     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
                     const payload = JSON.parse(atob(base64));
                     if (payload.username) {
-                        window.location.replace('user-home.html');
+                        window.location.replace('user-home');
                     }
                 } catch (e) {
                     console.error(e);
@@ -18,7 +18,7 @@
         </script>
         <meta charset="utf-8">
         <title>StadiumTrackr</title>
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="/css/style.css">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,7 +47,7 @@
                 <input type="submit" id="log-in-button" value="Log In">
             </form>
             <h3>Don't have an account? <span id="sign-up-link">Sign up here</span></h3>
-            <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
+            <a href="/forgot-password" class="forgot-password">Forgot Password?</a>
         </div>
 
         <!-- Create Account Menu -->
@@ -63,7 +63,7 @@
                 <input type="password" id="new-password" class="input-field" placeholder="Password"><br>
                 <div id="terms-and-conditions-container">
                     <input type="checkbox" id="terms-and-conditions">
-                    <label for="terms-and-conditions">I agree to the <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a></label>
+                    <label for="terms-and-conditions">I agree to the <a href="/terms-and-conditions" target="_blank">Terms and Conditions</a></label>
                 </div>
                 <cap-widget id="create-account-captcha"></cap-widget>
                 <input type="submit" id="sign-up-button" value="Sign Up"><br>
@@ -79,9 +79,9 @@
                 <h1>StadiumTrackr</h1>
                 <ul id="logged-out-nav">
                     <li class="nav-item"><a href="/">Home</a></li>
-                    <li class="nav-item"><a href="./stadiums.html">Stadiums</a></li>
-                    <li class="nav-item"><a href="events.html">Events</a></li>
-                    <li class="nav-item"><a href="about.html">About</a></li>
+                    <li class="nav-item"><a href="/stadiums">Stadiums</a></li>
+                    <li class="nav-item"><a href="/events">Events</a></li>
+                    <li class="nav-item"><a href="/about">About</a></li>
                     <li class="nav-item button" id="log-in">Log In</li>
                     <li class="nav-item button" id="create-account">Sign Up</li>
                     <li class="nav-item" id="logged-out-nav-search-container">
@@ -95,18 +95,18 @@
                     <li class="nav-item toggle">
                         <input type="checkbox" id="sidebar-active">
                         <label for="sidebar-active" class="open-sidebar-button">
-                            <img src="images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
+                            <img src="/images/icons/menu-icon.svg" alt="Menu Icon" height="40" width="40">
                         </label>
                         <label id="sidebar-overlay" for="sidebar-active"></label>
                         <div class="links-container">
                             <label for="sidebar-active" class="close-sidebar-button">
-                                <img src="images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
+                                <img src="/images/icons/close-menu-icon.svg" alt="Close Menu Icon" height="40" width="40">
                             </label>
                             <div class="sidebar-links">
                                 <a class="home-link" href="/">Home</a>
-                                <a href="./stadiums.html">Stadiums</a>
-                                <a href="events.html">Events</a>
-                                <a href="about.html">About</a>
+                                <a href="/stadiums">Stadiums</a>
+                                <a href="/events">Events</a>
+                                <a href="/about">About</a>
                             </div>
                             <div class="account-buttons">
                                 <span id="sidebar-log-in">Log In</span>
@@ -126,14 +126,14 @@
             </header>
 
             <main>
-                <img src="images/stadiums/sofi-stadium.jpg" id="home-image">
+                <img src="/images/stadiums/sofi-stadium.jpg" id="home-image">
 
                 <!-- Welcome Text -->
                 <div id="welcome-text">
                     <h2>Track the sports venues you've visited and discover new ones to explore</h2>
                     <div id="button-container">
                         <button id="get-started-button">Get Started</button>
-                        <button><a href="about.html">Learn More</a></button>
+                        <button><a href="/about">Learn More</a></button>
                     </div>
                     <div id="home-stadium-search-container">
                         <form id="home-search-stadiums" autocomplete="off">
@@ -165,28 +165,28 @@
                         <div id="stadium-trackr-infos">
                             <div class="stadium-trackr-info">
                                 <div>
-                                    <img src="images/icons/pin.png" alt="Pin">
+                                    <img src="/images/icons/pin.png" alt="Pin">
                                 </div>
                                 <h3>Track Visits</h3>
                                 <h4>Keep a record of all the stadiums you've visited</h4>
                             </div>
                             <div class="stadium-trackr-info">
                                 <div>
-                                    <img src="images/icons/heart-plus.png" alt="Trophy">
+                                    <img src="/images/icons/heart-plus.png" alt="Trophy">
                                 </div>
                                 <h3>Wishlist</h3>
                                 <h4>Save stadiums you want to visit in the future</h4>
                             </div>
                             <div class="stadium-trackr-info">
                                 <div>
-                                    <img src="images/icons/calendar.png" alt="Trophy">
+                                    <img src="/images/icons/calendar.png" alt="Trophy">
                                 </div>
                                 <h3>Upcoming Events</h3>
                                 <h4>Stay updated on events at your favorite stadiums</h4>
                             </div>
                             <div class="stadium-trackr-info">
                                 <div>
-                                    <img src="images/icons/map.png" alt="Map">
+                                    <img src="/images/icons/map.png" alt="Map">
                                 </div>
                                 <h3>Stadium Maps</h3>
                                 <h4>See all the stadiums you've visited on interactive maps</h4>
@@ -213,19 +213,19 @@
                     </div>
                     <div class="footer-item footer-links">
                         <h4>Quick Links</h4>
-                        <a href="" id="footer-home-link"><h5>Home</h5></a><br>
-                        <a href="stadiums.html"><h5>Stadiums</h5></a><br>
-                        <a href="events.html"><h5>Events</h5></a><br>
-                        <a href="about.html"><h5>About</h5></a><br>
+                        <a href="/" id="footer-home-link"><h5>Home</h5></a><br>
+                        <a href="/stadiums"><h5>Stadiums</h5></a><br>
+                        <a href="/events"><h5>Events</h5></a><br>
+                        <a href="/about"><h5>About</h5></a><br>
                     </div>
                     <div class="footer-item footer-links">
                         <h4>Help</h4>
-                        <a href="contact.html"><h5>Contact</h5></a><br>
-                        <a href="faqs.html"><h5>FAQs</h5></a><br>
-                        <a href="pro.html"><h5>Pro</h5></a><br>
-                        <a href="photo-credits.html"><h5>Photo Credits</h5></a><br>
-                        <a href="terms-and-conditions.html"><h5>Terms and Conditions</h5></a><br>
-                        <a href="privacy-policy.html"><h5>Privacy Policy</h5></a>
+                        <a href="/contact"><h5>Contact</h5></a><br>
+                        <a href="/faqs"><h5>FAQs</h5></a><br>
+                        <a href="/pro"><h5>Pro</h5></a><br>
+                        <a href="/photo-credits"><h5>Photo Credits</h5></a><br>
+                        <a href="/terms-and-conditions"><h5>Terms and Conditions</h5></a><br>
+                        <a href="/privacy-policy"><h5>Privacy Policy</h5></a>
                     </div>
                     <div class="footer-item">
                         <h4>Newsletter</h4>
@@ -242,7 +242,7 @@
         </div>
 
         <!-- Scripts -->
-        <script type="module" src="scripts/pages/index-script.js"></script>
+        <script type="module" src="/scripts/pages/index-script.js"></script>
         
     </body>
 </html>

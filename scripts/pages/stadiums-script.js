@@ -154,7 +154,7 @@ function renderMap(stadiums) {
     window.stadiumsMap = L.map('stadiums-stadium-map').setView([42.8283, -96.5795], 4);
 
     const customIcon = L.icon({
-        iconUrl: 'images/icons/pin-blue.png',
+        iconUrl: '/images/icons/pin-blue.png',
         iconSize: [25, 35],
         iconAnchor: [16, 40],
         popupAnchor: [-3, -40]
@@ -173,7 +173,7 @@ function renderMap(stadiums) {
                     <h4>${stadium.stadium_name}</h4>
                     <p>${stadium.address}</p>
                     <a href="/stadium/${stadium.stadium_id}">
-                        <img src="images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
+                        <img src="/images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
                     </a>
                 </div>
             `);
