@@ -218,11 +218,9 @@ async function loadHomeTab() {
     if (userWishlist.length > 0) document.getElementById('user-home-wishlist-see-all-button').style.display = 'block';
     document.getElementById('user-achievements-skeleton').style.display = 'none';
     document.getElementById('user-achievements').style.display = 'flex';
-    if (userAchievements.length > 0) document.getElementById('user-home-achievements-see-all-button').style.display = 'block';
+    if (userAchievements.length > 0 && isPro()) document.getElementById('user-home-achievements-see-all-button').style.display = 'block';
     if (isPro()) {
         document.getElementById('user-home-map-filters').style.display = 'flex';
-    } else {
-        document.getElementById('user-home-map-upgrade').style.display = 'block';
     }
     document.getElementById('user-home-map-filters-skeleton').style.display = 'none';
     document.getElementById('user-home-stadium-map-skeleton').style.display = 'none';
@@ -1025,6 +1023,26 @@ function renderEventsTab(events, elements) {
 }
 
 function renderHomeTabAchievements(achievements) {
+    if (!isPro()) {
+        const upgradeText = document.createElement('h3');
+        upgradeText.classList.add('user-home-tab-achievements-upgrade')
+        upgradeText.textContent = 'Achievements is a Pro feature';
+
+        const upgradeDescription = document.createElement('p');
+        upgradeDescription.textContent = 'Upgrade to Pro to earn and track achievements.';
+
+        const upgradeButton = document.createElement('a');
+        upgradeButton.href = 'pro.html';
+        upgradeButton.className = 'upgrade-pro-button';
+        upgradeButton.textContent = 'Upgrade';
+
+        const container = document.getElementById('user-achievements');
+        container.appendChild(upgradeText);
+        container.appendChild(upgradeDescription);
+        container.appendChild(upgradeButton);
+        return;
+    }
+
     if (achievements.length === 0) {
         document.getElementById('user-home-no-achievements-text').style.display = 'block';
         return;

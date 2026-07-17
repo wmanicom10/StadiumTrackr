@@ -1173,20 +1173,27 @@ export function setupEditLogHandlers(elements, getCurrentData) {
     });
 }
 
-export function setupFilterHandlers(elements) {
+export function setupFilterHandlers(elements, onClear) {
     const getFilters = () => ({
         league: elements.leagueFilter.value,
         country: elements.countryFilter.value,
         sort: elements.sortFilter.value
     });
 
+    let isClearing = false;
+
     function applyFilter() {
         const { league, country, sort } = getFilters();
+        const currentParams = new URLSearchParams(window.location.search);
         const params = new URLSearchParams();
         params.set('page', '1');
-        if (league !== 'all')      params.set('league', league);
-        if (country !== 'all')     params.set('country', country);
-        if (sort !== 'name-asc')   params.set('sort', sort);
+        if (league !== 'all') params.set('league', league);
+        if (country !== 'all') params.set('country', country);
+        if (sort !== 'name-asc') params.set('sort', sort);
+        if (!isClearing) {
+            const show = currentParams.get('show');
+            if (show) params.set('show', show);
+        }
         window.location.search = params.toString();
     }
 
@@ -1195,9 +1202,11 @@ export function setupFilterHandlers(elements) {
     elements.sortFilter.addEventListener('change', applyFilter);
     
     elements.clearFiltersButton.addEventListener('click', () => {
+        isClearing = true;
         elements.leagueFilter.value = 'all';
         elements.countryFilter.value = 'all';
         elements.sortFilter.value = 'name-asc';
+        if (onClear) onClear();
         applyFilter();
     });
 }

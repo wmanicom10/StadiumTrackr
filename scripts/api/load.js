@@ -32,8 +32,8 @@ export const loadAPI = {
     loadStadiumMap: (id) =>
         fetchAPI(ROUTES.LOAD_STADIUM_MAP, { id }),
 
-    loadStadiums: (league, country, sortBy) =>
-        fetchAPI(ROUTES.LOAD_STADIUMS, { league, country, sortBy }),
+    loadStadiums: (show, league, country, sortBy) =>
+        fetchAPI(ROUTES.LOAD_STADIUMS, { show, league, country, sortBy }),
 
     loadUserEvents: (event, sort) =>
         fetchAPI(ROUTES.LOAD_USER_EVENTS, { event, sort }),

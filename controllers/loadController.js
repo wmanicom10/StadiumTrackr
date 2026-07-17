@@ -349,7 +349,7 @@ const handleLoadStadiumMap = async (req, res) => {
 
 /*  loadStadiums  */
 const handleLoadStadiums = async (req, res) => {
-    const { league, country, sortBy } = req.body;
+    const { show, league, country, sortBy } = req.body;
     const userId = req.user?.userId || null;
         
     try {
@@ -392,6 +392,17 @@ const handleLoadStadiums = async (req, res) => {
         const countryFilter = buildCountryFilter(country);
         query += countryFilter.sql;
         params.push(...countryFilter.params);
+
+        if (userId && show && show.length > 0 && !show.includes('all')) {
+            const conditions = [];
+            if (show.includes('visited')) conditions.push('v.stadium_id IS NOT NULL');
+            if (show.includes('not-visited')) conditions.push('v.stadium_id IS NULL');
+            if (show.includes('wishlist')) conditions.push('w.stadium_id IS NOT NULL');
+            if (show.includes('not-wishlist')) conditions.push('w.stadium_id IS NULL');
+            if (conditions.length > 0) {
+                query += ` AND (${conditions.join(' AND ')})`;
+            }
+        }
 
         query += ` GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, stadiums.city, stadiums.state, stadiums.country_id, stadiums.opened_date, stadiums.construction_cost, stadiums.capacity`;
         if (userId) query += `, CASE WHEN v.stadium_id IS NOT NULL THEN 1 ELSE 0 END, CASE WHEN w.stadium_id IS NOT NULL THEN 1 ELSE 0 END`;

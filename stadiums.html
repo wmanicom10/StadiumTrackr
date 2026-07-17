@@ -319,6 +319,24 @@
                     <div id="filter-bar">
                         <h3>Filters</h3>
                         <div id="filter-controls">
+                            <div class="filter-group" id="show-filter-group">
+                                <label class="filter-label">Show:</label>
+                                <div class="custom-select-wrapper" id="show-wrapper">
+                                    <div class="show-trigger" id="show-trigger">
+                                        <span class="custom-select-value" id="show-value">All</span>
+                                        <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
+                                            <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div class="show-dropdown" id="show-dropdown">
+                                        <div class="custom-select-option selected" data-value="all">All</div>
+                                        <div class="custom-select-option" data-value="visited">Visited</div>
+                                        <div class="custom-select-option" data-value="not-visited">Not Visited</div>
+                                        <div class="custom-select-option" data-value="wishlist">Wishlist</div>
+                                        <div class="custom-select-option" data-value="not-wishlist">Not In Wishlist</div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="filter-group">
                                 <label class="filter-label">League:</label>
                                 <div class="custom-select-wrapper">
@@ -502,7 +520,7 @@
                     <div id="stadiums-map-upgrade">
                         <h3>Map Filters is a Pro feature</h3>
                         <p>Upgrade to Pro to filter the stadiums map by league, country, and visit status.</p>
-                        <a href="pro.html" class="upgrade-pro-button">Upgrade to Pro</a>
+                        <a href="pro.html" class="upgrade-pro-button">Upgrade</a>
                     </div>
                     <div id="stadiums-stadium-map"></div>
                     <div id="stadiums-stadium-map-skeleton"></div>

@@ -31,6 +31,7 @@ const elements = {
 };
 
 let allStadiums = [];
+let showSelections = new Set(['all']);
 let allMapStadiums = [];
 let mapShowSelections = new Set(['all']);
 
@@ -47,15 +48,29 @@ async function loadMapStadiums() {
 
 async function setView() {
     const params = new URLSearchParams(window.location.search);
+    const showParam = params.get('show');
+    if (showParam) {
+        showSelections.clear();
+        showParam.split(',').forEach(v => showSelections.add(v));
+    } else {
+        showSelections.clear();
+        showSelections.add('all');
+    }
+    const show = [...showSelections];
     const league = params.get('league') || 'all';
     const country = params.get('country') || 'all';
     const sort = params.get('sort') || 'name-asc';
+
+    if (isLoggedIn()) syncShowFilter();
 
     if (!params.has('page')) {
         sessionStorage.removeItem('stadiumSearch');
     }
 
-    setupFilterHandlers(elements);
+    setupFilterHandlers(elements, () => {
+        showSelections.clear();
+        showSelections.add('all');
+    });
     setupSearch(() => allStadiums, elements);
     
     syncSelectFromURL('league-filter', league);
@@ -63,7 +78,7 @@ async function setView() {
     syncSelectFromURL('sort-filter', sort);
 
     await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await loadAPI.loadStadiums(league, country, sort);
+    const result = await loadAPI.loadStadiums(show, league, country, sort);
     const stadiums = result.stadiums;
 
     allStadiums = stadiums;
@@ -96,6 +111,17 @@ async function setView() {
 }
 
 /*  Functions  */
+function applyShowFilter() {
+    const params = new URLSearchParams(window.location.search);
+    params.set('page', '1');
+    if (showSelections.has('all')) {
+        params.delete('show');
+    } else {
+        params.set('show', [...showSelections].join(','));
+    }
+    window.location.search = params.toString();
+}
+
 function filterMapStadiums(stadiums, filters) {
     return stadiums.filter(s => {
         if (filters.league !== 'all' && s.league.toLowerCase() !== filters.league) return false;
@@ -269,6 +295,108 @@ function setupMapShowFilter() {
     });
 }
 
+function setupShowFilter() {
+    const trigger = document.getElementById('show-trigger');
+    const dropdown = document.getElementById('show-dropdown');
+    const valueDisplay = document.getElementById('show-value');
+    const options = dropdown.querySelectorAll('.custom-select-option');
+
+    document.addEventListener('click', (e) => {
+        const wrapper = document.getElementById('show-wrapper');
+        if (!wrapper.contains(e.target)) {
+            dropdown.classList.remove('active');
+            trigger.classList.remove('active');
+        }
+    });
+
+    trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.custom-select-dropdown.active').forEach(d => {
+            d.classList.remove('active');
+            d.parentElement.querySelector('.custom-select-trigger')?.classList.remove('active');
+        });
+        dropdown.classList.toggle('active');
+        trigger.classList.toggle('active');
+    });
+
+    options.forEach(option => {
+        option.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value;
+
+            if (value === 'all') {
+                showSelections.clear();
+                showSelections.add('all');
+                options.forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+            } else {
+                showSelections.delete('all');
+                options[0].classList.remove('selected');
+
+                if (value === 'visited') showSelections.delete('not-visited');
+                if (value === 'not-visited') showSelections.delete('visited');
+                if (value === 'wishlist') showSelections.delete('not-wishlist');
+                if (value === 'not-wishlist') showSelections.delete('wishlist');
+
+                if (showSelections.has(value)) {
+                    showSelections.delete(value);
+                    option.classList.remove('selected');
+                } else {
+                    showSelections.add(value);
+                    option.classList.add('selected');
+                }
+
+                options.forEach(o => {
+                    if (o.dataset.value !== 'all') {
+                        o.classList.toggle('selected', showSelections.has(o.dataset.value));
+                    }
+                });
+
+                if (showSelections.size === 0) {
+                    showSelections.add('all');
+                    options[0].classList.add('selected');
+                }
+            }
+
+            if (showSelections.has('all')) {
+                valueDisplay.textContent = 'All';
+            } else {
+                const labels = {
+                    visited: 'Visited',
+                    'not-visited': 'Not Visited',
+                    wishlist: 'Wishlist',
+                    'not-wishlist': 'Not In Wishlist'
+                };
+                valueDisplay.textContent = [...showSelections].map(v => labels[v]).join(', ');
+            }
+
+            applyShowFilter();
+        });
+    });
+}
+
+function syncShowFilter() {
+    const options = document.querySelectorAll('#show-dropdown .custom-select-option');
+    const valueDisplay = document.getElementById('show-value');
+    if (!valueDisplay) return;
+
+    options.forEach(o => {
+        o.classList.toggle('selected', showSelections.has(o.dataset.value));
+    });
+
+    if (showSelections.has('all')) {
+        valueDisplay.textContent = 'All';
+    } else {
+        const labels = {
+            visited: 'Visited',
+            'not-visited': 'Not Visited',
+            wishlist: 'Wishlist',
+            'not-wishlist': 'Not In Wishlist'
+        };
+        valueDisplay.textContent = [...showSelections].map(v => labels[v]).join(', ');
+    }
+}
+
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
     registerEventListeners(getAuthElements());
@@ -285,6 +413,8 @@ document.addEventListener('DOMContentLoaded', () => {
 window.onload = async () => {
     if (isLoggedIn()) {
         showLoggedInUI();
+        document.getElementById('show-filter-group').style.display = 'flex';
+        setupShowFilter();
         if (isPro()) {
             setupMapShowFilter();
             setupMapFilterHandlers();

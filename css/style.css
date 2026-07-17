@@ -1244,7 +1244,7 @@ label img:hover {
     background-clip: text;
     font-weight: normal;
     margin: 0;
-    padding: 150px 0 30px;
+    padding: 130px 0 30px;
 }
 
 #button-container {
@@ -1470,7 +1470,7 @@ label img:hover {
 /*  Popular Stadiums  */
 #popular-stadiums-container {
     width: 1100px;
-    margin: 70px auto;
+    margin: 50px auto;
 }
 
 #popular-stadiums-container h2 {
@@ -1905,6 +1905,10 @@ footer {
     position: relative;
 }
 
+#show-filter-group {
+    display: none;
+}
+
 .filter-label {
     font-size: 0.95rem;
     font-weight: normal;
@@ -1920,7 +1924,7 @@ footer {
     width: 72%;
 }
 
-.custom-select-trigger, .map-show-trigger {
+.custom-select-trigger, .map-show-trigger, .show-trigger {
     padding: 12px 20px 12px 18px;
     border: 1px solid var(--color-primary-20);
     border-radius: 10px;
@@ -1937,11 +1941,11 @@ footer {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
 }
 
-.custom-select-trigger:hover, .map-show-trigger:hover {
+.custom-select-trigger:hover, .map-show-trigger:hover, .show-trigger:hover {
     border-color: rgba(79, 172, 254, 0.4);
 }
 
-.custom-select-trigger.active, .map-show-trigger.active {
+.custom-select-trigger.active, .map-show-trigger.active, .show-trigger.active {
     border-color: rgba(79, 172, 254, 0.6);
     box-shadow: 0 0 0 3px var(--color-primary-10);
 }
@@ -1960,7 +1964,7 @@ footer {
     transform: rotate(180deg);
 }
 
-.custom-select-dropdown, .map-show-dropdown {
+.custom-select-dropdown, .map-show-dropdown, .show-dropdown {
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
@@ -1978,11 +1982,11 @@ footer {
     overflow-y: auto;
 }
 
-.custom-select-wrapper:has(.custom-select-dropdown.active), .custom-select-wrapper:has(.map-show-dropdown.active) {
+.custom-select-wrapper:has(.custom-select-dropdown.active), .custom-select-wrapper:has(.map-show-dropdown.active), .custom-select-wrapper:has(.show-dropdown.active) {
     z-index: 10000;
 }
 
-.custom-select-dropdown.active, .map-show-dropdown.active {
+.custom-select-dropdown.active, .map-show-dropdown.active, .show-dropdown.active {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -3227,26 +3231,26 @@ footer {
     gap: 15px;
 }
 
-#user-home-lists-upgrade, #stadiums-map-upgrade, #user-home-map-upgrade, #user-home-achievements-upgrade {
+#user-home-lists-upgrade, #stadiums-map-upgrade, #user-home-achievements-upgrade {
     display: none;
     width: 100%;
     text-align: center;
     padding: 40px;
 }
 
-#stadiums-map-upgrade, #user-home-map-upgrade {
+#stadiums-map-upgrade {
     padding: 20px 0 0;
     margin-bottom: 30px;
 }
 
-#user-home-lists-upgrade h3, #stadiums-map-upgrade h3, #user-home-map-upgrade h3, #user-home-achievements-upgrade h3 {
+#user-home-lists-upgrade h3, #stadiums-map-upgrade h3, #user-home-achievements-upgrade h3 {
     font-size: 1.4rem;
     font-weight: 400;
     margin: 0 0 15px;
     color: var(--color-text);
 }
 
-#user-home-lists-upgrade p, #stadiums-map-upgrade p, #user-home-map-upgrade p, #user-home-achievements-upgrade p {
+#user-home-lists-upgrade p, #stadiums-map-upgrade p, #user-home-achievements-upgrade p {
     font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0;
@@ -3264,9 +3268,10 @@ footer {
     padding: 8px;
     font-size: 1rem;
     display: block;
-    width: 190px;
+    width: 160px;
     height: 38px;
     margin: 20px auto;
+    text-align: center;
 }
 
 .upgrade-pro-button:hover {
@@ -4250,6 +4255,27 @@ footer {
     gap: 9px;
     flex-direction: column;
     gap: 12px;
+}
+
+.user-home-tab-achievements-upgrade {
+    font-size: 1.1rem;
+    font-weight: 400;
+    margin: 0;
+    margin-top: 40px;
+    color: var(--color-text);
+    text-align: center;
+}
+
+#user-achievements p {
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: 1.6;
+}
+
+#user-achievements .upgrade-pro-button {
+    margin: 0 auto;
 }
 
 .user-achievement {

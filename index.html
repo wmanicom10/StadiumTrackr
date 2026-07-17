@@ -2,6 +2,20 @@
 <html lang="en" class="logged-out">
 
     <head>
+        <script>
+            const token = localStorage.getItem('token');
+            if (token) {
+                try {
+                    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                    const payload = JSON.parse(atob(base64));
+                    if (payload.username) {
+                        window.location.replace('user-home.html');
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+        </script>
         <meta charset="utf-8">
         <title>StadiumTrackr</title>
         <link rel="stylesheet" href="css/style.css">
@@ -112,7 +126,7 @@
             </header>
 
             <main>
-                <img src="images/stadiums/truist-park.jpg" id="home-image">
+                <img src="images/stadiums/sofi-stadium.jpg" id="home-image">
 
                 <!-- Welcome Text -->
                 <div id="welcome-text">
@@ -172,10 +186,10 @@
                             </div>
                             <div class="stadium-trackr-info">
                                 <div>
-                                    <img src="images/icons/trophy.png" alt="Trophy">
+                                    <img src="images/icons/map.png" alt="Map">
                                 </div>
-                                <h3>Earn Badges</h3>
-                                <h4>Collect achievements for visting different stadiums</h4>
+                                <h3>Stadium Maps</h3>
+                                <h4>See all the stadiums you've visited on interactive maps</h4>
                             </div>
                         </div>
                     </div>
