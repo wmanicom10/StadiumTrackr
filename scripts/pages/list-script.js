@@ -1,6 +1,6 @@
 /*  Imports  */
-import { DEBOUNCE_TIME, getAuthElements, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, debounce, getPageFromURL, initializeCustomSelects, isLoggedIn, renderPageNumbers, renderWithoutTransition, setupSearchAutocomplete, shakeOrReplace, syncSelectFromURL, toggleMenu } from "../utils.js";
+import { DEBOUNCE_TIME, getAuthElements, IS_PROD, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
+import { createToast, debounce, getPageFromURL, initializeCustomSelects, isLoggedIn, renderPageNumbers, renderWithoutTransition, rewriteUserHomeLinks, setupSearchAutocomplete, shakeOrReplace, syncSelectFromURL, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 import { userAPI } from "../api/user.js";
@@ -27,6 +27,7 @@ const elements = {
 }
 
 let dragSrcEl = null;
+let listShowSelections = new Set(['all']);
 
 /*  Async Functions  */
 async function showCreateUI() {
@@ -58,7 +59,11 @@ async function showCreateUI() {
             try {
                 const result = await updateAPI.createUserList(listName, listDescription, isRanked, stadiums);
                 sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'List created successfully.' }));
-                window.location.href = `list.html?mode=view&id=${result.listId}`;
+                if (IS_PROD && result.slug) {
+                    window.location.href = `/list/${result.slug}/view`;
+                } else {
+                    window.location.href = `list.html?mode=view&id=${result.listId}`;
+                }
             } catch (error) {
                 console.error(error);
                 shakeOrReplace(error.message || 'Failed to create list. Please try again.');
@@ -85,7 +90,7 @@ async function showCreateUI() {
     }
 }
 
-async function showEditUI(listId) {
+async function showEditUI(listId, slug) {
     try {
         const saveButton = document.getElementById('edit-list-save-button');
         saveButton.disabled = true;
@@ -94,54 +99,16 @@ async function showEditUI(listId) {
             saveButton.disabled = false;
         }
 
-        saveButton.addEventListener('click', async () => {
-            const listName = document.getElementById('edit-list-name').value.trim();
-            if (!listName) {
-                shakeOrReplace('List name is required.');
-                return;
-            }
-
-            const listDescription = document.getElementById('edit-list-description').value.trim();
-
-            const isRanked = document.getElementById('edit-list-ranked').checked;
-
-            const stadiums = Array.from(document.querySelectorAll('.edit-list-stadium')).map((el, index) => ({
-                stadiumId: el.dataset.stadiumId,
-                note: el.querySelector('.edit-list-note-button').dataset.note || null,
-                orderIndex: index
-            }));
-
-            try {
-                await updateAPI.updateUserList(listId, listName, listDescription, isRanked, stadiums);
-                sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'List saved successfully.' }));
-                window.location.href = `list.html?mode=view&id=${listId}`;
-            } catch (error) {
-                console.error(error);
-                shakeOrReplace(error.message || 'Failed to save list. Please try again.');
-            }
-        });
-
         const deleteListMenu = document.getElementById('delete-list-menu');
-
         document.getElementById('edit-list-delete-button').addEventListener('click', () => toggleMenu(deleteListMenu, true, overlay));
         document.getElementById('close-delete-list-menu').addEventListener('click', () => toggleMenu(deleteListMenu, false, overlay));
         document.getElementById('delete-list-cancel-button').addEventListener('click', () => toggleMenu(deleteListMenu, false, overlay));
 
-        document.getElementById('delete-list-delete-button').addEventListener('click', async () => {
-            try {
-                await updateAPI.deleteUserList(listId);
-                sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'List deleted successfully.' }));
-                window.location.href = 'user-home.html?tab=lists';
-            } catch (error) {
-                console.error(error);
-                shakeOrReplace(error.message || 'Failed to delete list. Please try again.');
-            }
-        });
-
         document.getElementById('edit-list-container').style.display = 'block';
 
         await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const result = await userAPI.loadUserList(listId, 'all', 'all', 'all', 'order');
+        const result = await userAPI.loadUserList(listId, slug, ['all'], 'all', 'all', 'order');
+        const resolvedListId = result.listId || listId;
         const stadiums = result.listStadiums;
 
         document.title = `Edit your ${result.listName} list - StadiumTrackr`;
@@ -157,6 +124,45 @@ async function showEditUI(listId) {
             updateEditRankNumbers();
         });
 
+        // Save handler now has resolvedListId in scope
+        saveButton.addEventListener('click', async () => {
+            const listName = document.getElementById('edit-list-name').value.trim();
+            if (!listName) {
+                shakeOrReplace('List name is required.');
+                return;
+            }
+            const listDescription = document.getElementById('edit-list-description').value.trim();
+            const isRanked = document.getElementById('edit-list-ranked').checked;
+            const stadiums = Array.from(document.querySelectorAll('.edit-list-stadium')).map((el, index) => ({
+                stadiumId: el.dataset.stadiumId,
+                note: el.querySelector('.edit-list-note-button').dataset.note || null,
+                orderIndex: index
+            }));
+            try {
+                const saveResult = await updateAPI.updateUserList(resolvedListId, listName, listDescription, isRanked, stadiums);
+                sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'List saved successfully.' }));
+                if (IS_PROD && saveResult.slug) {
+                    window.location.href = `/list/${saveResult.slug}/view`;
+                } else {
+                    window.location.href = `list.html?mode=view&id=${resolvedListId}`;
+                }
+            } catch (error) {
+                console.error(error);
+                shakeOrReplace(error.message || 'Failed to save list. Please try again.');
+            }
+        });
+
+        document.getElementById('delete-list-delete-button').addEventListener('click', async () => {
+            try {
+                await updateAPI.deleteUserList(resolvedListId);
+                sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'List deleted successfully.' }));
+                window.location.href = IS_PROD ? `/${username}/lists` : 'user-home.html?tab=lists';
+            } catch (error) {
+                console.error(error);
+                shakeOrReplace(error.message || 'Failed to delete list. Please try again.');
+            }
+        });
+
         renderEditListView(stadiums, enableSave);
         setupEditListSearch(enableSave);
 
@@ -168,10 +174,9 @@ async function showEditUI(listId) {
     }
 }
 
-async function showViewUI(listId, view) {
+async function showViewUI(listId, slug, view) {
     try {
         const elements = {
-            showFilter: document.getElementById('view-list-show-filter'),
             leagueFilter: document.getElementById('view-list-league-filter'),
             countryFilter: document.getElementById('view-list-country-filter'),
             sortFilter: document.getElementById('view-list-sort-filter'),
@@ -182,14 +187,34 @@ async function showViewUI(listId, view) {
         }
 
         const params = new URLSearchParams(window.location.search);
-        const show = params.get('show') || 'all';
-        const league = params.get('league') || 'all';
-        const country = params.get('country') || 'all';
-        const sort = params.get('sort') || 'order';
+        const pathParts = window.location.pathname.split('/');
 
-        setupFilterHandlers(elements, listId, view);
+        let sort = 'order';
+        let currentPage = 1;
+        let league = 'all';
+        let country = 'all';
+        let show = ['all'];
 
-        syncSelectFromURL('view-list-show-filter', show);
+        if (slug) {
+            for (let i = 4; i < pathParts.length - 1; i += 2) {
+                if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'order';
+                if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+                if (pathParts[i] === 'league') league = pathParts[i + 1] || 'all';
+                if (pathParts[i] === 'country') country = pathParts[i + 1] || 'all';
+                if (pathParts[i] === 'show') show = pathParts[i + 1]?.split(',') || ['all'];
+            }
+        } else {
+            sort = params.get('sort') || 'order';
+            league = params.get('league') || 'all';
+            country = params.get('country') || 'all';
+            const showParam = params.get('show');
+            show = showParam ? showParam.split(',') : ['all'];
+        }
+
+        syncListShowFilter();
+        setupListShowFilter(listId, slug, view);
+        setupFilterHandlers(elements, listId, slug, view);
+
         syncSelectFromURL('view-list-league-filter', league);
         syncSelectFromURL('view-list-country-filter', country);
         syncSelectFromURL('view-list-sort-filter', sort);
@@ -197,8 +222,10 @@ async function showViewUI(listId, view) {
         document.getElementById('view-list-container').style.display = 'flex';
 
         await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const result = await userAPI.loadUserList(listId, show, league, country, sort);
+        const result = await userAPI.loadUserList(listId, slug, show, league, country, sort);
         const stadiums = result.listStadiums;
+        const resolvedSlug = result.slug || slug;
+        const resolvedListId = result.listId || listId;
 
         document.title = `${result.listName} - A list of stadiums`;
 
@@ -206,22 +233,29 @@ async function showViewUI(listId, view) {
         stadiumImage.id = 'stadium-image';
         stadiumImage.src = STADIUM_IMAGE_PATH + result.backdropImage;
         document.querySelector('main').prepend(stadiumImage);
-        stadiumImage.onload = () => {
-            stadiumImage.classList.add('loaded');
-        };
+        stadiumImage.onload = () => stadiumImage.classList.add('loaded');
 
         document.getElementById('view-list-name').textContent = result.listName;
-        result.listDescription ? document.getElementById('view-list-description').textContent = result.listDescription : document.getElementById('view-list-description').style.display = 'none';
+        result.listDescription 
+            ? document.getElementById('view-list-description').textContent = result.listDescription 
+            : document.getElementById('view-list-description').style.display = 'none';
 
         if (view === 'list') {
-            renderListView(elements, stadiums, result.isRanked);
+            renderListView(elements, stadiums, result.isRanked, resolvedSlug, sort, currentPage);
         } else {
-            renderWithoutTransition(elements, stadiums, result.isRanked);
+            renderWithoutTransition(elements, stadiums, result.isRanked, resolvedSlug, sort, currentPage);
         }
 
-        document.getElementById('edit-list-button').href = `list.html?mode=edit&id=${listId}`;
-        document.getElementById('list-view-grid').href = `list.html?mode=view&id=${listId}`;
-        document.getElementById('list-view-list').href = `list.html?mode=view&id=${listId}&view=list`;
+        // Update links
+        if (IS_PROD && resolvedSlug) {
+            document.getElementById('edit-list-button').href = `/list/${resolvedSlug}/edit`;
+            document.getElementById('list-view-grid').href = `/list/${resolvedSlug}/view`;
+            document.getElementById('list-view-list').href = `/list/${resolvedSlug}/view`;
+        } else {
+            document.getElementById('edit-list-button').href = `list.html?mode=edit&id=${resolvedListId}`;
+            document.getElementById('list-view-grid').href = `list.html?mode=view&id=${resolvedListId}`;
+            document.getElementById('list-view-list').href = `list.html?mode=view&id=${resolvedListId}&view=list`;
+        }
 
         document.getElementById('list-skeleton').style.display = 'none';
         if (stadiums.length > 0) document.getElementById('view-list-stadiums').style.display = 'flex';
@@ -233,6 +267,154 @@ async function showViewUI(listId, view) {
 }
 
 /*  Functions  */
+function setupListShowFilter(listId, slug, view) {
+    const trigger = document.getElementById('list-show-trigger');
+    const dropdown = document.getElementById('list-show-dropdown');
+    const valueDisplay = document.getElementById('list-show-value');
+    const options = dropdown.querySelectorAll('.custom-select-option');
+
+    document.addEventListener('click', (e) => {
+        const wrapper = document.getElementById('list-show-wrapper');
+        if (!wrapper.contains(e.target)) {
+            dropdown.classList.remove('active');
+            trigger.classList.remove('active');
+        }
+    });
+
+    trigger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.querySelectorAll('.custom-select-dropdown.active').forEach(d => {
+            d.classList.remove('active');
+            d.parentElement.querySelector('.custom-select-trigger')?.classList.remove('active');
+        });
+        dropdown.classList.toggle('active');
+        trigger.classList.toggle('active');
+    });
+
+    options.forEach(option => {
+        option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const value = option.dataset.value;
+
+            if (value === 'all') {
+                listShowSelections.clear();
+                listShowSelections.add('all');
+                options.forEach(o => o.classList.remove('selected'));
+                option.classList.add('selected');
+            } else {
+                listShowSelections.delete('all');
+                options[0].classList.remove('selected');
+
+                if (value === 'visited') listShowSelections.delete('not-visited');
+                if (value === 'not-visited') listShowSelections.delete('visited');
+                if (value === 'wishlist') listShowSelections.delete('not-wishlist');
+                if (value === 'not-wishlist') listShowSelections.delete('wishlist');
+
+                if (listShowSelections.has(value)) {
+                    listShowSelections.delete(value);
+                    option.classList.remove('selected');
+                } else {
+                    listShowSelections.add(value);
+                    option.classList.add('selected');
+                }
+
+                if (listShowSelections.size === 0) {
+                    listShowSelections.add('all');
+                    options[0].classList.add('selected');
+                }
+
+                options.forEach(o => {
+                    if (o.dataset.value !== 'all') {
+                        o.classList.toggle('selected', listShowSelections.has(o.dataset.value));
+                    }
+                });
+            }
+
+            if (listShowSelections.has('all')) {
+                valueDisplay.textContent = 'All';
+            } else {
+                const labels = {
+                    visited: 'Visited',
+                    'not-visited': 'Not Visited',
+                    wishlist: 'Wishlist',
+                    'not-wishlist': 'Not In Wishlist'
+                };
+                valueDisplay.textContent = [...listShowSelections].map(v => labels[v]).join(', ');
+            }
+
+            applyListShowFilter(listId, slug, view);
+        });
+    });
+}
+
+function applyListShowFilter(listId, slug, view) {
+    if (IS_PROD && slug) {
+        const pathParts = window.location.pathname.split('/');
+        let sort = null, league = null, country = null;
+        for (let i = 4; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'league') league = pathParts[i + 1];
+            if (pathParts[i] === 'country') country = pathParts[i + 1];
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1];
+        }
+        let path = `/list/${slug}/view`;
+        if (!listShowSelections.has('all')) path += `/show/${[...listShowSelections].join(',')}`;
+        if (league) path += `/league/${league}`;
+        if (country) path += `/country/${country}`;
+        if (sort) path += `/sort/${sort}`;
+        window.location.href = path;
+    } else {
+        const params = new URLSearchParams(window.location.search);
+        params.set('mode', 'view');
+        params.set('id', listId);
+        params.set('page', '1');
+        if (view) params.set('view', view);
+        if (listShowSelections.has('all')) {
+            params.delete('show');
+        } else {
+            params.set('show', [...listShowSelections].join(','));
+        }
+        window.location.search = params.toString();
+    }
+}
+
+function syncListShowFilter() {
+    const pathParts = window.location.pathname.split('/');
+    let showValue = null;
+    if (IS_PROD) {
+        for (let i = 4; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'show') showValue = pathParts[i + 1];
+        }
+    } else {
+        showValue = new URLSearchParams(window.location.search).get('show');
+    }
+
+    if (showValue) {
+        listShowSelections.clear();
+        showValue.split(',').forEach(v => listShowSelections.add(v));
+    } else {
+        listShowSelections.clear();
+        listShowSelections.add('all');
+    }
+
+    const options = document.querySelectorAll('#list-show-dropdown .custom-select-option');
+    const valueDisplay = document.getElementById('list-show-value');
+    if (!valueDisplay) return;
+
+    options.forEach(o => o.classList.toggle('selected', listShowSelections.has(o.dataset.value)));
+
+    if (listShowSelections.has('all')) {
+        valueDisplay.textContent = 'All';
+    } else {
+        const labels = {
+            visited: 'Visited',
+            'not-visited': 'Not Visited',
+            wishlist: 'Wishlist',
+            'not-wishlist': 'Not In Wishlist'
+        };
+        valueDisplay.textContent = [...listShowSelections].map(v => labels[v]).join(', ');
+    }
+}
+
 function renderEditListView(stadiums, enableSave) {
     if (stadiums.length === 0) {
         document.getElementById('edit-list-no-stadiums').style.display = 'block';
@@ -260,7 +442,7 @@ function renderEditListView(stadiums, enableSave) {
 
             const editListStadiumName = document.createElement('a');
             editListStadiumName.classList.add('edit-list-stadium-name');
-            editListStadiumName.href = `stadium.html?id=${stadium.stadium_id}`;
+            editListStadiumName.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
             editListStadiumName.textContent = stadium.stadium_name;
             editListStadiumName.draggable = false;
 
@@ -374,7 +556,7 @@ function renderEditListView(stadiums, enableSave) {
     }
 }
 
-function renderListView(elements, stadiums, isRanked) {
+function renderListView(elements, stadiums, isRanked, resolvedSlug, sort, currentPage) {
     if (stadiums.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -387,7 +569,7 @@ function renderListView(elements, stadiums, isRanked) {
         const perPage = 10;
         
         const pageCount = Math.ceil(stadiums.length / perPage);
-        let currentPage = Math.min(getPageFromURL(), pageCount);
+        currentPage = Math.min(currentPage || getPageFromURL(), pageCount) || 1;
 
         function renderPage(page) {
             elements.stadiumsList.innerHTML = '';
@@ -416,7 +598,7 @@ function renderListView(elements, stadiums, isRanked) {
 
                 const listViewStadiumName = document.createElement('a');
                 listViewStadiumName.classList.add('list-view-stadium-name');
-                listViewStadiumName.href = `stadium.html?id=${stadium.stadium_id}`;
+                listViewStadiumName.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                 listViewStadiumName.textContent = stadium.stadium_name;
 
                 const listViewStadiumLocation = document.createElement('h4');
@@ -441,7 +623,26 @@ function renderListView(elements, stadiums, isRanked) {
         }
 
         renderPage(currentPage);
-        renderPageNumbers(elements, currentPage, pageCount);
+
+        const onPageChange = resolvedSlug ? (page) => {
+            const parts = window.location.pathname.split('/');
+            let path = `/list/${resolvedSlug}/view`;
+            let show = null, sort2 = null, league = null, country = null;
+            for (let i = 4; i < parts.length - 1; i += 2) {
+                if (parts[i] === 'show') show = parts[i + 1];
+                if (parts[i] === 'sort') sort2 = parts[i + 1];
+                if (parts[i] === 'league') league = parts[i + 1];
+                if (parts[i] === 'country') country = parts[i + 1];
+            }
+            if (show) path += `/show/${show}`;
+            if (league) path += `/league/${league}`;
+            if (country) path += `/country/${country}`;
+            if (sort2) path += `/sort/${sort2}`;
+            if (page !== 1) path += `/page/${page}`;
+            window.location.href = path;
+        } : null;
+
+        renderPageNumbers(elements, currentPage, pageCount, onPageChange);
     }
 }
 
@@ -501,7 +702,7 @@ function setupCreateListSearch(enableSave) {
 
                 const createListStadiumName = document.createElement('a');
                 createListStadiumName.classList.add('create-list-stadium-name');
-                createListStadiumName.href = `stadium.html?id=${stadium.stadium_id}`;
+                createListStadiumName.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                 createListStadiumName.textContent = stadium.stadium_name;
                 createListStadiumName.draggable = false;
 
@@ -682,7 +883,7 @@ function setupEditListSearch(enableSave) {
 
                 const editListStadiumName = document.createElement('a');
                 editListStadiumName.classList.add('edit-list-stadium-name');
-                editListStadiumName.href = `stadium.html?id=${stadium.stadium_id}`;
+                editListStadiumName.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                 editListStadiumName.textContent = stadium.stadium_name;
                 editListStadiumName.draggable = false;
 
@@ -877,43 +1078,57 @@ function setupEditListStadiumModal(stadiumId, stadiumName, city, state, stadiumI
     elements.closeEditListStadiumMenu.onclick = () => toggleMenu(elements.editListStadiumMenu, false, overlay);
 }
 
-function setupFilterHandlers(elements, listId, view) {
+function setupFilterHandlers(elements, listId, slug, view) {
     const getFilters = () => ({
-        show: elements.showFilter.value,
         league: elements.leagueFilter.value,
         country: elements.countryFilter.value,
         sort: elements.sortFilter.value
     });
 
     function applyFilter() {
-        const { show, league, country, sort } = getFilters();
-        const params = new URLSearchParams();
-        params.set('mode', 'view');
-        params.set('id', listId);
-        if (view) params.set('view', view);
-        params.set('page', '1');
-        if (show !== 'all')        params.set('show', show);
-        if (league !== 'all')      params.set('league', league);
-        if (country !== 'all')     params.set('country', country);
-        params.set('sort', sort);
-        window.location.search = params.toString();
+        const { league, country, sort } = getFilters();
+        if (IS_PROD && slug) {
+            let path = `/list/${slug}/view`;
+            if (!listShowSelections.has('all')) path += `/show/${[...listShowSelections].join(',')}`;
+            if (league !== 'all') path += `/league/${league}`;
+            if (country !== 'all') path += `/country/${country}`;
+            if (sort !== 'order') path += `/sort/${sort}`;
+            window.location.href = path;
+        } else {
+            const currentParams = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams();
+            params.set('mode', 'view');
+            params.set('id', listId);
+            if (view) params.set('view', view);
+            params.set('page', '1');
+            if (league !== 'all') params.set('league', league);
+            if (country !== 'all') params.set('country', country);
+            params.set('sort', sort);
+            const show = currentParams.get('show');
+            if (show) params.set('show', show);
+            window.location.search = params.toString();
+        }
     }
 
-    elements.showFilter.addEventListener('change', applyFilter);
     elements.leagueFilter.addEventListener('change', applyFilter);
     elements.countryFilter.addEventListener('change', applyFilter);
     elements.sortFilter.addEventListener('change', applyFilter);
-    
+
     elements.clearFiltersButton.addEventListener('click', () => {
-        elements.showFilter.value = 'all';
         elements.leagueFilter.value = 'all';
         elements.countryFilter.value = 'all';
         elements.sortFilter.value = 'order';
-        const params = new URLSearchParams();
-        params.set('mode', 'view');
-        params.set('id', listId);
-        if (view) params.set('view', view);
-        window.location.search = params.toString();
+        listShowSelections.clear();
+        listShowSelections.add('all');
+        if (IS_PROD && slug) {
+            window.location.href = `/list/${slug}/view`;
+        } else {
+            const params = new URLSearchParams();
+            params.set('mode', 'view');
+            params.set('id', listId);
+            if (view) params.set('view', view);
+            window.location.search = params.toString();
+        }
     });
 }
 
@@ -949,6 +1164,7 @@ function updateEditRankNumbers() {
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerCommonEvents();
     registerEventListeners(getAuthElements());
     registerUserLogOutEvents();
@@ -964,7 +1180,13 @@ window.onload = async () => {
     }
 
     const params = new URLSearchParams(window.location.search);
-    const mode = params.get('mode') || null;
+    const pathParts = window.location.pathname.split('/');
+
+    const isCreate = IS_PROD && pathParts[1] === 'list' && pathParts[2] === 'create';
+    const slug = IS_PROD && pathParts[1] === 'list' && pathParts[2] && pathParts[2] !== 'create' ? pathParts[2] : null;
+    const pathMode = IS_PROD && slug ? pathParts[3] || 'view' : null;
+
+    const mode = isCreate ? 'create' : (pathMode || params.get('mode') || null);
     const listId = params.get('id') || null;
     const view = params.get('view') || null;
 
@@ -974,11 +1196,11 @@ window.onload = async () => {
         createToast(type, message);
         sessionStorage.removeItem('toast');
     }
-    
-    if (listId && mode === 'view') {
-        showViewUI(listId, view);
-    } else if (listId && mode === 'edit') {
-        showEditUI(listId);
+
+    if ((listId || slug) && mode === 'view') {
+        showViewUI(listId, slug, view);
+    } else if ((listId || slug) && mode === 'edit') {
+        showEditUI(listId, slug);
     } else if (mode === 'create') {
         showCreateUI();
     } else {

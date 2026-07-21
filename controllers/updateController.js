@@ -6,6 +6,7 @@ const fs = require('fs');
 const PROFILE_PIC_DIR = process.env.PROFILE_PIC_DIR;
 const bcrypt = require('bcryptjs');
 const sharp = require('sharp');
+const { generateSlug, getUniqueSlug } = require('../database/dbHelpers.js');
 
 /*  createUserList  */
 const handleCreateUserList = async (req, res) => {
@@ -19,16 +20,24 @@ const handleCreateUserList = async (req, res) => {
     try {
         await connection.beginTransaction();
 
-        const [result] = await connection.execute('INSERT INTO user_lists (user_id, list_name, list_description, is_ranked) VALUES (?, ?, ?, ?)', [userId, listName, listDescription || null, isRanked]);
+        const slug = await getUniqueSlug(userId, listName);
+
+        const [result] = await connection.execute(
+            'INSERT INTO user_lists (user_id, list_name, list_description, is_ranked, slug) VALUES (?, ?, ?, ?, ?)',
+            [userId, listName, listDescription || null, isRanked, slug]
+        );
 
         const listId = result.insertId;
 
         for (const stadium of stadiums) {
-            await connection.execute('INSERT INTO user_list_stadiums (list_id, stadium_id, order_index, note) VALUES (?, ?, ?, ?)', [listId, stadium.stadiumId, stadium.orderIndex, stadium.note || null]);
+            await connection.execute(
+                'INSERT INTO user_list_stadiums (list_id, stadium_id, order_index, note) VALUES (?, ?, ?, ?)',
+                [listId, stadium.stadiumId, stadium.orderIndex, stadium.note || null]
+            );
         }
 
         await connection.commit();
-        res.json({ listId });
+        res.json({ listId, slug });
     } catch (err) {
         await connection.rollback();
         console.error(err);
@@ -535,13 +544,21 @@ const handleUpdateUserList = async (req, res) => {
     try {
         await connection.beginTransaction();
 
-        const [[list]] = await connection.execute('SELECT list_id FROM user_lists WHERE list_id = ? AND user_id = ?', [listId, userId]);
+        const [[list]] = await connection.execute(
+            'SELECT list_id FROM user_lists WHERE list_id = ? AND user_id = ?',
+            [listId, userId]
+        );
         if (!list) {
             connection.release();
             return res.status(403).json({ error: 'Unauthorized' });
         }
 
-        await connection.execute('UPDATE user_lists SET list_name = ?, list_description = ?, is_ranked = ?, updated_at = NOW() WHERE list_id = ?', [listName, listDescription, isRanked, listId]);
+        const slug = await getUniqueSlug(userId, listName, listId);
+
+        await connection.execute(
+            'UPDATE user_lists SET list_name = ?, list_description = ?, is_ranked = ?, slug = ?, updated_at = NOW() WHERE list_id = ?',
+            [listName, listDescription, isRanked, slug, listId]
+        );
 
         await connection.execute('DELETE FROM user_list_stadiums WHERE list_id = ?', [listId]);
 
@@ -553,7 +570,7 @@ const handleUpdateUserList = async (req, res) => {
         }
 
         await connection.commit();
-        res.json({ success: true });
+        res.json({ success: true, slug });
     } catch (err) {
         await connection.rollback();
         console.error('Error in handleUpdateUserList:', err);

@@ -83,9 +83,34 @@ const buildSortOrder = (sortBy, tablePrefix = '', isGrouped = false, isUnion = f
     }
 };
 
+const generateSlug = (name) => {
+    return name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-');
+};
+
+const getUniqueSlug = async (userId, name, excludeListId = null) => {
+    let slug = generateSlug(name);
+    let suffix = 1;
+    while (true) {
+        const query = excludeListId
+            ? 'SELECT slug FROM user_lists WHERE user_id = ? AND slug = ? AND list_id != ?'
+            : 'SELECT slug FROM user_lists WHERE user_id = ? AND slug = ?';
+        const params = excludeListId ? [userId, slug, excludeListId] : [userId, slug];
+        const [existing] = await db.execute(query, params);
+        if (existing.length === 0) break;
+        slug = `${generateSlug(name)}-${suffix++}`;
+    }
+    return slug;
+};
+
 module.exports = {
     getStadiumId,
     buildCountryFilter,
     buildLeagueFilter,
-    buildSortOrder
+    buildSortOrder,
+    generateSlug,
+    getUniqueSlug
 };

@@ -1,6 +1,6 @@
 /*  Imports  */
-import { getAuthElements, MIN_LOADING_TIME, STADIUM_IMAGE_PATH } from "../constants.js";
-import { calculatePageButtons, createEllipsis, createNavigationButton, createPageButton, formatEventDate, formatEventTime, getEventIcon, getPageFromURL, initializeCreateAccountCaptcha, initializeCustomSelects, isLoggedIn, setPageInURL, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
+import { getAuthElements, IS_PROD, MIN_LOADING_TIME, STADIUM_IMAGE_PATH } from "../constants.js";
+import { calculatePageButtons, createEllipsis, createNavigationButton, createPageButton, formatEventDate, formatEventTime, getEventIcon, getPageFromURL, initializeCreateAccountCaptcha, initializeCustomSelects, isLoggedIn, rewriteUserHomeLinks, setPageInURL, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -40,7 +40,7 @@ async function showEventsUI() {
                 const featuredEventStadiumName = document.createElement('a');
                 featuredEventStadiumName.classList.add('featured-event-stadium-name');
                 featuredEventStadiumName.textContent = stadium.stadium_name;
-                featuredEventStadiumName.href = `stadium.html?id=${stadium.stadium_id}`;
+                featuredEventStadiumName.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                 featuredEventHeader.appendChild(featuredEventStadiumName);
 
                 const featuredEventStadiumLocation = document.createElement('h4');
@@ -118,6 +118,7 @@ async function showStadiumUI(stadiumId, slug) {
     };
 
     document.getElementById('events-container').style.display = 'none';
+    document.getElementById('events-stadium').style.display = 'block';
 
     try {
         const [eventsResult] = await Promise.all([
@@ -130,7 +131,7 @@ async function showStadiumUI(stadiumId, slug) {
         if (events.length === 0) {
             document.getElementById('no-stadium-events-container').style.display = 'block';
         } else {
-            createStadiumEventsPagination(events, 18);
+            createStadiumEventsPagination(events, slug, 18);
         }
 
         document.getElementById('events-stadium-name-skeleton').style.display = 'none';
@@ -144,9 +145,9 @@ async function showStadiumUI(stadiumId, slug) {
 }
 
 /*  Functions  */
-function createStadiumEventsPagination(events, perPage = 18) {
+function createStadiumEventsPagination(events, slug, perPage = 18) {
     const pageCount = Math.ceil(events.length / perPage);
-    let currentPage = Math.min(getPageFromURL(), pageCount) || 1;
+    let currentPage = Math.min(getEventsPage(slug), pageCount) || 1;
 
     function renderPage(page) {
         const stadiumEventsContainer = document.getElementById('stadium-events');
@@ -162,27 +163,34 @@ function createStadiumEventsPagination(events, perPage = 18) {
         const stadiumEventsPageSelector = document.getElementsByClassName('events-page-selector')[0];
         stadiumEventsPageSelector.innerHTML = '';
         
-        if (pageCount <= 1) {
-            return;
-        }
+        if (pageCount <= 1) return;
 
         const prevBtn = createNavigationButton('←', currentPage === 1, () => {
-            setPageInURL(currentPage - 1);
+            setEventsPage(currentPage - 1, slug);
         });
         stadiumEventsPageSelector.appendChild(prevBtn);
         
         calculatePageButtons(currentPage, pageCount).forEach(item => {
-            stadiumEventsPageSelector.appendChild(item === '...' ? createEllipsis() : createPageButton(item, currentPage));
+            stadiumEventsPageSelector.appendChild(item === '...' ? createEllipsis() : createPageButton(item, currentPage, (page) => setEventsPage(page, slug)));
         });
         
         const nextBtn = createNavigationButton('→', currentPage === pageCount, () => {
-            setPageInURL(currentPage + 1);
+            setEventsPage(currentPage + 1, slug);
         });
         stadiumEventsPageSelector.appendChild(nextBtn);
     }
 
     renderPage(currentPage);
     renderPageNumbers();
+}
+
+function getEventsPage(slug) {
+    if (slug) {
+        const pathParts = window.location.pathname.split('/');
+        const pageIndex = pathParts.indexOf('page');
+        return pageIndex !== -1 ? parseInt(pathParts[pageIndex + 1]) || 1 : 1;
+    }
+    return getPageFromURL();
 }
 
 function renderStadiumEventCard(event, container) {
@@ -225,8 +233,17 @@ function renderStadiumEventCard(event, container) {
     container.appendChild(eventContainer);
 }
 
+function setEventsPage(page, slug) {
+    if (slug) {
+        window.location.href = `/events/${slug}/page/${page}`;
+    } else {
+        setPageInURL(page);
+    }
+}
+
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerLogOutEvents();
@@ -240,10 +257,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 window.onload = async () => {
     const params = new URLSearchParams(window.location.search);
-    const isProd = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
 
     const pathParts = window.location.pathname.split('/');
-    const slug = isProd && pathParts[1] === 'events' && pathParts[2] ? pathParts[2] : null;
+    const slug = IS_PROD && pathParts[1] === 'events' && pathParts[2] && pathParts[2] !== 'page' ? pathParts[2] : null;
     const stadiumId = params.get('id') || null;
 
     if (isLoggedIn() && slug) {

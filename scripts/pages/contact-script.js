@@ -1,10 +1,11 @@
 /*  Imports  */
 import { getAuthElements } from "../constants.js";
-import { initializeCreateAccountCaptcha, isLoggedIn, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI } from "../utils.js";
+import { initializeCreateAccountCaptcha, isLoggedIn, rewriteUserHomeLinks, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerLogOutEvents();

@@ -14,5 +14,5 @@ window.onload = async () => {
         shakeOrReplace(err.message || 'Failed to refresh token.');
     }
 
-    document.getElementById('go-home-button').href = isLoggedIn() ? 'user-home' : '/';
+    document.getElementById('go-home-button').href = isLoggedIn() ? (IS_PROD ? `/${getUsername()}` : '/user-home') : '/';
 };

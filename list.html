@@ -242,23 +242,20 @@
                             <div id="view-list-filters">
                                 <div class="filter-group">
                                     <label class="filter-label">Show:</label>
-                                    <div class="custom-select-wrapper">
-                                        <div class="custom-select-trigger" data-select="league">
-                                            <span class="custom-select-value">All Stadiums</span>
+                                    <div class="custom-select-wrapper" id="list-show-wrapper">
+                                        <div class="custom-select-trigger" id="list-show-trigger">
+                                            <span class="custom-select-value" id="list-show-value">All</span>
                                             <svg class="custom-select-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
-                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"></path>
+                                                <path d="M1 1.5L6 6.5L11 1.5" stroke="#4facfe" stroke-width="2" stroke-linecap="round"/>
                                             </svg>
                                         </div>
-                                        <div class="custom-select-dropdown">
-                                            <div class="custom-select-option selected" data-value="all">All Stadiums</div>
+                                        <div class="custom-select-dropdown" id="list-show-dropdown">
+                                            <div class="custom-select-option selected" data-value="all">All</div>
                                             <div class="custom-select-option" data-value="visited">Visited</div>
                                             <div class="custom-select-option" data-value="not-visited">Not Visited</div>
+                                            <div class="custom-select-option" data-value="wishlist">Wishlist</div>
+                                            <div class="custom-select-option" data-value="not-wishlist">Not In Wishlist</div>
                                         </div>
-                                        <select class="filter-select" id="view-list-show-filter">
-                                            <option value="all">All Stadiums</option>
-                                            <option value="visited">Visited</option>
-                                            <option value="not-visited">Not Visited</option>
-                                        </select>
                                     </div>
                                 </div>
                                 <div class="filter-group">
@@ -446,7 +443,11 @@
                     <script>
                         (function() {
                             const params = new URLSearchParams(window.location.search);
-                            const mode = params.get('mode');
+                            const pathParts = window.location.pathname.split('/');
+                            const isProd = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
+                            const isCreate = isProd && pathParts[1] === 'list' && pathParts[2] === 'create';
+                            const slug = isProd && pathParts[1] === 'list' && pathParts[2] && pathParts[2] !== 'create' ? pathParts[2] : null;
+                            const mode = isCreate ? 'create' : ((slug ? pathParts[3] : null) || params.get('mode'));
                             if (mode === 'edit') {
                                 document.getElementById('list-skeleton').style.display = 'none';
                                 document.getElementById('edit-list-container').style.display = 'block';

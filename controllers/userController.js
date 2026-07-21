@@ -226,6 +226,7 @@ const handleLoadUserActivity = async (req, res) => {
                     stadiums.city,
                     stadiums.state,
                     stadiums.country_id,
+                    stadiums.slug,
                     user_stadiums.visit_id,
                     user_stadiums.added_on,
                     user_stadiums.visited_on,
@@ -250,7 +251,7 @@ const handleLoadUserActivity = async (req, res) => {
             }
 
             query += ` GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image,
-                              stadiums.city, stadiums.state, stadiums.country_id,
+                              stadiums.city, stadiums.state, stadiums.country_id, stadiums.slug, 
                               user_stadiums.visit_id, user_stadiums.added_on, 
                               user_stadiums.visited_on, user_stadiums.user_note`;
         }
@@ -264,6 +265,7 @@ const handleLoadUserActivity = async (req, res) => {
                     stadiums.city,
                     stadiums.state,
                     stadiums.country_id,
+                    stadiums.slug, 
                     NULL as visit_id,
                     user_wishlist_stadiums.added_on,
                     NULL as visited_on,
@@ -282,7 +284,7 @@ const handleLoadUserActivity = async (req, res) => {
             }
 
             wishlistQuery += ` GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image,
-                                       stadiums.city, stadiums.state, stadiums.country_id,
+                                       stadiums.city, stadiums.state, stadiums.country_id, stadiums.slug, 
                                        user_wishlist_stadiums.added_on`;
 
             if (activity === 'all') {
@@ -336,7 +338,7 @@ const handleLoadUserHomeMap = async (req, res) => {
     if (!userId) return res.status(404).json({ error: 'User not found' });
 
     try {
-        const [stadiums] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude, l.league_name, c.country_name FROM stadiums s JOIN user_stadiums us ON s.stadium_id = us.stadium_id JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id JOIN countries c ON s.country_id = c.country_id WHERE us.user_id = ? GROUP BY s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude, l.league_name, c.country_name`, [userId]);
+        const [stadiums] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.slug, s.latitude, s.longitude, l.league_name, c.country_name FROM stadiums s JOIN user_stadiums us ON s.stadium_id = us.stadium_id JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id JOIN countries c ON s.country_id = c.country_id WHERE us.user_id = ? GROUP BY s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude, l.league_name, c.country_name`, [userId]);
 
         const formattedRows = stadiums.map(row => ({
             stadium_id: row.stadium_id,
@@ -344,6 +346,7 @@ const handleLoadUserHomeMap = async (req, res) => {
             address: `${row.street_address}, ${row.city}, ${row.state} ${row.zip}`,
             location: [row.latitude, row.longitude],
             image: row.image,
+            slug: row.slug,
             league: row.league_name,
             country: row.country_name
         }));
@@ -370,13 +373,14 @@ const handleLoadUserInfo = async (req, res) => {
                 s.city, 
                 s.state, 
                 s.image,
+                s.slug,
                 1 AS visited,
                 CASE WHEN w.stadium_id IS NOT NULL THEN 1 ELSE 0 END AS wishlist
             FROM user_stadiums us
             JOIN stadiums s ON us.stadium_id = s.stadium_id
             LEFT JOIN user_wishlist_stadiums w ON w.stadium_id = us.stadium_id AND w.user_id = ?
             WHERE us.user_id = ?
-            GROUP BY us.stadium_id, s.stadium_name, s.city, s.state, s.image
+            GROUP BY us.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug
             ORDER BY MAX(us.added_on) DESC
             LIMIT 2
         `, [userId, userId]);
@@ -393,20 +397,21 @@ const handleLoadUserInfo = async (req, res) => {
                 s.city, 
                 s.state, 
                 s.image,
+                s.slug,
                 1 AS wishlist,
                 CASE WHEN v.stadium_id IS NOT NULL THEN 1 ELSE 0 END AS visited
             FROM user_wishlist_stadiums uw
             JOIN stadiums s ON uw.stadium_id = s.stadium_id
             LEFT JOIN user_stadiums v ON v.stadium_id = uw.stadium_id AND v.user_id = ?
             WHERE uw.user_id = ?
-            GROUP BY uw.stadium_id, s.stadium_name, s.city, s.state, s.image
+            GROUP BY uw.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug
             ORDER BY MAX(uw.added_on) DESC
             LIMIT 2
         `, [userId, userId]);
 
         const [userAchievements] = await db.execute('SELECT a.achievement_name, a.achievement_image, a.achievement_description, ua.unlocked_on FROM achievements a LEFT JOIN user_achievements ua ON a.achievement_id = ua.achievement_id AND ua.user_id = ? WHERE ua.unlocked_on IS NOT NULL ORDER BY (ua.unlocked IS NOT TRUE) ASC, ua.unlocked_on DESC LIMIT 3', [userId]);
 
-        const [userFavoriteStadiums] = await db.execute('SELECT stadiums.stadium_id, stadium_name, city, state, image FROM user_favorite_stadiums JOIN stadiums ON user_favorite_stadiums.stadium_id = stadiums.stadium_id WHERE user_favorite_stadiums.user_id = ? ORDER BY user_favorite_stadiums.order_index ASC', [userId]);
+        const [userFavoriteStadiums] = await db.execute('SELECT stadiums.stadium_id, stadium_name, city, state, image, slug FROM user_favorite_stadiums JOIN stadiums ON user_favorite_stadiums.stadium_id = stadiums.stadium_id WHERE user_favorite_stadiums.user_id = ? ORDER BY user_favorite_stadiums.order_index ASC', [userId]);
 
         res.json({ userStadiums, numStadiumsVisited, numCountriesVisited, numEventsAttended, wishlistItems, userAchievements, userFavoriteStadiums });
     } catch (err) {
@@ -417,13 +422,24 @@ const handleLoadUserInfo = async (req, res) => {
 
 /*  loadUserList  */
 const handleLoadUserList = async (req, res) => {
-    const { listId, show, league, country, sortBy } = req.body;
+    const { listId, slug, show, league, country, sortBy } = req.body;
     const { userId, isPro } = req.user;
 
     if (!isPro) return res.status(403).json({ error: 'Pro subscription required' });
     if (!userId) return res.status(404).json({ error: 'User not found' });
+    if (!listId && !slug) return res.status(400).json({ error: 'List id or slug is required' });
 
     try {
+        let resolvedListId = listId;
+        if (!resolvedListId) {
+            const [[listRow]] = await db.execute(
+                'SELECT list_id FROM user_lists WHERE user_id = ? AND slug = ?',
+                [userId, slug]
+            );
+            if (!listRow) return res.status(404).json({ error: 'List not found' });
+            resolvedListId = listRow.list_id;
+        }
+
         const leagueFilter = buildLeagueFilter(league);
         const countryFilter = buildCountryFilter(country);
 
@@ -438,6 +454,7 @@ const handleLoadUserList = async (req, res) => {
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id,
+                stadiums.slug,
                 user_list_stadiums.order_index,
                 user_list_stadiums.note,
                 MAX(user_list_stadiums.added_on) AS added_on,
@@ -458,61 +475,39 @@ const handleLoadUserList = async (req, res) => {
             ${countryFilter.sql}
         `;
 
-        if (show === 'visited') {
-            query += ` AND us.stadium_id IS NOT NULL`;
-        } else if (show === 'not-visited') {
-            query += ` AND us.stadium_id IS NULL`;
+        if (show && show.length > 0 && !show.includes('all')) {
+            const conditions = [];
+            if (show.includes('visited')) conditions.push('us.stadium_id IS NOT NULL');
+            if (show.includes('not-visited')) conditions.push('us.stadium_id IS NULL');
+            if (show.includes('wishlist')) conditions.push('w.stadium_id IS NOT NULL');
+            if (show.includes('not-wishlist')) conditions.push('w.stadium_id IS NULL');
+            if (conditions.length > 0) {
+                query += ` AND (${conditions.join(' AND ')})`;
+            }
         }
 
         query += ` GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, 
                    stadiums.opened_date, stadiums.construction_cost, stadiums.capacity, 
-                   stadiums.city, stadiums.state, stadiums.country_id, user_list_stadiums.order_index, user_list_stadiums.note`;
+                   stadiums.city, stadiums.state, stadiums.country_id, stadiums.slug, user_list_stadiums.order_index, user_list_stadiums.note`;
 
         switch (sortBy) {
-            case 'visited-asc':
-                query += ` ORDER BY MAX(us.visited_on) IS NULL, MAX(us.visited_on) ASC`;
-                break;
-            case 'visited-desc':
-                query += ` ORDER BY MAX(us.visited_on) IS NULL, MAX(us.visited_on) DESC`;
-                break;
-            case 'added-asc':
-                query += ` ORDER BY MAX(user_list_stadiums.added_on) ASC`;
-                break;
-            case 'added-desc':
-                query += ` ORDER BY MAX(user_list_stadiums.added_on) DESC`;
-                break;
-            case 'name-asc':
-                query += ` ORDER BY stadiums.stadium_name ASC`;
-                break;
-            case 'name-desc':
-                query += ` ORDER BY stadiums.stadium_name DESC`;
-                break;
-            case 'popularity':
-                query += ` ORDER BY popularity DESC, stadiums.stadium_name ASC`;
-                break;
-            case 'opened-asc':
-                query += ` ORDER BY stadiums.opened_date IS NULL, stadiums.opened_date ASC`;
-                break;
-            case 'opened-desc':
-                query += ` ORDER BY stadiums.opened_date IS NULL, stadiums.opened_date DESC`;
-                break;
-            case 'cost-asc':
-                query += ` ORDER BY stadiums.construction_cost IS NULL, stadiums.construction_cost ASC`;
-                break;
-            case 'cost-desc':
-                query += ` ORDER BY stadiums.construction_cost IS NULL, stadiums.construction_cost DESC`;
-                break;
-            case 'capacity-asc':
-                query += ` ORDER BY stadiums.capacity IS NULL, stadiums.capacity ASC`;
-                break;
-            case 'capacity-desc':
-                query += ` ORDER BY stadiums.capacity IS NULL, stadiums.capacity DESC`;
-                break;
-            default:
-                query += ` ORDER BY user_list_stadiums.order_index ASC`;
+            case 'visited-asc': query += ` ORDER BY MAX(us.visited_on) IS NULL, MAX(us.visited_on) ASC`; break;
+            case 'visited-desc': query += ` ORDER BY MAX(us.visited_on) IS NULL, MAX(us.visited_on) DESC`; break;
+            case 'added-asc': query += ` ORDER BY MAX(user_list_stadiums.added_on) ASC`; break;
+            case 'added-desc': query += ` ORDER BY MAX(user_list_stadiums.added_on) DESC`; break;
+            case 'name-asc': query += ` ORDER BY stadiums.stadium_name ASC`; break;
+            case 'name-desc': query += ` ORDER BY stadiums.stadium_name DESC`; break;
+            case 'popularity': query += ` ORDER BY popularity DESC, stadiums.stadium_name ASC`; break;
+            case 'opened-asc': query += ` ORDER BY stadiums.opened_date IS NULL, stadiums.opened_date ASC`; break;
+            case 'opened-desc': query += ` ORDER BY stadiums.opened_date IS NULL, stadiums.opened_date DESC`; break;
+            case 'cost-asc': query += ` ORDER BY stadiums.construction_cost IS NULL, stadiums.construction_cost ASC`; break;
+            case 'cost-desc': query += ` ORDER BY stadiums.construction_cost IS NULL, stadiums.construction_cost DESC`; break;
+            case 'capacity-asc': query += ` ORDER BY stadiums.capacity IS NULL, stadiums.capacity ASC`; break;
+            case 'capacity-desc': query += ` ORDER BY stadiums.capacity IS NULL, stadiums.capacity DESC`; break;
+            default: query += ` ORDER BY user_list_stadiums.order_index ASC`;
         }
 
-        const params = [userId, userId, listId, ...leagueFilter.params, ...countryFilter.params];
+        const params = [userId, userId, resolvedListId, ...leagueFilter.params, ...countryFilter.params];
         const [listStadiums] = await db.query(query, params);
 
         const [[newestStadium]] = await db.query(`
@@ -522,17 +517,25 @@ const handleLoadUserList = async (req, res) => {
             WHERE uls.list_id = ?
             ORDER BY uls.order_index ASC
             LIMIT 1
-        `, [listId]);
+        `, [resolvedListId]);
 
         const backdropImage = newestStadium?.image || null;
 
         const [[listInfo]] = await db.query(`
-            SELECT list_name, list_description, is_ranked
+            SELECT list_name, list_description, is_ranked, slug
             FROM user_lists 
             WHERE list_id = ?
-        `, [listId]);
+        `, [resolvedListId]);
 
-        res.json({ listStadiums, backdropImage, listName: listInfo?.list_name, listDescription: listInfo?.list_description, isRanked: listInfo?.is_ranked });
+        res.json({ 
+            listStadiums, 
+            backdropImage, 
+            listName: listInfo?.list_name, 
+            listDescription: listInfo?.list_description, 
+            isRanked: listInfo?.is_ranked,
+            slug: listInfo?.slug,
+            listId: resolvedListId
+        });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: 'Internal server error' });
@@ -552,6 +555,7 @@ const handleLoadUserLists = async (req, res) => {
             SELECT 
                 ul.list_id,
                 ul.list_name,
+                ul.slug,
                 ul.created_at,
                 ul.updated_at,
                 COUNT(DISTINCT ls.stadium_id) AS stadium_count,
@@ -619,6 +623,7 @@ const handleLoadUserStadiums = async (req, res) => {
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id,
+                stadiums.slug,
                 GROUP_CONCAT(DISTINCT teams.team_name SEPARATOR ', ') AS team_names,
                 MAX(user_stadiums.added_on) AS added_on,
                 MAX(user_stadiums.visited_on) AS visited_on,
@@ -674,9 +679,9 @@ const handleLoadUserStats = async (req, res) => {
 
         const [visitsByYear] = await db.execute(`SELECT YEAR(us.visited_on) AS year, COUNT(*) AS count FROM user_stadiums us WHERE us.user_id = ? AND us.visited_on IS NOT NULL GROUP BY YEAR(us.visited_on) ORDER BY year ASC`, [userId]);
 
-        const [[firstVisit]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, us.visited_on, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND us.visited_on IS NOT NULL GROUP BY s.stadium_id, s.stadium_name, s.city, s.state, s.image, us.visited_on ORDER BY us.visited_on ASC LIMIT 1`, [userId, userId, userId]);
+        const [[firstVisit]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, us.visited_on, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND us.visited_on IS NOT NULL GROUP BY s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, us.visited_on ORDER BY us.visited_on ASC LIMIT 1`, [userId, userId, userId]);
 
-        const [[latestVisit]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, us.visited_on, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND us.visited_on IS NOT NULL GROUP BY s.stadium_id, s.stadium_name, s.city, s.state, s.image, us.visited_on ORDER BY us.visited_on DESC LIMIT 1`, [userId, userId, userId]);
+        const [[latestVisit]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, us.visited_on, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND us.visited_on IS NOT NULL GROUP BY s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, us.visited_on ORDER BY us.visited_on DESC LIMIT 1`, [userId, userId, userId]);
 
         const [[favoriteMonth]] = await db.execute(`SELECT DATE_FORMAT(us.visited_on, '%b') AS month, COUNT(*) AS count FROM user_stadiums us WHERE us.user_id = ? AND us.visited_on IS NOT NULL GROUP BY MONTH(us.visited_on), DATE_FORMAT(us.visited_on, '%b') ORDER BY count DESC LIMIT 1`, [userId]);
 
@@ -697,29 +702,29 @@ const handleLoadUserStats = async (req, res) => {
 
         const avgVisitsPerYear = visitsByYear.length > 0 ? (visitsByYear.reduce((sum, y) => sum + y.count, 0) / (visitsByYear[visitsByYear.length - 1].year - visitsByYear[0].year + 1)).toFixed(1) : 0;
 
-        const [mostVisited] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, (SELECT COUNT(*) FROM user_stadiums WHERE stadium_id = s.stadium_id AND user_id = ? AND visited_on IS NOT NULL) AS visitCount, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND us.visited_on IS NOT NULL GROUP BY s.stadium_id, s.stadium_name, s.city, s.state, s.image ORDER BY visitCount DESC LIMIT 3`, [userId, userId, userId, userId]);
+        const [mostVisited] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, (SELECT COUNT(*) FROM user_stadiums WHERE stadium_id = s.stadium_id AND user_id = ? AND visited_on IS NOT NULL) AS visitCount, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND us.visited_on IS NOT NULL GROUP BY s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug ORDER BY visitCount DESC LIMIT 3`, [userId, userId, userId, userId]);
 
-        const [[oldest]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.opened_date, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.opened_date IS NOT NULL GROUP BY s.stadium_id ORDER BY s.opened_date ASC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
+        const [[oldest]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, s.opened_date, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.opened_date IS NOT NULL GROUP BY s.stadium_id ORDER BY s.opened_date ASC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
 
-        const [[newest]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.opened_date, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.opened_date IS NOT NULL GROUP BY s.stadium_id ORDER BY s.opened_date DESC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
+        const [[newest]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, s.opened_date, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.opened_date IS NOT NULL GROUP BY s.stadium_id ORDER BY s.opened_date DESC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
 
-        const [[highestCapacity]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.capacity, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.capacity IS NOT NULL GROUP BY s.stadium_id ORDER BY s.capacity DESC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
+        const [[highestCapacity]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, s.capacity, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.capacity IS NOT NULL GROUP BY s.stadium_id ORDER BY s.capacity DESC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
 
-        const [[lowestCapacity]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.capacity, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.capacity IS NOT NULL GROUP BY s.stadium_id ORDER BY s.capacity ASC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
+        const [[lowestCapacity]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, s.capacity, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.capacity IS NOT NULL GROUP BY s.stadium_id ORDER BY s.capacity ASC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
 
-        const [[highestCost]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.construction_cost, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.construction_cost IS NOT NULL GROUP BY s.stadium_id ORDER BY s.construction_cost DESC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
+        const [[highestCost]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, s.construction_cost, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.construction_cost IS NOT NULL GROUP BY s.stadium_id ORDER BY s.construction_cost DESC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
 
-        const [[lowestCost]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.construction_cost, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.construction_cost IS NOT NULL GROUP BY s.stadium_id ORDER BY s.construction_cost ASC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
+        const [[lowestCost]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, s.construction_cost, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? AND s.construction_cost IS NOT NULL GROUP BY s.stadium_id ORDER BY s.construction_cost ASC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
 
-        const [[mostPopular]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, COUNT(DISTINCT us2.user_id) + COUNT(DISTINCT uw2.user_id) AS popularity, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums us2 ON us2.stadium_id = s.stadium_id LEFT JOIN user_wishlist_stadiums uw2 ON uw2.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? GROUP BY s.stadium_id ORDER BY popularity DESC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
+        const [[mostPopular]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, COUNT(DISTINCT us2.user_id) + COUNT(DISTINCT uw2.user_id) AS popularity, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums us2 ON us2.stadium_id = s.stadium_id LEFT JOIN user_wishlist_stadiums uw2 ON uw2.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? GROUP BY s.stadium_id ORDER BY popularity DESC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
 
-        const [[leastPopular]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, COUNT(DISTINCT us2.user_id) + COUNT(DISTINCT uw2.user_id) AS popularity, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums us2 ON us2.stadium_id = s.stadium_id LEFT JOIN user_wishlist_stadiums uw2 ON uw2.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? GROUP BY s.stadium_id ORDER BY popularity ASC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
+        const [[leastPopular]] = await db.execute(`SELECT s.stadium_id, s.stadium_name, s.city, s.state, s.image, s.slug, COUNT(DISTINCT us2.user_id) + COUNT(DISTINCT uw2.user_id) AS popularity, CASE WHEN MAX(uv.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS visited, CASE WHEN MAX(uw.stadium_id) IS NOT NULL THEN 1 ELSE 0 END AS wishlist FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id LEFT JOIN user_stadiums us2 ON us2.stadium_id = s.stadium_id LEFT JOIN user_wishlist_stadiums uw2 ON uw2.stadium_id = s.stadium_id LEFT JOIN user_stadiums uv ON uv.stadium_id = s.stadium_id AND uv.user_id = ? LEFT JOIN user_wishlist_stadiums uw ON uw.stadium_id = s.stadium_id AND uw.user_id = ? WHERE us.user_id = ? GROUP BY s.stadium_id ORDER BY popularity ASC, s.stadium_name ASC LIMIT 1`, [userId, userId, userId]);
 
         const [topCountries] = await db.execute(`SELECT c.country_name, COUNT(DISTINCT us.stadium_id) AS stadiumCount FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id JOIN countries c ON s.country_id = c.country_id WHERE us.user_id = ? GROUP BY c.country_id, c.country_name ORDER BY stadiumCount DESC, c.country_name ASC LIMIT 5`, [userId]);
 
         const [topCities] = await db.execute(`SELECT s.city, s.state, COUNT(DISTINCT us.stadium_id) AS stadiumCount FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id WHERE us.user_id = ? GROUP BY s.city, s.state ORDER BY stadiumCount DESC, s.city ASC LIMIT 5`, [userId]);
 
-        const [mapStadiums] = await db.execute(`SELECT DISTINCT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude, l.league_name, c.country_name FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id JOIN countries c ON s.country_id = c.country_id WHERE us.user_id = ? GROUP BY s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.latitude, s.longitude, l.league_name, c.country_name`, [userId]);
+        const [mapStadiums] = await db.execute(`SELECT DISTINCT s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.slug, s.latitude, s.longitude, l.league_name, c.country_name FROM user_stadiums us JOIN stadiums s ON us.stadium_id = s.stadium_id JOIN teams t ON s.stadium_id = t.stadium_id JOIN leagues l ON t.league_id = l.league_id JOIN countries c ON s.country_id = c.country_id WHERE us.user_id = ? GROUP BY s.stadium_id, s.stadium_name, s.street_address, s.city, s.state, s.zip, s.image, s.slug, s.latitude, s.longitude, l.league_name, c.country_name`, [userId]);
 
         const formattedMapStadiums = mapStadiums.map(row => ({
             stadium_id: row.stadium_id,
@@ -727,6 +732,7 @@ const handleLoadUserStats = async (req, res) => {
             address: `${row.street_address}, ${row.city}, ${row.state} ${row.zip}`,
             location: [row.latitude, row.longitude],
             image: row.image,
+            slug: row.slug,
             league_name: row.league_name,
             country_name: row.country_name
         }));
@@ -771,6 +777,7 @@ const handleLoadUserVisits = async (req, res) => {
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id,
+                stadiums.slug,
                 user_stadiums.visit_id,
                 user_stadiums.added_on,
                 user_stadiums.visited_on,
@@ -787,7 +794,7 @@ const handleLoadUserVisits = async (req, res) => {
             ${leagueFilter.sql}
             ${countryFilter.sql}
             GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image,
-                    stadiums.city, stadiums.state, stadiums.country_id,
+                    stadiums.city, stadiums.state, stadiums.country_id, stadiums.slug, 
                     user_stadiums.visit_id, user_stadiums.added_on, user_stadiums.visited_on
         `;
 
@@ -852,6 +859,7 @@ const handleLoadUserWishlist = async (req, res) => {
                 stadiums.city, 
                 stadiums.state,
                 stadiums.country_id,
+                stadiums.slug,
                 GROUP_CONCAT(DISTINCT teams.team_name SEPARATOR ', ') AS team_names,
                 MAX(user_wishlist_stadiums.added_on) AS added_on,
                 1 AS wishlist,
@@ -870,7 +878,7 @@ const handleLoadUserWishlist = async (req, res) => {
             ${countryFilter.sql}
             GROUP BY stadiums.stadium_id, stadiums.stadium_name, stadiums.image, 
                     stadiums.opened_date, stadiums.construction_cost, stadiums.capacity,
-                    stadiums.city, stadiums.state, stadiums.country_id
+                    stadiums.city, stadiums.state, stadiums.country_id, stadiums.slug
         `;
         query += buildSortOrder(sortBy, 'stadiums', true, false, 'user_wishlist_stadiums');
         const params = [

@@ -1,5 +1,5 @@
 /*  Imports  */
-import { API_BASE_URL, DEBOUNCE_TIME, getHeaderElements, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS, STADIUM_IMAGE_PATH } from './constants.js';
+import { API_BASE_URL, DEBOUNCE_TIME, getHeaderElements, IS_PROD, ROUTES, USERNAME_CONSTRAINTS, PASSWORD_CONSTRAINTS, STADIUM_IMAGE_PATH } from './constants.js';
 import { loadAPI } from './api/load.js';
 import { updateAPI } from './api/update.js';
 import { userAPI } from './api/user.js';
@@ -17,7 +17,7 @@ if (footerHomeLink) {
     if (token) {
         const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
         const payload = JSON.parse(atob(base64));
-        footerHomeLink.href = payload.username ? 'user-home' : '/';
+        footerHomeLink.href = payload.username ? (IS_PROD ? `/${payload.username}` : '/user-home') : '/';
     } else {
         footerHomeLink.href = '/';
     }
@@ -112,9 +112,9 @@ function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
     return btn;
 }
 
-function createPagination(elements, stadiums, perPage = 18, isRanked) {
+function createPagination(elements, stadiums, perPage = 18, isRanked, slug = null, sort = 'order', startPage = null, onPageChange = null) {
     const pageCount = Math.ceil(stadiums.length / perPage);
-    let currentPage = Math.min(getPageFromURL(), pageCount);
+    let currentPage = Math.min(startPage || getPageFromURL(), pageCount) || 1;
 
     function renderPage(page) {
         elements.stadiumsList.innerHTML = '';
@@ -127,7 +127,26 @@ function createPagination(elements, stadiums, perPage = 18, isRanked) {
     }
 
     renderPage(currentPage);
-    renderPageNumbers(elements, currentPage, pageCount);
+
+    const pageChange = onPageChange || (slug ? (page) => {
+        const parts = window.location.pathname.split('/');
+        let path = `/list/${slug}/view`;
+        let show = null, sort2 = null, league = null, country = null;
+        for (let i = 4; i < parts.length - 1; i += 2) {
+            if (parts[i] === 'show') show = parts[i + 1];
+            if (parts[i] === 'league') league = parts[i + 1];
+            if (parts[i] === 'country') country = parts[i + 1];
+            if (parts[i] === 'sort') sort2 = parts[i + 1];
+        }
+        if (show) path += `/show/${show}`;
+        if (league) path += `/league/${league}`;
+        if (country) path += `/country/${country}`;
+        if (sort2) path += `/sort/${sort2}`;
+        if (page !== 1) path += `/page/${page}`;
+        window.location.href = path;
+    } : null);
+
+    renderPageNumbers(elements, currentPage, pageCount, pageChange);
 }
 
 function createSearchResultElement(text, isLink = false) {
@@ -146,7 +165,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
     card.classList.add('stadiums-list-stadium');
 
     const link = document.createElement('a');
-    link.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
+    link.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
     let img;
     if (stadium.image) {
@@ -290,7 +309,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
         '/images/icons/clock.png',
         'btn-activity',
         (btn, e) => {},
-        `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
+        IS_PROD && stadium.slug ? `/activity/${stadium.slug}` : `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
     ));
 
     card.appendChild(controls);
@@ -307,7 +326,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
 
 function createStadiumLinkElement(stadium, searchValue) {
     const stadiumLink = document.createElement('a');
-    stadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
+    stadiumLink.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
     
     const searchResult = createSearchResultElement(stadium.stadium_name);
     stadiumLink.appendChild(searchResult);
@@ -540,13 +559,19 @@ export function createNavigationButton(text, disabled, onClick) {
     return btn;
 }
 
-export function createPageButton(pageNum, currentPage) {
+export function createPageButton(pageNum, currentPage, onPageChange = null) {
     const btn = document.createElement('button');
     btn.className = 'page-btn';
     btn.textContent = pageNum;
     btn.dataset.page = pageNum;
     if (pageNum === currentPage) btn.classList.add('active');
-    btn.addEventListener('click', () => { setPageInURL(pageNum); });
+    btn.addEventListener('click', () => {
+        if (onPageChange) {
+            onPageChange(pageNum);
+        } else {
+            setPageInURL(pageNum);
+        }
+    });
     return btn;
 }
 
@@ -609,7 +634,7 @@ export function createUserStadiumElement(stadium, elements) {
     userStadium.classList.add('user-stadium');
 
     const userStadiumLink = document.createElement('a');
-    userStadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
+    userStadiumLink.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
     const userStadiumImage = document.createElement('img');
     userStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
@@ -743,7 +768,7 @@ export function createUserStadiumElement(stadium, elements) {
         '/images/icons/clock.png',
         'btn-activity',
         (btn, e) => {},
-        `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
+        IS_PROD && stadium.slug ? `/activity/${stadium.slug}` : `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
     ));
 
     userStadium.appendChild(controls);
@@ -944,27 +969,27 @@ export function openLightbox(src) {
     };
 }
 
-export function renderPageNumbers(elements, currentPage, pageCount) {
+export function renderPageNumbers(elements, currentPage, pageCount, onPageChange = null) {
     elements.stadiumsPageSelector.innerHTML = '';
     const prevBtn = createNavigationButton('←', currentPage === 1, () => {
-        setPageInURL(currentPage - 1);
+        onPageChange ? onPageChange(currentPage - 1) : setPageInURL(currentPage - 1);
     });
     elements.stadiumsPageSelector.appendChild(prevBtn);
     calculatePageButtons(currentPage, pageCount).forEach(item => {
-        elements.stadiumsPageSelector.appendChild(item === '...' ? createEllipsis() : createPageButton(item, currentPage));
+        elements.stadiumsPageSelector.appendChild(item === '...' ? createEllipsis() : createPageButton(item, currentPage, onPageChange ? (page) => onPageChange(page) : null));
     });
     const nextBtn = createNavigationButton('→', currentPage === pageCount, () => {
-        setPageInURL(currentPage + 1);
+        onPageChange ? onPageChange(currentPage + 1) : setPageInURL(currentPage + 1);
     });
     elements.stadiumsPageSelector.appendChild(nextBtn);
 }
 
-export function renderWithoutTransition(elements, stadiums, isRanked = false) {
+export function renderWithoutTransition(elements, stadiums, isRanked = false, slug = null, sort = 'order', currentPage = null, onPageChange = null) {
     if (stadiums.length === 0) {
         showNoResults(elements);
     } else {
         showResults(elements);
-        createPagination(elements, stadiums, 18, isRanked);
+        createPagination(elements, stadiums, 18, isRanked, slug, sort, currentPage, onPageChange);
     }
 }
 
@@ -989,6 +1014,22 @@ export function renderWithTransition(elements, stadiums) {
             });
         }
     }, 150);
+}
+
+export function rewriteUserHomeLinks() {
+    const isProd = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
+    if (!isProd) return;
+    const token = localStorage.getItem('token');
+    if (!token) return;
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const username = JSON.parse(atob(base64)).username || '';
+    if (!username) return;
+
+    document.querySelectorAll('a[href*="user-home"]').forEach(a => {
+        const url = new URL(a.href);
+        const tab = url.searchParams.get('tab');
+        a.href = tab ? `/${username}/${tab}` : `/${username}`;
+    });
 }
 
 export function setPageInURL(page) {

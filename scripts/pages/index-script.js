@@ -1,6 +1,6 @@
 /*  Imports  */
-import { DEBOUNCE_TIME, getAuthElements, MIN_LOADING_TIME, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, debounce, initializeCreateAccountCaptcha, isPro, setupSearchAutocomplete, searchStadiums, shakeOrReplace } from "../utils.js";
+import { DEBOUNCE_TIME, getAuthElements, IS_PROD, MIN_LOADING_TIME, STADIUM_IMAGE_PATH } from "../constants.js";
+import { createToast, debounce, initializeCreateAccountCaptcha, isPro, rewriteUserHomeLinks, setupSearchAutocomplete, searchStadiums, shakeOrReplace } from "../utils.js";
 import { registerCommonEvents, registerEventListeners } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -27,7 +27,7 @@ async function loadPopularStadiums() {
             popularStadium.classList.add('popular-stadium');
 
             const popularStadiumLink = document.createElement('a');
-            popularStadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
+            popularStadiumLink.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
             const popularStadiumImage = document.createElement('img');
             popularStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
@@ -99,7 +99,7 @@ function initializeMap(stadiums) {
                 <div class="popup-card">
                     <h4>${stadium.stadium_name}</h4>
                     <p>${stadium.address}</p>
-                    <a href="stadium.html?id=${encodeURIComponent(stadium.stadium_id)}">
+                    <a href="${IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`}">
                         <img src="/images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
                     </a>
                 </div>
@@ -109,6 +109,7 @@ function initializeMap(stadiums) {
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     initializeCreateAccountCaptcha();

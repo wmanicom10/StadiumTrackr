@@ -1,6 +1,6 @@
 /*  Imports  */
-import { getAuthElements, MIN_LOADING_TIME } from "../constants.js";
-import { createToast, createUserStadiumElement, initializeCustomSelects, isLoggedIn, isPro, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
+import { getAuthElements, IS_PROD, MIN_LOADING_TIME } from "../constants.js";
+import { createToast, createUserStadiumElement, initializeCustomSelects, isLoggedIn, isPro, rewriteUserHomeLinks, setupSearchAutocomplete, shakeOrReplace } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 
@@ -90,7 +90,7 @@ async function renderMap(stadiums = null) {
                     <div class="popup-card">
                         <h4>${stadium.stadium_name}</h4>
                         <p>${stadium.address}</p>
-                        <a href="stadium.html?id=${encodeURIComponent(stadium.stadium_id)}">
+                        <a href="${IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`}">
                             <img src="/images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
                         </a>
                     </div>
@@ -393,6 +393,7 @@ function setupStatsMapFilterHandlers() {
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerUserLogOutEvents();

@@ -23,8 +23,8 @@ export const userAPI = {
     loadUserInfo: () =>
         fetchAPI(ROUTES.LOAD_USER_INFO),
 
-    loadUserList: (listId, show, league, country, sortBy) =>
-        fetchAPI(ROUTES.LOAD_USER_LIST, { listId, show, league, country, sortBy }),
+    loadUserList: (listId, slug, show, league, country, sortBy) =>
+        fetchAPI(ROUTES.LOAD_USER_LIST, { listId, slug, show, league, country, sortBy }),
 
     loadUserLists: (sortBy, limit = 18, offset = 0) =>
         fetchAPI(ROUTES.LOAD_USER_LISTS, { sortBy, limit, offset }),

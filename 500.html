@@ -51,7 +51,13 @@
 
         <!-- Scripts -->
         <script>
-            document.getElementById('go-back-button').href = document.documentElement.classList.contains('logged-in') ? 'user-home' : '/';
+            const isProd = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
+            let username = '';
+            if (token) {
+                const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+                username = JSON.parse(atob(base64)).username || '';
+            }
+            document.getElementById('go-back-button').href = document.documentElement.classList.contains('logged-in') ? (isProd ? `/${username}` : '/user-home') : '/';
         </script>
         
     </body>

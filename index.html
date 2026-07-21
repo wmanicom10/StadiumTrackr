@@ -9,7 +9,8 @@
                     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
                     const payload = JSON.parse(atob(base64));
                     if (payload.username) {
-                        window.location.replace('user-home');
+                        const isProd = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
+                        window.location.replace(isProd ? `/${payload.username}` : 'user-home');
                     }
                 } catch (e) {
                     console.error(e);

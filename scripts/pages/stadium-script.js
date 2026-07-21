@@ -1,6 +1,6 @@
 /*  Imports  */
-import { createAccountMenu, getAuthElements, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, initializeCreateAccountCaptcha, isLoggedIn, setupAddStadiumModal, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI, toggleMenu } from "../utils.js";
+import { createAccountMenu, getAuthElements, IS_PROD, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
+import { createToast, formatDate, formatEventDate, formatEventTime, formatLocation, getEventIcon, initializeCreateAccountCaptcha, isLoggedIn, rewriteUserHomeLinks, setupAddStadiumModal, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 import { updateAPI } from "../api/update.js";
@@ -45,12 +45,14 @@ let hasNoUpcomingEvents = false;
 let stadiumMapData = null;
 
 /*  Async Functions  */
-async function loadFullStadiumPage(id) {
+async function loadFullStadiumPage(id, slug) {
     try {
-        const [result] = await Promise.all([
-            loadStadiumInfo(id),
-            loadStadiumMap(id),
-            loadUpcomingEvents(id),
+        const infoResult = await loadStadiumInfo(id, slug);
+        const resolvedId = infoResult;
+
+        await Promise.all([
+            loadStadiumMap(resolvedId),
+            loadUpcomingEvents(resolvedId),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
 
@@ -82,9 +84,9 @@ async function loadFullStadiumPage(id) {
     }
 }
 
-async function loadStadiumInfo(id) {
+async function loadStadiumInfo(id, slug) {
     try {
-        const result = await loadAPI.loadStadiumInfo(id);
+        const result = await loadAPI.loadStadiumInfo(id, slug);
         const { stadium, teams, userVisited, userWishlist } = result.stadiumInfo;
 
         const stadiumImage = document.createElement('img');
@@ -105,12 +107,11 @@ async function loadStadiumInfo(id) {
         elements.stadiumCapacity.textContent = stadium.capacity ? stadium.capacity.toLocaleString() : 'Unknown';
         elements.stadiumConstructionCost.textContent = formatConstructionCost(stadium.constructionCost);
         elements.stadiumVisits.textContent = stadium.visits;
-        const isProd = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
-        elements.upcomingEventsStadiumLink.href = isProd ? `/events/${stadium.slug}` : `events.html?id=${stadium.id}`;
+        elements.upcomingEventsStadiumLink.href = IS_PROD ? `/events/${stadium.slug}` : `events.html?id=${stadium.id}`;
 
-        setupUserControls(id, userVisited, userWishlist);
-        setupAddStadiumModal(id, stadium.name, stadium.city, stadium.state, stadium.image, elements);
-
+        setupUserControls(stadium.id, slug, userVisited, userWishlist);
+        setupAddStadiumModal(stadium.id, stadium.name, stadium.city, stadium.state, stadium.image, elements);
+        return stadium.id;
     } catch (error) {
         console.error(error);
         shakeOrReplace(error.message || 'Failed to load stadium info.')
@@ -235,7 +236,7 @@ function initializeStadiumMap(stadiumMapData) {
     `);
 }
 
-function setupUserControls(stadiumId, userVisited, userWishlist) {
+function setupUserControls(stadiumId, slug, userVisited, userWishlist) {
     const hasLogged = userVisited.some(activity => activity.visited_on !== null);
     let isWishlist = userWishlist.length > 0;
     let isVisited = userVisited.length > 0;
@@ -245,7 +246,7 @@ function setupUserControls(stadiumId, userVisited, userWishlist) {
     
     if (hasLogged) {
         const visitLink = document.createElement('a');
-        visitLink.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
+        visitLink.href = IS_PROD && slug ? `/activity/${slug}` : `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
         visitLink.className = 'stadium-user-control';
         visitLink.id = 'stadium-user-control-visited';
         visitLink.innerHTML = `
@@ -276,7 +277,7 @@ function setupUserControls(stadiumId, userVisited, userWishlist) {
         }
     });
 
-    elements.stadiumActivityButton.href = `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
+    elements.stadiumActivityButton.href = IS_PROD && slug ? `/activity/${slug}` : `user-activity.html?id=${encodeURIComponent(stadiumId)}`;
 }
 
 function setupVisitedClickHandler(stadiumId, initialIsVisited, initialIsWishlist) {
@@ -364,6 +365,7 @@ function setupWishlistClickHandler(stadiumId, initialIsWishlist) {
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerLogOutEvents();
@@ -383,6 +385,8 @@ window.onload = async () => {
 
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
-    
-    loadFullStadiumPage(id);
+    const pathParts = window.location.pathname.split('/');
+    const slug = IS_PROD && pathParts[1] === 'stadium' && pathParts[2] ? pathParts[2] : null;
+
+    loadFullStadiumPage(id, slug);
 };

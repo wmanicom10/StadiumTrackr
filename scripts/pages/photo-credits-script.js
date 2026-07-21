@@ -1,6 +1,6 @@
 /*  Imports  */
-import { getAuthElements, MIN_LOADING_TIME } from "../constants.js";
-import { initializeCreateAccountCaptcha, isLoggedIn, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI } from "../utils.js";
+import { getAuthElements, IS_PROD, MIN_LOADING_TIME } from "../constants.js";
+import { initializeCreateAccountCaptcha, isLoggedIn, rewriteUserHomeLinks, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -31,7 +31,7 @@ function renderPhotoCredits(photoCredits) {
         const stadiumName = document.createElement('td');
         const stadiumNameLink = document.createElement('a');
         stadiumNameLink.textContent = photoCredit.stadium_name;
-        stadiumNameLink.href = `stadium.html?id=${photoCredit.stadium_id}`;
+        stadiumNameLink.href = IS_PROD && photoCredit.slug ? `/stadium/${photoCredit.slug}` : `stadium.html?id=${photoCredit.stadium_id}`;
         stadiumNameLink.target = '_blank';
         stadiumName.appendChild(stadiumNameLink);
 
@@ -82,6 +82,7 @@ function renderPhotoCredits(photoCredits) {
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerLogOutEvents();

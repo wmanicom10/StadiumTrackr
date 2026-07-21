@@ -1,6 +1,6 @@
 /*  Imports  */
 import { createAccountMenu, getAuthElements, MIN_LOADING_TIME, overlay } from "../constants.js";
-import { initializeCreateAccountCaptcha, isLoggedIn, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI, toggleMenu } from "../utils.js";
+import { initializeCreateAccountCaptcha, isLoggedIn, rewriteUserHomeLinks, setupSearchAutocomplete, shakeOrReplace, showLoggedInUI, showLoggedOutUI, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 import { paymentAPI } from '../api/payment.js';
@@ -24,6 +24,7 @@ async function loadProPricing() {
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerLogOutEvents();

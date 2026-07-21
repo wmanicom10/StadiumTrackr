@@ -1,6 +1,6 @@
 /*  Imports  */
-import { getAuthElements, MIN_LOADING_TIME } from "../constants.js";
-import { createToast, filterAndRank, initializeCreateAccountCaptcha, initializeCustomSelects, isLoggedIn, isPro, renderWithoutTransition, setupFilterHandlers, setupSearch, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI, syncSelectFromURL } from "../utils.js";
+import { getAuthElements, IS_PROD, MIN_LOADING_TIME } from "../constants.js";
+import { createToast, filterAndRank, initializeCreateAccountCaptcha, initializeCustomSelects, isLoggedIn, isPro, renderWithoutTransition, rewriteUserHomeLinks, setupSearch, setupSearchAutocomplete, showLoggedInUI, showLoggedOutUI, syncSelectFromURL } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 
@@ -48,29 +48,42 @@ async function loadMapStadiums() {
 
 async function setView() {
     const params = new URLSearchParams(window.location.search);
-    const showParam = params.get('show');
-    if (showParam) {
+    const pathParts = window.location.pathname.split('/');
+
+    let sort = 'name-asc';
+    let league = 'all';
+    let country = 'all';
+    let show = ['all'];
+    let currentPage = 1;
+
+    if (IS_PROD) {
+        for (let i = 2; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'name-asc';
+            if (pathParts[i] === 'league') league = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'country') country = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'show') show = pathParts[i + 1]?.split(',') || ['all'];
+            if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+        }
         showSelections.clear();
-        showParam.split(',').forEach(v => showSelections.add(v));
+        show.forEach(v => showSelections.add(v));
+
+        if (isLoggedIn()) syncShowFilter();
     } else {
-        showSelections.clear();
-        showSelections.add('all');
+        const showParam = params.get('show');
+        if (showParam) {
+            showSelections.clear();
+            showParam.split(',').forEach(v => showSelections.add(v));
+        } else {
+            showSelections.clear();
+            showSelections.add('all');
+        }
+        show = [...showSelections];
+        league = params.get('league') || 'all';
+        country = params.get('country') || 'all';
+        sort = params.get('sort') || 'name-asc';
     }
-    const show = [...showSelections];
-    const league = params.get('league') || 'all';
-    const country = params.get('country') || 'all';
-    const sort = params.get('sort') || 'name-asc';
 
-    if (isLoggedIn()) syncShowFilter();
-
-    if (!params.has('page')) {
-        sessionStorage.removeItem('stadiumSearch');
-    }
-
-    setupFilterHandlers(elements, () => {
-        showSelections.clear();
-        showSelections.add('all');
-    });
+    setupStadiumsFilterHandlers();
     setupSearch(() => allStadiums, elements);
     
     syncSelectFromURL('league-filter', league);
@@ -89,7 +102,22 @@ async function setView() {
     const plural = filtered.length === 1 ? 'stadium' : 'stadiums';
     elements.stadiumCount.textContent = `Showing ${filtered.length} ${plural}`;
 
-    renderWithoutTransition(elements, filtered);
+    const stadiumsPageChange = IS_PROD ? (page) => {
+        const pathParts = window.location.pathname.split('/');
+        let path = '/stadiums';
+        for (let i = 2; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'show') path += `/show/${pathParts[i + 1]}`;
+        }
+        for (let i = 2; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'sort') path += `/sort/${pathParts[i + 1]}`;
+            if (pathParts[i] === 'league') path += `/league/${pathParts[i + 1]}`;
+            if (pathParts[i] === 'country') path += `/country/${pathParts[i + 1]}`;
+        }
+        if (page !== 1) path += `/page/${page}`;
+        window.location.href = path;
+    } : null;
+
+    renderWithoutTransition(elements, filtered, false, null, 'name-asc', currentPage, stadiumsPageChange);
 
     loadMapStadiums();
 
@@ -112,14 +140,30 @@ async function setView() {
 
 /*  Functions  */
 function applyShowFilter() {
-    const params = new URLSearchParams(window.location.search);
-    params.set('page', '1');
-    if (showSelections.has('all')) {
-        params.delete('show');
+    if (IS_PROD) {
+        const pathParts = window.location.pathname.split('/');
+        let sort = null, league = null, country = null;
+        for (let i = 2; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1];
+            if (pathParts[i] === 'league') league = pathParts[i + 1];
+            if (pathParts[i] === 'country') country = pathParts[i + 1];
+        }
+        let path = '/stadiums';
+        if (!showSelections.has('all')) path += `/show/${[...showSelections].join(',')}`;
+        if (sort) path += `/sort/${sort}`;
+        if (league) path += `/league/${league}`;
+        if (country) path += `/country/${country}`;
+        window.location.href = path;
     } else {
-        params.set('show', [...showSelections].join(','));
+        const params = new URLSearchParams(window.location.search);
+        params.set('page', '1');
+        if (showSelections.has('all')) {
+            params.delete('show');
+        } else {
+            params.set('show', [...showSelections].join(','));
+        }
+        window.location.search = params.toString();
     }
-    window.location.search = params.toString();
 }
 
 function filterMapStadiums(stadiums, filters) {
@@ -172,7 +216,7 @@ function renderMap(stadiums) {
                 <div class="popup-card">
                     <h4>${stadium.stadium_name}</h4>
                     <p>${stadium.address}</p>
-                    <a href="/stadium/${stadium.stadium_id}">
+                    <a href="${IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`}">
                         <img src="/images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
                     </a>
                 </div>
@@ -375,6 +419,53 @@ function setupShowFilter() {
     });
 }
 
+function setupStadiumsFilterHandlers() {
+    const getFilters = () => ({
+        league: elements.leagueFilter.value,
+        country: elements.countryFilter.value,
+        sort: elements.sortFilter.value
+    });
+
+    function applyFilter() {
+        const { league, country, sort } = getFilters();
+        if (IS_PROD) {
+            let path = '/stadiums';
+            if (!showSelections.has('all')) path += `/show/${[...showSelections].join(',')}`;
+            if (league !== 'all') path += `/league/${league}`;
+            if (country !== 'all') path += `/country/${country}`;
+            if (sort !== 'name-asc') path += `/sort/${sort}`;
+            window.location.href = path;
+        } else {
+            const currentParams = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams();
+            params.set('page', '1');
+            if (league !== 'all') params.set('league', league);
+            if (country !== 'all') params.set('country', country);
+            if (sort !== 'name-asc') params.set('sort', sort);
+            const show = currentParams.get('show');
+            if (show) params.set('show', show);
+            window.location.search = params.toString();
+        }
+    }
+
+    elements.leagueFilter.addEventListener('change', applyFilter);
+    elements.countryFilter.addEventListener('change', applyFilter);
+    elements.sortFilter.addEventListener('change', applyFilter);
+
+    elements.clearFiltersButton.addEventListener('click', () => {
+        showSelections.clear();
+        showSelections.add('all');
+        if (IS_PROD) {
+            window.location.href = '/stadiums';
+        } else {
+            elements.leagueFilter.value = 'all';
+            elements.countryFilter.value = 'all';
+            elements.sortFilter.value = 'name-asc';
+            window.location.search = '';
+        }
+    });
+}
+
 function syncShowFilter() {
     const options = document.querySelectorAll('#show-dropdown .custom-select-option');
     const valueDisplay = document.getElementById('show-value');
@@ -399,6 +490,7 @@ function syncShowFilter() {
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerEventListeners(getAuthElements());
     registerCommonEvents();
     registerLogOutEvents();

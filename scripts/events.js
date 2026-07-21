@@ -1,6 +1,6 @@
 /*  Imports  */
-import { createToast, getCaptchaToken, logOut, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
-import { getHeaderElements, PROFILE_PIC_PATH } from "./constants.js";
+import { createToast, getCaptchaToken, getUsername, logOut, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
+import { getHeaderElements, IS_PROD, PROFILE_PIC_PATH } from "./constants.js";
 import { authAPI } from "./api/auth.js";
 
 /*  Variables  */
@@ -33,7 +33,7 @@ async function handleLogin() {
     try {
         const result = await authAPI.login(username, password);
         localStorage.setItem('token', result.token);
-        window.location.replace('user-home');
+        window.location.replace(IS_PROD ? `/${getUsername()}` : '/user-home');
     } catch (error) {
         console.error(error);
         shakeOrReplace(error.message || 'Login failed. Please try again.')
@@ -56,7 +56,7 @@ async function handleSignup() {
     try {
         const result = await authAPI.signup(email, username, password, captchaToken);
         localStorage.setItem('token', result.token);
-        window.location.replace('user-home');
+        window.location.replace(IS_PROD ? `/${getUsername()}` : '/user-home');
     } catch (error) {
         console.error(error);
         shakeOrReplace(error.message || 'There was an error creating your account. Please try again.');

@@ -1,6 +1,6 @@
 /*  Imports  */
-import { MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { addExistingPhotoPreview, formatDate, getPageFromURL, initializeCustomSelects, isLoggedIn, isPro, openLightbox, renderPageNumbers, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
+import { MIN_LOADING_TIME, IS_PROD, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
+import { addExistingPhotoPreview, formatDate, getPageFromURL, initializeCustomSelects, isLoggedIn, isPro, openLightbox, renderPageNumbers, rewriteUserHomeLinks, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
 import { registerCommonEvents, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
@@ -35,11 +35,11 @@ const elements = {
 let currentData = null;
 
 /*  Async Functions  */
-async function loadStadiumInfo(id) {
+async function loadStadiumInfo(id, slug) {
     try {
-        const result = await loadAPI.loadStadiumInfo(id);
+        const result = await loadAPI.loadStadiumInfo(id, slug);
         const { stadium } = result.stadiumInfo;
-        return { stadiumName: stadium.name, image: stadium.image };
+        return { stadiumName: stadium.name, image: stadium.image, stadiumId: stadium.id };
     } catch (error) {
         console.error(error);
     }
@@ -47,14 +47,32 @@ async function loadStadiumInfo(id) {
 
 async function setView() {
     const params = new URLSearchParams(window.location.search);
-    const activity = params.get('activity') || 'all';
-    const sort = params.get('sort') || 'added-desc';
-    const stadium = params.get('id') || null;
+    const pathParts = window.location.pathname.split('/');
 
-    setupActivityFilterHandlers(elements, stadium);
+    let activity = 'all';
+    let sort = 'added-desc';
+    let stadium = null;
+    let stadiumSlug = null;
+    let currentPage = 1;
 
-    if (stadium) {
-        const { stadiumName, image } = await loadStadiumInfo(stadium);
+    if (IS_PROD) {
+        stadiumSlug = pathParts[2] || null;
+        for (let i = 3; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'show') activity = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'added-desc';
+            if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+        }
+    } else {
+        activity = params.get('activity') || 'all';
+        sort = params.get('sort') || 'added-desc';
+        stadium = params.get('id') || null;
+    }
+
+    setupActivityFilterHandlers(elements, stadium, stadiumSlug);
+
+    if (stadium || stadiumSlug) {
+        const { stadiumName, image, stadiumId } = await loadStadiumInfo(stadium, stadiumSlug);
+        if (IS_PROD) stadium = stadiumId;
         document.title = `${stadiumName} Activity - StadiumTrackr`;
         document.getElementById('user-activity-welcome-text').textContent = `${stadiumName} Activity`;
 
@@ -62,9 +80,7 @@ async function setView() {
         stadiumImage.id = 'stadium-image';
         stadiumImage.src = STADIUM_IMAGE_PATH + image;
         document.querySelector('main').prepend(stadiumImage);
-        stadiumImage.onload = () => {
-            stadiumImage.classList.add('loaded');
-        };
+        stadiumImage.onload = () => stadiumImage.classList.add('loaded');
     }
 
     syncSelectFromURL('activity-filter', activity);
@@ -74,7 +90,7 @@ async function setView() {
     const result = await userAPI.loadUserActivity(activity, stadium, sort);
     const stadiums = result.userActivity;
 
-    renderActivity(stadiums, elements);
+    renderActivity(stadiums, elements, currentPage, stadiumSlug || stadium, activity, sort);
 
     document.getElementById('activity-skeleton').style.display = 'none';
     document.getElementById('activity-list').style.display = 'flex';
@@ -85,7 +101,7 @@ async function setView() {
 }
 
 /*  Functions  */
-function renderActivity(stadiums, elements) {
+function renderActivity(stadiums, elements, currentPage = 1, slugOrId, activity, sort) {
     if (stadiums.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -97,7 +113,7 @@ function renderActivity(stadiums, elements) {
 
         const perPage = 18;
         const pageCount = Math.ceil(stadiums.length / perPage);
-        let currentPage = Math.min(getPageFromURL(), pageCount);
+        currentPage = Math.min(currentPage || getPageFromURL(), pageCount) || 1;
 
         const hasLoggedVisits = stadiums.some(s => s.activity_type === "stadium" && s.visited_on);
         if (hasLoggedVisits) {
@@ -121,7 +137,7 @@ function renderActivity(stadiums, elements) {
                     userHomeLogActivityTitle.textContent = 'Logged visit to ';
 
                     const userHomeLogActivityTitleLink = document.createElement('a');
-                    userHomeLogActivityTitleLink.href = `stadium.html?id=${stadium.stadium_id}`;
+                    userHomeLogActivityTitleLink.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                     userHomeLogActivityTitleLink.textContent = stadium.stadium_name;
 
                     userHomeLogActivityTitle.appendChild(userHomeLogActivityTitleLink);
@@ -258,7 +274,7 @@ function renderActivity(stadiums, elements) {
                     userHomeVisitActivityTitle.textContent = 'Marked ';
 
                     const link = document.createElement('a');
-                    link.href = `stadium.html?id=${stadium.stadium_id}`;
+                    link.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                     link.textContent = stadium.stadium_name;
 
                     userHomeVisitActivityTitle.appendChild(link);
@@ -279,7 +295,7 @@ function renderActivity(stadiums, elements) {
                     userHomeWishlistActivityTitle.textContent = 'Added ';
 
                     const link = document.createElement('a');
-                    link.href = `stadium.html?id=${stadium.stadium_id}`;
+                    link.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                     link.textContent = stadium.stadium_name;
 
                     userHomeWishlistActivityTitle.appendChild(link);
@@ -297,11 +313,20 @@ function renderActivity(stadiums, elements) {
         }
 
         renderPage(currentPage);
-        renderPageNumbers(elements, currentPage, pageCount);
+        
+        const onPageChange = IS_PROD && slugOrId ? (page) => {
+            let path = `/activity/${slugOrId}`;
+            if (activity !== 'all') path += `/show/${activity}`;
+            if (sort !== 'added-desc') path += `/sort/${sort}`;
+            if (page !== 1) path += `/page/${page}`;
+            window.location.href = path;
+        } : null;
+
+        renderPageNumbers(elements, currentPage, pageCount, onPageChange);
     }
 }
 
-function setupActivityFilterHandlers(elements, id) {
+function setupActivityFilterHandlers(elements, id, slug) {
     const getFilters = () => ({
         activity: elements.activityFilter.value,
         sort: elements.sortFilter.value
@@ -309,28 +334,40 @@ function setupActivityFilterHandlers(elements, id) {
 
     function applyFilter() {
         const { activity, sort } = getFilters();
-        const params = new URLSearchParams();
-        params.set('page', '1');
-        params.set('activity', activity);
-        params.set('sort', sort);
-        params.set('id', id)
-        window.location.search = params.toString();
+        if (IS_PROD && slug) {
+            let path = `/activity/${slug}`;
+            if (activity !== 'all') path += `/show/${activity}`;
+            if (sort !== 'added-desc') path += `/sort/${sort}`;
+            window.location.href = path;
+        } else {
+            const params = new URLSearchParams();
+            params.set('page', '1');
+            params.set('activity', activity);
+            params.set('sort', sort);
+            params.set('id', id);
+            window.location.search = params.toString();
+        }
     }
 
     elements.activityFilter.addEventListener('change', applyFilter);
     elements.sortFilter.addEventListener('change', applyFilter);
-    
+
     elements.clearFiltersButton.addEventListener('click', () => {
         elements.activityFilter.value = 'all';
         elements.sortFilter.value = 'added-desc';
-        const params = new URLSearchParams();
-        params.set('id', id)
-        window.location.search = params.toString();
+        if (IS_PROD && slug) {
+            window.location.href = `/activity/${slug}`;
+        } else {
+            const params = new URLSearchParams();
+            params.set('id', id);
+            window.location.search = params.toString();
+        }
     });
 }
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerCommonEvents();
     registerUserLogOutEvents();
     initializeCustomSelects();

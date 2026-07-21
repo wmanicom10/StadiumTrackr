@@ -13,6 +13,7 @@ export const createAccountForm = getElement('create-account-form');
 export const createAccountMenu = getElement('create-account-menu');
 export const DEBOUNCE_TIME = 500;
 export const ICON_IMAGE_PATH = '/images/icons/';
+export const IS_PROD = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
 export const loggedInHeader = getElement('logged-in-nav');
 export const loggedInHeaderUsername = getElement('logged-in-header-username');
 export const loggedOutHeader = getElement('logged-out-nav');

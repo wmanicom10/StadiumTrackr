@@ -13,13 +13,16 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
         <script src="https://captcha.stadiumtrackr.com/assets/widget.js"></script>
         <script>
+            const isProd = ['stadiumtrackr.com', 'stadiumtrackruat.com', 'stadiumtrackrpreprod.com', 'stadiumtrackrdev.com'].includes(window.location.hostname);
             const params = new URLSearchParams(window.location.search);
             const stadiumId = params.get('id') || null;
+            const pathParts = window.location.pathname.split('/');
+            const hasSlug = isProd && pathParts[1] === 'events' && pathParts[2] && pathParts[2] !== 'page';
             const token = localStorage.getItem('token');
             if (token) {
                 const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
                 const payload = JSON.parse(atob(base64));
-                if (stadiumId && payload.username) {
+                if ((stadiumId || hasSlug) && payload.username) {
                     document.documentElement.classList.add('logged-in');
                 } else if (payload.username) {
                     document.documentElement.classList.add('logged-in');

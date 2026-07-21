@@ -1,6 +1,6 @@
 /*  Imports  */
-import { getAuthElements, ICON_IMAGE_PATH, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
-import { addExistingPhotoPreview, createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getPageFromURL, initializeCustomSelects, isLoggedIn, isPro, openLightbox, renderPageNumbers, renderWithoutTransition, renderWithTransition, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
+import { getAuthElements, ICON_IMAGE_PATH, IS_PROD, MIN_LOADING_TIME, overlay, PROFILE_PIC_PATH, STADIUM_IMAGE_PATH } from "../constants.js";
+import { addExistingPhotoPreview, createToast, createUserStadiumElement, filterAndRank, formatDate, formatEventDate, formatEventTime, getUsername, initializeCustomSelects, isLoggedIn, isPro, openLightbox, renderPageNumbers, renderWithoutTransition, renderWithTransition, rewriteUserHomeLinks, setupDeleteLogHandlers, setupEditLogHandlers, setupSearchAutocomplete, showLoggedInUI, syncSelectFromURL, timeAgo, toggleMenu, updateEditLogPhotoCount } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { userAPI } from "../api/user.js";
 import { loadAPI } from "../api/load.js";
@@ -43,11 +43,25 @@ async function loadAchievementsTab(tab) {
         noStadiumsContainer: document.getElementById('user-home-no-achievements-container'),
     }
 
-    setupAchievementsFilterHandlers(elements, tab);
-
     const params = new URLSearchParams(window.location.search);
-    const achievement = params.get('achievement') || 'all';
-    const sort = params.get('sort') || 'name-asc';
+    const pathParts = window.location.pathname.split('/');
+
+    let achievement = 'all';
+    let sort = 'name-asc';
+    let currentPage = 1;
+
+    if (IS_PROD) {
+        for (let i = 3; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'achievement') achievement = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'name-asc';
+            if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+        }
+    } else {
+        achievement = params.get('achievement') || 'all';
+        sort = params.get('sort') || 'name-asc';
+    }
+
+    setupAchievementsFilterHandlers(elements, tab);
 
     syncSelectFromURL('achievements-filter', achievement);
     syncSelectFromURL('achievements-sort-filter', sort);
@@ -58,7 +72,12 @@ async function loadAchievementsTab(tab) {
     const result = await userAPI.loadUserAchievements(achievement, sort);
     const achievements = result.userAchievements;
 
-    renderAchievementsTab(achievements, elements);
+    const onPageChange = IS_PROD ? (page) => {
+        let basePath = window.location.pathname.replace(/\/page\/\d+$/, '');
+        window.location.href = page === 1 ? basePath : `${basePath}/page/${page}`;
+    } : null;
+
+    renderAchievementsTab(achievements, elements, currentPage, onPageChange);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -101,11 +120,25 @@ async function loadActivityTab(tab) {
         deleteLogDeleteButton: document.getElementById('delete-log-delete-button')
     }
 
-    setupActivityFilterHandlers(elements, tab);
-
     const params = new URLSearchParams(window.location.search);
-    const activity = params.get('activity') || 'all';
-    const sort = params.get('sort') || 'added-desc';
+    const pathParts = window.location.pathname.split('/');
+
+    let activity = 'all';
+    let sort = 'added-desc';
+    let currentPage = 1;
+
+    if (IS_PROD) {
+        for (let i = 3; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'activity') activity = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'added-desc';
+            if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+        }
+    } else {
+        activity = params.get('activity') || 'all';
+        sort = params.get('sort') || 'added-desc';
+    }
+
+    setupActivityFilterHandlers(elements, tab);
 
     syncSelectFromURL('activity-filter', activity);
     syncSelectFromURL('activity-sort-filter', sort);
@@ -116,7 +149,12 @@ async function loadActivityTab(tab) {
     const result = await userAPI.loadUserActivity(activity, '', sort);
     const stadiums = result.userActivity;
 
-    renderActivityTab(stadiums, elements);
+    const onPageChange = IS_PROD ? (page) => {
+        let basePath = window.location.pathname.replace(/\/page\/\d+$/, '');
+        window.location.href = page === 1 ? basePath : `${basePath}/page/${page}`;
+    } : null;
+
+    renderActivityTab(stadiums, elements, currentPage, onPageChange);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -130,7 +168,7 @@ async function loadEventsTab(tab) {
     const token = localStorage.getItem('token');
     if (!token) return
     const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-                                        const payload = JSON.parse(atob(base64));
+    const payload = JSON.parse(atob(base64));
     const username = payload.username || '';
     document.title = username + "'s Events - StadiumTrackr";
     
@@ -143,11 +181,25 @@ async function loadEventsTab(tab) {
         noStadiumsContainer: document.getElementById('user-home-no-events-container'),
     }
 
-    setupEventsFilterHandlers(elements, tab);
-
     const params = new URLSearchParams(window.location.search);
-    const event = params.get('event') || 'all';
-    const sort = params.get('sort') || 'date-asc';
+    const pathParts = window.location.pathname.split('/');
+
+    let event = 'all';
+    let sort = 'date-asc';
+    let currentPage = 1;
+
+    if (IS_PROD) {
+        for (let i = 3; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'event') event = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'date-asc';
+            if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+        }
+    } else {
+        event = params.get('event') || 'all';
+        sort = params.get('sort') || 'date-asc';
+    }
+
+    setupEventsFilterHandlers(elements, tab);
 
     syncSelectFromURL('event-filter', event);
     syncSelectFromURL('event-sort-filter', sort);
@@ -158,7 +210,7 @@ async function loadEventsTab(tab) {
     const result = await loadAPI.loadUserEvents(event, sort);
     const events = result.stadiums;
 
-    renderEventsTab(events, elements);
+    renderEventsTab(events, elements, currentPage);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -254,10 +306,22 @@ async function loadListsTab(tab) {
         noStadiumsContainer: document.getElementById('user-home-no-lists-container'),
     }
 
-    setupListsFilterHandlers(elements, tab);
-
     const params = new URLSearchParams(window.location.search);
-    const sort = params.get('sort') || 'updated-desc';
+    const pathParts = window.location.pathname.split('/');
+
+    let sort = 'updated-desc';
+    let currentPage = 1;
+
+    if (IS_PROD) {
+        for (let i = 3; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'updated-desc';
+            if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+        }
+    } else {
+        sort = params.get('sort') || 'updated-desc';
+    }
+
+    setupListsFilterHandlers(elements, tab);
 
     syncSelectFromURL('lists-sort-filter', sort);
 
@@ -269,7 +333,12 @@ async function loadListsTab(tab) {
     ]);
     const lists = result.userLists;
 
-    renderListsTab(lists, elements);
+    const onPageChange = IS_PROD ? (page) => {
+        let basePath = window.location.pathname.replace(/\/page\/\d+$/, '');
+        window.location.href = page === 1 ? basePath : `${basePath}/page/${page}`;
+    } : null;
+
+    renderListsTab(lists, elements, currentPage, onPageChange);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -313,15 +382,31 @@ async function loadStadiumsTab(tab) {
     }
 
     const params = new URLSearchParams(window.location.search);
-    const league = params.get('league') || 'all';
-    const country = params.get('country') || 'all';
-    const sort = params.get('sort') || 'added-desc';
+    const pathParts = window.location.pathname.split('/');
+
+    let league = 'all';
+    let country = 'all';
+    let sort = 'added-desc';
+    let currentPage = 1;
+
+    if (IS_PROD) {
+        for (let i = 3; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'league') league = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'country') country = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'added-desc';
+            if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+        }
+    } else {
+        league = params.get('league') || 'all';
+        country = params.get('country') || 'all';
+        sort = params.get('sort') || 'added-desc';
+    }
 
     if (!params.has('page')) {
         sessionStorage.removeItem('userStadiumSearch');
     }
 
-    setupFilterHandlers(elements, tab);
+    setupFilterHandlers(elements, tab, 'added-desc');
     setupSearch(() => allStadiums, elements, 'userStadiumsSearch');
     
     syncSelectFromURL('stadiums-league-filter', league);
@@ -342,7 +427,13 @@ async function loadStadiumsTab(tab) {
     const plural = filtered.length === 1 ? 'stadium' : 'stadiums';
     elements.stadiumCount.textContent = `Showing ${filtered.length} ${plural}`;
 
-    renderWithoutTransition(elements, filtered);
+    const onPageChange = IS_PROD ? (page) => {
+        const pathParts = window.location.pathname.split('/');
+        let basePath = window.location.pathname.replace(/\/page\/\d+$/, '');
+        window.location.href = page === 1 ? basePath : `${basePath}/page/${page}`;
+    } : null;
+
+    renderWithoutTransition(elements, filtered, false, null, null, currentPage, onPageChange);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -353,6 +444,8 @@ async function loadStadiumsTab(tab) {
 }
 
 async function loadTab(tab) {
+    document.querySelectorAll('.user-home-tab-container').forEach(el => el.style.display = 'none');
+
     switch (tab) {
         case "home":
             await loadHomeTab();
@@ -453,12 +546,28 @@ async function loadVisitsTab(tab) {
         deleteLogDeleteButton: document.getElementById('delete-log-delete-button')
     }
 
-    setupFilterHandlers(elements, tab);
-
     const params = new URLSearchParams(window.location.search);
-    const league = params.get('league') || 'all';
-    const country = params.get('country') || 'all';
-    const sort = params.get('sort') || 'visited-desc';
+    const pathParts = window.location.pathname.split('/');
+
+    let league = 'all';
+    let country = 'all';
+    let sort = 'visited-desc';
+    let currentPage = 1;
+
+    if (IS_PROD) {
+        for (let i = 3; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'league') league = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'country') country = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'visited-desc';
+            if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+        }
+    } else {
+        league = params.get('league') || 'all';
+        country = params.get('country') || 'all';
+        sort = params.get('sort') || 'visited-desc';
+    }
+
+    setupFilterHandlers(elements, tab, 'visited-desc');
     
     syncSelectFromURL('visits-league-filter', league);
     syncSelectFromURL('visits-country-filter', country);
@@ -471,7 +580,8 @@ async function loadVisitsTab(tab) {
     const stadiums = result.userVisits;
 
     const loggedStadiums = stadiums.filter(stadium => stadium.visited_on);
-    renderVisitsTab(loggedStadiums, elements);
+    
+    renderVisitsTab(loggedStadiums, elements, currentPage);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -515,15 +625,31 @@ async function loadWishlistTab(tab) {
     }
 
     const params = new URLSearchParams(window.location.search);
-    const league = params.get('league') || 'all';
-    const country = params.get('country') || 'all';
-    const sort = params.get('sort') || 'added-desc';
+    const pathParts = window.location.pathname.split('/');
 
+    let league = 'all';
+    let country = 'all';
+    let sort = 'added-desc';
+    let currentPage = 1;
+
+    if (IS_PROD) {
+        for (let i = 3; i < pathParts.length - 1; i += 2) {
+            if (pathParts[i] === 'league') league = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'country') country = pathParts[i + 1] || 'all';
+            if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'added-desc';
+            if (pathParts[i] === 'page') currentPage = parseInt(pathParts[i + 1]) || 1;
+        }
+    } else {
+        league = params.get('league') || 'all';
+        country = params.get('country') || 'all';
+        sort = params.get('sort') || 'added-desc';
+    }
+    
     if (!params.has('page')) {
         sessionStorage.removeItem('userWishlistSearch');
     }
 
-    setupFilterHandlers(elements, tab);
+    setupFilterHandlers(elements, tab, 'added-desc');
     setupSearch(() => allStadiums, elements, 'userWishlistSearch');
 
     syncSelectFromURL('wishlist-league-filter', league);
@@ -544,7 +670,13 @@ async function loadWishlistTab(tab) {
     const plural = filtered.length === 1 ? 'stadium' : 'stadiums';
     elements.stadiumCount.textContent = `Showing ${filtered.length} ${plural}`;
 
-    renderWithoutTransition(elements, filtered);
+    const onPageChange = IS_PROD ? (page) => {
+        const pathParts = window.location.pathname.split('/');
+        let basePath = window.location.pathname.replace(/\/page\/\d+$/, '');
+        window.location.href = page === 1 ? basePath : `${basePath}/page/${page}`;
+    } : null;
+
+    renderWithoutTransition(elements, filtered, false, null, null, currentPage, onPageChange);
 
     userHomeHeaderSkeleton.style.display = 'none';
     userHomeHeader.style.display = 'flex';
@@ -584,7 +716,7 @@ async function renderHomeTabMap(stadiums = null) {
                 <div class="popup-card">
                     <h4>${stadium.stadium_name}</h4>
                     <p>${stadium.address}</p>
-                    <a href="stadium.html?id=${encodeURIComponent(stadium.stadium_id)}">
+                    <a href="${IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`}">
                         <img src="/images/stadiums/${stadium.image}" alt="${stadium.stadium_name}" />
                     </a>
                 </div>
@@ -610,7 +742,7 @@ function filterHomeMapStadiums(stadiums) {
     });
 }
 
-function renderAchievementsTab(achievements, elements) {
+function renderAchievementsTab(achievements, elements, startPage = 1, onPageChange = null) {
     if (achievements.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -622,7 +754,7 @@ function renderAchievementsTab(achievements, elements) {
 
         const perPage = 18;
         const pageCount = Math.ceil(achievements.length / perPage);
-        let currentPage = Math.min(getPageFromURL(), pageCount);
+        let currentPage = Math.min(startPage, pageCount);
 
         function renderPage(page) {
             elements.stadiumsList.innerHTML = '';
@@ -711,11 +843,11 @@ function renderAchievementsTab(achievements, elements) {
         }
 
         renderPage(currentPage);
-        renderPageNumbers(elements, currentPage, pageCount);
+        renderPageNumbers(elements, currentPage, pageCount, onPageChange);
     }
 }
 
-function renderActivityTab(stadiums, elements) {
+function renderActivityTab(stadiums, elements, startPage = 1, onPageChange = null) {
     if (stadiums.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -727,7 +859,7 @@ function renderActivityTab(stadiums, elements) {
 
         const perPage = 18;
         const pageCount = Math.ceil(stadiums.length / perPage);
-        let currentPage = Math.min(getPageFromURL(), pageCount);
+        let currentPage = Math.min(startPage, pageCount);
 
         const hasLoggedVisits = stadiums.some(s => s.activity_type === "stadium" && s.visited_on);
         if (hasLoggedVisits) {
@@ -751,7 +883,7 @@ function renderActivityTab(stadiums, elements) {
                     userHomeLogActivityTitle.textContent = 'Logged visit to ';
 
                     const userHomeLogActivityTitleLink = document.createElement('a');
-                    userHomeLogActivityTitleLink.href = `stadium.html?id=${stadium.stadium_id}`;
+                    userHomeLogActivityTitleLink.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                     userHomeLogActivityTitleLink.textContent = stadium.stadium_name;
 
                     userHomeLogActivityTitle.appendChild(userHomeLogActivityTitleLink);
@@ -888,7 +1020,7 @@ function renderActivityTab(stadiums, elements) {
                     userHomeVisitActivityTitle.textContent = 'Marked ';
 
                     const link = document.createElement('a');
-                    link.href = `stadium.html?id=${stadium.stadium_id}`;
+                    link.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                     link.textContent = stadium.stadium_name;
 
                     userHomeVisitActivityTitle.appendChild(link);
@@ -909,7 +1041,7 @@ function renderActivityTab(stadiums, elements) {
                     userHomeWishlistActivityTitle.textContent = 'Added ';
 
                     const link = document.createElement('a');
-                    link.href = `stadium.html?id=${stadium.stadium_id}`;
+                    link.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                     link.textContent = stadium.stadium_name;
 
                     userHomeWishlistActivityTitle.appendChild(link);
@@ -927,11 +1059,11 @@ function renderActivityTab(stadiums, elements) {
         }
 
         renderPage(currentPage);
-        renderPageNumbers(elements, currentPage, pageCount);
+        renderPageNumbers(elements, currentPage, pageCount, onPageChange);
     }
 }
 
-function renderEventsTab(events, elements) {
+function renderEventsTab(events, elements, startPage = 1) {
     if (events.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -943,7 +1075,13 @@ function renderEventsTab(events, elements) {
 
         const perPage = 18;
         const pageCount = Math.ceil(events.length / perPage);
-        let currentPage = Math.min(getPageFromURL(), pageCount);
+        let currentPage = Math.min(startPage, pageCount);
+
+        const onPageChange = IS_PROD ? (page) => {
+            const pathParts = window.location.pathname.split('/');
+            let basePath = window.location.pathname.replace(/\/page\/\d+$/, '');
+            window.location.href = page === 1 ? basePath : `${basePath}/page/${page}`;
+        } : null;
 
         function renderPage(page) {
             elements.stadiumsList.innerHTML = '';
@@ -959,7 +1097,7 @@ function renderEventsTab(events, elements) {
                 const headerName = document.createElement('h3');
                 headerName.classList.add('user-home-event-header-name');
                 const headerLink = document.createElement('a');
-                headerLink.href = `stadium.html?id=${event.stadium_id}`;
+                headerLink.href = IS_PROD && event.slug ? `/stadium/${event.slug}` : `stadium.html?id=${event.stadium_id}`;
                 headerLink.textContent = event.stadium_name;
                 headerName.appendChild(headerLink);
 
@@ -1018,7 +1156,7 @@ function renderEventsTab(events, elements) {
         }
 
         renderPage(currentPage);
-        renderPageNumbers(elements, currentPage, pageCount);
+        renderPageNumbers(elements, currentPage, pageCount, onPageChange);
     }
 }
 
@@ -1087,7 +1225,7 @@ function renderHomeTabFavoriteStadiums(stadiums) {
         userFavoriteStadium.classList.add('user-favorite-stadium');
 
         const userFavoriteStadiumLink = document.createElement('a');
-        userFavoriteStadiumLink.href = `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
+        userFavoriteStadiumLink.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${encodeURIComponent(stadium.stadium_id)}`;
 
         const userFavoriteStadiumImage = document.createElement('img');
         userFavoriteStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
@@ -1132,7 +1270,7 @@ function renderHomeTabRecentActivity(activity) {
         let activityText = document.createElement('h4');
         if (activity.visited_on) {
             const link = document.createElement('a');
-            link.href = `user-activity.html?id=${activity.stadium_id}`;
+            link.href = IS_PROD && activity.slug ? `/activity/${activity.slug}` : `user-activity.html?id=${encodeURIComponent(activity.stadium_id)}`
             link.textContent = activity.stadium_name;
             
             activityText.appendChild(document.createTextNode('Visited '));
@@ -1140,7 +1278,7 @@ function renderHomeTabRecentActivity(activity) {
             activityText.appendChild(document.createTextNode(' on ' + formatDate(activity.visited_on)));
         } else if (activity.activity_type === 'wishlist') {
             const link = document.createElement('a');
-            link.href = `stadium.html?id=${activity.stadium_id}`;
+            link.href = IS_PROD && activity.slug ? `/stadium/${activity.slug}` : `stadium.html?id=${activity.stadium_id}`;
             link.textContent = activity.stadium_name;
             
             activityText.appendChild(document.createTextNode('Added '));
@@ -1148,7 +1286,7 @@ function renderHomeTabRecentActivity(activity) {
             activityText.appendChild(document.createTextNode(' to your wishlist'));
         } else {
             const link = document.createElement('a');
-            link.href = `stadium.html?id=${activity.stadium_id}`;
+            link.href = IS_PROD && activity.slug ? `/stadium/${activity.slug}` : `stadium.html?id=${activity.stadium_id}`;
             link.textContent = activity.stadium_name;
             
             activityText.appendChild(document.createTextNode('Marked '));
@@ -1219,7 +1357,7 @@ function renderHomeTabWishlist(stadiums) {
     });
 }
 
-function renderListsTab(lists, elements) {
+function renderListsTab(lists, elements, startPage = 1, onPageChange = null) {
     if (lists.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -1229,9 +1367,11 @@ function renderListsTab(lists, elements) {
         elements.stadiumsPageSelector.style.display = 'flex';
         elements.noStadiumsContainer.style.display = 'none';
 
+        document.getElementById('user-home-create-list-button').href = IS_PROD ? '/list/create' : 'list.html?mode=create';
+
         const perPage = 18;
         const pageCount = Math.ceil(lists.length / perPage);
-        let currentPage = Math.min(getPageFromURL(), pageCount);
+        let currentPage = Math.min(startPage, pageCount);
 
         function renderPage(page) {
             elements.stadiumsList.innerHTML = '';
@@ -1246,7 +1386,7 @@ function renderListsTab(lists, elements) {
 
                 const userHomeListHeaderName = document.createElement('a');
                 userHomeListHeaderName.classList.add('user-home-list-header-name');
-                userHomeListHeaderName.href = `list.html?mode=view&id=${list.list_id}`;
+                userHomeListHeaderName.href = IS_PROD && list.slug ? `/list/${list.slug}/view` : `list.html?mode=view&id=${list.list_id}`;
                 userHomeListHeaderName.textContent = list.list_name;
 
                 const userHomeListHeaderCount = document.createElement('span');
@@ -1262,7 +1402,7 @@ function renderListsTab(lists, elements) {
                 userHomeListStadiumsContainer.classList.add('user-home-list-stadiums-container');
 
                 const userHomeListLink = document.createElement('a');
-                userHomeListLink.href = `list.html?mode=view&id=${list.list_id}`;
+                userHomeListLink.href = IS_PROD && list.slug ? `/list/${list.slug}/view` : `list.html?mode=view&id=${list.list_id}`;
 
                 const userHomeListImages = document.createElement('div');
                 userHomeListImages.classList.add('user-home-list-images');
@@ -1291,7 +1431,7 @@ function renderListsTab(lists, elements) {
 
                 const userHomeListEditListButton = document.createElement('a');
                 userHomeListEditListButton.classList.add('user-home-list-edit-list-button');
-                userHomeListEditListButton.href = `list.html?mode=edit&id=${list.list_id}`;
+                userHomeListEditListButton.href = IS_PROD && list.slug ? `/list/${list.slug}/edit` : `list.html?mode=edit&id=${list.list_id}`;
 
                 const editImg = document.createElement('img');
                 editImg.src = ICON_IMAGE_PATH + 'edit.png';
@@ -1309,11 +1449,11 @@ function renderListsTab(lists, elements) {
         }
 
         renderPage(currentPage);
-        renderPageNumbers(elements, currentPage, pageCount);
+        renderPageNumbers(elements, currentPage, pageCount, onPageChange);
     }
 }
 
-function renderVisitsTab(stadiums, elements) {
+function renderVisitsTab(stadiums, elements, startPage = 1) {
     if (stadiums.length === 0) {
         elements.stadiumsList.style.display = 'none';
         elements.stadiumsPageSelector.style.display = 'none';
@@ -1324,7 +1464,15 @@ function renderVisitsTab(stadiums, elements) {
         elements.noStadiumsContainer.style.display = 'none';
 
         const params = new URLSearchParams(window.location.search);
-        const sort = params.get('sort') || 'visited-desc';
+        const pathParts = window.location.pathname.split('/');
+        let sort = 'visited-desc';
+        if (IS_PROD) {
+            for (let i = 3; i < pathParts.length - 1; i += 2) {
+                if (pathParts[i] === 'sort') sort = pathParts[i + 1] || 'visited-desc';
+            }
+        } else {
+            sort = params.get('sort') || 'visited-desc';
+        }
         const showYearHeaders = sort === 'visited-desc' || sort === 'visited-asc';
 
         const stadiumsByYear = Object.entries(
@@ -1339,7 +1487,13 @@ function renderVisitsTab(stadiums, elements) {
 
         const perPage = 10;
         const pageCount = Math.ceil(stadiums.length / perPage);
-        let currentPage = Math.min(getPageFromURL(), pageCount);
+        let currentPage = Math.min(startPage, pageCount);
+
+        const onPageChange = IS_PROD ? (page) => {
+            const pathParts = window.location.pathname.split('/');
+            let basePath = window.location.pathname.replace(/\/page\/\d+$/, '');
+            window.location.href = page === 1 ? basePath : `${basePath}/page/${page}`;
+        } : null;
 
         setupEditLogHandlers(elements, () => currentData);
         setupDeleteLogHandlers(elements, () => currentData);
@@ -1377,7 +1531,7 @@ function renderVisitsTab(stadiums, elements) {
 
             const userHomeVisitName = document.createElement('a');
             userHomeVisitName.classList.add('user-home-visit-name');
-            userHomeVisitName.href = `stadium.html?id=${stadium.stadium_id}`;
+            userHomeVisitName.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
             userHomeVisitName.textContent = stadium.stadium_name;
 
             const userHomeVisitLocation = document.createElement('h4');
@@ -1497,7 +1651,7 @@ function renderVisitsTab(stadiums, elements) {
         }
 
         renderPage(currentPage);
-        renderPageNumbers(elements, currentPage, pageCount);
+        renderPageNumbers(elements, currentPage, pageCount, onPageChange);
     }
 }
 
@@ -1509,12 +1663,20 @@ function setupAchievementsFilterHandlers(elements, tab) {
 
     function applyFilter() {
         const { achievement, sort } = getFilters();
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        params.set('page', '1');
-        params.set('achievement', achievement);
-        params.set('sort', sort);
-        window.location.search = params.toString();
+        if (IS_PROD) {
+            const username = getUsername();
+            let path = `/${username}/${tab}`;
+            if (achievement !== 'all') path += `/achievement/${achievement}`;
+            if (sort !== 'name-asc') path += `/sort/${sort}`;
+            window.location.href = path;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            params.set('page', '1');
+            params.set('achievement', achievement);
+            params.set('sort', sort);
+            window.location.search = params.toString();
+        }
     }
 
     elements.achievementsFilter.addEventListener('change', applyFilter);
@@ -1523,9 +1685,14 @@ function setupAchievementsFilterHandlers(elements, tab) {
     elements.clearFiltersButton.addEventListener('click', () => {
         elements.achievementsFilter.value = 'all';
         elements.sortFilter.value = 'name-asc';
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        window.location.search = params.toString();
+        if (IS_PROD) {
+            const username = getUsername();
+            window.location.href = `/${username}/${tab}`;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            window.location.search = params.toString();
+        }
     });
 }
 
@@ -1537,12 +1704,20 @@ function setupActivityFilterHandlers(elements, tab) {
 
     function applyFilter() {
         const { activity, sort } = getFilters();
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        params.set('page', '1');
-        params.set('activity', activity);
-        params.set('sort', sort);
-        window.location.search = params.toString();
+        if (IS_PROD) {
+            const username = getUsername();
+            let path = `/${username}/${tab}`;
+            if (activity !== 'all') path += `/activity/${activity}`;
+            if (sort !== 'added-desc') path += `/sort/${sort}`;
+            window.location.href = path;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            params.set('page', '1');
+            params.set('activity', activity);
+            params.set('sort', sort);
+            window.location.search = params.toString();
+        }
     }
 
     elements.activityFilter.addEventListener('change', applyFilter);
@@ -1551,9 +1726,14 @@ function setupActivityFilterHandlers(elements, tab) {
     elements.clearFiltersButton.addEventListener('click', () => {
         elements.activityFilter.value = 'all';
         elements.sortFilter.value = 'added-desc';
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        window.location.search = params.toString();
+        if (IS_PROD) {
+            const username = getUsername();
+            window.location.href = `/${username}/${tab}`;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            window.location.search = params.toString();
+        }
     });
 }
 
@@ -1565,12 +1745,20 @@ function setupEventsFilterHandlers(elements, tab) {
 
     function applyFilter() {
         const { event, sort } = getFilters();
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        params.set('page', '1');
-        params.set('event', event);
-        params.set('sort', sort);
-        window.location.search = params.toString();
+        if (IS_PROD) {
+            const username = getUsername();
+            let path = `/${username}/${tab}`;
+            if (event !== 'all') path += `/event/${event}`;
+            if (sort !== 'date-asc') path += `/sort/${sort}`;
+            window.location.href = path;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            params.set('page', '1');
+            params.set('event', event);
+            params.set('sort', sort);
+            window.location.search = params.toString(); 
+        }
     }
 
     elements.eventFilter.addEventListener('change', applyFilter);
@@ -1579,13 +1767,18 @@ function setupEventsFilterHandlers(elements, tab) {
     elements.clearFiltersButton.addEventListener('click', () => {
         elements.eventFilter.value = 'all';
         elements.sortFilter.value = 'date-desc';
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        window.location.search = params.toString();
+        if (IS_PROD) {
+            const username = getUsername();
+            window.location.href = `/${username}/${tab}`;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            window.location.search = params.toString();
+        }
     });
 }
 
-function setupFilterHandlers(elements, tab) {
+function setupFilterHandlers(elements, tab, defaultSort = 'added-desc') {
     const getFilters = () => ({
         league: elements.leagueFilter.value,
         country: elements.countryFilter.value,
@@ -1594,31 +1787,40 @@ function setupFilterHandlers(elements, tab) {
 
     function applyFilter() {
         const { league, country, sort } = getFilters();
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        params.set('page', '1');
-        if (league !== 'all')      params.set('league', league);
-        if (country !== 'all')     params.set('country', country);
-        params.set('sort', sort);
-        window.location.search = params.toString();
+        if (IS_PROD) {
+            const username = getUsername();
+            let path = `/${username}/${tab}`;
+            if (league !== 'all') path += `/league/${league}`;
+            if (country !== 'all') path += `/country/${country}`;
+            if (sort !== defaultSort) path += `/sort/${sort}`;
+            window.location.href = path;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            params.set('page', '1');
+            if (league !== 'all') params.set('league', league);
+            if (country !== 'all') params.set('country', country);
+            params.set('sort', sort);
+            window.location.search = params.toString();
+        }
     }
 
     elements.leagueFilter.addEventListener('change', applyFilter);
     elements.countryFilter.addEventListener('change', applyFilter);
     elements.sortFilter.addEventListener('change', applyFilter);
-    
+
     elements.clearFiltersButton.addEventListener('click', () => {
         elements.leagueFilter.value = 'all';
         elements.countryFilter.value = 'all';
-        if (tab === "visits") {
-            elements.sortFilter.value = 'date-desc';
+        elements.sortFilter.value = defaultSort;
+        if (IS_PROD) {
+            const username = getUsername();
+            window.location.href = `/${username}/${tab}`;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            window.location.search = params.toString();
         }
-        else {
-            elements.sortFilter.value = 'added-desc';
-        }
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        window.location.search = params.toString();
     });
 }
 
@@ -1649,20 +1851,32 @@ function setupListsFilterHandlers(elements, tab) {
 
     function applyFilter() {
         const { sort } = getFilters();
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        params.set('page', '1');
-        params.set('sort', sort);
-        window.location.search = params.toString();
+        if (IS_PROD) {
+            const username = getUsername();
+            let path = `/${username}/${tab}`;
+            if (sort !== 'updated-desc') path += `/sort/${sort}`;
+            window.location.href = path;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            params.set('page', '1');
+            params.set('sort', sort);
+            window.location.search = params.toString();
+        }
     }
 
     elements.sortFilter.addEventListener('change', applyFilter);
     
     elements.clearFiltersButton.addEventListener('click', () => {
         elements.sortFilter.value = 'updated-desc';
-        const params = new URLSearchParams();
-        params.set('tab', tab);
-        window.location.search = params.toString();
+        if (IS_PROD) {
+            const username = getUsername();
+            window.location.href = `/${username}/${tab}`;
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', tab);
+            window.location.search = params.toString();
+        }
     });
 }
 
@@ -1709,6 +1923,7 @@ function setupSearch(getAllStadiums, elements, searchKey) {
 
 /*  Events  */
 document.addEventListener('DOMContentLoaded', () => {
+    rewriteUserHomeLinks();
     registerCommonEvents();
     registerEventListeners(getAuthElements());
     registerUserLogOutEvents();
@@ -1733,8 +1948,26 @@ window.onload = async () => {
     showLoggedInUI();
     loadUserHeader();
     
-    const params = new URLSearchParams(window.location.search);
-    const tab = params.get('tab') || 'home';
+    const token = localStorage.getItem('token');
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
+    const username = payload.username || '';
+
+    let tab = 'home';
+    if (IS_PROD) {
+        const pathParts = window.location.pathname.split('/');
+        const pathTab = pathParts[2] || 'home';
+        const validTabs = ['stadiums', 'visits', 'events', 'wishlist', 'lists', 'activity', 'achievements'];
+        tab = validTabs.includes(pathTab) ? pathTab : 'home';
+        document.querySelectorAll('.user-home-nav-bar-tab').forEach(t => {
+            t.classList.remove('active-tab');
+            if (t.dataset.tab === tab) t.classList.add('active-tab');
+        });
+    } else {
+        const params = new URLSearchParams(window.location.search);
+        tab = params.get('tab') || 'home';
+    }
+
     const pending = sessionStorage.getItem('toast');
     if (pending) {
         const { type, message } = JSON.parse(pending);
@@ -1747,16 +1980,23 @@ window.onload = async () => {
 Array.from(document.getElementsByClassName('user-home-nav-bar-tab')).forEach(tab => {
     tab.addEventListener('click', () => {
         const activeTab = tab.dataset.tab;
-        
+
         document.querySelectorAll('.user-home-nav-bar-tab').forEach(t => {
             t.classList.remove('active-tab');
-            if (t.dataset.tab === activeTab) {
-                t.classList.add('active-tab');
-            }
+            if (t.dataset.tab === activeTab) t.classList.add('active-tab');
         });
-        
-        const params = new URLSearchParams();
-        params.set('tab', activeTab);
-        window.location.search = params.toString();
+
+        if (IS_PROD) {
+            const username = getUsername();
+            if (activeTab === 'home') {
+                window.location.href = `/${username}`;
+            } else {
+                window.location.href = `/${username}/${activeTab}`;
+            }
+        } else {
+            const params = new URLSearchParams();
+            params.set('tab', activeTab);
+            window.location.search = params.toString();
+        }
     });
 });
