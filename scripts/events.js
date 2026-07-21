@@ -2,6 +2,7 @@
 import { createToast, getCaptchaToken, getUsername, logOut, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
 import { getHeaderElements, IS_PROD, PROFILE_PIC_PATH } from "./constants.js";
 import { authAPI } from "./api/auth.js";
+import { userAPI } from "./api/user.js";
 
 /*  Variables  */
 let scrollY = 0;
@@ -120,6 +121,23 @@ export function registerCommonEvents() {
                 unlockScroll();
             }
         });
+    });
+
+    document.getElementById('subscribe-button').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            const email = document.getElementById('email-field').value.trim();
+            if (!email || !validateEmail(email)) {
+                shakeOrReplace('Please enter a valid email address.');
+                return;
+            }
+            await userAPI.newsletterSubscribe(email);
+            sessionStorage.setItem('toast', JSON.stringify({ type: 'success', message: 'Subscribed to newsletter!' }));
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            shakeOrReplace(error.message || 'Failed to subscribe to newsletter.');
+        }
     });
 }
 

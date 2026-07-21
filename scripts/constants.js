@@ -87,6 +87,7 @@ export const ROUTES = {
     LOAD_USER_STATS: '/user/loadUserStats',
     LOAD_USER_VISITS: '/user/loadUserVisits',
     LOAD_USER_WISHLIST: '/user/loadUserWishlist',
+    NEWSLETTER_SUBSCRIBE: '/user/newsletterSubscribe',
     REFRESH_TOKEN: '/user/refreshToken',
     SAVE_FAVORITE_STADIUMS: '/user/saveFavoriteStadiums',
     SEND_PASSWORD_RESET: '/user/sendPasswordReset',

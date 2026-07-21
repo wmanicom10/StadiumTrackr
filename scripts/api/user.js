@@ -41,6 +41,9 @@ export const userAPI = {
     loadUserWishlist: (league, country, sortBy) =>
         fetchAPI(ROUTES.LOAD_USER_WISHLIST, { league, country, sortBy }),
 
+    newsletterSubscribe: (email) => 
+        fetchAPI(ROUTES.NEWSLETTER_SUBSCRIBE, { email }),
+
     refreshToken: () => 
         fetchAPI(ROUTES.REFRESH_TOKEN),
 

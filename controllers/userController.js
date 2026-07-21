@@ -895,6 +895,24 @@ const handleLoadUserWishlist = async (req, res) => {
     }
 };
 
+/*  newsletterSubscribe  */
+const handleNewsletterSubscribe = async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    try {
+        await db.execute('INSERT INTO newsletter_emails (email) VALUES (?)', [email]);
+        res.json({ success: true });
+    } catch (err) {
+        if (err.code === 'ER_DUP_ENTRY') {
+            return res.status(400).json({ error: 'This email is already subscribed.' });
+        }
+        console.error('Newsletter subscribe error:', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};
+
 /*  refreshToken  */
 const handleRefreshToken = async (req, res) => {
     const { userId } = req.user;
@@ -1082,4 +1100,4 @@ const handleUploadTempVisitPhoto = async (req, res) => {
     }
 };
 
-module.exports = { handleAddStadium, handleDownloadUserData, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserList, handleLoadUserLists, handleLoadUserStadiums, handleLoadUserStats, handleLoadUserVisits, handleLoadUserWishlist, handleRefreshToken, handleSaveFavoriteStadiums, handleSendPasswordReset, handleUploadTempVisitPhoto, uploadTempVisitPhoto };
+module.exports = { handleAddStadium, handleDownloadUserData, handleLoadFavoriteStadiums, handleLoadUserAchievements, handleLoadUserActivity, handleLoadUserHomeMap, handleLoadUserInfo, handleLoadUserList, handleLoadUserLists, handleLoadUserStadiums, handleLoadUserStats, handleLoadUserVisits, handleLoadUserWishlist, handleNewsletterSubscribe, handleRefreshToken, handleSaveFavoriteStadiums, handleSendPasswordReset, handleUploadTempVisitPhoto, uploadTempVisitPhoto };

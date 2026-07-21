@@ -91,12 +91,31 @@ function closeAllDropdowns(except = null) {
 }
 
 function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
-    const btn = document.createElement(href ? 'a' : 'button');
+    const btn = document.createElement('button');
     btn.classList.add('user-stadium-icon-btn');
     if (extraClass) btn.classList.add(extraClass);
     btn.dataset.tip = tip;
 
-    if (href) btn.href = href;
+    if (href) {
+        const link = document.createElement('a');
+        link.href = href;
+
+        const img = document.createElement('img');
+        img.src = iconSrc;
+        img.alt = tip;
+        link.appendChild(img);
+
+        const tooltip = document.createElement('span');
+        tooltip.classList.add('icon-btn-tooltip');
+        tooltip.textContent = tip;
+        link.appendChild(tooltip);
+
+        btn.addEventListener('click', (e) => onClick(btn, e));
+
+        btn.appendChild(link);
+
+        return btn;
+    }
 
     const img = document.createElement('img');
     img.src = iconSrc;
