@@ -27,7 +27,7 @@ const elements = {
     addStadiumPhotosPreview: document.getElementById('add-stadium-photos-preview'),
     addStadiumPhotosCount: document.getElementById('add-stadium-photos-count'),
     addStadiumLogButton: document.getElementById('add-stadium-log-button'),
-    addStadiumCancelButton: document.getElementById('add-stadium-cancel-button'),
+    addStadiumCancelButton: document.getElementById('add-stadium-cancel-button')
 };
 
 let allStadiums = [];

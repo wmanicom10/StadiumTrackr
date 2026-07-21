@@ -99,6 +99,47 @@
             </div>
         </div>
 
+        <!-- Add Stadium Menu -->
+        <div id="add-stadium-menu" class="menu">
+            <div id="add-stadium-menu-header">
+                <h2></h2>
+                <h2>Log Your Visit</h2>
+                <h2 id="close-add-stadium-menu">×</h2>
+            </div>
+            <h2 id="add-stadium-name"></h2>
+            <h3 id="add-stadium-location"></h3>
+            <div id="add-stadium-container">
+                <img src="" id="add-stadium-image">
+                <div id="add-stadium-image-placeholder">No image available</div>
+                <form id="add-stadium-form">
+                    <div id="add-stadium-date-visited-container">
+                        <h3 id="add-stadium-date-visited-text">Date Visited</h3>
+                        <input type="date" id="add-stadium-date-visited">
+                    </div>
+                    <div id="add-stadium-note-container">
+                        <h3 id="add-stadium-note-text">Note</h3>
+                        <textarea id="add-stadium-note" placeholder="Add a note..."></textarea>
+                    </div>
+                </form>
+                <div id="add-stadium-photos-container">
+                    <h3 id="add-stadium-photos-text">Photos</h3>
+                    <div id="add-stadium-photos-upload-area">
+                        <input type="file" id="add-stadium-photos-input" accept="image/*" multiple>
+                        <label for="add-stadium-photos-input" id="add-stadium-photos-upload-label">
+                            <img src="/images/icons/upload.png" alt="Upload">
+                            <span>Upload Photos</span>
+                        </label>
+                        <span id="add-stadium-photos-count">0/5</span>
+                    </div>
+                    <div id="add-stadium-photos-preview"></div>
+                </div>
+            </div>
+            <div id="add-stadium-buttons">
+                <h3 id="add-stadium-log-button">Log Visit</h3>
+                <h3 id="add-stadium-cancel-button">Cancel</h3>
+            </div>
+        </div>
+
         <!-- Main Content -->
         <div id="content-wrapper">
 

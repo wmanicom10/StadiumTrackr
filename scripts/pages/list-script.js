@@ -1,6 +1,6 @@
 /*  Imports  */
 import { DEBOUNCE_TIME, getAuthElements, IS_PROD, MIN_LOADING_TIME, overlay, STADIUM_IMAGE_PATH } from "../constants.js";
-import { createToast, debounce, getPageFromURL, initializeCustomSelects, isLoggedIn, renderPageNumbers, renderWithoutTransition, rewriteUserHomeLinks, setupSearchAutocomplete, shakeOrReplace, syncSelectFromURL, toggleMenu } from "../utils.js";
+import { createToast, debounce, getPageFromURL, initializeCustomSelects, isLoggedIn, renderPageNumbers, renderWithoutTransition, rewriteUserHomeLinks, setupAddStadiumModal, setupSearchAutocomplete, shakeOrReplace, syncSelectFromURL, toggleMenu } from "../utils.js";
 import { registerCommonEvents, registerEventListeners, registerUserLogOutEvents } from "../events.js";
 import { loadAPI } from "../api/load.js";
 import { userAPI } from "../api/user.js";
@@ -124,7 +124,6 @@ async function showEditUI(listId, slug) {
             updateEditRankNumbers();
         });
 
-        // Save handler now has resolvedListId in scope
         saveButton.addEventListener('click', async () => {
             const listName = document.getElementById('edit-list-name').value.trim();
             if (!listName) {
@@ -183,7 +182,19 @@ async function showViewUI(listId, slug, view) {
             clearFiltersButton: document.getElementById('view-list-clear-filters'),
             stadiumsList: document.getElementById('view-list-stadiums'),
             stadiumsPageSelector: document.getElementById('view-list-page-selector'),
-            noStadiumsContainer: document.getElementById('view-list-no-stadiums-container')
+            noStadiumsContainer: document.getElementById('view-list-no-stadiums-container'),
+            addStadiumMenu: document.getElementById('add-stadium-menu'),
+            addStadiumDateVisited: document.getElementById('add-stadium-date-visited'),
+            addStadiumNote: document.getElementById('add-stadium-note'),
+            closeAddStadiumMenu: document.getElementById('close-add-stadium-menu'),
+            addStadiumName: document.getElementById('add-stadium-name'),
+            addStadiumLocation: document.getElementById('add-stadium-location'),
+            addStadiumImage: document.getElementById('add-stadium-image'),
+            addStadiumPhotosInput: document.getElementById('add-stadium-photos-input'),
+            addStadiumPhotosPreview: document.getElementById('add-stadium-photos-preview'),
+            addStadiumPhotosCount: document.getElementById('add-stadium-photos-count'),
+            addStadiumLogButton: document.getElementById('add-stadium-log-button'),
+            addStadiumCancelButton: document.getElementById('add-stadium-cancel-button')
         }
 
         const params = new URLSearchParams(window.location.search);
@@ -246,7 +257,6 @@ async function showViewUI(listId, slug, view) {
             renderWithoutTransition(elements, stadiums, result.isRanked, resolvedSlug, sort, currentPage);
         }
 
-        // Update links
         if (IS_PROD && resolvedSlug) {
             document.getElementById('edit-list-button').href = `/list/${resolvedSlug}/edit`;
             document.getElementById('list-view-grid').href = `/list/${resolvedSlug}/view`;

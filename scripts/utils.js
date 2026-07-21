@@ -178,7 +178,6 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
         img.textContent = 'No image available';
     }
 
-
     const textDiv = document.createElement('div');
     textDiv.classList.add('stadiums-list-stadium-text');
 
@@ -395,7 +394,7 @@ export async function fetchAPI(endpoint, body) {
         body: JSON.stringify(body)
     });
 
-    if (response.status === 401) {
+    if (response.status === 401 && endpoint !== ROUTES.AUTH_LOGIN) {
         localStorage.removeItem('token');
         window.location.replace('/');
         throw new Error('Not authenticated');
@@ -1041,7 +1040,16 @@ export function setPageInURL(page) {
 export function setupAddStadiumModal(stadiumId, stadiumName, city, state, stadiumImage, elements) {
     elements.addStadiumName.textContent = stadiumName;
     elements.addStadiumLocation.textContent = city + ', ' + state;
-    elements.addStadiumImage.src = STADIUM_IMAGE_PATH + stadiumImage;
+
+    if (stadiumImage) {
+        elements.addStadiumImage.src = STADIUM_IMAGE_PATH + stadiumImage;
+        elements.addStadiumImage.style.display = '';
+        document.getElementById('add-stadium-image-placeholder').style.display = 'none';
+    } else {
+        elements.addStadiumImage.src = '';
+        elements.addStadiumImage.style.display = 'none';
+        document.getElementById('add-stadium-image-placeholder').style.display = 'flex';
+    }
 
     const today = new Date().toISOString().split('T')[0];
     elements.addStadiumDateVisited.setAttribute('max', today);
