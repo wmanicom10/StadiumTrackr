@@ -624,6 +624,7 @@ if (token) {
     if (payload.isPro) {
         document.getElementById('manage-subscription-button').style.display = 'block';
     } else {
+        document.getElementById('pro-upgrade-button').style.display = 'block';
         document.getElementById('data-settings').style.display = 'none';
     }
 }

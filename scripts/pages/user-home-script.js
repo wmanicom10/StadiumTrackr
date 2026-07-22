@@ -24,6 +24,7 @@ async function loadAchievementsTab(tab) {
     document.title = username + "'s Achievements - StadiumTrackr";
 
     if (!payload.isPro) {
+        document.getElementById('user-home-achievements-tab-container').style.display = 'flex';
         await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
         userHomeHeaderSkeleton.style.display = 'none';
         userHomeHeader.style.display = 'flex';
@@ -294,6 +295,7 @@ async function loadListsTab(tab) {
     document.title = username + "'s Lists - StadiumTrackr";
 
     if (!payload.isPro) {
+        document.getElementById('user-home-lists-tab-container').style.display = 'flex';
         await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
         userHomeHeaderSkeleton.style.display = 'none';
         userHomeHeader.style.display = 'flex';
@@ -420,6 +422,8 @@ async function loadStadiumsTab(tab) {
     syncSelectFromURL('stadiums-sort-filter', sort);
     
     document.getElementById('user-home-stadiums-tab-container').style.display = 'flex';
+
+    console.log('lists skeleton display:', document.getElementById('user-home-lists-skeleton').style.display);
 
     const [result] = await Promise.all([
         userAPI.loadUserStadiums(league, country, sort),

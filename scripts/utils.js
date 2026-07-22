@@ -413,7 +413,7 @@ export async function fetchAPI(endpoint, body) {
         body: JSON.stringify(body)
     });
 
-    if (response.status === 401 && endpoint !== ROUTES.AUTH_LOGIN) {
+    if (response.status === 401 && endpoint !== ROUTES.AUTH_LOGIN && endpoint !== ROUTES.UPDATE_PASSWORD && endpoint !== ROUTES.AUTH_DELETE) {
         localStorage.removeItem('token');
         window.location.replace('/');
         throw new Error('Not authenticated');

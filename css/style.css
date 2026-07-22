@@ -2552,7 +2552,7 @@ footer {
 }
 
 .event-info {
-
+    width: 80%;
     margin-right: 10px;
 }
 
@@ -7115,7 +7115,7 @@ footer {
     margin-top: 20px;
 }
 
-.setting #manage-subscription-button {
+.setting #manage-subscription-button, .setting #pro-upgrade-button {
     display: none;
     background: var(--color-primary-10);
     border: 1px solid var(--color-primary-30);
@@ -7134,6 +7134,20 @@ footer {
 #manage-subscription-button:hover {
     background: #314460;
     transform: translateY(-3px);
+}
+
+.setting #pro-upgrade-button {
+    margin-top: 20px;
+}
+
+.setting #pro-upgrade-button:hover {
+    background: #314460;
+    transform: translateY(-3px);
+}
+
+.setting #pro-upgrade-button a {
+    color: var(--color-blue);
+    text-decoration: none;
 }
 
 #download-data-button {
