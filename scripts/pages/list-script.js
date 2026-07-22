@@ -251,13 +251,15 @@ async function showViewUI(listId, slug, view) {
         stadiumImage.onload = () => stadiumImage.classList.add('loaded');
 
         document.getElementById('view-list-name').textContent = result.listName;
-        result.listDescription 
-            ? document.getElementById('view-list-description').textContent = result.listDescription 
-            : document.getElementById('view-list-description').style.display = 'none';
+        result.listDescription ? document.getElementById('view-list-description').textContent = result.listDescription : document.getElementById('view-list-description').style.display = 'none';
 
         if (view === 'list') {
+            elements.stadiumsList.classList.add('list-view-mode');
+            document.getElementById('view-list-filters-container').classList.add('list-view-mode-filters');
             renderListView(elements, stadiums, result.isRanked, resolvedSlug, sort, currentPage);
         } else {
+            elements.stadiumsList.classList.remove('list-view-mode');
+            document.getElementById('view-list-filters-container').classList.remove('list-view-mode-filters');
             renderWithoutTransition(elements, stadiums, result.isRanked, resolvedSlug, sort, currentPage);
         }
 
@@ -583,8 +585,8 @@ function renderListView(elements, stadiums, isRanked, resolvedSlug, sort, curren
         const perPage = 10;
         
         const pageCount = Math.ceil(stadiums.length / perPage);
-        currentPage = Math.min(currentPage || getPageFromURL(), pageCount) || 1;
-
+        currentPage = Math.min(IS_PROD ? currentPage : getPageFromURL(), pageCount) || 1;        
+        
         function renderPage(page) {
             elements.stadiumsList.innerHTML = '';
             const start = (page - 1) * perPage;
@@ -638,7 +640,7 @@ function renderListView(elements, stadiums, isRanked, resolvedSlug, sort, curren
 
         renderPage(currentPage);
 
-        const onPageChange = resolvedSlug ? (page) => {
+        const onPageChange = IS_PROD && resolvedSlug ? (page) => {
             const parts = window.location.pathname.split('/');
             let path = `/list/${resolvedSlug}/view`;
             let show = null, sort2 = null, league = null, country = null;

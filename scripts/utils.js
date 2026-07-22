@@ -133,7 +133,7 @@ function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
 
 function createPagination(elements, stadiums, perPage = 18, isRanked, slug = null, sort = 'order', startPage = null, onPageChange = null) {
     const pageCount = Math.ceil(stadiums.length / perPage);
-    let currentPage = Math.min(startPage || getPageFromURL(), pageCount) || 1;
+    let currentPage = Math.min(IS_PROD ? (startPage || 1) : getPageFromURL(), pageCount) || 1;
 
     function renderPage(page) {
         elements.stadiumsList.innerHTML = '';
@@ -147,7 +147,7 @@ function createPagination(elements, stadiums, perPage = 18, isRanked, slug = nul
 
     renderPage(currentPage);
 
-    const pageChange = onPageChange || (slug ? (page) => {
+    const pageChange = onPageChange || (IS_PROD && slug ? (page) => {
         const parts = window.location.pathname.split('/');
         let path = `/list/${slug}/view`;
         let show = null, sort2 = null, league = null, country = null;

@@ -295,6 +295,8 @@ cap-widget {
     display: none;
     width: 1000px;
     height: auto;
+    overflow-y: auto;
+    max-height: 90vh;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -2550,7 +2552,7 @@ footer {
 }
 
 .event-info {
-    width: 82%;
+
     margin-right: 10px;
 }
 
@@ -4740,6 +4742,8 @@ footer {
     display: none;
     width: 1000px;
     height: auto;
+    overflow-y: auto;
+    max-height: 90vh;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -6195,7 +6199,8 @@ footer {
     text-decoration: none;
     transition: color 0.3s ease;
     font-size: 0.9rem;
-    width: 25%;
+    width: 15%;
+    min-width: 100px;
     text-align: right;
     flex-shrink: 0;
 }
@@ -6205,7 +6210,7 @@ footer {
 }
 
 .featured-event .event-info, .user-event .event-info {
-    width: 80%;
+    margin-top: 20px;
 }
 
 #events-filter-bar {
@@ -7135,6 +7140,10 @@ footer {
     margin-top: 20px;
 }
 
+#download-note {
+    display: none;
+}
+
 #pro-features-container {
     width: 1090px;
     margin: 60px auto;
@@ -7452,6 +7461,8 @@ footer {
 .list-view-stadium-info-header {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
     margin-top: 10px;
 }
 
@@ -7871,6 +7882,8 @@ footer {
     display: none;
     width: 1000px;
     height: auto;
+    overflow-y: auto;
+    max-height: 90vh;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -8228,7 +8241,7 @@ footer {
 }
 
 .league-completion-progress-bar-blue {
-    background: rgba(79, 172, 254, 0.1);
+    background: var(--color-blue);
     border: 1px solid rgba(79, 172, 254, 0.3);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
@@ -8264,7 +8277,7 @@ footer {
 }
 
 .visit-history-bar {
-    background: rgba(79, 172, 254, 0.1);
+    background: var(--color-blue);
     border: 1px solid rgba(79, 172, 254, 0.3);
     border-radius: 5px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
@@ -8413,7 +8426,7 @@ footer {
 }
 
 .geographic-breakdown-country-progress-bar, .geographic-breakdown-city-progress-bar {
-    background: rgba(79, 172, 254, 0.1);
+    background: var(--color-blue);
     border: 1px solid rgba(79, 172, 254, 0.3);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
     border-radius: 5px;
@@ -9287,6 +9300,9 @@ footer {
         height: auto;
         aspect-ratio: 16 / 9;
     }
+    .toast-error, .toast-success {
+        width: 100%;
+    }
 }
 
 @media screen and (max-width: 411px) {
@@ -9304,17 +9320,17 @@ footer {
 }
 
 @media screen and (max-width: 450px) {
-    #add-stadium-menu-header, #add-stadium-name, #add-stadium-location, #add-stadium-container, #edit-log-menu-header, #edit-log-name, #edit-log-location, #edit-log-container {
+    #add-stadium-menu-header, #add-stadium-name, #add-stadium-location, #add-stadium-container, #edit-log-menu-header, #edit-log-name, #edit-log-location, #edit-log-container, #edit-list-stadium-menu-header, #create-list-stadium-menu-header, #edit-list-stadium-name, #create-list-stadium-name, #edit-list-stadium-location, #create-list-stadium-location, #edit-list-stadium-container, #create-list-stadium-container {
         width: 88%;
     }
-    #add-stadium-image, #edit-log-image {
+    #add-stadium-image, #edit-log-image, #edit-list-stadium-image, #create-list-stadium-image {
         width: 100% !important;
     }
-    #add-stadium-form, #edit-log-form {
+    #add-stadium-form, #edit-log-form, #edit-list-stadium-form, #create-list-stadium-form {
         flex-direction: column;
         gap: 20px !important;
     }
-    #add-stadium-buttons, #edit-log-buttons {
+    #add-stadium-buttons, #edit-log-buttons, #edit-list-stadium-buttons, #create-list-stadium-buttons {
         width: 70% !important;
         gap: 20px;
     }
@@ -9549,13 +9565,23 @@ footer {
     .edit-list-stadium-skeleton {
         height: 291px;
     }
+    .list-view-stadium {
+        flex-wrap: wrap;
+    }
+    .list-view-stadium-info-container {
+        width: 100%;
+        margin-top: 10px;
+    }
+    .edit-list-rank-badge, .create-list-rank-badge {
+        margin-bottom: 15px;
+    }
 }
 
 @media screen and (max-width: 525px) {
     #welcome-text {
         width: 90% !important;
     }
-    #log-in-menu, #create-account-menu, #add-favorite-stadium-menu, #delete-log-menu, #delete-account-menu {
+    #log-in-menu, #create-account-menu, #add-favorite-stadium-menu, #delete-log-menu, #delete-account-menu, #forgot-password-menu, #reset-password-menu, #delete-list-menu {
         width: 95%;
     }
     #delete-log-buttons {
@@ -9563,6 +9589,9 @@ footer {
     }
     #delete-account-buttons {
         width: 369px;
+    }
+    #delete-list-buttons {
+        width: 95%;
     }
 }
 
@@ -9586,6 +9615,10 @@ footer {
         flex-direction: column;
         align-items: start;
         width: 100% !important;
+        margin-bottom: 20px;
+    }
+    #league-completion-container {
+        gap: 10px;
     }
 }
 
@@ -9796,10 +9829,10 @@ footer {
 }
 
 @media screen and (max-width: 715px) {
-    #add-stadium-container, #edit-log-container {
+    #add-stadium-container, #edit-log-container, #edit-list-stadium-container, #create-list-stadium-container {
         flex-direction: column;
     }
-    #add-stadium-form, #edit-log-form {
+    #add-stadium-form, #edit-log-form, #edit-list-stadium-form, #create-list-stadium-form {
         display: flex;
         width: 100%;
         gap: 35px;
@@ -9955,14 +9988,32 @@ footer {
     }
 }
 
+@media screen and (max-width: 768px) {
+    #download-data-button {
+        display: none;
+    }
+    #download-note {
+        display: block;
+    }
+}
+
 @media screen and (max-width: 800px) {
-    #add-stadium-image, #edit-log-image {
-        width: 350px;
+    #add-stadium-image, #edit-log-image, #edit-list-stadium-image, #create-list-stadium-image {
+        width: 398px;
         aspect-ratio: 16/9;
         height: auto;
     }
-    #add-stadium-note, #edit-log-note {
-        height: auto !important;
+    #edit-log-container, #edit-list-stadium-container, #create-list-stadium-container {
+        flex-direction: column;
+    }
+    #add-stadium-form, #edit-log-form, #edit-list-stadium-form, #create-list-stadium-form {
+        display: flex;
+        gap: 25px;
+        width: 100%;
+        margin-top: 20px;
+    }
+    #edit-log-note-container {
+        margin-top: 0;
     }
     #settings-container, #contact-container, #faqs-container, #photo-credits-container {
         width: 85% !important;
@@ -10208,14 +10259,10 @@ footer {
 }
 
 @media screen and (max-width: 1050px) {
-    #add-stadium-menu, #edit-log-menu {
+    #add-stadium-menu, #edit-log-menu, #edit-list-stadium-menu, #create-list-stadium-menu {
         width: 95%;
     }
-    #add-stadium-container, #edit-log-container {
-        justify-content: start;
-        gap: 35px;
-    }
-    #add-stadium-buttons, #edit-log-buttons {
+    #add-stadium-buttons, #edit-log-buttons, #edit-list-stadium-buttons, #create-list-stadium-buttons {
         width: 371px;
     }
 }
@@ -10342,13 +10389,26 @@ footer {
     }
     #league-completion-container, #geographic-breakdown-stats {
         flex-direction: column;
+        gap: 10px;
     }
     .league-completion-item, #geographic-breakdown-top-countries, #geographic-breakdown-top-cities {
-        width: 528px;
+        width: 100%;
     }
     #stadiums-map-filters, #user-home-map-filters, #stats-map-filters {
         flex-direction: column;
         gap: 15px;
+    }
+    .list-view-mode, .list-view-mode-filters {
+        width: 715px !important;
+    }
+    .list-view-mode {
+        order: 2;
+    }
+    .list-view-mode-filters {
+        order: 1;
+    }
+    #view-list-page-selector {
+        order: 3;
     }
 }
 
@@ -10361,6 +10421,13 @@ footer {
     }
     #logged-out-nav .toggle, #logged-in-nav .toggle {
         display: list-item;
+    }
+    #logged-out-sidebar-search-container,
+    #logged-in-sidebar-search-container {
+        display: none;
+    }
+    .account-buttons {
+        margin-bottom: 20px;
     }
 }
 
