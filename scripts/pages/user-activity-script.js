@@ -69,35 +69,42 @@ async function setView() {
     }
 
     setupActivityFilterHandlers(elements, stadium, stadiumSlug);
+    syncSelectFromURL('activity-filter', activity);
+    syncSelectFromURL('sort-filter', sort);
 
     if (stadium || stadiumSlug) {
-        const { stadiumName, image, stadiumId } = await loadStadiumInfo(stadium, stadiumSlug);
+        const [stadiumInfo] = await Promise.all([
+            loadStadiumInfo(stadium, stadiumSlug),
+            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+        ]);
+
+        const { stadiumName, image, stadiumId } = stadiumInfo;
         if (IS_PROD) stadium = stadiumId;
+
         document.title = `${stadiumName} Activity - StadiumTrackr`;
         document.getElementById('user-activity-welcome-text').textContent = `${stadiumName} Activity`;
+
+        const [result] = await Promise.all([
+            userAPI.loadUserActivity(activity, stadium, sort),
+            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+        ]);
+        const stadiums = result.userActivity;
+
+        renderActivity(stadiums, elements, currentPage, stadiumSlug || stadium, activity, sort);
 
         const stadiumImage = document.createElement('img');
         stadiumImage.id = 'stadium-image';
         stadiumImage.src = STADIUM_IMAGE_PATH + image;
         document.querySelector('main').prepend(stadiumImage);
         stadiumImage.onload = () => stadiumImage.classList.add('loaded');
+
+        document.getElementById('user-activity-welcome-text-skeleton').style.display = 'none';
+        document.getElementById('user-activity-welcome-text').style.display = 'inline';
+        document.getElementById('activity-skeleton').style.display = 'none';
+        document.getElementById('activity-list').style.display = 'flex';
+        document.getElementById('activity-filter-bar-skeleton').style.display = 'none';
+        document.getElementById('activity-filter-bar').style.display = 'block';
     }
-
-    syncSelectFromURL('activity-filter', activity);
-    syncSelectFromURL('sort-filter', sort);
-
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserActivity(activity, stadium, sort);
-    const stadiums = result.userActivity;
-
-    renderActivity(stadiums, elements, currentPage, stadiumSlug || stadium, activity, sort);
-
-    document.getElementById('activity-skeleton').style.display = 'none';
-    document.getElementById('activity-list').style.display = 'flex';
-    document.getElementById('user-activity-welcome-text-skeleton').style.display = 'none';
-    document.getElementById('user-activity-welcome-text').style.display = 'inline';
-    document.getElementById('activity-filter-bar-skeleton').style.display = 'none';
-    document.getElementById('activity-filter-bar').style.display = 'block';
 }
 
 /*  Functions  */
@@ -382,5 +389,5 @@ window.onload = async () => {
     }
     
     showLoggedInUI();
-    setView();
+    await setView();
 };

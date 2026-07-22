@@ -106,8 +106,10 @@ async function showEditUI(listId, slug) {
 
         document.getElementById('edit-list-container').style.display = 'block';
 
-        await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const result = await userAPI.loadUserList(listId, slug, ['all'], 'all', 'all', 'order');
+        const [result] = await Promise.all([
+            userAPI.loadUserList(listId, slug, ['all'], 'all', 'all', 'order'),
+            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+        ]);
         const resolvedListId = result.listId || listId;
         const stadiums = result.listStadiums;
 
@@ -232,8 +234,10 @@ async function showViewUI(listId, slug, view) {
 
         document.getElementById('view-list-container').style.display = 'flex';
 
-        await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const result = await userAPI.loadUserList(listId, slug, show, league, country, sort);
+        const [result] = await Promise.all([
+            userAPI.loadUserList(listId, slug, show, league, country, sort),
+            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+        ]);
         const stadiums = result.listStadiums;
         const resolvedSlug = result.slug || slug;
         const resolvedListId = result.listId || listId;

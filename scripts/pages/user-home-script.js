@@ -68,8 +68,10 @@ async function loadAchievementsTab(tab) {
 
     document.getElementById('user-home-achievements-tab-container').style.display = 'flex';
 
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserAchievements(achievement, sort);
+    const [result] = await Promise.all([
+        userAPI.loadUserAchievements(achievement, sort),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
     const achievements = result.userAchievements;
 
     const onPageChange = IS_PROD ? (page) => {
@@ -145,8 +147,10 @@ async function loadActivityTab(tab) {
 
     document.getElementById('user-home-activity-tab-container').style.display = 'flex';
 
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserActivity(activity, '', sort);
+    const [result] = await Promise.all([
+        userAPI.loadUserActivity(activity, '', sort),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
     const stadiums = result.userActivity;
 
     const onPageChange = IS_PROD ? (page) => {
@@ -206,8 +210,10 @@ async function loadEventsTab(tab) {
 
     document.getElementById('user-home-events-tab-container').style.display = 'flex';
 
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await loadAPI.loadUserEvents(event, sort);
+    const [result] = await Promise.all([
+        loadAPI.loadUserEvents(event, sort),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
     const events = result.stadiums;
 
     renderEventsTab(events, elements, currentPage);
@@ -415,8 +421,10 @@ async function loadStadiumsTab(tab) {
     
     document.getElementById('user-home-stadiums-tab-container').style.display = 'flex';
 
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserStadiums(league, country, sort);
+    const [result] = await Promise.all([
+        userAPI.loadUserStadiums(league, country, sort),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
     const stadiums = result.userStadiums;
 
     allStadiums = stadiums;
@@ -483,7 +491,7 @@ async function loadUserHeader() {
 
         const token = localStorage.getItem('token');
         const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-                                        const payload = JSON.parse(atob(base64));
+        const payload = JSON.parse(atob(base64));
         const profilePic = payload.profilePic;
         const numStadiums = result.numStadiumsVisited;
         const numCountries = result.numCountriesVisited;
@@ -575,8 +583,10 @@ async function loadVisitsTab(tab) {
     
     document.getElementById('user-home-visits-tab-container').style.display = 'flex';
 
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserVisits(league, country, sort);
+    const [result] = await Promise.all([
+        userAPI.loadUserVisits(league, country, sort),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
     const stadiums = result.userVisits;
 
     const loggedStadiums = stadiums.filter(stadium => stadium.visited_on);
@@ -658,8 +668,10 @@ async function loadWishlistTab(tab) {
 
     document.getElementById('user-home-wishlist-tab-container').style.display = 'flex';
 
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await userAPI.loadUserWishlist(league, country, sort);
+    const [result] = await Promise.all([
+        userAPI.loadUserWishlist(league, country, sort),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
     const stadiums = result.userWishlist;
 
     allStadiums = stadiums;

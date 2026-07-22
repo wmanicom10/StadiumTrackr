@@ -47,59 +47,27 @@ let stadiumMapData = null;
 /*  Async Functions  */
 async function loadFullStadiumPage(id, slug) {
     try {
-        const infoResult = await loadStadiumInfo(id, slug);
-        const resolvedId = infoResult;
-
-        await Promise.all([
-            loadStadiumMap(resolvedId),
-            loadUpcomingEvents(resolvedId),
+        const [infoResult] = await Promise.all([
+            loadAPI.loadStadiumInfo(id, slug),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
 
-        if (isLoggedIn()) document.getElementById('upcoming-events-stadium-link').style.display = 'block';
-        document.getElementById('stadium-skeleton').style.display = 'none';
-        document.getElementById('stadium-content').style.display = 'block';
-        document.getElementById('upcoming-events-skeleton').style.display = 'none';
-        document.getElementById('upcoming-events').style.display = 'block';
-        document.getElementById('stadium-map-skeleton').style.display = 'none';
-        document.getElementById('stadium-map').style.display = 'block';
+        const { stadium, teams, userVisited, userWishlist } = infoResult.stadiumInfo;
+        const resolvedId = stadium.id;
 
-        const pending = sessionStorage.getItem('toast');
-        if (pending) {
-            const { type, message } = JSON.parse(pending);
-            createToast(type, message);
-            sessionStorage.removeItem('toast');
-        }
+        const [mapResult, eventsResult] = await Promise.all([
+            loadAPI.loadStadiumMap(resolvedId),
+            loadAPI.loadStadiumEvents(resolvedId)
+        ]);
 
-        if (hasNoUpcomingEvents) {
-            elements.noUpcomingEventsContainer.style.display = 'block';
-            hasNoUpcomingEvents = false;
-        }
-
-        if (stadiumMapData) initializeStadiumMap(stadiumMapData);
-        
-    } catch (error) {
-        console.error(error);
-        shakeOrReplace(error.message || 'Failed to load stadium content');
-    }
-}
-
-async function loadStadiumInfo(id, slug) {
-    try {
-        const result = await loadAPI.loadStadiumInfo(id, slug);
-        const { stadium, teams, userVisited, userWishlist } = result.stadiumInfo;
+        document.title = `${stadium.name} - StadiumTrackr`;
+        elements.stadiumName.textContent = stadium.name;
 
         const stadiumImage = document.createElement('img');
         stadiumImage.id = 'stadium-image';
         stadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
         document.querySelector('main').prepend(stadiumImage);
-        stadiumImage.onload = () => {
-            stadiumImage.classList.add('loaded');
-        };
-        
-        elements.stadiumName.textContent = stadium.name;
-
-        document.title = `${stadium.name} - StadiumTrackr`;
+        stadiumImage.onload = () => stadiumImage.classList.add('loaded');
 
         elements.stadiumLocation.textContent = formatLocation(stadium.city, stadium.state);
         elements.stadiumOpenedDate.textContent = formatDate(stadium.openedDate);
@@ -111,50 +79,47 @@ async function loadStadiumInfo(id, slug) {
 
         setupUserControls(stadium.id, slug, userVisited, userWishlist);
         setupAddStadiumModal(stadium.id, stadium.name, stadium.city, stadium.state, stadium.image, elements);
-        return stadium.id;
-    } catch (error) {
-        console.error(error);
-        shakeOrReplace(error.message || 'Failed to load stadium info.')
-    }
-}
 
-async function loadStadiumMap(id) {
-    try {
-        const result = await loadAPI.loadStadiumMap(id);
-        const stadium = result.result;
-
+        const mapStadium = mapResult.result;
         stadiumMapData = {
-            latitude: stadium.latitude,
-            longitude: stadium.longitude,
-            name: stadium.stadium_name,
-            address: stadium.street_address,
-            city: stadium.city,
-            state: stadium.state,
-            zip: stadium.zip
+            latitude: mapStadium.latitude,
+            longitude: mapStadium.longitude,
+            name: mapStadium.stadium_name,
+            address: mapStadium.street_address,
+            city: mapStadium.city,
+            state: mapStadium.state,
+            zip: mapStadium.zip
         };
-    } catch (error) {
-        console.error(error);
-    }
-}
 
-async function loadUpcomingEvents(id) {
-    try {
-        const result = await loadAPI.loadStadiumEvents(id);
-        const events = result.events;
-
+        const events = eventsResult.events;
         if (!events || events.length === 0) {
-            hasNoUpcomingEvents = true;
-            return;
+            elements.noUpcomingEventsContainer.style.display = 'block';
+        } else {
+            const maxEvents = Math.min(events.length, 3);
+            for (let i = 0; i < maxEvents; i++) {
+                elements.upcomingEventsContainer.appendChild(createEventElement(events[i]));
+            }
         }
 
-        const maxEvents = Math.min(events.length, 3);
-        for (let i = 0; i < maxEvents; i++) {
-            const event = events[i];
-            const eventElement = createEventElement(event);
-            elements.upcomingEventsContainer.appendChild(eventElement);
+        if (isLoggedIn()) document.getElementById('upcoming-events-stadium-link').style.display = 'block';
+        document.getElementById('stadium-skeleton').style.display = 'none';
+        document.getElementById('stadium-content').style.display = 'block';
+        document.getElementById('upcoming-events-skeleton').style.display = 'none';
+        document.getElementById('upcoming-events').style.display = 'block';
+        document.getElementById('stadium-map-skeleton').style.display = 'none';
+        document.getElementById('stadium-map').style.display = 'block';
+
+        if (stadiumMapData) initializeStadiumMap(stadiumMapData);
+
+        const pending = sessionStorage.getItem('toast');
+        if (pending) {
+            const { type, message } = JSON.parse(pending);
+            createToast(type, message);
+            sessionStorage.removeItem('toast');
         }
     } catch (error) {
         console.error(error);
+        shakeOrReplace(error.message || 'Failed to load stadium content');
     }
 }
 
@@ -388,5 +353,5 @@ window.onload = async () => {
     const pathParts = window.location.pathname.split('/');
     const slug = IS_PROD && pathParts[1] === 'stadium' && pathParts[2] ? pathParts[2] : null;
 
-    loadFullStadiumPage(id, slug);
+    await loadFullStadiumPage(id, slug);
 };

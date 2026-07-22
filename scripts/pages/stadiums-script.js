@@ -90,8 +90,10 @@ async function setView() {
     syncSelectFromURL('country-filter', country);
     syncSelectFromURL('sort-filter', sort);
 
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-    const result = await loadAPI.loadStadiums(show, league, country, sort);
+    const [result] = await Promise.all([
+        loadAPI.loadStadiums(show, league, country, sort),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
     const stadiums = result.stadiums;
 
     allStadiums = stadiums;

@@ -7,8 +7,10 @@ import { loadAPI } from "../api/load.js";
 /*  Async Functions  */
 async function loadPhotoCredits() {
     try {
-        await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const result = await loadAPI.loadPhotoCredits();
+        const [result] = await Promise.all([
+            loadAPI.loadPhotoCredits(),
+            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+        ]);
         const photoCredits = result.photoCredits;
 
         renderPhotoCredits(photoCredits);

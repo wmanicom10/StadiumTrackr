@@ -11,6 +11,7 @@ async function loadStadiumInfo(id, slug) {
         return result;
     } catch (error) {
         console.error(error);
+        shakeOrReplace(error.message || 'Failed to load stadium info.')
     }
 }
 
@@ -95,7 +96,6 @@ async function showEventsUI() {
         }
 
         document.getElementById('featured-events-skeleton').style.display = 'none';
-        document.getElementById('featured-events').style.display = 'block';
         
     } catch (error) {
         console.error(error);
@@ -103,44 +103,52 @@ async function showEventsUI() {
 }
 
 async function showStadiumUI(stadiumId, slug) {
-    const result = await loadStadiumInfo(stadiumId, slug);
-    const id = result.stadiumInfo.stadium.id;
-
-    document.title = `${result.stadiumInfo.stadium.name} Events - StadiumTrackr`;
-    document.getElementById('events-stadium-name').textContent = `${result.stadiumInfo.stadium.name} Events`;
-
-    const stadiumImage = document.createElement('img');
-    stadiumImage.id = 'stadium-image';
-    stadiumImage.src = STADIUM_IMAGE_PATH + result.stadiumInfo.stadium.image;
-    document.querySelector('main').prepend(stadiumImage);
-    stadiumImage.onload = () => {
-        stadiumImage.classList.add('loaded');
-    };
-
-    document.getElementById('events-container').style.display = 'none';
-    document.getElementById('events-stadium').style.display = 'block';
-
     try {
-        const [eventsResult] = await Promise.all([
-            loadAPI.loadStadiumEvents(id),
+        const [result] = await Promise.all([
+            loadStadiumInfo(stadiumId, slug),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
 
-        const events = eventsResult.events;
+        const id = result.stadiumInfo.stadium.id;
 
-        if (events.length === 0) {
-            document.getElementById('no-stadium-events-container').style.display = 'block';
-        } else {
-            createStadiumEventsPagination(events, slug, 18);
+        document.title = `${result.stadiumInfo.stadium.name} Events - StadiumTrackr`;
+        document.getElementById('events-stadium-name').textContent = `${result.stadiumInfo.stadium.name} Events`;
+
+        document.getElementById('events-container').style.display = 'none';
+        document.getElementById('events-stadium').style.display = 'block';
+
+        try {
+            const [eventsResult] = await Promise.all([
+                loadAPI.loadStadiumEvents(id),
+                new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+            ]);
+
+            const events = eventsResult.events;
+
+            if (events.length === 0) {
+                document.getElementById('no-stadium-events-container').style.display = 'block';
+            } else {
+                createStadiumEventsPagination(events, slug, 18);
+            }
+
+            const stadiumImage = document.createElement('img');
+            stadiumImage.id = 'stadium-image';
+            stadiumImage.src = STADIUM_IMAGE_PATH + result.stadiumInfo.stadium.image;
+            document.querySelector('main').prepend(stadiumImage);
+            stadiumImage.onload = () => stadiumImage.classList.add('loaded');
+
+            document.getElementById('events-stadium-name-skeleton').style.display = 'none';
+            document.getElementById('events-stadium-name').style.display = 'inline';
+            document.getElementById('stadium-events-skeleton').style.display = 'none';
+            document.getElementById('stadium-events').style.display = 'block';
+
+        } catch (error) {
+            console.error(error);
+            shakeOrReplace(error.message || 'Failed to show stadium events.')
         }
-
-        document.getElementById('events-stadium-name-skeleton').style.display = 'none';
-        document.getElementById('stadium-events-skeleton').style.display = 'none';
-        document.getElementById('events-stadium-name').style.display = 'inline';
-        document.getElementById('stadium-events').style.display = 'block';
-        
     } catch (error) {
         console.error(error);
+        shakeOrReplace(error.message || 'Failed to show stadium events.')
     }
 }
 
@@ -263,10 +271,10 @@ window.onload = async () => {
     const stadiumId = params.get('id') || null;
 
     if (isLoggedIn() && slug) {
-        showStadiumUI(null, slug);
+        await showStadiumUI(null, slug);
     } else if (isLoggedIn() && stadiumId) {
-        showStadiumUI(stadiumId, null);
+        await showStadiumUI(stadiumId, null);
     } else {
-        showEventsUI();
+        await showEventsUI();
     }
 };

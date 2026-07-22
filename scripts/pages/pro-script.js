@@ -12,10 +12,12 @@ let annualPriceId = null;
 /*  Async Functions  */
 async function loadProPricing() {
     try {
-        await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-        const pricing = await loadAPI.loadProPricing();
-        monthlyPriceId = pricing.monthlyPriceId;
-        annualPriceId = pricing.annualPriceId;
+        const [result] = await Promise.all([
+            loadAPI.loadProPricing(),
+            new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+        ]);
+        monthlyPriceId = result.monthlyPriceId;
+        annualPriceId = result.annualPriceId;
     } catch (err) {
         console.error(err);
         shakeOrReplace(err.message || 'Failed to load pro pricing ids.');

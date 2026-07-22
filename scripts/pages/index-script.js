@@ -59,23 +59,6 @@ async function loadPopularStadiums() {
     }
 }
 
-async function waitForImages() {
-    const images = document.querySelectorAll('#popular-stadiums img');
-    
-    const imagePromises = Array.from(images).map(img => {
-        return new Promise(resolve => {
-            if (img.complete) {
-                resolve();
-            } else {
-                img.onload = img.onerror = resolve;
-            }
-        });
-    });
-
-    await Promise.all(imagePromises);
-    await new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME));
-}
-
 /*  Functions  */
 function initializeMap(stadiums) {
     const map = L.map('home-stadium-map').setView([42.8283, -96.5795], 4);
@@ -119,13 +102,19 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.onload = async () => {
-    await loadPopularStadiums();
-    await waitForImages();
-    loadMapStadiums();
+    await Promise.all([
+        loadPopularStadiums(),
+        new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
+    ]);
+
     document.getElementById('popular-stadiums-skeleton').style.display = 'none';
     document.getElementById('popular-stadiums').style.display = 'flex';
+
+    loadMapStadiums();
+
     document.getElementById('home-stadium-map-skeleton').style.display = 'none';
     document.getElementById('home-stadium-map').style.display = 'block';
+
     const pending = sessionStorage.getItem('toast');
     if (pending) {
         const { type, message } = JSON.parse(pending);
