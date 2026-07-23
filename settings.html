@@ -27,16 +27,16 @@
             <p>Are you sure you want to delete your account?</p>
             <p>This action is permanent and cannot be undone. All of your data will be erased, including your visited stadiums, wishlist, and activity.</p>
             <div id="delete-account-password-container">
-                <input type="password" placeholder="Enter your password to confirm" id="delete-account-password" autocomplete="current-password">
+                <input type="password" placeholder="Enter your password to confirm" id="delete-account-password" autocomplete="current-password" aria-label="Enter your password to confirm">
             </div>
             <div id="delete-account-buttons">
-                <h3 id="delete-account-cancel-button">Cancel</h3>
-                <h3 id="delete-account-delete-button">Delete Account</h3>
+                <button id="delete-account-cancel-button">Cancel</button>
+                <button id="delete-account-delete-button">Delete Account</button>
             </div>
         </div>
 
         <!-- Add Favorite Stadium Menu -->
-         <div id="add-favorite-stadium-menu">
+        <div id="add-favorite-stadium-menu">
             <div id="add-favorite-stadium-menu-header">
                 <h2></h2>
                 <h2>Pick a Favorite Stadium</h2>
@@ -44,7 +44,7 @@
             </div>
             <form id="search-favorite-stadiums" autocomplete="off">
                 <div id="favorite-search-wrapper">
-                    <input type="text" placeholder="Search stadiums..." id="favorite-search-field" spellcheck="false">
+                    <input type="text" placeholder="Search stadiums..." id="favorite-search-field" spellcheck="false" aria-label="Search stadiums">
                     <div id="favorite-autocomplete-list"></div>
                 </div>
             </form>
@@ -60,7 +60,7 @@
                 <!-- Logged In Nav -->
                 <ul id="logged-in-nav">
                     <li class="nav-item">
-                        <div id="user-dropdown-wrapper">
+                        <div id="user-dropdown-wrapper" tabindex="0">
                             <div id="logged-in-header-user-container">
                                 <img id="logged-in-header-user-profile-pic">
                                 <span id="logged-in-header-username"></span>
@@ -74,6 +74,7 @@
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
                                         document.getElementById('logged-in-header-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : '/images/profile-pics/default.png';
+                                        document.getElementById('logged-in-header-user-profile-pic').alt = u + "'s profile picture";
                                         if (!payload.isPro) {
                                             document.querySelectorAll('a[href="/stats"]').forEach(el => el.remove());
                                         }
@@ -94,7 +95,7 @@
                                 <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="/stats">Stats</a>
                                 <a href="/settings">Settings</a>
-                                <a id="log-out">Log Out</a>
+                                <a id="log-out" tabindex="0">Log Out</a>
                             </div>
                         </div>
                     </li>
@@ -104,7 +105,7 @@
                     <li class="nav-item" id="logged-in-nav-search-container">
                         <form id="logged-in-nav-search" autocomplete="off">
                             <div id="logged-in-nav-search-wrapper">
-                                <input type="text" placeholder="Search stadiums..." id="logged-in-search-field-nav" spellcheck="false">
+                                <input type="text" placeholder="Search stadiums..." id="logged-in-search-field-nav" spellcheck="false" aria-label="Search stadiums">
                                 <div id="logged-in-nav-autocomplete-list"></div>
                             </div>
                         </form>
@@ -122,7 +123,7 @@
                             <div id="logged-in-sidebar-search-container">
                                 <form id="logged-in-sidebar-nav-search" autocomplete="off">
                                     <div id="logged-in-sidebar-nav-search-wrapper">
-                                        <input type="text" placeholder="Search stadiums..." id="logged-in-sidebar-search-field-nav" spellcheck="false">
+                                        <input type="text" placeholder="Search stadiums..." id="logged-in-sidebar-search-field-nav" spellcheck="false" aria-label="Search stadiums">
                                         <div id="logged-in-sidebar-nav-autocomplete-list"></div>
                                     </div>
                                 </form>
@@ -140,6 +141,7 @@
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
                                         document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : '/images/profile-pics/default.png';
+                                        document.getElementById('sidebar-user-profile-pic').alt = u + "'s profile picture";
                                         if (!payload.isPro) {
                                             document.querySelectorAll('a[href="/stats"]').forEach(el => el.remove());
                                         }
@@ -178,16 +180,16 @@
                         <div id="settings-controls">
                             <div id="settings-controls-main">
                                 <div class="setting-control setting-active" id="profile-control">
-                                    <img src="/images/icons/person.png" id="profile-control-image">
+                                    <img src="/images/icons/person.png" id="profile-control-image" alt="Profile">
                                     <span>Profile</span>
                                 </div>
                                 <div class="setting-control" id="account-control">
-                                    <img src="/images/icons/lock-white.png" id="account-control-image">
+                                    <img src="/images/icons/lock-white.png" id="account-control-image" alt="Lock">
                                     <span>Account</span>
                                 </div>
                             </div>
                             <div class="setting-control" id="delete-control">
-                                <img src="/images/icons/trash.png" id="delete-control-image">
+                                <img src="/images/icons/trash.png" id="delete-control-image" alt="Delete">
                                 <span>Delete Account</span>
                             </div>
                         </div>
@@ -202,7 +204,7 @@
                                         <h4 id="current-username"></h4>
                                     </div>
                                     <div id="new-username-input-col">
-                                        <input type="text" placeholder="Enter new username" id="new-username">
+                                        <input type="text" placeholder="Enter new username" id="new-username" aria-label="Enter new username">
                                         <span id="username-status"></span>
                                     </div>
                                 </div>
@@ -212,10 +214,10 @@
                                 <h3>Profile Picture</h3>
                                 <h4>Upload a new profile photo. JPG or PNG, max 2MB.</h4>
                                 <div id="new-profile-pic-container">
-                                    <img id="new-profile-pic"></img>
+                                    <img id="new-profile-pic" alt="New profile picture"></img>
                                     <input type="file" id="profile-pic-input" accept="image/*" style="display: none;">
                                     <button id="upload-profile-pic-button">
-                                        <img src="/images/icons/upload.png">
+                                        <img src="/images/icons/upload.png" alt="Upload">
                                         <span>Choose Photo</span>
                                     </button>
                                 </div>
@@ -241,7 +243,7 @@
                                         <h3>New Email</h3>
                                         <h4 id="current-email"></h4>
                                     </div>
-                                    <input type="text" placeholder="Enter new email" id="new-email">
+                                    <input type="text" placeholder="Enter new email" id="new-email" aria-label="Enter new email">
                                 </div>
                                 <button class="settings-save-button" id="email-save-button">Save</button>
                             </div>
@@ -252,7 +254,7 @@
                                     <div class="password-input">
                                         <h3>Current Password</h3>
                                         <div class="password-input-wrapper">
-                                            <input type="password" placeholder="Enter current password" id="current-password" autocomplete="current-password">
+                                            <input type="password" placeholder="Enter current password" id="current-password" autocomplete="current-password" aria-label="Enter current password">
                                             <button class="toggle-password" type="button" data-target="current-password">Show</button>
                                         </div>
                                     </div>
@@ -260,7 +262,7 @@
                                         <h3>New Password</h3>
                                         <div class="password-input-flex-col">
                                             <div class="password-input-wrapper">
-                                                <input type="password" placeholder="Enter new password" id="new-password" autocomplete="new-password">
+                                                <input type="password" placeholder="Enter new password" id="new-password" autocomplete="new-password" aria-label="Enter new password">
                                                 <button class="toggle-password" type="button" data-target="new-password">Show</button>
                                             </div>
                                             <span id="password-strength-status"></span>
@@ -270,7 +272,7 @@
                                         <h3>Confirm New Password</h3>
                                         <div class="password-input-flex-col">
                                             <div class="password-input-wrapper">
-                                                <input type="password" placeholder="Enter new password again" id="confirm-password" autocomplete="new-password">
+                                                <input type="password" placeholder="Enter new password again" id="confirm-password" autocomplete="new-password" aria-label="Enter new password again">
                                                 <button class="toggle-password" type="button" data-target="confirm-password">Show</button>
                                             </div>
                                             <span id="password-match-status"></span>
@@ -309,35 +311,35 @@
             <footer>
                 <div id="footer-items">
                     <div class="footer-item">
-                        <h4>StadiumTrackr</h4>
-                        <h5>Track the sports venues you've visited and discover new ones to explore</h5>
+                        <h3>StadiumTrackr</h3>
+                        <h4>Track the sports venues you've visited and discover new ones to explore</h4>
                     </div>
                     <div class="footer-item footer-links">
-                        <h4>Quick Links</h4>
-                        <a href="/" id="footer-home-link"><h5>Home</h5></a><br>
-                        <a href="/stadiums"><h5>Stadiums</h5></a><br>
-                        <a href="/events"><h5>Events</h5></a><br>
-                        <a href="/about"><h5>About</h5></a><br>
+                        <h3>Quick Links</h3>
+                        <a href="/" id="footer-home-link"><h4>Home</h4></a><br>
+                        <a href="/stadiums"><h4>Stadiums</h4></a><br>
+                        <a href="/events"><h4>Events</h4></a><br>
+                        <a href="/about"><h4>About</h4></a><br>
                     </div>
                     <div class="footer-item footer-links">
-                        <h4>Help</h4>
-                        <a href="/contact"><h5>Contact</h5></a><br>
-                        <a href="/faqs"><h5>FAQs</h5></a><br>
-                        <a href="/pro"><h5>Pro</h5></a><br>
-                        <a href="/photo-credits"><h5>Photo Credits</h5></a><br>
-                        <a href="/terms-and-conditions"><h5>Terms and Conditions</h5></a><br>
-                        <a href="/privacy-policy"><h5>Privacy Policy</h5></a>
+                        <h3>Help</h3>
+                        <a href="/contact"><h4>Contact</h4></a><br>
+                        <a href="/faqs"><h4>FAQs</h4></a><br>
+                        <a href="/pro"><h4>Pro</h4></a><br>
+                        <a href="/photo-credits"><h4>Photo Credits</h4></a><br>
+                        <a href="/terms-and-conditions"><h4>Terms and Conditions</h4></a><br>
+                        <a href="/privacy-policy"><h4>Privacy Policy</h4></a>
                     </div>
                     <div class="footer-item">
-                        <h4>Newsletter</h4>
-                        <h5>Subscribe for updates and news</h5>
+                        <h3>Newsletter</h3>
+                        <h4>Subscribe for updates and news</h4>
                         <form id="newsletter-email">
-                            <input type="text" placeholder="Enter your email" id="email-field">
+                            <input type="text" placeholder="Enter your email" id="email-field" aria-label="Enter your email">
                             <input type="submit" value="Subscribe" id="subscribe-button">
                         </form>
                     </div>
                 </div>
-                <h5 id="copyright"></h5>
+                <h4 id="copyright"></h4>
             </footer>
 
          </div>

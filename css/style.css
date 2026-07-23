@@ -858,7 +858,9 @@ label img:hover {
     pointer-events: none;
 }
 
-#user-dropdown-wrapper:hover #logged-in-header-user-container-hidden {
+#user-dropdown-wrapper:hover #logged-in-header-user-container-hidden,
+#user-dropdown-wrapper:focus #logged-in-header-user-container-hidden,
+#user-dropdown-wrapper:focus-within #logged-in-header-user-container-hidden {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -1255,7 +1257,7 @@ label img:hover {
     justify-content: center;
 }
 
-#button-container button {
+#button-container button, #button-container a {
     font-size: 1.1rem;
     font-weight: normal;
     background: #273147;
@@ -1268,7 +1270,7 @@ label img:hover {
     transition: all 0.3s ease;
 }
 
-#button-container button:hover {
+#button-container button:hover, #button-container a:hover {
     cursor: pointer;
     background: #2A3F5B;
     transform: translateY(-3px);
@@ -1778,34 +1780,36 @@ footer {
     width: 242px;
 }
 
-.footer-item h4 {
+.footer-item h3 {
     font-weight: bold;
     margin: 0;
     color: var(--color-blue);
     font-size: 1.1rem;
 }
 
-.footer-item h5 {
+.footer-item h4 {
     color: var(--color-text-muted);
     font-weight: normal;
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 .footer-links {
     margin: 40px 50px 0;
 }
 
-.footer-links h4 {
+.footer-links h3 {
     margin-bottom: 10px !important;
 }
 
-.footer-links h5 {
+.footer-links h4 {
     display: inline-block;
     margin: 13px 0;
     transition: color 0.3s ease;
     font-weight: normal;
 }
 
-.footer-links h5:hover {
+.footer-links h4:hover {
     cursor: pointer;
     color: var(--color-text);
 }
@@ -1813,6 +1817,7 @@ footer {
 #copyright {
     font-weight: normal;
     color: var(--color-text-muted);
+    font-size: 0.9rem;
 }
 
 #newsletter-email {
@@ -2565,6 +2570,7 @@ footer {
     font-weight: normal;
     font-size: 1rem;
     line-height: 1.4;
+    margin: 0;
 }
 
 .event-info-container {
@@ -2572,7 +2578,8 @@ footer {
     margin-top: 10px;
 }
 
-.event-info-container h4 {
+.event-info-container p {
+    margin: 0;
     margin-right: 10px;
     color: var(--color-text-muted);
     font-weight: normal;
@@ -4211,7 +4218,7 @@ footer {
     width: 100%;
 }
 
-.user-activity-text h4 {
+.user-activity-text h3 {
     margin: 0;
     font-weight: normal;
     color: var(--color-text-muted);
@@ -4219,17 +4226,17 @@ footer {
     font-size: 0.9rem;
 }
 
-.user-activity-text h4 a {
+.user-activity-text h3 a {
     color: var(--color-text);
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-.user-activity-text h4 a:hover {
+.user-activity-text h3 a:hover {
     color: var(--color-blue);
 }
 
-.user-activity-text h5 {
+.user-activity-text h4 {
     margin: 0;
     margin-left: 15px;
     font-weight: normal;
@@ -6188,10 +6195,12 @@ footer {
 
 .featured-event .event-stadium-name, .user-event .event-stadium-name {
     font-size: 1rem;
+    margin: 0;
 }
 
-.featured-event .event-info-container h4, .user-event .event-info-container h4 {
+.featured-event .event-info-container p, .user-event .event-info-container p {
     font-size: 0.9rem;
+    margin: 0;
 }
 
 .featured-event-link, .user-event-link, .stadium-event-link {
@@ -6207,10 +6216,6 @@ footer {
 
 .featured-event-link:hover, .user-event-link:hover, .stadium-event-link:hover {
     color: #3f8acc;
-}
-
-.featured-event .event-info, .user-event .event-info {
-    margin-top: 20px;
 }
 
 #events-filter-bar {
@@ -7578,6 +7583,7 @@ footer {
 .edit-list-stadium-info-header, .create-list-stadium-info-header {
     display: flex;
     flex-wrap: wrap;
+    align-items: end;
     margin-top: 10px;
     gap: 8px;
 }
@@ -8412,9 +8418,10 @@ footer {
 }
 
 .geographic-breakdown-header {
+    display: block;
     font-weight: normal;
     margin: 0;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 #geographic-breakdown-top-countries, #geographic-breakdown-top-cities {
@@ -9770,6 +9777,9 @@ footer {
     }
     .user-home-event-skeleton {
         height: 305px;
+    }
+    .featured-event .event-info, .user-event .event-info {
+        margin-top: 20px;
     }
 }
 

@@ -228,7 +228,12 @@ async function loadEventsTab(tab) {
 }
 
 async function loadHomeTab() {
-    document.title = 'Home - StadiumTrackr';
+    const token = localStorage.getItem('token');
+    if (!token) return
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const payload = JSON.parse(atob(base64));
+    const username = payload.username || '';
+    document.title = username + "'s Home - StadiumTrackr";
 
     document.getElementById('user-home-home-tab-container').style.display = 'flex';
 
@@ -506,6 +511,7 @@ async function loadUserHeader() {
             const userHomeImage = document.createElement('img');
             userHomeImage.id = 'user-home-image';
             userHomeImage.src = STADIUM_IMAGE_PATH + result.userFavoriteStadiums[0].image;
+            userHomeImage.alt = result.userFavoriteStadiums[0].stadium_name;
             document.querySelector('main').prepend(userHomeImage);
 
             userHomeImage.onload = () => {
@@ -514,6 +520,7 @@ async function loadUserHeader() {
         }
 
         document.getElementById('user-home-profile-pic').src = PROFILE_PIC_PATH + profilePic;
+        document.getElementById('user-home-profile-pic').alt = payload.username + "'s profile picture";
         document.getElementById('user-home-username').textContent = payload.username;
         document.getElementById('num-stadiums').textContent = numStadiums;
         document.getElementById('num-events').textContent = numEvents;
@@ -802,6 +809,12 @@ function renderAchievementsTab(achievements, elements, startPage = 1, onPageChan
                 const userHomeAchievementImage = document.createElement('img');
                 userHomeAchievementImage.classList.add('user-home-achievement-image');
                 userHomeAchievementImage.src = ICON_IMAGE_PATH + achievement.achievement_image;
+                const altText = achievement.achievement_image
+                    .replace(/\.[^.]+$/, '')
+                    .replace(/-/g, ' ')
+                    .replace(/\b\w/g, c => c.toUpperCase());
+
+                userHomeAchievementImage.alt = altText;
 
                 const userHomeAchievementDescription = document.createElement('p');
                 userHomeAchievementDescription.classList.add('user-home-achievement-description');
@@ -917,6 +930,7 @@ function renderActivityTab(stadiums, elements, startPage = 1, onPageChange = nul
                     const userHomeActivityLogImage = document.createElement('img');
                     userHomeActivityLogImage.classList.add('user-home-activity-log-image');
                     userHomeActivityLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
+                    userHomeActivityLogImage.alt = stadium.stadium_name;
 
                     const userHomeLogActivityInfo = document.createElement('div');
                     userHomeLogActivityInfo.classList.add('user-home-log-activity-info');
@@ -1016,6 +1030,7 @@ function renderActivityTab(stadiums, elements, startPage = 1, onPageChange = nul
                             const img = document.createElement('img');
                             img.src = `/images/visit-photos/${photo.filename}`;
                             img.classList.add('activity-photo');
+                            img.alt = 'Visit photo';
                             img.addEventListener('click', () => openLightbox(img.src));
                             img.style.cursor = 'pointer';
                             photosContainer.appendChild(img);
@@ -1129,6 +1144,7 @@ function renderEventsTab(events, elements, startPage = 1) {
 
                 const image = document.createElement('img');
                 image.src = STADIUM_IMAGE_PATH + event.image;
+                image.alt = event.stadium_name;
                 image.classList.add('user-home-event-image');
 
                 const info = document.createElement('div');
@@ -1283,7 +1299,7 @@ function renderHomeTabRecentActivity(activity) {
         const userActivity = document.createElement('div');
         userActivity.classList.add('user-activity-text');
 
-        let activityText = document.createElement('h4');
+        let activityText = document.createElement('h3');
         if (activity.visited_on) {
             const link = document.createElement('a');
             link.href = IS_PROD && activity.slug ? `/activity/${activity.slug}` : `user-activity.html?id=${encodeURIComponent(activity.stadium_id)}`
@@ -1311,7 +1327,7 @@ function renderHomeTabRecentActivity(activity) {
         }
         userActivity.appendChild(activityText);
 
-        const activityTime = document.createElement('h5');
+        const activityTime = document.createElement('h4');
         activityTime.textContent = timeAgo(activity.added_on).replace(' ago', '');
         userActivity.appendChild(activityTime);
 
@@ -1394,6 +1410,7 @@ function renderListsTab(lists, elements, startPage = 1, onPageChange = null) {
             const start = (page - 1) * perPage;
             const end = start + perPage;
             lists.slice(start, end).forEach(list => {
+                console.log(list);
                 const userHomeList = document.createElement('div');
                 userHomeList.classList.add('user-home-list');
 
@@ -1424,21 +1441,31 @@ function renderListsTab(lists, elements, startPage = 1, onPageChange = null) {
                 userHomeListImages.classList.add('user-home-list-images');
 
                 const totalSlots = 5;
-                const imagesToShow = list.images.slice(0, 5);
+                const dataToShow = list.stadiumData.slice(0, 5);
 
-                imagesToShow.forEach((image, index) => {
-                    const userHomeListImage = document.createElement('img');
-                    userHomeListImage.classList.add('user-home-list-image');
-                    userHomeListImage.src = STADIUM_IMAGE_PATH + image;
-                    userHomeListImage.style.zIndex = totalSlots - index;
-                    userHomeListImage.style.position = 'relative';
-                    userHomeListImages.appendChild(userHomeListImage);
+                dataToShow.forEach((stadium, index) => {
+                    if (stadium.image) {
+                        const userHomeListImage = document.createElement('img');
+                        userHomeListImage.classList.add('user-home-list-image');
+                        userHomeListImage.src = STADIUM_IMAGE_PATH + stadium.image;
+                        userHomeListImage.alt = stadium.name;
+                        userHomeListImage.style.zIndex = totalSlots - index;
+                        userHomeListImage.style.position = 'relative';
+                        userHomeListImages.appendChild(userHomeListImage);
+                    } else {
+                        const userHomeListImageEmpty = document.createElement('div');
+                        userHomeListImageEmpty.classList.add('user-home-list-image-empty');
+                        userHomeListImageEmpty.style.zIndex = totalSlots - index;
+                        userHomeListImageEmpty.style.position = 'relative';
+                        userHomeListImages.appendChild(userHomeListImageEmpty);
+                    }
                 });
 
-                for (let i = 0; i < totalSlots - imagesToShow.length; i++) {
+                const remainingSlots = totalSlots - dataToShow.length;
+                for (let i = 0; i < remainingSlots; i++) {
                     const userHomeListImageEmpty = document.createElement('div');
                     userHomeListImageEmpty.classList.add('user-home-list-image-empty');
-                    userHomeListImageEmpty.style.zIndex = totalSlots - imagesToShow.length - i;
+                    userHomeListImageEmpty.style.zIndex = remainingSlots - i;
                     userHomeListImageEmpty.style.position = 'relative';
                     userHomeListImages.appendChild(userHomeListImageEmpty);
                 }
@@ -1448,8 +1475,10 @@ function renderListsTab(lists, elements, startPage = 1, onPageChange = null) {
                 const userHomeListEditListButton = document.createElement('a');
                 userHomeListEditListButton.classList.add('user-home-list-edit-list-button');
                 userHomeListEditListButton.href = IS_PROD && list.slug ? `/list/${list.slug}/edit` : `list.html?mode=edit&id=${list.list_id}`;
+                userHomeListEditListButton.setAttribute('aria-label', `Edit ${list.list_name}`);
 
                 const editImg = document.createElement('img');
+                editImg.alt = 'Edit list';
                 editImg.src = ICON_IMAGE_PATH + 'edit.png';
 
                 userHomeListEditListButton.appendChild(editImg);
@@ -1563,8 +1592,10 @@ function renderVisitsTab(stadiums, elements, startPage = 1) {
 
             const userHomeVisitEditLogButton = document.createElement('button');
             userHomeVisitEditLogButton.classList.add('user-home-visit-edit-log-button');
+            userHomeVisitEditLogButton.setAttribute('aria-label', 'Edit log');
             const editImage = document.createElement('img');
             editImage.src = '/images/icons/edit.png';
+            editImage.alt = 'Edit';
             userHomeVisitEditLogButton.appendChild(editImage);
 
             userHomeVisitEditLogButton.addEventListener('click', () => {
@@ -1591,8 +1622,10 @@ function renderVisitsTab(stadiums, elements, startPage = 1) {
 
             const userHomeVisitRemoveButton = document.createElement('button');
             userHomeVisitRemoveButton.classList.add('user-home-visit-remove-button');
+            userHomeVisitRemoveButton.setAttribute('aria-label', 'Remove visit');
             const removeImage = document.createElement('img');
             removeImage.src = '/images/icons/trash.png';
+            removeImage.alt = 'Remove';
             userHomeVisitRemoveButton.appendChild(removeImage);
 
             userHomeVisitRemoveButton.addEventListener('click', () => {
@@ -2013,6 +2046,16 @@ Array.from(document.getElementsByClassName('user-home-nav-bar-tab')).forEach(tab
             const params = new URLSearchParams();
             params.set('tab', activeTab);
             window.location.search = params.toString();
+        }
+    });
+});
+
+document.querySelectorAll('.user-home-nav-bar-tab').forEach(tab => {
+    tab.setAttribute('tabindex', '0');
+    tab.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            tab.click();
         }
     });
 });

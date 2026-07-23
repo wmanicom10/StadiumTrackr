@@ -1,6 +1,6 @@
 /*  Imports  */
 import { createToast, getCaptchaToken, getUsername, logOut, shakeOrReplace, toggleMenu, validateEmail, validatePassword, validateUsername } from "./utils.js";
-import { getHeaderElements, IS_PROD, PROFILE_PIC_PATH } from "./constants.js";
+import { getHeaderElements, IS_PROD, overlay, PROFILE_PIC_PATH } from "./constants.js";
 import { authAPI } from "./api/auth.js";
 import { userAPI } from "./api/user.js";
 
@@ -121,6 +121,141 @@ export function registerCommonEvents() {
                 unlockScroll();
             }
         });
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.menu-fade-in').forEach(menu => {
+                toggleMenu(menu, false, overlay);
+            });
+        }
+    });
+
+    ['log-in', 'create-account', 'sidebar-log-in', 'sidebar-sign-up'].forEach(id => {
+        document.getElementById(id)?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                document.getElementById(id).click();
+            }
+        });
+    });
+
+    document.getElementById('sign-up-link')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            document.getElementById('sign-up-link').click();
+        }
+    });
+
+    document.getElementById('sign-in-link')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            document.getElementById('sign-in-link').click();
+        }
+    });
+
+    document.getElementById('terms-and-conditions')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const checkbox = document.getElementById('terms-and-conditions');
+            checkbox.checked = !checkbox.checked;
+        }
+    });
+
+    document.getElementById('log-out')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('log-out').click();
+        }
+    });
+
+    document.getElementById('edit-list-ranked')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('edit-list-ranked').click();
+        }
+    });
+
+    document.getElementById('create-list-ranked')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('create-list-ranked').click();
+        }
+    });
+
+    document.getElementById('edit-list-search-field')?.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            document.querySelector('#edit-list-autocomplete-list .autocomplete-item')?.focus();
+        }
+    });
+
+    document.getElementById('create-list-search-field')?.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            document.querySelector('#create-list-autocomplete-list .autocomplete-item')?.focus();
+        }
+    });
+
+    document.getElementById('favorite-search-field')?.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            document.querySelector('#favorite-autocomplete-list .autocomplete-item')?.focus();
+        }
+    });
+
+    document.getElementById('add-stadium-photos-upload-label')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            document.getElementById('add-stadium-photos-input').click();
+        }
+    });
+
+    document.querySelectorAll('.custom-select-trigger').forEach(trigger => {
+        trigger.setAttribute('tabindex', '0');
+        trigger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                trigger.click();
+            }
+        });
+    });
+
+    document.querySelectorAll('.custom-select-option').forEach(option => {
+        option.setAttribute('tabindex', '0');
+        option.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                option.click();
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                option.nextElementSibling?.focus();
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                option.previousElementSibling?.focus();
+            }
+            if (e.key === 'Escape') {
+                option.closest('.custom-select-wrapper').querySelector('.custom-select-trigger').click();
+            }
+        });
+    });
+
+    document.getElementById('show-trigger')?.setAttribute('tabindex', '0');
+    document.getElementById('show-trigger')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            document.getElementById('show-trigger').click();
+        }
+    });
+
+    document.getElementById('map-show-trigger')?.setAttribute('tabindex', '0');
+    document.getElementById('map-show-trigger')?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            document.getElementById('map-show-trigger').click();
+        }
     });
 
     document.getElementById('subscribe-button').addEventListener('click', async (e) => {

@@ -45,11 +45,11 @@
                 <h2 id="close-log-in-menu">×</h2>
             </div>
             <form id="log-in-form">
-                <input type="text" id="username" class="input-field" placeholder="Username"><br>
-                <input type="password" id="password" class="input-field" placeholder="Password"><br>
+                <input type="text" id="username" class="input-field" placeholder="Username" aria-label="Username" autocomplete="username">
+                <input type="password" id="password" class="input-field" placeholder="Password" aria-label="Password" autocomplete="current-password">
                 <input type="submit" id="log-in-button" value="Log In">
             </form>
-            <h3>Don't have an account? <span id="sign-up-link">Sign up here</span></h3>
+            <h3>Don't have an account? <span id="sign-up-link" tabindex="0">Sign up here</span></h3>
             <a href="/forgot-password" class="forgot-password">Forgot Password?</a>
         </div>
 
@@ -61,9 +61,9 @@
                 <h2 id="close-create-account-menu">×</h2>
             </div>
             <form id="create-account-form">
-                <input type="text" id="new-username" class="input-field" placeholder="Username"><br>
-                <input type="text" id="new-email" class="input-field" placeholder="Email address"><br>
-                <input type="password" id="new-password" class="input-field" placeholder="Password"><br>
+                <input type="text" id="new-username" class="input-field" placeholder="Username" aria-label="Username"><br>
+                <input type="text" id="new-email" class="input-field" placeholder="Email address" aria-label="Email address"><br>
+                <input type="password" id="new-password" class="input-field" placeholder="Password" aria-label="Password" autocomplete="new-password"><br>
                 <div id="terms-and-conditions-container">
                     <input type="checkbox" id="terms-and-conditions">
                     <label for="terms-and-conditions">I agree to the <a href="/terms-and-conditions" target="_blank">Terms and Conditions</a></label>
@@ -87,12 +87,12 @@
                     <li class="nav-item"><a href="/stadiums">Stadiums</a></li>
                     <li class="nav-item"><a href="/events">Events</a></li>
                     <li class="nav-item"><a href="/about">About</a></li>
-                    <li class="nav-item button" id="log-in">Log In</li>
-                    <li class="nav-item button" id="create-account">Sign Up</li>
+                    <li class="nav-item button" id="log-in" tabindex="0">Log In</li>
+                    <li class="nav-item button" id="create-account" tabindex="0">Sign Up</li>
                     <li class="nav-item" id="logged-out-nav-search-container">
                         <form id="logged-out-nav-search" autocomplete="off">
                             <div id="logged-out-nav-search-wrapper">
-                                <input type="text" placeholder="Search stadiums..." id="logged-out-search-field-nav" spellcheck="false">
+                                <input type="text" placeholder="Search stadiums..." id="logged-out-search-field-nav" spellcheck="false" aria-label="Search stadiums">
                                 <div id="logged-out-nav-autocomplete-list"></div>
                             </div>
                         </form>
@@ -114,13 +114,13 @@
                                 <a href="/about">About</a>
                             </div>
                             <div class="account-buttons">
-                                <span id="sidebar-log-in">Log In</span>
-                                <span id="sidebar-sign-up">Sign Up</span>
+                                <span id="sidebar-log-in" tabindex="0">Log In</span>
+                                <span id="sidebar-sign-up" tabindex="0">Sign Up</span>
                             </div>
                             <div id="logged-out-sidebar-search-container">
                                 <form id="logged-out-sidebar-nav-search" autocomplete="off">
                                     <div id="logged-out-sidebar-nav-search-wrapper">
-                                        <input type="text" placeholder="Search stadiums..." id="logged-out-sidebar-search-field-nav" spellcheck="false">
+                                        <input type="text" placeholder="Search stadiums..." id="logged-out-sidebar-search-field-nav" spellcheck="false" aria-label="Search stadiums">
                                         <div id="logged-out-sidebar-nav-autocomplete-list"></div>
                                     </div>
                                 </form>
@@ -132,7 +132,7 @@
                 <!-- Logged In Nav -->
                 <ul id="logged-in-nav">
                     <li class="nav-item">
-                        <div id="user-dropdown-wrapper">
+                        <div id="user-dropdown-wrapper" tabindex="0">
                             <div id="logged-in-header-user-container">
                                 <img id="logged-in-header-user-profile-pic">
                                 <span id="logged-in-header-username"></span>
@@ -146,6 +146,10 @@
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('logged-in-header-username').textContent = d;
                                         document.getElementById('logged-in-header-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : '/images/profile-pics/default.png';
+                                        document.getElementById('logged-in-header-user-profile-pic').alt = u + "'s profile picture";
+                                        if (!payload.isPro) {
+                                            document.querySelectorAll('a[href="/stats"]').forEach(el => el.remove());
+                                        }
                                     })();
                                 </script>
                                 <svg class="user-dropdown-arrow" width="12" height="8" viewBox="0 0 12 8" fill="none">
@@ -163,7 +167,7 @@
                                 <a href="user-home.html?tab=achievements">Achievements</a>
                                 <a href="/stats">Stats</a>
                                 <a href="/settings">Settings</a>
-                                <a id="log-out">Log Out</a>
+                                <a id="log-out" tabindex="0">Log Out</a>
                             </div>
                         </div>
                     </li>
@@ -173,7 +177,7 @@
                     <li class="nav-item" id="logged-in-nav-search-container">
                         <form id="logged-in-nav-search" autocomplete="off">
                             <div id="logged-in-nav-search-wrapper">
-                                <input type="text" placeholder="Search stadiums..." id="logged-in-search-field-nav" spellcheck="false">
+                                <input type="text" placeholder="Search stadiums..." id="logged-in-search-field-nav" spellcheck="false" aria-label="Search stadiums">
                                 <div id="logged-in-nav-autocomplete-list"></div>
                             </div>
                         </form>
@@ -191,7 +195,7 @@
                             <div id="logged-in-sidebar-search-container">
                                 <form id="logged-in-sidebar-nav-search" autocomplete="off">
                                     <div id="logged-in-sidebar-nav-search-wrapper">
-                                        <input type="text" placeholder="Search stadiums..." id="logged-in-sidebar-search-field-nav" spellcheck="false">
+                                        <input type="text" placeholder="Search stadiums..." id="logged-in-sidebar-search-field-nav" spellcheck="false" aria-label="Search stadiums">
                                         <div id="logged-in-sidebar-nav-autocomplete-list"></div>
                                     </div>
                                 </form>
@@ -209,6 +213,10 @@
                                         const d = u.length > 10 ? u.slice(0, 10) + '...' : u;
                                         document.getElementById('sidebar-username').textContent = d;
                                         document.getElementById('sidebar-user-profile-pic').src = payload.profilePic ? '/images/profile-pics/' + payload.profilePic : '/images/profile-pics/default.png';
+                                        document.getElementById('sidebar-user-profile-pic').alt = u + "'s profile picture";
+                                        if (!payload.isPro) {
+                                            document.querySelectorAll('a[href="/stats"]').forEach(el => el.remove());
+                                        }
                                     })();
                                 </script>
                             </div>
@@ -255,35 +263,35 @@
             <footer>
                 <div id="footer-items">
                     <div class="footer-item">
-                        <h4>StadiumTrackr</h4>
-                        <h5>Track the sports venues you've visited and discover new ones to explore</h5>
+                        <h3>StadiumTrackr</h3>
+                        <h4>Track the sports venues you've visited and discover new ones to explore</h4>
                     </div>
                     <div class="footer-item footer-links">
-                        <h4>Quick Links</h4>
-                        <a href="/" id="footer-home-link"><h5>Home</h5></a><br>
-                        <a href="/stadiums"><h5>Stadiums</h5></a><br>
-                        <a href="/events"><h5>Events</h5></a><br>
-                        <a href="/about"><h5>About</h5></a><br>
+                        <h3>Quick Links</h3>
+                        <a href="/" id="footer-home-link"><h4>Home</h4></a><br>
+                        <a href="/stadiums"><h4>Stadiums</h4></a><br>
+                        <a href="/events"><h4>Events</h4></a><br>
+                        <a href="/about"><h4>About</h4></a><br>
                     </div>
                     <div class="footer-item footer-links">
-                        <h4>Help</h4>
-                        <a href="/contact"><h5>Contact</h5></a><br>
-                        <a href="/faqs"><h5>FAQs</h5></a><br>
-                        <a href="/pro"><h5>Pro</h5></a><br>
-                        <a href="/photo-credits"><h5>Photo Credits</h5></a><br>
-                        <a href="/terms-and-conditions"><h5>Terms and Conditions</h5></a><br>
-                        <a href="/privacy-policy"><h5>Privacy Policy</h5></a>
+                        <h3>Help</h3>
+                        <a href="/contact"><h4>Contact</h4></a><br>
+                        <a href="/faqs"><h4>FAQs</h4></a><br>
+                        <a href="/pro"><h4>Pro</h4></a><br>
+                        <a href="/photo-credits"><h4>Photo Credits</h4></a><br>
+                        <a href="/terms-and-conditions"><h4>Terms and Conditions</h4></a><br>
+                        <a href="/privacy-policy"><h4>Privacy Policy</h4></a>
                     </div>
                     <div class="footer-item">
-                        <h4>Newsletter</h4>
-                        <h5>Subscribe for updates and news</h5>
+                        <h3>Newsletter</h3>
+                        <h4>Subscribe for updates and news</h4>
                         <form id="newsletter-email">
-                            <input type="text" placeholder="Enter your email" id="email-field">
+                            <input type="text" placeholder="Enter your email" id="email-field" aria-label="Enter your email">
                             <input type="submit" value="Subscribe" id="subscribe-button">
                         </form>
                     </div>
                 </div>
-                <h5 id="copyright"></h5>
+                <h4 id="copyright"></h4>
             </footer>
 
         </div>

@@ -95,6 +95,7 @@ async function setView() {
         const stadiumImage = document.createElement('img');
         stadiumImage.id = 'stadium-image';
         stadiumImage.src = STADIUM_IMAGE_PATH + image;
+        stadiumImage.alt = stadiumName;
         document.querySelector('main').prepend(stadiumImage);
         stadiumImage.onload = () => stadiumImage.classList.add('loaded');
 
@@ -162,6 +163,7 @@ function renderActivity(stadiums, elements, currentPage = 1, slugOrId, activity,
                     const userHomeActivityLogImage = document.createElement('img');
                     userHomeActivityLogImage.classList.add('user-home-activity-log-image');
                     userHomeActivityLogImage.src = STADIUM_IMAGE_PATH + stadium.image;
+                    userHomeActivityLogImage.alt = stadium.stadium_name;
 
                     const userHomeLogActivityInfo = document.createElement('div');
                     userHomeLogActivityInfo.classList.add('user-home-log-activity-info');

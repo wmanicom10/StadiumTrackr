@@ -130,7 +130,7 @@ function renderStatsPage(userStats) {
         const leagueCompletionItem = document.createElement('div');
         leagueCompletionItem.classList.add('league-completion-item');
 
-        const leagueCompletionName = document.createElement('h4');
+        const leagueCompletionName = document.createElement('span');
         leagueCompletionName.classList.add('league-completion-name');
         leagueCompletionName.textContent = league.league_name;
 

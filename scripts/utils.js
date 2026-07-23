@@ -102,7 +102,7 @@ function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
 
         const img = document.createElement('img');
         img.src = iconSrc;
-        img.alt = tip;
+        img.alt = '';
         link.appendChild(img);
 
         const tooltip = document.createElement('span');
@@ -111,21 +111,35 @@ function createCornerButton(tip, iconSrc, extraClass, onClick, href = null) {
         link.appendChild(tooltip);
 
         btn.addEventListener('click', (e) => onClick(btn, e));
-
         btn.appendChild(link);
+
+        link.addEventListener('focus', () => {
+            tooltip.style.opacity = '1';
+        });
+        link.addEventListener('blur', () => {
+            tooltip.style.opacity = '0';
+        });
 
         return btn;
     }
 
     const img = document.createElement('img');
     img.src = iconSrc;
-    img.alt = tip;
+    img.alt = '';
     btn.appendChild(img);
 
     const tooltip = document.createElement('span');
     tooltip.classList.add('icon-btn-tooltip');
     tooltip.textContent = tip;
     btn.appendChild(tooltip);
+
+    btn.addEventListener('focus', () => {
+        btn.querySelector('.icon-btn-tooltip').style.opacity = '1';
+    });
+
+    btn.addEventListener('blur', () => {
+        btn.querySelector('.icon-btn-tooltip').style.opacity = '0';
+    });
 
     btn.addEventListener('click', (e) => onClick(btn, e));
     return btn;
@@ -225,7 +239,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
 
     const visitedImg = document.createElement('img');
     visitedImg.src = isVisited ? '/images/icons/check.png' : '/images/icons/plus.png';
-    visitedImg.alt = 'Mark as Visited';
+    visitedImg.alt = '';
     visitedBtn.appendChild(visitedImg);
 
     const visitedTooltip = document.createElement('span');
@@ -233,19 +247,35 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
     visitedTooltip.textContent = isVisited ? 'Visited' : 'Mark as Visited';
     visitedBtn.appendChild(visitedTooltip);
 
+    visitedBtn.addEventListener('focus', () => {
+        visitedBtn.querySelector('.icon-btn-tooltip').style.opacity = '1';
+    });
+
+    visitedBtn.addEventListener('blur', () => {
+        visitedBtn.querySelector('.icon-btn-tooltip').style.opacity = '0';
+    });
+
     let isWishlist = stadium.wishlist;
     const wishlistBtn = document.createElement('button');
     wishlistBtn.classList.add('user-stadium-icon-btn', 'btn-wishlist');
 
     const wishlistImg = document.createElement('img');
     wishlistImg.src = isWishlist ? '/images/icons/heart-check.png' : '/images/icons/heart-plus.png';
-    wishlistImg.alt = 'Add to Wishlist';
+    wishlistImg.alt = '';
     wishlistBtn.appendChild(wishlistImg);
 
     const wishlistTooltip = document.createElement('span');
     wishlistTooltip.classList.add('icon-btn-tooltip');
     wishlistTooltip.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
     wishlistBtn.appendChild(wishlistTooltip);
+
+    wishlistBtn.addEventListener('focus', () => {
+        wishlistBtn.querySelector('.icon-btn-tooltip').style.opacity = '1';
+    });
+
+    wishlistBtn.addEventListener('blur', () => {
+        wishlistBtn.querySelector('.icon-btn-tooltip').style.opacity = '0';
+    });
 
     visitedBtn.addEventListener('click', async () => {
         if (!isLoggedIn()) return;
@@ -322,13 +352,7 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
         toggleMenu(elements.addStadiumMenu, true, overlay);
     }));
 
-    controls.appendChild(createCornerButton(
-        'Show Activity',
-        '/images/icons/clock.png',
-        'btn-activity',
-        (btn, e) => {},
-        IS_PROD && stadium.slug ? `/activity/${stadium.slug}` : `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
-    ));
+    controls.appendChild(createCornerButton('Show Activity', '/images/icons/clock.png', 'btn-activity', (btn, e) => {}, IS_PROD && stadium.slug ? `/activity/${stadium.slug}` : `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`));
 
     card.appendChild(controls);
 
@@ -338,6 +362,18 @@ function createStadiumCard(stadium, elements, rankNumber = null) {
         rankBadge.textContent = rankNumber;
         card.appendChild(rankBadge);
     }
+
+    card.setAttribute('tabindex', '0');
+
+    card.addEventListener('focus', () => {
+        card.querySelector('.user-stadium-corner-controls').style.opacity = '1';
+    });
+
+    card.addEventListener('blur', (e) => {
+        if (!card.contains(e.relatedTarget)) {
+            card.querySelector('.user-stadium-corner-controls').style.opacity = '0';
+        }
+    });
 
     return card;
 }
@@ -633,6 +669,8 @@ export function createToast(type, message) {
     if (!container) {
         container = document.createElement('div');
         container.classList.add('toast-container');
+        container.setAttribute('role', 'alert');
+        container.setAttribute('aria-live', 'assertive');
         document.body.appendChild(container);
     }
     const existing = [...container.querySelectorAll('.toast-error, .toast-success')];
@@ -682,7 +720,7 @@ export function createUserStadiumElement(stadium, elements) {
 
     const visitedImg = document.createElement('img');
     visitedImg.src = isVisited ? '/images/icons/check.png' : '/images/icons/plus.png';
-    visitedImg.alt = 'Mark as Visited';
+    visitedImg.alt = '';
     visitedBtn.appendChild(visitedImg);
 
     const visitedTooltip = document.createElement('span');
@@ -690,19 +728,35 @@ export function createUserStadiumElement(stadium, elements) {
     visitedTooltip.textContent = isVisited ? 'Visited' : 'Mark as Visited';
     visitedBtn.appendChild(visitedTooltip);
 
+    visitedBtn.addEventListener('focus', () => {
+        visitedBtn.querySelector('.icon-btn-tooltip').style.opacity = '1';
+    });
+
+    visitedBtn.addEventListener('blur', () => {
+        visitedBtn.querySelector('.icon-btn-tooltip').style.opacity = '0';
+    });
+
     let isWishlist = stadium.wishlist;
     const wishlistBtn = document.createElement('button');
     wishlistBtn.classList.add('user-stadium-icon-btn', 'btn-wishlist');
 
     const wishlistImg = document.createElement('img');
     wishlistImg.src = isWishlist ? '/images/icons/heart-check.png' : '/images/icons/heart-plus.png';
-    wishlistImg.alt = 'Add to Wishlist';
+    wishlistImg.alt = '';
     wishlistBtn.appendChild(wishlistImg);
 
     const wishlistTooltip = document.createElement('span');
     wishlistTooltip.classList.add('icon-btn-tooltip');
     wishlistTooltip.textContent = isWishlist ? 'In Wishlist' : 'Add to Wishlist';
     wishlistBtn.appendChild(wishlistTooltip);
+
+    wishlistBtn.addEventListener('focus', () => {
+        wishlistBtn.querySelector('.icon-btn-tooltip').style.opacity = '1';
+    });
+
+    wishlistBtn.addEventListener('blur', () => {
+        wishlistBtn.querySelector('.icon-btn-tooltip').style.opacity = '0';
+    });
 
     visitedBtn.addEventListener('click', async () => {
         if (!isLoggedIn()) return;
@@ -781,15 +835,21 @@ export function createUserStadiumElement(stadium, elements) {
         }
     }));
 
-    controls.appendChild(createCornerButton(
-        'Show Activity',
-        '/images/icons/clock.png',
-        'btn-activity',
-        (btn, e) => {},
-        IS_PROD && stadium.slug ? `/activity/${stadium.slug}` : `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`
-    ));
+    controls.appendChild(createCornerButton('Show Activity', '/images/icons/clock.png', 'btn-activity', (btn, e) => {}, IS_PROD && stadium.slug ? `/activity/${stadium.slug}` : `user-activity.html?id=${encodeURIComponent(stadium.stadium_id)}`));
 
     userStadium.appendChild(controls);
+
+    userStadium.setAttribute('tabindex', '0');
+
+    userStadium.addEventListener('focus', () => {
+        userStadium.querySelector('.user-stadium-corner-controls').style.opacity = '1';
+    });
+
+    userStadium.addEventListener('blur', (e) => {
+        if (!userStadium.contains(e.relatedTarget)) {
+            userStadium.querySelector('.user-stadium-corner-controls').style.opacity = '0';
+        }
+    });
 
     return userStadium;
 }
@@ -1452,6 +1512,10 @@ export function toggleMenu(menu, show, overlay, keepOverlay = false) {
         menu.classList.remove('menu-fade-out');
         void menu.offsetWidth;
         menu.classList.add('menu-fade-in');
+        setTimeout(() => {
+            const focusable = menu.querySelectorAll('button, [href], input, select, textarea, [tabindex="0"]');
+            focusable[0]?.focus();
+        }, 50);
     } 
     else {
         document.querySelectorAll('.toast-error, .toast-success').forEach(t => t.remove());

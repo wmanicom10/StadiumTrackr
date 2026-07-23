@@ -238,15 +238,17 @@ async function showViewUI(listId, slug, view) {
             userAPI.loadUserList(listId, slug, show, league, country, sort),
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
+        console.log(result)
         const stadiums = result.listStadiums;
         const resolvedSlug = result.slug || slug;
         const resolvedListId = result.listId || listId;
 
-        document.title = `${result.listName} - A list of stadiums`;
+        document.title = `${result.listName}, a list of stadiums - StadiumTrackr`;
 
         const stadiumImage = document.createElement('img');
         stadiumImage.id = 'stadium-image';
         stadiumImage.src = STADIUM_IMAGE_PATH + result.backdropImage;
+        stadiumImage.alt = result.listStadiums[0]?.stadium_name || 'Stadium image';
         document.querySelector('main').prepend(stadiumImage);
         stadiumImage.onload = () => stadiumImage.classList.add('loaded');
 
@@ -448,6 +450,7 @@ function renderEditListView(stadiums, enableSave) {
             const editListStadiumImage = document.createElement('img');
             editListStadiumImage.classList.add('edit-list-stadium-image');
             editListStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
+            editListStadiumImage.alt = stadium.stadium_name;
             editListStadiumImage.draggable = false;
 
             const editListStadiumInfoContainer = document.createElement('div');
@@ -462,7 +465,7 @@ function renderEditListView(stadiums, enableSave) {
             editListStadiumName.textContent = stadium.stadium_name;
             editListStadiumName.draggable = false;
 
-            const editListStadiumLocation = document.createElement('h4');
+            const editListStadiumLocation = document.createElement('p');
             editListStadiumLocation.classList.add('edit-list-stadium-location');
             editListStadiumLocation.textContent = stadium.city + ', ' + stadium.state;
 
@@ -495,6 +498,7 @@ function renderEditListView(stadiums, enableSave) {
 
             const editListDeleteButton = document.createElement('button');
             editListDeleteButton.classList.add('edit-list-delete-button');
+            editListDeleteButton.setAttribute('aria-label', `Remove ${stadium.stadium_name} from list`);
             editListDeleteButton.addEventListener('click', () => {
                 editListStadium.style.opacity = '0';
                 setTimeout(() => {
@@ -511,6 +515,7 @@ function renderEditListView(stadiums, enableSave) {
 
             const editListDeleteImage = document.createElement('img');
             editListDeleteImage.src = '/images/icons/trash.png';
+            editListDeleteImage.alt = 'Delete stadium';
             editListDeleteButton.appendChild(editListDeleteImage);
 
             editListStadium.appendChild(editListStadiumImage);
@@ -827,6 +832,21 @@ function setupCreateListSearch(enableSave) {
                 suggestionsContainer.classList.remove('active');
                 searchField.value = '';
             });
+            item.setAttribute('tabindex', '0');
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    item.click();
+                }
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    item.nextElementSibling?.focus();
+                }
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    item.previousElementSibling?.focus() || document.getElementById('create-list-search-field').focus();
+                }
+            });
             suggestionsContainer.appendChild(item);
         });
     }, DEBOUNCE_TIME);
@@ -889,6 +909,7 @@ function setupEditListSearch(enableSave) {
                 const editListStadiumImage = document.createElement('img');
                 editListStadiumImage.classList.add('edit-list-stadium-image');
                 editListStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
+                editListStadiumImage.alt = stadium.stadium_name;
                 editListStadiumImage.draggable = 'false';
 
                 const editListStadiumInfoContainer = document.createElement('div');
@@ -903,7 +924,7 @@ function setupEditListSearch(enableSave) {
                 editListStadiumName.textContent = stadium.stadium_name;
                 editListStadiumName.draggable = false;
 
-                const editListStadiumLocation = document.createElement('h4');
+                const editListStadiumLocation = document.createElement('p');
                 editListStadiumLocation.classList.add('edit-list-stadium-location');
                 editListStadiumLocation.textContent = stadium.city + ', ' + stadium.state;
 
@@ -1013,6 +1034,21 @@ function setupEditListSearch(enableSave) {
                 updateEditRankNumbers();
                 suggestionsContainer.classList.remove('active');
                 searchField.value = '';
+            });
+            item.setAttribute('tabindex', '0');
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    item.click();
+                }
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    item.nextElementSibling?.focus();
+                }
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    item.previousElementSibling?.focus() || document.getElementById('edit-list-search-field').focus();
+                }
             });
             suggestionsContainer.appendChild(item);
         });

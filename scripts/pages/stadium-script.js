@@ -66,6 +66,7 @@ async function loadFullStadiumPage(id, slug) {
         const stadiumImage = document.createElement('img');
         stadiumImage.id = 'stadium-image';
         stadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
+        stadiumImage.alt = stadium.name;
         document.querySelector('main').prepend(stadiumImage);
         stadiumImage.onload = () => stadiumImage.classList.add('loaded');
 
@@ -130,21 +131,28 @@ function createEventElement(event) {
 
     const icon = document.createElement('img');
     icon.src = getEventIcon(event.classifications[0].genre.name);
+    const altText = getEventIcon(event.classifications[0].genre.name)
+        .split('/').pop()
+        .replace(/\.[^.]+$/, '')
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase());
+
+    icon.alt = altText;
 
     const info = document.createElement('div');
     info.classList.add('event-info');
 
-    const name = document.createElement('h4');
+    const name = document.createElement('p');
     name.textContent = event.name;
     name.classList.add('event-stadium-name');
 
     const infoContainer = document.createElement('div');
     infoContainer.classList.add('event-info-container');
 
-    const date = document.createElement('h4');
+    const date = document.createElement('p');
     date.textContent = formatEventDate(event.dates.start.localDate);
 
-    const time = document.createElement('h4');
+    const time = document.createElement('p');
     time.textContent = formatEventTime(event.dates.start.dateTime, event.dates.timezone);
 
     const link = document.createElement('a');
@@ -355,3 +363,14 @@ window.onload = async () => {
 
     await loadFullStadiumPage(id, slug);
 };
+
+['stadium-user-control-wishlist', 'stadium-log-button'].forEach(id => {
+    const el = document.getElementById(id);
+    el?.setAttribute('tabindex', '0');
+    el?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            el.click();
+        }
+    });
+});

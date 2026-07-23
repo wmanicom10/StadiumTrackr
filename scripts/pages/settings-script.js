@@ -131,6 +131,7 @@ function createActiveSlot(stadium) {
 
     const favoriteStadiumImage = document.createElement('img');
     favoriteStadiumImage.src = STADIUM_IMAGE_PATH + stadium.image;
+    favoriteStadiumImage.alt = stadium.stadium_name;
     favoriteStadiumsSettingActive.appendChild(favoriteStadiumImage);
 
     const favoriteStadiumsSettingText = document.createElement('div');
@@ -174,6 +175,18 @@ function createActiveSlot(stadium) {
     favoriteStadiumsSettingActive.addEventListener('dragend', handleDragEnd);
     favoriteStadiumsSettingActive.addEventListener('dragleave', handleDragLeave);
 
+    favoriteStadiumsSettingActive.setAttribute('tabindex', '0');
+
+    favoriteStadiumsSettingActive.addEventListener('focus', () => {
+        cornerControls.style.opacity = '1';
+    });
+
+    favoriteStadiumsSettingActive.addEventListener('blur', (e) => {
+        if (!favoriteStadiumsSettingActive.contains(e.relatedTarget)) {
+            cornerControls.style.opacity = '0';
+        }
+    });
+
     return favoriteStadiumsSettingActive;
 }
 
@@ -185,6 +198,14 @@ function createEmptySlot() {
     img.src = '/images/icons/plus.png';
     img.alt = 'Add Favorite Stadium';
     slot.appendChild(img);
+
+    slot.setAttribute('tabindex', '0');
+    slot.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            slot.click();
+        }
+    });
 
     slot.addEventListener('click', () => toggleMenu(addFavoriteStadiumMenu, true, overlay));
     return slot;
@@ -271,6 +292,22 @@ function renderSearchSuggestions(stadiums, suggestionsContainer, searchValue) {
         stadiumName.textContent = stadium.stadium_name;
         
         searchResult.appendChild(stadiumName);
+
+        searchResult.setAttribute('tabindex', '0');
+        searchResult.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchResult.click();
+            }
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                searchResult.nextElementSibling?.focus();
+            }
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                searchResult.previousElementSibling?.focus() || document.getElementById('favorite-search-field').focus();
+            }
+        });
         
         searchResult.addEventListener('click', () => {
             toggleMenu(addFavoriteStadiumMenu, false, overlay);
@@ -652,4 +689,14 @@ document.getElementById('download-data-button').addEventListener('click', async 
         console.error(error);
         shakeOrReplace(error.message || 'Failed to download data. Please try again.');
     }
+});
+
+document.querySelectorAll('.setting-control').forEach(control => {
+    control.setAttribute('tabindex', '0');
+    control.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            control.click();
+        }
+    });
 });

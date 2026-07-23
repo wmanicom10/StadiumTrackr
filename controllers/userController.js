@@ -559,7 +559,7 @@ const handleLoadUserLists = async (req, res) => {
                 ul.created_at,
                 ul.updated_at,
                 COUNT(DISTINCT ls.stadium_id) AS stadium_count,
-                GROUP_CONCAT(DISTINCT s.image ORDER BY ls.order_index ASC SEPARATOR ',') AS images
+                GROUP_CONCAT(DISTINCT CONCAT(COALESCE(s.image, ''), '|', COALESCE(s.stadium_name, '')) ORDER BY ls.order_index ASC SEPARATOR ',') AS stadium_data
             FROM user_lists ul
             LEFT JOIN user_list_stadiums ls ON ul.list_id = ls.list_id
             LEFT JOIN stadiums s ON ls.stadium_id = s.stadium_id
@@ -591,7 +591,10 @@ const handleLoadUserLists = async (req, res) => {
 
         const formattedLists = userLists.map(list => ({
             ...list,
-            images: list.images ? list.images.split(',') : []
+            stadiumData: list.stadium_data ? list.stadium_data.split(',').map(item => {
+                const [image, name] = item.split('|');
+                return { image: image || null, name: name || '' };
+            }) : []
         }));
 
         res.json({ userLists: formattedLists });

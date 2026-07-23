@@ -44,7 +44,7 @@ async function showEventsUI() {
                 featuredEventStadiumName.href = IS_PROD && stadium.slug ? `/stadium/${stadium.slug}` : `stadium.html?id=${stadium.stadium_id}`;
                 featuredEventHeader.appendChild(featuredEventStadiumName);
 
-                const featuredEventStadiumLocation = document.createElement('h4');
+                const featuredEventStadiumLocation = document.createElement('p');
                 featuredEventStadiumLocation.classList.add('featured-event-stadium-location');
                 featuredEventStadiumLocation.textContent = stadium.city + ', ' + stadium.state;
                 featuredEventHeader.appendChild(featuredEventStadiumLocation);
@@ -56,12 +56,13 @@ async function showEventsUI() {
 
                 const featuredEventImage = document.createElement('img');
                 featuredEventImage.src = STADIUM_IMAGE_PATH + stadium.image;
+                featuredEventImage.alt = stadium.stadium_name;
                 featuredEvent.appendChild(featuredEventImage);
 
                 const eventInfo = document.createElement('div');
                 eventInfo.classList.add('event-info');
 
-                const eventStadiumName = document.createElement('h4');
+                const eventStadiumName = document.createElement('p');
                 eventStadiumName.classList.add('event-stadium-name');
                 eventStadiumName.textContent = stadium.nextEvent.name;
                 eventInfo.appendChild(eventStadiumName);
@@ -69,11 +70,11 @@ async function showEventsUI() {
                 const eventInfoContainer = document.createElement('div');
                 eventInfoContainer.classList.add('event-info-container');
 
-                const eventDate = document.createElement('h4');
+                const eventDate = document.createElement('p');
                 eventDate.textContent = formatEventDate(stadium.nextEvent.dates.start.localDate);
                 eventInfoContainer.appendChild(eventDate);
 
-                const eventTime = document.createElement('h4');
+                const eventTime = document.createElement('p');
                 eventTime.textContent = formatEventTime(stadium.nextEvent.dates.start.dateTime, stadium.nextEvent.dates.timezone);
                 eventInfoContainer.appendChild(eventTime);
 
@@ -109,6 +110,8 @@ async function showStadiumUI(stadiumId, slug) {
             new Promise(resolve => setTimeout(resolve, MIN_LOADING_TIME))
         ]);
 
+        console.log(result)
+
         const id = result.stadiumInfo.stadium.id;
 
         document.title = `${result.stadiumInfo.stadium.name} Events - StadiumTrackr`;
@@ -134,6 +137,7 @@ async function showStadiumUI(stadiumId, slug) {
             const stadiumImage = document.createElement('img');
             stadiumImage.id = 'stadium-image';
             stadiumImage.src = STADIUM_IMAGE_PATH + result.stadiumInfo.stadium.image;
+            stadiumImage.alt = result.stadiumInfo.stadium.name;
             document.querySelector('main').prepend(stadiumImage);
             stadiumImage.onload = () => stadiumImage.classList.add('loaded');
 
@@ -207,21 +211,28 @@ function renderStadiumEventCard(event, container) {
 
     const icon = document.createElement('img');
     icon.src = getEventIcon(event.classifications[0].genre.name);
+    const altText = getEventIcon(event.classifications[0].genre.name)
+        .split('/').pop()
+        .replace(/\.[^.]+$/, '')
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, c => c.toUpperCase());
+
+    icon.alt = altText;
 
     const info = document.createElement('div');
     info.classList.add('event-info');
 
-    const name = document.createElement('h4');
+    const name = document.createElement('p');
     name.textContent = event.name;
     name.classList.add('event-stadium-name');
 
     const infoContainer = document.createElement('div');
     infoContainer.classList.add('event-info-container');
 
-    const date = document.createElement('h4');
+    const date = document.createElement('p');
     date.textContent = formatEventDate(event.dates.start.localDate);
 
-    const time = document.createElement('h4');
+    const time = document.createElement('p');
     time.textContent = formatEventTime(event.dates.start.dateTime, event.dates.timezone);
 
     const link = document.createElement('a');
